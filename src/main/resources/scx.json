@@ -1,0 +1,33 @@
+{
+  "scx": {
+    "port": 8080,
+    "plugin": {
+      "root": "/plugins",
+      "disabled-list": [
+        "scx-bole-0.0.1.jar",
+        "scx-cms-0.0.1.jar"
+      ]
+    },
+    "datasource": {
+      "url": "jdbc:mysql://127.0.0.1:3306/scx?allowMultiQueries=true",
+      "username": "root",
+      "password": "OgaIGDNXuGHN8riHCTVsgeSro4o2IVY/wTU3+467XCYkdDT2bkoJROBhGOTcA3Z0"
+    },
+    "allowed-origin": "*",
+    "cms": {
+      "root": "absPath:C:/Users/scx56/Projects/scx/scx-bole/src/main/resources/c/",
+      "resource-url": "/static/*",
+      "resource-locations": "absPath:C:/Users/scx56/Projects/scx/scx-bole/src/main/resources/c/static/",
+      "resource-suffix": ".html"
+    },
+    "confusion-login-error": false,
+    "login-error-lock-times": 3,
+    "login-error-lock-second": 60,
+    "file-path": "absPath:C:/Users/scx56/Documents/scxFiles/",
+    "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
+    "real-delete": false,
+    "show-log": true,
+    "show-gui": false,
+    "fix-table": true
+  }
+}
