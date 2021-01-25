@@ -15,7 +15,7 @@
     },
     "allowed-origin": "*",
     "cms": {
-      "root": "absPath:C:/Users/scx56/Projects/scx/scx-bole/src/main/resources/c/",
+      "root": "/c/",
       "resource-url": "/static/*",
       "resource-locations": "absPath:C:/Users/scx56/Projects/scx/scx-bole/src/main/resources/c/static/",
       "resource-suffix": ".html"
