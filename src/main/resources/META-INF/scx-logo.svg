@@ -1,0 +1,20 @@
+<svg viewBox="0 0 1640 1420" xmlns="http://www.w3.org/2000/svg" class="icon">
+    <defs>
+        <filter height="200%" width="200%" y="-50%" x="-50%" id="svg_2_blur">
+            <feGaussianBlur stdDeviation="0" in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g>
+        <title>Layer 1</title>
+        <path stroke-width="0" filter="url(#svg_2_blur)" fill="#377cd3" id="svg_1"
+              d="m1021.205863,71.579152l-538.39917,541.17442l141.53793,0l396.86124,-541.17442zm135.98742,463.46732l-546.72493,538.39917l396.86124,-538.39917l149.86369,0z"/>
+        <path stroke-width="0" fill="#377cd3" id="svg_2"
+              d="m570.227184,535.046472l499.54563,0l0,77.7071l-499.54563,0l0,-77.7071z"/>
+        <text font-style="italic" font-weight="bold" xml:space="preserve" text-anchor="start"
+              font-family="'Courier New', Courier, monospace" font-size="250" id="svg_3" y="1301.322695" x="550.971255"
+              stroke-opacity="null" stroke-width="8" stroke="null" fill="#58AAFF">SCX</text>
+        <text opacity="0.25" font-style="italic" font-weight="bold" xml:space="preserve" text-anchor="start"
+              font-family="'Courier New', Courier, monospace" font-size="250" id="svg_4" y="1294.655985" x="550.975655"
+              stroke-opacity="null" stroke-width="8" stroke="null" fill="#ffffff">SCX</text>
+    </g>
+</svg>

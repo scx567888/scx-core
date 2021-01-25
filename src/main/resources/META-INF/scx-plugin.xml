@@ -1,0 +1,17 @@
+<scx-plugin>
+    <id>scx-attend</id>
+    <name>人脸考勤项目</name>
+    <version>0.0.1</version>
+    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <description><![CDATA[
+      人脸考勤项目
+      <h1>这里可以写 html</h1>
+    ]]></description>
+
+    <change-notes><![CDATA[
+     ---0.0.1
+        修复了 无法登录的 bug
+    ]]>
+    </change-notes>
+    <scx-version>0.0.1</scx-version>
+</scx-plugin>

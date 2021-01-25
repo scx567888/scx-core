@@ -1,0 +1,39 @@
+package cool.scx.boot;
+
+import cool.scx.util.PackageUtils;
+import cool.scx.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public final class ScxPlugins {
+
+    public static List<Class<?>> pluginsClassList = new ArrayList<>();
+
+    static {
+        StringUtils.println("ScxPlugins 初始化中...", StringUtils.Color.YELLOW);
+        var pluginsRoot = ScxConfig.pluginRoot;
+        if (pluginsRoot.exists()) {
+            Arrays.stream(pluginsRoot.listFiles()).filter(file -> file.getName().endsWith(".jar")).filter(file -> {
+                var f = ScxConfig.pluginDisabledList.contains(file.getName());
+                if (f) {
+                    StringUtils.println("找到插件 名称 [" + file.getName() + "] 已禁用!!!", StringUtils.Color.BRIGHT_RED);
+                }
+                return !f;
+            }).forEach(file -> {
+                        try {
+                            PackageUtils.scanPackageByJar(clazz -> pluginsClassList.add(clazz), file.toURI().toURL());
+                            StringUtils.println("找到插件 名称 [" + file.getName() + "] 已加载!!!", StringUtils.Color.YELLOW);
+                        } catch (Exception e) {
+                            StringUtils.println("找到插件 名称 [" + file.getName() + "] 已损坏!!!", StringUtils.Color.RED);
+                        }
+                    }
+            );
+        }
+    }
+
+    public static void init() {
+        StringUtils.println("ScxPlugins 初始化完成...", StringUtils.Color.YELLOW);
+    }
+}
