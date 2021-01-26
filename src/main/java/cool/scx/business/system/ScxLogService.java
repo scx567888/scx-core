@@ -2,11 +2,11 @@ package cool.scx.business.system;
 
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
-import cool.scx.enumeration.HttpMethod;
 import cool.scx.base.BaseService;
 import cool.scx.base.Param;
 import cool.scx.boot.ScxConfig;
 import cool.scx.boot.ScxContext;
+import cool.scx.enumeration.HttpMethod;
 import cool.scx.util.NetUtils;
 
 @ScxController("api/scxLogService")

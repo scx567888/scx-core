@@ -24,14 +24,6 @@ public final class ScxContext {
     private static final Map<String, Class<?>> baseModelClassCache;
     private static final Map<String, BaseService<?>> baseServiceCache;
 
-    public static Class<?> getBaseModelClassByName(String str) {
-        return baseModelClassCache.get(str);
-    }
-
-    public static BaseService<?> getBaseServiceByName(String str) {
-        return baseServiceCache.get(str);
-    }
-
     static {
         StringUtils.println("ScxContext 初始化中...", StringUtils.Color.GREEN);
         applicationContext = new AnnotationConfigApplicationContext(PackageUtils.getBasePackages());
@@ -40,6 +32,14 @@ public final class ScxContext {
         baseModelClassCache = initBaseModelClassCache();
         baseServiceCache = initBaseServiceCache();
         fixTable();
+    }
+
+    public static Class<?> getBaseModelClassByName(String str) {
+        return baseModelClassCache.get(str);
+    }
+
+    public static BaseService<?> getBaseServiceByName(String str) {
+        return baseServiceCache.get(str);
     }
 
     private static Map<String, Class<?>> initBaseModelClassCache() {

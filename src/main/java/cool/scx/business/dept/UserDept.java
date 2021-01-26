@@ -1,5 +1,6 @@
 package cool.scx.business.dept;
 
+import cool.scx.annotation.Column;
 import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
@@ -8,7 +9,15 @@ import cool.scx.base.BaseModel;
  */
 @ScxModel(tablePrefix = "core")
 public class UserDept extends BaseModel {
-    public Long userId;//用户的 id
+    /**
+     * 用户的 id
+     */
+    @Column(notNull = true)
+    public Long userId;
 
-    public Long deptId;//部门的 id
+    /**
+     * 部门的 id
+     */
+    @Column(notNull = true)
+    public Long deptId;
 }

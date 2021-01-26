@@ -22,20 +22,8 @@ import java.util.Map;
 public class BaseController {
 
 
-    /**
-     * 实体插入新对象,并返回主键id值
-     *
-     * @param entity 实体
-     * @return 实体
-     */
-    @ScxMapping(value = ":modelName/save", httpMethod = HttpMethod.GET)
-    public Long save(String modelName, Map<String, Object> entity) {
-        modelName = modelName.toLowerCase();
-        var modelClass = ScxContext.getBaseModelClassByName(modelName);
-        var baseServiceByName = (BaseService<Object>) ScxContext.getBaseServiceByName(modelName + "service");
-        Object o = ObjectUtils.mapToBean(entity, modelClass);
-        return baseServiceByName.save(o);
-    }
+    @Autowired
+    private ScxLogService scxLogService;
 
 
 //    /**
@@ -161,18 +149,30 @@ public class BaseController {
 //    public Entity get(Param<Entity> param) {
 //        return baseDao.get(param);
 //    }
-
-    @Autowired
-    private ScxLogService scxLogService;
     @Autowired
     private UploadFileService uploadFileService;
+
+    /**
+     * 实体插入新对象,并返回主键id值
+     *
+     * @param entity 实体
+     * @return 实体
+     */
+    @ScxMapping(value = ":modelName/save", httpMethod = HttpMethod.GET)
+    public Long save(String modelName, Map<String, Object> entity) {
+        modelName = modelName.toLowerCase();
+        var modelClass = ScxContext.getBaseModelClassByName(modelName);
+        var baseServiceByName = (BaseService<Object>) ScxContext.getBaseServiceByName(modelName + "service");
+        Object o = ObjectUtils.mapToBean(entity, modelClass);
+        return baseServiceByName.save(o);
+    }
 
     /**
      * 通用下载资源方法
      *
      * @param fileName 要下载的文件名
      */
-    @ScxMapping("/download/{year}/{month}/{day}/{hour}/{timestamp}/{fileName}")
+    @ScxMapping("/download/:year/:month/:day/:hour/:timestamp/:fileName")
     public void download(String year, String month, String day, String hour, String timestamp, String fileName) throws UnsupportedEncodingException {
         var fullPath = ScxConfig.uploadFilePath + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName;
         //FileUtils.downloadFile(response, request, fullPath);
@@ -186,7 +186,7 @@ public class BaseController {
      * @param fileName 要下载的文件名
      *                 下载文件或错误
      */
-    @ScxMapping("/showPicture/{year}/{month}/{day}/{hour}/{timestamp}/{fileName}")
+    @ScxMapping("/showPicture/:year/:month:/:day/:hour/:timestamp/:fileName")
     public void showPicture(String year,
                             String month,
                             String day,
@@ -206,7 +206,7 @@ public class BaseController {
      * @param id 要显示的图片 id
      *           下载文件或错误
      */
-    @ScxMapping("/showPictureById/{id}")
+    @ScxMapping("/showPictureById/:id")
     public void showPictureById(Long id) {
         var uploadFile = uploadFileService.getById(id);
         //var width = request.getParameter("w") != null ? Integer.parseInt(request.getParameter("w")) : null;

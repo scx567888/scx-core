@@ -1,17 +1,24 @@
 <scx-plugin>
-    <id>scx-attend</id>
-    <name>人脸考勤项目</name>
+    <id>scx-cms</id>
+    <name>Scx Cms 内容管理系统</name>
     <version>0.0.1</version>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
-    <description><![CDATA[
-      人脸考勤项目
-      <h1>这里可以写 html</h1>
-    ]]></description>
+    <vendor email="小明@qq.com" url="http://www.小明website.com">小明</vendor>
+    <description>
+        <![CDATA[
 
-    <change-notes><![CDATA[
+      内容管理系统
+      <h1>这里可以写 html</h1>
+
+    ]]>
+    </description>
+
+    <change-log>
+        <![CDATA[
+
      ---0.0.1
         修复了 无法登录的 bug
+
     ]]>
-    </change-notes>
-    <scx-version>0.0.1</scx-version>
+    </change-log>
+    <scx-version>0.1.5</scx-version>
 </scx-plugin>

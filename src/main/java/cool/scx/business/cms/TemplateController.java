@@ -2,8 +2,8 @@ package cool.scx.business.cms;
 
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
-import cool.scx.enumeration.HttpMethod;
 import cool.scx.boot.ScxConfig;
+import cool.scx.enumeration.HttpMethod;
 import cool.scx.util.FileUtils;
 import cool.scx.vo.Json;
 

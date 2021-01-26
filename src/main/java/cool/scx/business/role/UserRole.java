@@ -1,5 +1,6 @@
 package cool.scx.business.role;
 
+import cool.scx.annotation.Column;
 import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
@@ -9,8 +10,16 @@ import cool.scx.base.BaseModel;
 @ScxModel(tablePrefix = "core")
 public class UserRole extends BaseModel {
 
-    public Long userId;//用户的 id
+    /**
+     * 用户的 id
+     */
+    @Column(notNull = true)
+    public Long userId;
 
-    public Long roleId;//角色的 id
+    /**
+     * 角色的 id
+     */
+    @Column(notNull = true)
+    public Long roleId;
 
 }

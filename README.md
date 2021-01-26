@@ -30,7 +30,9 @@
 > 基于 Vert.x 的 后台 Web 快速开发框架
 
 ### 使用方法
+
 将此项目引入到您自己的项目中 。
+
 ```
 public class YourApp {
     public static void main(String[] args) {
@@ -38,6 +40,7 @@ public class YourApp {
     }
 }
 ```
+
 运行 main 方法即可运行 。
 
 [更多信息请查看文档](./docs/index.md) <br/>

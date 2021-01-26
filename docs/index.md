@@ -1,6 +1,8 @@
 ## 项目技术架构
+
 项目采用 java 进行编写 ， maven 构建<br>
 版本要求
+
 ```
 java  >= 11
 maven >= 3.6.3
@@ -64,7 +66,6 @@ Api 说明
 数据库脚本在 src/resources/sql 文件夹中
 请按照顺序或者对应模块 执行 如 0_xxx.sql -> 1_xxx.sql -> 2_xxx.sql
 ```
-
 
 使用方法
 

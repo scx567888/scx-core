@@ -1,9 +1,9 @@
 package cool.scx.boot;
 
+import cool.scx.base.FreemarkerSupperTag;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import freemarker.template.Configuration;
-import cool.scx.base.FreemarkerSupperTag;
 
 public final class ScxCmsConfig {
     public static final Configuration freemarkerConfig;

@@ -15,9 +15,9 @@ public @interface ScxMapping {
 
     String value() default "";
 
-    boolean useMethodNameAsUrl() default false;
+    boolean useMethodNameAsUrl() default true;
 
-    ReturnType returnType() default ReturnType.JSON;
+    ReturnType returnType() default ReturnType.AUTO;
 
-    HttpMethod[] httpMethod() default HttpMethod.POST;
+    HttpMethod[] httpMethod() default {HttpMethod.POST};
 }

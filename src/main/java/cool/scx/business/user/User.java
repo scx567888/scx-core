@@ -5,39 +5,80 @@ import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
+import java.util.Date;
+
 /**
- * 用户类 包含所有人员信息 通过 type 进行区分人员类型 如 学生 教师 等
+ * 用户类 包含所有人员信息 通过 level 进行区分人员类型 如 学生 教师 等
  */
 @ScxModel(tablePrefix = "core")
 public class User extends BaseModel {
 
+    /**
+     * 登录名，创建后不可改
+     */
+    @Column(notNull = true, useLike = true, unique = true, noUpdate = true)
+    public String username;
+
+    /**
+     * 已加密的登录密码
+     */
+    @Column(notNull = true)
+    public String password;
+
+    /**
+     * 随机加密盐值
+     */
+    @Column(notNull = true)
+    public String salt;
+
+    /**
+     * 昵称
+     */
     @Column(useLike = true)
-    public String realName; //真实姓名
+    public String nickName;
 
-    public String sex; //性别
+    /**
+     * 性别
+     */
+    public String gender;
 
-    @Column(notNull = true, useLike = true, unique = true)
-    public String username;// 登录名，不可改
+    /**
+     * 用户头像 id 此处存储的是 位于 uploadFile 表中的 id
+     */
+    public Long avatarId;
 
-    public String salt;// 加密盐值
+    /**
+     * 电话号码
+     */
+    public String phone;
 
-    public String password;// 已加密的登录密码
+    /**
+     * 用户级别 共六个级别
+     * 2  超级管理员 一个系统应有且只有一个
+     * 4  普通管理员
+     * 8  教师,商家等
+     * 16 普通会员用户
+     * 32 普通用户
+     * 64 游客
+     */
+    @Column(notNull = true, defaultValue = "8")
+    public Byte level;
 
-    public String avatar;//用户头像
+    /**
+     * 最后一次登录时间
+     */
+    public Date lastLoginDate;
 
+    /**
+     * dept id 集合
+     */
     @NoColumn
-    public String deptIds;//dept id 集合
+    public String deptIds;
 
+    /**
+     * role id 集合
+     */
     @NoColumn
-    public String roleIds;//role id 集合
-
-    @NoColumn
-    public Integer parentId = 0;//父id
-
-    public String phoneNumber;//电话号码
-
-    //用户级别
-    //取值 2 4 8 16 32 64 128 256
-    public Integer level;
+    public String roleIds;
 
 }

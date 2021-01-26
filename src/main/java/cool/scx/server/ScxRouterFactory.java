@@ -9,6 +9,7 @@ import cool.scx.boot.ScxContext;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Html;
+import cool.scx.vo.Json;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
@@ -67,7 +68,7 @@ public final class ScxRouterFactory {
                 Arrays.stream(clazz.getMethods()).filter(method -> method.isAnnotationPresent(ScxMapping.class)).forEach(method -> {
                     method.setAccessible(true);
                     var scxMapping = method.getAnnotation(ScxMapping.class);
-                    var url = scxMapping.useMethodNameAsUrl() ? StringUtils.cleanHttpUrl("api", StringUtils.getModelNameByControllerName(clazz.getSimpleName()), method.getName())
+                    var url = scxMapping.useMethodNameAsUrl() && "".equals(scxMapping.value()) ? StringUtils.cleanHttpUrl("api", StringUtils.getModelNameByControllerName(clazz.getSimpleName()), method.getName())
                             : StringUtils.cleanHttpUrl(scxController.value(), scxMapping.value());
                     Arrays.asList(scxMapping.httpMethod()).forEach(httpMethod ->
                             router.route(HttpMethod.valueOf(httpMethod.toString()), url)
@@ -108,6 +109,16 @@ public final class ScxRouterFactory {
                 break;
             case HTML:
                 contentType = "text/html; charset=utf-8";
+                break;
+            case AUTO:
+                Class<?> returnType = scxRouteHandler.method.getReturnType();
+                if (returnType == Html.class) {
+                    contentType = "text/html; charset=utf-8";
+                } else if (returnType == Json.class) {
+                    contentType = "application/json; charset=utf-8";
+                } else {
+                    contentType = "application/json; charset=utf-8";
+                }
                 break;
             default:
         }

@@ -3,7 +3,8 @@ package cool.scx.enumeration;
 public enum ReturnType {
     JSON("JSON"),
     HTML("HTML"),
-    FILE("FILE");
+    FILE("FILE"),
+    AUTO("AUTO");
 
     private final String return_type_str;
 

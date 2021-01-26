@@ -1,5 +1,8 @@
 package cool.scx.business.dept;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import cool.scx.annotation.Column;
+import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
@@ -14,10 +17,12 @@ public class Dept extends BaseModel {
     public String perm;//部门权限
 
     public Integer level;//部门级别
+    @Column(notNull = true, defaultValue = "0", needIndex = true)
+    @JsonIgnore
+    public Integer modelOrder;//排序
 
-    public Long parentId;//父id
-
-    public String deptOrder;//排序字段
+    @NoColumn
+    public Long parentId = 0L;//父id 用作构建树形结构
 
     public String parentStr;//父字符串
 }
