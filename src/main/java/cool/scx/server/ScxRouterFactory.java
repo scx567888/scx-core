@@ -26,6 +26,10 @@ public final class ScxRouterFactory {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    static {
+        OBJECT_MAPPER.findAndRegisterModules();
+    }
+
     public static Router getRouter(Vertx vertx) {
         var router = Router.router(vertx);
         registerCorsHandler(router);
