@@ -31,9 +31,6 @@ public final class ScxVertxServer extends AbstractVerticle {
         server = vertx.createHttpServer();
         eventBus = vertx.eventBus();
         var router = ScxRouterFactory.getRouter(vertx);
-        if (ScxConfig.showLog) {
-            router.getRoutes().forEach(route -> System.out.println(route.methods() + "   " + route.getPath()));
-        }
         server.requestHandler(router).listen(ScxConfig.port, http -> {
             if (http.succeeded()) {
                 startPromise.complete();
