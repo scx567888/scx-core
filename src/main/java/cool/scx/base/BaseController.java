@@ -16,6 +16,7 @@ import cool.scx.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -151,28 +152,15 @@ public class BaseController {
 //
     @ScxMapping(value = ":modelName/list", httpMethod = HttpMethod.GET)
     public Json listAll(String modelName) {
-//        var us = new ArrayList<User>();
-//        for (int i = 0; i < 10000; i++) {
-//            var u = new User();
-//            u.phone = "123131231123";
-//            u.nickName = "四程序";
-//            u.avatarId = 123L + i;
-//            u.gender = "女";
-//            u.lastLoginDate = LocalDateTime.now();
-//            u.password = "hbhfvjvsvbsvhdjvhfv" + i;
-//            u.username = "admin" + i;
-//            u.salt = "salt" + i;
-//            u.level = 1;
-//            us.add(u);
-//        }
-//        userService.saveList(us);
-
 
         modelName = modelName.toLowerCase();
         var modelClass = ScxContext.getBaseModelClassByName(modelName);
         var baseServiceByName = (BaseService<Object>) ScxContext.getBaseServiceByName(modelName + "service");
-        var objects = baseServiceByName.listAll();
-        return Json.ok().tables(objects, objects.size());
+        var s = LocalDateTime.now();
+//        List<Object> objects = baseServiceByName.listAll();
+        var s1 = LocalDateTime.now();
+        var duration = Duration.between(s, s1);
+        return Json.ok().tables(duration.toMillis(), 666);
     }
 
     /**

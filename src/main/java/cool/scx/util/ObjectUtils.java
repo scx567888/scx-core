@@ -1,5 +1,6 @@
 package cool.scx.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
@@ -13,6 +14,8 @@ public final class ObjectUtils {
 
     public static final LocalVariableTableParameterNameDiscoverer u = new LocalVariableTableParameterNameDiscoverer();
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final TypeReference<Map<String, Object>> mapType = new TypeReference<>() {
+    };
 
     static {
         objectMapper.findAndRegisterModules();
@@ -54,30 +57,7 @@ public final class ObjectUtils {
     }
 
     public static <T> T mapToBean(Map<String, ?> map, Class<T> clazz) {
-        T bean; // 构建对象
-        try {
-            bean = clazz.getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        if (map == null) {
-            return bean;
-        }
-
-        for (var field : clazz.getFields()) {
-            field.setAccessible(true);
-            var mapValue = map.get(field.getName());
-            if (mapValue != null) {
-                try {
-                    field.set(bean, parseSimpleType(mapValue, field.getType()));
-                } catch (Exception ignored) {
-
-                }
-            }
-        }
-
-        return bean;
+        return objectMapper.convertValue(map, clazz);
     }
 
     /**
@@ -117,19 +97,7 @@ public final class ObjectUtils {
     }
 
     public static Map<String, Object> beanToMap(Object o) {
-        if (o == null) {
-            return null;
-        }
-        var clazzFields = o.getClass().getFields(); // 获取所有方法
-        var objectMap = new HashMap<String, Object>(1 + (int) (clazzFields.length / 0.75));
-        for (Field field : clazzFields) {
-            try {
-                objectMap.put(field.getName(), field.get(o));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return objectMap;
+        return objectMapper.convertValue(o, mapType);
     }
 
     public static Map<String, Object> beanToMapWithIndex(Integer index, Object o) {
