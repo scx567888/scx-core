@@ -172,7 +172,7 @@ public class BaseController {
         modelName = modelName.toLowerCase();
         var modelClass = ScxContext.getBaseModelClassByName(modelName);
         var baseServiceByName = (BaseService<Object>) ScxContext.getBaseServiceByName(modelName + "service");
-        List<Object> objects = baseServiceByName.listAll();
+        var objects = baseServiceByName.listMapAll();
         return Json.ok().tables(objects, 100);
     }
 
