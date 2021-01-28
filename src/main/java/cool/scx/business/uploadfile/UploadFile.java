@@ -3,7 +3,7 @@ package cool.scx.business.uploadfile;
 import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 文件上传表
@@ -17,6 +17,6 @@ public class UploadFile extends BaseModel {
 
     public String fileName;//文件名
 
-    public Date uploadTime;//上传日期
+    public LocalDateTime uploadTime;//上传日期
 
 }

@@ -1,11 +1,12 @@
 package cool.scx.business.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import cool.scx.annotation.Column;
 import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 用户类 包含所有人员信息 通过 level 进行区分人员类型 如 学生 教师 等
@@ -67,7 +68,8 @@ public class User extends BaseModel {
     /**
      * 最后一次登录时间
      */
-    public Date lastLoginDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    public LocalDateTime lastLoginDate;
 
     /**
      * dept id 集合

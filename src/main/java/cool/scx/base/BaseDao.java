@@ -119,7 +119,7 @@ public final class BaseDao<Entity> {
         TypeMapping.put(java.lang.Long.class, "bigint");
         TypeMapping.put(java.lang.Double.class, "double");
         TypeMapping.put(java.lang.Boolean.class, "tinyint(1)");
-        TypeMapping.put(java.util.Date.class, "datetime");
+        TypeMapping.put(java.time.LocalDateTime.class, "datetime");
         var type = TypeMapping.get(clazz);
         if (type == null) {
             return " varchar(128) ";

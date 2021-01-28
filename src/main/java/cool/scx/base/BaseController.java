@@ -7,6 +7,7 @@ import cool.scx.boot.ScxContext;
 import cool.scx.business.system.ScxLogService;
 import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
+import cool.scx.business.user.UserService;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.util.FileUtils;
 import cool.scx.util.NetUtils;
@@ -15,7 +16,8 @@ import cool.scx.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @ScxController("api")
@@ -24,72 +26,9 @@ public class BaseController {
 
     @Autowired
     private ScxLogService scxLogService;
-
-
-//    /**
-//     * 批量保存实体 (适用于少量数据 数据量 < 5000)
-//     *
-//     * @param entityList 实体集合
-//     * @return 插入成功的数据 自增主键
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public List<Long> saveList(List<Entity> entityList) {
-//        return baseDao.saveList(entityList);
-//    }
-//
-//    /**
-//     * 删除指定id的实体
-//     *
-//     * @param ids 要删除的 id 集合
-//     * @return 被删除的数据条数 用于前台分页优化
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Integer deleteByIds(Long... ids) {
-//        return baseDao.deleteByIds(ids);
-//    }
-//
-//    /**
-//     * 根据条件删除
-//     *
-//     * @param param e
-//     * @return e
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Integer delete(Param<Entity> param) {
-//        return baseDao.delete(param);
-//    }
-//
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Entity update(Param<Entity> param) {
-//        return baseDao.update(param, false);
-//    }
-//
-//    /**
-//     * 根据主键查询
-//     *
-//     * @param id e
-//     * @return e
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Entity getById(Long id) {
-//        return baseDao.getById(id);
-//    }
-//
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Entity updateById(Entity entity) {
-//        return baseDao.update(new Param<>(entity), false);
-//    }
-//
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Entity updateIncludeNull(Param<Entity> param) {
-//        return baseDao.update(param, true);
-//    }
-//
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public List<Entity> listAll() {
-//        return baseDao.listAll();
-//    }
-//
+    @Autowired
+    private UserService userService;
+    //
 //    /**
 //     * 根据实体条件查询实体列表带 Like 条件 需要在实体类上注解@Like
 //     * 查询分页数据（提供模糊查询）
@@ -151,6 +90,91 @@ public class BaseController {
 //    }
     @Autowired
     private UploadFileService uploadFileService;
+
+    //    /**
+//     * 批量保存实体 (适用于少量数据 数据量 < 5000)
+//     *
+//     * @param entityList 实体集合
+//     * @return 插入成功的数据 自增主键
+//     */
+//    @ScxMapping(useMethodNameAsUrl = true)
+//    public List<Long> saveList(List<Entity> entityList) {
+//        return baseDao.saveList(entityList);
+//    }
+//
+//    /**
+//     * 删除指定id的实体
+//     *
+//     * @param ids 要删除的 id 集合
+//     * @return 被删除的数据条数 用于前台分页优化
+//     */
+//    @ScxMapping(useMethodNameAsUrl = true)
+//    public Integer deleteByIds(Long... ids) {
+//        return baseDao.deleteByIds(ids);
+//    }
+//
+//    /**
+//     * 根据条件删除
+//     *
+//     * @param param e
+//     * @return e
+//     */
+//    @ScxMapping(useMethodNameAsUrl = true)
+//    public Integer delete(Param<Entity> param) {
+//        return baseDao.delete(param);
+//    }
+//
+//    @ScxMapping(useMethodNameAsUrl = true)
+//    public Entity update(Param<Entity> param) {
+//        return baseDao.update(param, false);
+//    }
+//
+//    /**
+//     * 根据主键查询
+//     *
+//     * @param id e
+//     * @return e
+//     */
+//    @ScxMapping(useMethodNameAsUrl = true)
+//    public Entity getById(Long id) {
+//        return baseDao.getById(id);
+//    }
+//
+//    @ScxMapping(useMethodNameAsUrl = true)
+//    public Entity updateById(Entity entity) {
+//        return baseDao.update(new Param<>(entity), false);
+//    }
+//
+//    @ScxMapping(useMethodNameAsUrl = true)
+//    public Entity updateIncludeNull(Param<Entity> param) {
+//        return baseDao.update(param, true);
+//    }
+//
+    @ScxMapping(value = ":modelName/list", httpMethod = HttpMethod.GET)
+    public Json listAll(String modelName) {
+//        var us = new ArrayList<User>();
+//        for (int i = 0; i < 10000; i++) {
+//            var u = new User();
+//            u.phone = "123131231123";
+//            u.nickName = "四程序";
+//            u.avatarId = 123L + i;
+//            u.gender = "女";
+//            u.lastLoginDate = LocalDateTime.now();
+//            u.password = "hbhfvjvsvbsvhdjvhfv" + i;
+//            u.username = "admin" + i;
+//            u.salt = "salt" + i;
+//            u.level = 1;
+//            us.add(u);
+//        }
+//        userService.saveList(us);
+
+
+        modelName = modelName.toLowerCase();
+        var modelClass = ScxContext.getBaseModelClassByName(modelName);
+        var baseServiceByName = (BaseService<Object>) ScxContext.getBaseServiceByName(modelName + "service");
+        List<Object> objects = baseServiceByName.listAll();
+        return Json.ok().tables(objects, 100);
+    }
 
     /**
      * 实体插入新对象,并返回主键id值
@@ -296,7 +320,7 @@ public class BaseController {
                 UploadFile u = new UploadFile();
                 u.fileName = fileName;
                 u.filePath = fileWritePath;
-                u.uploadTime = new Date();
+                u.uploadTime = LocalDateTime.now();
                 u.fileSize = fileSize;
                 u.id = uploadFileService.save(u);
                 return Json.ok().items(u);

@@ -22,47 +22,6 @@ public final class ScxRouteHandler {
         this.scxMapping = scxMapping;
     }
 
-    public Object getResult(RoutingContext ctx) {
-        var parameters = method.getParameters();
-        var parameterNames = ObjectUtils.u.getParameterNames(method);
-        var handlerParamsFromJson = getHandlerParamsFromJson(ctx, parameters, parameterNames);
-        var handlerParamsFromFormAttributes = getHandlerParamsFromFormAttributes(ctx, parameters, parameterNames);
-        var handlerParamsFromPath = getHandlerParamsFromPath(ctx, parameters, parameterNames);
-        var handlerParamsFromQuery = getHandlerParamsFromQuery(ctx, parameters, parameterNames);
-
-        var finalHandlerParams = new Object[parameters.length];
-        for (int i = 0; i < finalHandlerParams.length; i++) {
-            var nowType = parameters[i].getType();
-            if (nowType == RoutingContext.class) {
-                finalHandlerParams[i] = ctx;
-                continue;
-            }
-            if (handlerParamsFromJson[i] != null) {
-                finalHandlerParams[i] = handlerParamsFromJson[i];
-                continue;
-            }
-            if (handlerParamsFromFormAttributes[i] != null) {
-                finalHandlerParams[i] = handlerParamsFromFormAttributes[i];
-                continue;
-            }
-            if (handlerParamsFromPath[i] != null) {
-                finalHandlerParams[i] = handlerParamsFromPath[i];
-                continue;
-            }
-            if (handlerParamsFromQuery[i] != null) {
-                finalHandlerParams[i] = handlerParamsFromQuery[i];
-            }
-        }
-
-        try {
-            return method.invoke(example, finalHandlerParams);
-        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-            e.getCause();
-            return "服务器发生错误";
-        }
-
-    }
-
     public static Object[] getHandlerParamsFromJson(RoutingContext ctx, Parameter[] parameters, String[] parameterNames) {
         var handlerParams = new Object[parameters.length];
         String jsonStr = ctx.request().method() != HttpMethod.GET ? ctx.getBodyAsString() : "";
@@ -122,6 +81,47 @@ public final class ScxRouteHandler {
             handlerParams[i] = ObjectUtils.parseSimpleType(queryParams.get(parameterNames[i]), parameters[i].getType());
         }
         return handlerParams;
+    }
+
+    public Object getResult(RoutingContext ctx) {
+        var parameters = method.getParameters();
+        var parameterNames = ObjectUtils.u.getParameterNames(method);
+        var handlerParamsFromJson = getHandlerParamsFromJson(ctx, parameters, parameterNames);
+        var handlerParamsFromFormAttributes = getHandlerParamsFromFormAttributes(ctx, parameters, parameterNames);
+        var handlerParamsFromPath = getHandlerParamsFromPath(ctx, parameters, parameterNames);
+        var handlerParamsFromQuery = getHandlerParamsFromQuery(ctx, parameters, parameterNames);
+
+        var finalHandlerParams = new Object[parameters.length];
+        for (int i = 0; i < finalHandlerParams.length; i++) {
+            var nowType = parameters[i].getType();
+            if (nowType == RoutingContext.class) {
+                finalHandlerParams[i] = ctx;
+                continue;
+            }
+            if (handlerParamsFromJson[i] != null) {
+                finalHandlerParams[i] = handlerParamsFromJson[i];
+                continue;
+            }
+            if (handlerParamsFromFormAttributes[i] != null) {
+                finalHandlerParams[i] = handlerParamsFromFormAttributes[i];
+                continue;
+            }
+            if (handlerParamsFromPath[i] != null) {
+                finalHandlerParams[i] = handlerParamsFromPath[i];
+                continue;
+            }
+            if (handlerParamsFromQuery[i] != null) {
+                finalHandlerParams[i] = handlerParamsFromQuery[i];
+            }
+        }
+
+        try {
+            return method.invoke(example, finalHandlerParams);
+        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+            e.getCause();
+            return "服务器发生错误";
+        }
+
     }
 
 }

@@ -31,7 +31,7 @@ public final class ObjectUtils {
             var mapValue = map.get(field.getName());
             if (mapValue != null) {
                 try {
-                    var value = parseSimpleType(mapValue.toString(), fieldType);
+                    var value = parseSimpleType(mapValue, fieldType);
                     field.set(bean, value);
                 } catch (Throwable ignored) {
 
@@ -46,7 +46,7 @@ public final class ObjectUtils {
      * 处理字符串，基础类型以及对应的包装类型
      */
     @SuppressWarnings("unchecked")
-    public static <T> T parseSimpleType(String value, Class<T> targetClass) {
+    public static <T> T parseSimpleType(Object value, Class<T> targetClass) {
         if (StringUtils.isEmpty(value)) {
             return null;
         }
@@ -55,11 +55,11 @@ public final class ObjectUtils {
             MethodHandle valueOf = null;
             try {
                 valueOf = MethodHandles.lookup().unreflect(wrapType.getMethod("valueOf", String.class));
-                return (T) valueOf.invoke(value);
+                return (T) valueOf.invoke(value.toString());
             } catch (Throwable ignored) {
 
             }
-        } else if (targetClass == String.class) {
+        } else if (wrapType == value.getClass()) {
             return (T) value;
         }
 
