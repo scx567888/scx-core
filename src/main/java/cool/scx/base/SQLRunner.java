@@ -54,10 +54,11 @@ public final class SQLRunner {
         var list = new ArrayList<T>();
         try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param); var resultSet = preparedStatement.executeQuery()) {
             var resultSetMetaData = resultSet.getMetaData();
+            var count = resultSetMetaData.getColumnCount();
             //从rs中取出数据，并且封装到ArrayList中
             while (resultSet.next()) {
                 var s = new HashMap<String, Object>();
-                for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+                for (int i = 1; i <= count; i++) {
                     s.put(resultSetMetaData.getColumnLabel(i), resultSet.getObject(i));
                 }
                 list.add(ObjectUtils.mapToBean(s, clazz));
@@ -92,10 +93,11 @@ public final class SQLRunner {
         var list = new ArrayList<Map<String, Object>>();
         try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param); var resultSet = preparedStatement.executeQuery()) {
             var resultSetMetaData = resultSet.getMetaData();
+            var count = resultSetMetaData.getColumnCount();
             //从rs中取出数据，并且封装到ArrayList中
             while (resultSet.next()) {
                 var s = new HashMap<String, Object>();
-                for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+                for (int i = 1; i <= count; i++) {
                     s.put(resultSetMetaData.getColumnLabel(i), resultSet.getObject(i));
                 }
                 list.add(s);

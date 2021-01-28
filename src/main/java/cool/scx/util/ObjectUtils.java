@@ -1,10 +1,9 @@
 package cool.scx.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -12,8 +11,47 @@ import java.util.Map;
 
 public final class ObjectUtils {
 
-    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     public static final LocalVariableTableParameterNameDiscoverer u = new LocalVariableTableParameterNameDiscoverer();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    static {
+        objectMapper.findAndRegisterModules();
+    }
+
+    public static String beanToJson(Object o) {
+        try {
+            return objectMapper.writeValueAsString(o);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JsonNode JsonToTree(String json) {
+        try {
+            return objectMapper.readTree(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static <T> T jsonToBean(String json, Class<T> clazz) {
+        try {
+            return objectMapper.readValue(json, clazz);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static <T> T jsonNodeToBean(JsonNode jsonNode, Class<T> clazz) {
+        try {
+            return objectMapper.treeToValue(jsonNode, clazz);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public static <T> T mapToBean(Map<String, ?> map, Class<T> clazz) {
         T bean; // 构建对象
@@ -26,19 +64,19 @@ public final class ObjectUtils {
         if (map == null) {
             return bean;
         }
-        for (Field field : clazz.getFields()) {
-            var fieldType = field.getType();
+
+        for (var field : clazz.getFields()) {
+            field.setAccessible(true);
             var mapValue = map.get(field.getName());
             if (mapValue != null) {
                 try {
-                    var value = parseSimpleType(mapValue, fieldType);
-                    field.set(bean, value);
-                } catch (Throwable ignored) {
+                    field.set(bean, parseSimpleType(mapValue, field.getType()));
+                } catch (Exception ignored) {
 
                 }
-
             }
         }
+
         return bean;
     }
 
@@ -47,20 +85,32 @@ public final class ObjectUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T parseSimpleType(Object value, Class<T> targetClass) {
-        if (StringUtils.isEmpty(value)) {
-            return null;
-        }
-        var wrapType = Primitives.wrap(targetClass);
-        if (Primitives.allWrapperTypes().contains(wrapType)) {
-            MethodHandle valueOf = null;
-            try {
-                valueOf = MethodHandles.lookup().unreflect(wrapType.getMethod("valueOf", String.class));
-                return (T) valueOf.invoke(value.toString());
-            } catch (Throwable ignored) {
-
-            }
-        } else if (wrapType == value.getClass()) {
+        if (value == null || targetClass == value.getClass()) {
             return (T) value;
+        }
+        if (targetClass == Integer.class || targetClass == int.class) {
+            return (T) Integer.valueOf(value.toString());
+        }
+        if (targetClass == Boolean.class || targetClass == boolean.class) {
+            return (T) Boolean.valueOf(value.toString());
+        }
+        if (targetClass == Byte.class || targetClass == byte.class) {
+            return (T) Byte.valueOf(value.toString());
+        }
+        if (targetClass == Character.class || targetClass == char.class) {
+            return (T) value;
+        }
+        if (targetClass == Double.class || targetClass == double.class) {
+            return (T) Double.valueOf(value.toString());
+        }
+        if (targetClass == Float.class || targetClass == float.class) {
+            return (T) Float.valueOf(value.toString());
+        }
+        if (targetClass == Long.class || targetClass == long.class) {
+            return (T) Long.valueOf(value.toString());
+        }
+        if (targetClass == Short.class || targetClass == short.class) {
+            return (T) Short.valueOf(value.toString());
         }
 
         return null;

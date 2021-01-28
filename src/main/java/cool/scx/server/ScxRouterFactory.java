@@ -1,11 +1,10 @@
 package cool.scx.server;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.boot.ScxConfig;
 import cool.scx.boot.ScxContext;
+import cool.scx.util.ObjectUtils;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Html;
@@ -23,12 +22,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 public final class ScxRouterFactory {
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-    static {
-        OBJECT_MAPPER.findAndRegisterModules();
-    }
 
     public static Router getRouter(Vertx vertx) {
         var router = Router.router(vertx);
@@ -97,12 +90,7 @@ public final class ScxRouterFactory {
         if (aClass == Html.class) {
             return ((Html) result).getHtmlStr();
         }
-        try {
-            return OBJECT_MAPPER.writeValueAsString(result);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return ObjectUtils.beanToJson(result);
     }
 
     private static void fillContentType(HttpServerResponse response, ScxRouteHandler scxRouteHandler) {

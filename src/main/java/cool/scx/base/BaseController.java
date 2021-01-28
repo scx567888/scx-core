@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 @ScxController("api")
@@ -172,8 +171,8 @@ public class BaseController {
         modelName = modelName.toLowerCase();
         var modelClass = ScxContext.getBaseModelClassByName(modelName);
         var baseServiceByName = (BaseService<Object>) ScxContext.getBaseServiceByName(modelName + "service");
-        var objects = baseServiceByName.listMapAll();
-        return Json.ok().tables(objects, 100);
+        var objects = baseServiceByName.listAll();
+        return Json.ok().tables(objects, objects.size());
     }
 
     /**

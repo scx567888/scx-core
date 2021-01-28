@@ -1,6 +1,5 @@
 package cool.scx.server;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.util.ObjectUtils;
@@ -25,32 +24,18 @@ public final class ScxRouteHandler {
     public static Object[] getHandlerParamsFromJson(RoutingContext ctx, Parameter[] parameters, String[] parameterNames) {
         var handlerParams = new Object[parameters.length];
         String jsonStr = ctx.request().method() != HttpMethod.GET ? ctx.getBodyAsString() : "";
-        JsonNode rootJsonNode = null;
-        try {
-            rootJsonNode = ObjectUtils.OBJECT_MAPPER.readTree(jsonStr);
-        } catch (JsonProcessingException ignored) {
-
-        }
+        JsonNode rootJsonNode = ObjectUtils.JsonToTree(jsonStr);
         for (int i = 0; i < handlerParams.length; i++) {
             var nowType = parameters[i].getType();
             var nowName = parameterNames[i];
             //先尝试将 body 中的数据进行转换
             if (parameters.length == 1) {
-                try {
-                    handlerParams[i] = ObjectUtils.OBJECT_MAPPER.readValue(jsonStr, nowType);
-                } catch (Exception e) {
-                    try {
-                        handlerParams[i] = ObjectUtils.OBJECT_MAPPER.treeToValue(rootJsonNode.get(nowName), nowType);
-                    } catch (Exception ignored) {
-
-                    }
+                handlerParams[i] = ObjectUtils.jsonToBean(jsonStr, nowType);
+                if (handlerParams[i] == null) {
+                    handlerParams[i] = ObjectUtils.jsonNodeToBean(rootJsonNode.get(nowName), nowType);
                 }
             } else {
-                try {
-                    handlerParams[i] = ObjectUtils.OBJECT_MAPPER.treeToValue(rootJsonNode.get(nowName), nowType);
-                } catch (Exception ignored) {
-
-                }
+                handlerParams[i] = ObjectUtils.jsonNodeToBean(rootJsonNode.get(nowName), nowType);
             }
         }
         return handlerParams;
