@@ -4,7 +4,6 @@ import cool.scx.annotation.Column;
 import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;
 import cool.scx.boot.ScxConfig;
-import cool.scx.enumeration.SortType;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
@@ -14,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class BaseDao<Entity> {
+public final class BaseDao<Entity extends BaseModel> {
 
     private static final Map<String, TableInfo> tableCache = new ConcurrentHashMap<>(256);
     private final TableInfo table;
@@ -112,7 +111,6 @@ public final class BaseDao<Entity> {
         }).toArray(String[]::new);
     }
 
-
     private static String getSQlColumnTypeByClass(Class<?> clazz) {
         var TypeMapping = new HashMap<Class<?>, String>();
         TypeMapping.put(java.lang.Integer.class, "int");
@@ -161,14 +159,6 @@ public final class BaseDao<Entity> {
         var c = Stream.of(table.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
         var sql = SQLBuilder.Insert(table.tableName).Columns(c).Values(c).GetSQL();
         return SQLRunner.update(sql, ObjectUtils.beanToMap(entity)).generatedKeys.get(0);
-    }
-
-    public Entity get(Param<Entity> param) {
-        var sql = SQLBuilder.Select(table.tableName).SelectColumns(table.selectColumns)
-                .Where(getWhereColumns(param.queryObject, false)).WhereSql(param.whereSql)
-                .Pagination(1).GetSQL();
-        var list = SQLRunner.query(entityClass, sql, ObjectUtils.beanToMap(param.queryObject));
-        return list.size() > 0 ? list.get(0) : null;
     }
 
     public List<Map<String, Object>> getFieldList(String fieldName) {
@@ -261,17 +251,6 @@ public final class BaseDao<Entity> {
         return SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject));
     }
 
-    public List<Map<String, Object>> listMapAll() {
-        Entity entity = null;
-        try {
-            entity = entityClass.getDeclaredConstructor().newInstance();
-        } catch (Exception ignored) {
-        }
-        var param = new Param<>(Objects.requireNonNull(entity));
-        param.addOrderBy("id", SortType.DESC);
-        return listMap(param);
-    }
-
     public List<Entity> list(Param<Entity> param) {
         var sql = SQLBuilder.Select().SelectColumns(table.selectColumns).Table(table.tableName)
                 .Where(getWhereColumns(param.queryObject, false))
@@ -283,34 +262,6 @@ public final class BaseDao<Entity> {
         return SQLRunner.query(entityClass, sql, ObjectUtils.beanToMap(param.queryObject));
     }
 
-    public List<Entity> listAll() {
-        Entity entity = null;
-        try {
-            entity = entityClass.getDeclaredConstructor().newInstance();
-        } catch (Exception ignored) {
-        }
-        var param = new Param<>(Objects.requireNonNull(entity));
-        param.addOrderBy("id", SortType.DESC);
-        return list(param);
-    }
-
-    public Entity getById(Long id) {
-        if (id == null) {
-            return null;
-        }
-        var sql = SQLBuilder.Select(table.tableName).SelectColumns(table.selectColumns)
-                .WhereSql("id = " + id.toString())
-                .Pagination(1).GetSQL();
-        var list = SQLRunner.query(entityClass, sql, new HashMap<>());
-        return list.size() > 0 ? list.get(0) : null;
-    }
-
-    public Integer deleteByIds(Long... ids) {
-        var whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        var sql = SQLBuilder.Delete().Table(table.tableName).WhereSql(whereSql).GetSQL();
-        return SQLRunner.update(sql, new HashMap<>()).affectedLength;
-    }
-
     public Integer delete(Param<Entity> param) {
         //将 对象转换为 map 方便处理
         var entityMap = ObjectUtils.beanToMap(param.queryObject);
@@ -320,9 +271,9 @@ public final class BaseDao<Entity> {
         return SQLRunner.update(sql, entityMap).affectedLength;
     }
 
-    public Entity update(Param<Entity> param, boolean includeNull) {
+    public List<Long> update(Param<Entity> param, boolean includeNull) {
         var beanMap = ObjectUtils.beanToMap(param.queryObject);
-        Object id = beanMap.get("id");
+        Long id = param.queryObject.id;
         var sql = SQLBuilder.Update(table.tableName);
         if (id != null) {
             var setColumns = Stream.of(table.canUpdateFields)
@@ -334,9 +285,7 @@ public final class BaseDao<Entity> {
         } else {
             throw new RuntimeException("更新数据时必须指定 id 或 自定义的 where 语句 !!!");
         }
-
-        SQLRunner.update(sql.GetSQL(), beanMap);
-        return getById(Long.parseLong(String.valueOf(id)));
+        return SQLRunner.update(sql.GetSQL(), beanMap).generatedKeys;
     }
 
     private static class TableInfo {

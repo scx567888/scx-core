@@ -3,10 +3,14 @@ package cool.scx.util;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,14 +22,17 @@ public final class ObjectUtils {
     };
 
     static {
-        objectMapper.findAndRegisterModules();
+        var timeModule = new JavaTimeModule();
+        var dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        timeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(dateTimeFormatter));
+        timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(dateTimeFormatter));
+        objectMapper.registerModule(timeModule);
     }
 
     public static String beanToJson(Object o) {
         try {
             return objectMapper.writeValueAsString(o);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -34,7 +41,6 @@ public final class ObjectUtils {
         try {
             return objectMapper.readTree(json);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -51,7 +57,6 @@ public final class ObjectUtils {
         try {
             return objectMapper.treeToValue(jsonNode, clazz);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -103,13 +108,8 @@ public final class ObjectUtils {
     public static Map<String, Object> beanToMapWithIndex(Integer index, Object o) {
         var clazzFields = o.getClass().getFields(); // 获取所有方法
         var objectMap = new HashMap<String, Object>(1 + (int) (clazzFields.length / 0.75));
-        for (Field field : clazzFields) {
-            var fieldName = field.getName(); // 截取属性名
-            try {
-                objectMap.put("list" + index + "." + fieldName, field.get(o));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        for (var field : clazzFields) {
+            objectMap.put("list" + index + "." + field.getName(), getFieldValue(field, o));
         }
         return objectMap;
     }
@@ -128,21 +128,6 @@ public final class ObjectUtils {
             e.printStackTrace();
             return null;
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T[] concatArray(T[] arr1, T[] arr2) {
-        final T[] result = (T[]) Array.newInstance(arr1.getClass().getComponentType(), arr1.length + arr2.length);
-        int index = 0;
-        for (T e : arr1) {
-            result[index] = e;
-            index++;
-        }
-        for (T e : arr2) {
-            result[index] = e;
-            index++;
-        }
-        return result;
     }
 
 }

@@ -1,10 +1,14 @@
 package cool.scx.base;
 
+import cool.scx.boot.ScxConfig;
+import cool.scx.enumeration.SortType;
+
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
-public abstract class BaseService<Entity> {
+public abstract class BaseService<Entity extends BaseModel> {
 
     private final BaseDao<Entity> baseDao;
     private final Class<Entity> entityClass;
@@ -43,7 +47,9 @@ public abstract class BaseService<Entity> {
      * @return 被删除的数据条数 用于前台分页优化
      */
     public Integer deleteByIds(Long... ids) {
-        return baseDao.deleteByIds(ids);
+        var defaultParam = getDefaultParam();
+        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
+        return baseDao.delete(defaultParam);
     }
 
     /**
@@ -56,8 +62,11 @@ public abstract class BaseService<Entity> {
         return baseDao.delete(param);
     }
 
-    public Entity update(Param<Entity> param) {
-        return baseDao.update(param, false);
+    public List<Entity> update(Param<Entity> param) {
+        var ids = baseDao.update(param, false);
+        var defaultParam = getDefaultParam();
+        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
+        return baseDao.list(defaultParam);
     }
 
     /**
@@ -67,19 +76,28 @@ public abstract class BaseService<Entity> {
      * @return e
      */
     public Entity getById(Long id) {
-        return baseDao.getById(id);
+        var defaultParam = getDefaultParam();
+        defaultParam.whereSql = "id = " + id;
+        defaultParam.setPagination(1);
+        List<Entity> list = baseDao.list(defaultParam);
+        return list.size() > 0 ? list.get(0) : null;
     }
 
     public Entity updateById(Entity entity) {
-        return baseDao.update(new Param<>(entity), false);
+        var defaultParam = new Param<>(entity);
+        var ids = baseDao.update(defaultParam, false);
+        return getById(ids.get(0));
     }
 
     public Entity updateIncludeNull(Param<Entity> param) {
-        return baseDao.update(param, true);
+        var ids = baseDao.update(param, true);
+        return getById(ids.get(0));
     }
 
     public List<Entity> listAll() {
-        return baseDao.listAll();
+        var param = getDefaultParam();
+        param.addOrderBy("id", SortType.DESC);
+        return list(param);
     }
 
     /**
@@ -90,19 +108,29 @@ public abstract class BaseService<Entity> {
      * @return e
      */
     public List<Entity> list(Param<Entity> param) {
+        if (!ScxConfig.realDelete) {
+            param.queryObject.isDeleted = false;
+        }
         return baseDao.list(param);
     }
 
     public List<Map<String, Object>> listMapAll() {
-        return baseDao.listMapAll();
+        var param = getDefaultParam();
+        param.addOrderBy("id", SortType.DESC);
+        return listMap(param);
     }
 
-
     public List<Map<String, Object>> listMap(Param<Entity> param) {
+        if (!ScxConfig.realDelete) {
+            param.queryObject.isDeleted = false;
+        }
         return baseDao.listMap(param);
     }
 
     public Integer count(Param<Entity> param) {
+        if (!ScxConfig.realDelete) {
+            param.queryObject.isDeleted = false;
+        }
         return baseDao.count(param, false);
     }
 
@@ -113,6 +141,9 @@ public abstract class BaseService<Entity> {
      * @return e
      */
     public Integer countIgnoreLike(Param<Entity> param) {
+        if (!ScxConfig.realDelete) {
+            param.queryObject.isDeleted = false;
+        }
         return baseDao.count(param, true);
     }
 
@@ -133,7 +164,21 @@ public abstract class BaseService<Entity> {
      * @return e
      */
     public Entity get(Param<Entity> param) {
-        return baseDao.get(param);
+        if (!ScxConfig.realDelete) {
+            param.queryObject.isDeleted = false;
+        }
+        param.setPagination(1);
+        var list = baseDao.list(param);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+
+    private Param<Entity> getDefaultParam() {
+        Entity entity = null;
+        try {
+            entity = entityClass.getDeclaredConstructor().newInstance();
+        } catch (Exception ignored) {
+        }
+        return new Param<>(entity);
     }
 
 }

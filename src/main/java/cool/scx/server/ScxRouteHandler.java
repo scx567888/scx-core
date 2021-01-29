@@ -29,12 +29,8 @@ public final class ScxRouteHandler {
             var nowType = parameters[i].getType();
             var nowName = parameterNames[i];
             //先尝试将 body 中的数据进行转换
-            if (parameters.length == 1) {
-                handlerParams[i] = ObjectUtils.jsonToBean(jsonStr, nowType);
-                if (handlerParams[i] == null) {
-                    handlerParams[i] = ObjectUtils.jsonNodeToBean(rootJsonNode.get(nowName), nowType);
-                }
-            } else {
+            handlerParams[i] = ObjectUtils.jsonToBean(jsonStr, nowType);
+            if (handlerParams[i] == null) {
                 handlerParams[i] = ObjectUtils.jsonNodeToBean(rootJsonNode.get(nowName), nowType);
             }
         }
@@ -103,7 +99,7 @@ public final class ScxRouteHandler {
         try {
             return method.invoke(example, finalHandlerParams);
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-            e.getCause();
+            e.printStackTrace();
             return "服务器发生错误";
         }
 

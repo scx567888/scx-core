@@ -16,7 +16,6 @@ import cool.scx.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -151,31 +150,34 @@ public class BaseController {
 //    }
 //
     @ScxMapping(value = ":modelName/list", httpMethod = HttpMethod.GET)
-    public Json listAll(String modelName) {
-
+    public Json listAll(String modelName, Map<String, Object> objectMap) {
+        System.out.println();
         modelName = modelName.toLowerCase();
         var modelClass = ScxContext.getBaseModelClassByName(modelName);
-        var baseServiceByName = (BaseService<Object>) ScxContext.getBaseServiceByName(modelName + "service");
-        var s = LocalDateTime.now();
-//        List<Object> objects = baseServiceByName.listAll();
-        var s1 = LocalDateTime.now();
-        var duration = Duration.between(s, s1);
-        return Json.ok().tables(duration.toMillis(), 666);
+        var baseServiceByName = (BaseService<?>) ScxContext.getBaseServiceByName(modelName + "service");
+        var objects = baseServiceByName.listMapAll();
+        return Json.ok().tables(objects, objects.size());
     }
 
     /**
-     * 实体插入新对象,并返回主键id值
+     * 实体插入新对象,并返回插入的实体
      *
-     * @param entity 实体
+     * @param modelName model 的名称
+     * @param entityMap 前台传过来的 map 以键值对的形式表示的 实体类
      * @return 实体
      */
-    @ScxMapping(value = ":modelName/save", httpMethod = HttpMethod.GET)
-    public Long save(String modelName, Map<String, Object> entity) {
-        modelName = modelName.toLowerCase();
-        var modelClass = ScxContext.getBaseModelClassByName(modelName);
-        var baseServiceByName = (BaseService<Object>) ScxContext.getBaseServiceByName(modelName + "service");
-        Object o = ObjectUtils.mapToBean(entity, modelClass);
-        return baseServiceByName.save(o);
+    @ScxMapping(value = ":modelName/save", httpMethod = HttpMethod.POST)
+    @SuppressWarnings("unchecked")
+    public Json save(String modelName, Map<String, Object> entityMap) {
+        if (entityMap != null) {
+            modelName = modelName.toLowerCase();
+            var baseService = (BaseService<BaseModel>) ScxContext.getBaseServiceByName(modelName + "service");
+            var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getBaseModelClassByName(modelName));
+            var newObjectId = baseService.save(realObject);
+            var newObject=baseService.getById(newObjectId);
+            return Json.ok().items(newObject);
+        }
+        return Json.fail("参数为空");
     }
 
     /**
