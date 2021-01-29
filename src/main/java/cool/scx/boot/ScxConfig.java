@@ -38,6 +38,14 @@ public final class ScxConfig {
     public static final boolean fixTable;
     public static final File pluginRoot;
     public static final Set<String> pluginDisabledList;
+    public static final String[] checkPermsUrls = new String[]{
+            "/api/*",
+    };
+    public static final String[] excludeCheckPermsUrls = new String[]{
+            "/api/user/login",
+            "/api/user/login",
+            "/api/user/login",
+    };
 
     static {
         StringUtils.println("ScxConfig v" + coreVersion + " 初始化中...", StringUtils.Color.BRIGHT_BLUE);

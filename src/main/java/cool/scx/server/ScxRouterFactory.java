@@ -4,11 +4,13 @@ import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.boot.ScxConfig;
 import cool.scx.boot.ScxContext;
+import cool.scx.business.user.User;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Html;
 import cool.scx.vo.Json;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
@@ -27,9 +29,41 @@ public final class ScxRouterFactory {
         var router = Router.router(vertx);
         registerCorsHandler(router);
         registerBodyHandler(router);
+        registerScxPermsHandler(router);
         registerScxMappingHandler(router);
         registerStaticHandler(router);
         return router;
+    }
+
+    private static void registerScxPermsHandler(Router router) {
+        var excludeCheckPermsUrls = Arrays.asList(ScxConfig.excludeCheckPermsUrls);
+        var s = new Handler<RoutingContext>() {
+            @Override
+            public void handle(RoutingContext ctx) {
+                String url = ctx.request().uri().split("\\?")[0];
+                if (!excludeCheckPermsUrls.contains(url)) {
+                    String sToken = ctx.request().getHeader("S-Token");
+                    User user = ScxContext.getUserFromSessionByToken(sToken);
+                    if (user == null) {
+                        HttpServerResponse response = ctx.response();
+                        response.putHeader("content-type", "application/json; charset=utf-8");
+                        response.end(ObjectUtils.beanToJson(Json.fail("没有登录")));
+                    }else{
+                        ctx.next();
+                    }
+                } else {
+                    ctx.next();
+                }
+
+            }
+        };
+        for (String checkPermsUrl : ScxConfig.checkPermsUrls) {
+            router.post(checkPermsUrl).order(0).handler(s);
+            router.put(checkPermsUrl).order(0).handler(s);
+            router.delete(checkPermsUrl).order(0).handler(s);
+            router.get(checkPermsUrl).order(0).handler(s);
+        }
+
     }
 
     private static void registerCorsHandler(Router router) {
@@ -50,7 +84,7 @@ public final class ScxRouterFactory {
         allowedMethods.add(HttpMethod.PATCH);
         allowedMethods.add(HttpMethod.PUT);
 
-        router.route().handler(CorsHandler.create(ScxConfig.allowedOrigin).allowedHeaders(allowedHeaders).allowedMethods(allowedMethods).allowCredentials(true));
+        router.route().order(0).handler(CorsHandler.create(ScxConfig.allowedOrigin).allowedHeaders(allowedHeaders).allowedMethods(allowedMethods).allowCredentials(true));
     }
 
     private static void registerBodyHandler(Router router) {
