@@ -25,6 +25,9 @@
     <a target="_blank" href="https://github.com/apache/poi">
         <img src="https://img.shields.io/badge/Freemarker-2.3.30-blue"/>
     </a>
+    <a target="_blank" href="https://github.com/apache/poi">
+        <img src="https://img.shields.io/badge/Jackson-2.12.1-blue"/>
+    </a>
 </p>
 
 > 基于 Vert.x 的 后台 Web 快速开发框架
