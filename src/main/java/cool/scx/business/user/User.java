@@ -1,6 +1,5 @@
 package cool.scx.business.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import cool.scx.annotation.Column;
 import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;

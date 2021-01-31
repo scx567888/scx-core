@@ -5,12 +5,15 @@ import cool.scx.annotation.ScxMapping;
 import cool.scx.base.Param;
 import cool.scx.enumeration.SortType;
 import cool.scx.vo.Json;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @ScxController
 public class RoleController {
-    @Autowired
+
     RoleService roleService;
+
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     @ScxMapping(useMethodNameAsUrl = true)
     public Json listRole() {

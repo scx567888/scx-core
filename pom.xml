@@ -41,18 +41,11 @@
             <version>2.12.1</version>
         </dependency>
 
-        <!-- 依赖注入 spring-context -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>5.3.3</version>
-        </dependency>
-
         <!--  数据库 驱动 以及连接池 -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.23</version>
+            <version>8.0.22</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -112,6 +105,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                     <!-- 指定编译时的jdk 版本 -->
                     <source>11</source>
                     <target>11</target>

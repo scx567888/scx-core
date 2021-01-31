@@ -13,7 +13,6 @@ import cool.scx.util.FileUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.vo.Json;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -23,10 +22,8 @@ import java.util.Map;
 public class BaseController {
 
 
-    @Autowired
-    private ScxLogService scxLogService;
-    @Autowired
-    private UserService userService;
+    private final ScxLogService scxLogService;
+    private final UserService userService;
     //
 //    /**
 //     * 根据实体条件查询实体列表带 Like 条件 需要在实体类上注解@Like
@@ -87,8 +84,13 @@ public class BaseController {
 //    public Entity get(Param<Entity> param) {
 //        return baseDao.get(param);
 //    }
-    @Autowired
-    private UploadFileService uploadFileService;
+    private final UploadFileService uploadFileService;
+
+    public BaseController(ScxLogService scxLogService, UserService userService, UploadFileService uploadFileService) {
+        this.scxLogService = scxLogService;
+        this.userService = userService;
+        this.uploadFileService = uploadFileService;
+    }
 
     //    /**
 //     * 批量保存实体 (适用于少量数据 数据量 < 5000)
@@ -174,7 +176,7 @@ public class BaseController {
             var baseService = (BaseService<BaseModel>) ScxContext.getBaseServiceByName(modelName + "service");
             var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getBaseModelClassByName(modelName));
             var newObjectId = baseService.save(realObject);
-            var newObject=baseService.getById(newObjectId);
+            var newObject = baseService.getById(newObjectId);
             return Json.ok().items(newObject);
         }
         return Json.fail("参数为空");

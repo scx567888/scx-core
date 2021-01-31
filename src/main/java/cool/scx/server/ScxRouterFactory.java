@@ -18,7 +18,9 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
+import io.vertx.ext.web.handler.SessionHandler;
 import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.sstore.LocalSessionStore;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,6 +29,8 @@ public final class ScxRouterFactory {
 
     public static Router getRouter(Vertx vertx) {
         var router = Router.router(vertx);
+//        router.route().handler(CookieHandler.c);
+        router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
         registerCorsHandler(router);
         registerBodyHandler(router);
         registerScxPermsHandler(router);
@@ -45,10 +49,11 @@ public final class ScxRouterFactory {
                     String sToken = ctx.request().getHeader("S-Token");
                     User user = ScxContext.getUserFromSessionByToken(sToken);
                     if (user == null) {
-                        HttpServerResponse response = ctx.response();
-                        response.putHeader("content-type", "application/json; charset=utf-8");
-                        response.end(ObjectUtils.beanToJson(Json.fail("没有登录")));
-                    }else{
+//                        HttpServerResponse response = ctx.response();
+//                        response.putHeader("content-type", "application/json; charset=utf-8");
+//                        response.end(ObjectUtils.beanToJson(Json.fail("没有登录")));
+                        ctx.next();
+                    } else {
                         ctx.next();
                     }
                 } else {

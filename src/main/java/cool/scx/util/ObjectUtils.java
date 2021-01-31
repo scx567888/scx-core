@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
@@ -16,7 +15,6 @@ import java.util.Map;
 
 public final class ObjectUtils {
 
-    public static final LocalVariableTableParameterNameDiscoverer u = new LocalVariableTableParameterNameDiscoverer();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final TypeReference<Map<String, Object>> mapType = new TypeReference<>() {
     };
