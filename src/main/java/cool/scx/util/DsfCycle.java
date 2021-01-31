@@ -66,9 +66,6 @@ public class DsfCycle {
         //返回值
         List<String> reslut = new ArrayList<>();
         findCycle(0, trace, reslut);
-        if (reslut.size() == 0) {
-            reslut.add("no cycle!");
-        }
         return reslut;
     }
 

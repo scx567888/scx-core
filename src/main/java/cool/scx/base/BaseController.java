@@ -153,7 +153,6 @@ public class BaseController {
 //
     @ScxMapping(value = ":modelName/list", httpMethod = HttpMethod.GET)
     public Json listAll(String modelName, Map<String, Object> objectMap) {
-        System.out.println();
         modelName = modelName.toLowerCase();
         var modelClass = ScxContext.getBaseModelClassByName(modelName);
         var baseServiceByName = (BaseService<?>) ScxContext.getBaseServiceByName(modelName + "service");
