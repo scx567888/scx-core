@@ -49,9 +49,9 @@ public final class ScxRouterFactory {
                     String sToken = ctx.request().getHeader("S-Token");
                     User user = ScxContext.getUserFromSessionByToken(sToken);
                     if (user == null) {
-                        HttpServerResponse response = ctx.response();
-                        response.putHeader("content-type", "application/json; charset=utf-8");
-                        response.end(ObjectUtils.beanToJson(Json.fail(Json.ILLEGAL_TOKEN, "未登录")));
+//                        HttpServerResponse response = ctx.response();
+//                        response.putHeader("content-type", "application/json; charset=utf-8");
+//                        response.end(ObjectUtils.beanToJson(Json.fail(Json.ILLEGAL_TOKEN, "未登录")));
                         ctx.next();
                     } else {
                         ctx.next();

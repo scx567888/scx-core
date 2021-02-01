@@ -161,58 +161,17 @@ public final class BaseDao<Entity extends BaseModel> {
         return SQLRunner.update(sql, ObjectUtils.beanToMap(entity)).generatedKeys.get(0);
     }
 
-    public List<Map<String, Object>> getFieldList(String fieldName) {
-        if (Arrays.stream(table.allFields).filter(field -> field.getName().equals(fieldName)).count() == 1) {
-            var sql = SQLBuilder.Select(table.tableName).SelectColumns(new String[]{StringUtils.camel2Underscore(fieldName) + " As value "})
-                    .WhereSql(ScxConfig.realDelete ? "" : "WHERE is_deleted = FALSE").GroupBy(new HashSet<>() {{
-                        add("value");
-                    }}).GetSQL();
-            return SQLRunner.query(sql, new HashMap<>());
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
-    /**
-     * 根据实体类 获取 where 条件的语句
-     *
-     * @param entity 实体类
-     * @return sql
-     */
-    private String[] getWhereColumns(Entity entity, boolean ignoreLike) {
-
-        return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
-                .map(field -> StringUtils.camel2Underscore(field.getName()) +
-                        (((field.getAnnotation(Column.class) != null && field.getAnnotation(Column.class).useLike()) && ignoreLike) ? " LIKE  CONCAT('%',:" + field.getName() + ",'%')" : " = :" + field.getName()))
-                .toArray(String[]::new);
-    }
-
-    /**
-     * 批量保存实体 (适用于大量数据 数据量 > 10万)
-     *
-     * @param entityList 实体集合
-     * @return 插入成功的数据 自增主键
-     */
-    public List<Long> saveListLargeData(List<Entity> entityList) {
+    public List<Long> saveList(List<Entity> entityList) {
         var splitSize = 5000;
-        var entityListSize = entityList.size();
-        if (entityListSize < splitSize) {
-            return saveList(entityList);
-        } else {
+        var size = entityList.size();
+        if (size > splitSize) {
+            StringUtils.println("批量插入数据量过大 , 达到" + size + "条 !!! 已显式调用 saveListLargeData() !!!", StringUtils.Color.BRIGHT_RED);
             var generatedKeys = new ArrayList<Long>(splitSize);
-            int number = entityListSize / splitSize;
+            int number = size / splitSize;
             for (int i = 0; i < number; i++) {
-                generatedKeys.addAll(saveList(entityList.subList(i * splitSize, (Math.min((i + 1) * splitSize, entityListSize)))));
+                generatedKeys.addAll(saveList(entityList.subList(i * splitSize, (Math.min((i + 1) * splitSize, size)))));
             }
             return generatedKeys;
-        }
-    }
-
-    public List<Long> saveList(List<Entity> entityList) {
-        var size = entityList.size();
-        if (size > 6000) {
-            StringUtils.println("批量插入数据量过大 , 达到" + size + "条 !!! 已显式调用 saveListLargeData() !!!", StringUtils.Color.BRIGHT_RED);
-            return saveListLargeData(entityList);
         }
         var values = new String[entityList.size()][table.canInsertFields.length];
         var map = new LinkedHashMap<String, Object>();
@@ -230,6 +189,28 @@ public final class BaseDao<Entity extends BaseModel> {
         return SQLRunner.update(sql, map).generatedKeys;
     }
 
+    public List<Entity> list(Param<Entity> param, boolean ignoreLike) {
+        var sql = SQLBuilder.Select().SelectColumns(table.selectColumns).Table(table.tableName)
+                .Where(getWhereColumns(param.queryObject, ignoreLike))
+                .WhereSql(param.whereSql)
+                .GroupBy(param.groupBy)
+                .OrderBy(param.orderBy)
+                .Pagination(param.getPage(), param.getLimit())
+                .GetSQL();
+        return SQLRunner.query(entityClass, sql, ObjectUtils.beanToMap(param.queryObject));
+    }
+
+    public List<Map<String, Object>> listMap(Param<Entity> param, boolean ignoreLike) {
+        var sql = SQLBuilder.Select().SelectColumns(table.selectColumns).Table(table.tableName)
+                .Where(getWhereColumns(param.queryObject, ignoreLike))
+                .WhereSql(param.whereSql)
+                .GroupBy(param.groupBy)
+                .OrderBy(param.orderBy)
+                .Pagination(param.getPage(), param.getLimit())
+                .GetSQL();
+        return SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject));
+    }
+
     public Integer count(Param<Entity> param, boolean ignoreLike) {
         var sql = SQLBuilder.Select(table.tableName).SelectColumns(new String[]{"COUNT(*)"})
                 .Where(getWhereColumns(param.queryObject, ignoreLike))
@@ -237,29 +218,6 @@ public final class BaseDao<Entity extends BaseModel> {
                 .GroupBy(param.groupBy)
                 .GetSQL();
         return Integer.parseInt(SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject)).get(0).get("COUNT(*)").toString());
-    }
-
-    public List<Map<String, Object>> listMap(Param<Entity> param) {
-        var sql = SQLBuilder.Select().SelectColumns(table.selectColumns).Table(table.tableName)
-                .Where(getWhereColumns(param.queryObject, false))
-                .WhereSql(param.whereSql)
-                .GroupBy(param.groupBy)
-                .OrderBy(param.orderBy)
-                .Pagination(param.getPage(), param.getLimit())
-                .GetSQL();
-
-        return SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject));
-    }
-
-    public List<Entity> list(Param<Entity> param) {
-        var sql = SQLBuilder.Select().SelectColumns(table.selectColumns).Table(table.tableName)
-                .Where(getWhereColumns(param.queryObject, false))
-                .WhereSql(param.whereSql)
-                .GroupBy(param.groupBy)
-                .OrderBy(param.orderBy)
-                .Pagination(param.getPage(), param.getLimit())
-                .GetSQL();
-        return SQLRunner.query(entityClass, sql, ObjectUtils.beanToMap(param.queryObject));
     }
 
     public Integer delete(Param<Entity> param) {
@@ -286,6 +244,25 @@ public final class BaseDao<Entity extends BaseModel> {
             throw new RuntimeException("更新数据时必须指定 id 或 自定义的 where 语句 !!!");
         }
         return SQLRunner.update(sql.GetSQL(), beanMap).generatedKeys;
+    }
+
+    public List<Map<String, Object>> getFieldList(String fieldName) {
+        if (Arrays.stream(table.allFields).filter(field -> field.getName().equals(fieldName)).count() == 1) {
+            var sql = SQLBuilder.Select(table.tableName).SelectColumns(new String[]{StringUtils.camel2Underscore(fieldName) + " As value "})
+                    .WhereSql(ScxConfig.realDelete ? "" : "WHERE is_deleted = FALSE").GroupBy(new HashSet<>() {{
+                        add("value");
+                    }}).GetSQL();
+            return SQLRunner.query(sql, new HashMap<>());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    private String[] getWhereColumns(Entity entity, boolean ignoreLike) {
+        return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
+                .map(field -> StringUtils.camel2Underscore(field.getName()) +
+                        (((field.getAnnotation(Column.class) != null && field.getAnnotation(Column.class).useLike()) && ignoreLike) ? " LIKE  CONCAT('%',:" + field.getName() + ",'%')" : " = :" + field.getName()))
+                .toArray(String[]::new);
     }
 
     private static class TableInfo {

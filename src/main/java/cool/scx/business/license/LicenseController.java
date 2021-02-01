@@ -85,7 +85,7 @@ public class LicenseController {
             myLicense.id = 1L;
             myLicense.flag = true;
             myLicense.lastTime = "2000-01-01";
-            licenseService.updateById(myLicense);
+            licenseService.update(myLicense);
             license = "密钥恢复完成现在可以正常使用";
         }
         return getHtml(license);

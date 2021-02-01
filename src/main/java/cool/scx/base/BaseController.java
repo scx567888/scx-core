@@ -9,6 +9,7 @@ import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
 import cool.scx.business.user.UserService;
 import cool.scx.enumeration.HttpMethod;
+import cool.scx.enumeration.SortType;
 import cool.scx.util.FileUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
@@ -153,11 +154,26 @@ public class BaseController {
 //
     @ScxMapping(value = ":modelName/list", httpMethod = HttpMethod.GET)
     public Json listAll(String modelName, Map<String, Object> objectMap) {
+//        var userList=new ArrayList<User>(100000);
+//        for (int i = 0; i < 100000; i++) {
+//            var u=new User();
+//            u.password="password"+i;
+//            u.username="司昌旭"+i;
+//            u.salt="salt"+i;
+//            u.level=2;
+//            userList.add(u);
+//        }
+//        List<Long> longs = userService.saveList(userList);
+
         modelName = modelName.toLowerCase();
         var modelClass = ScxContext.getBaseModelClassByName(modelName);
         var baseServiceByName = (BaseService<?>) ScxContext.getBaseServiceByName(modelName + "service");
-        var objects = baseServiceByName.listMapAll();
-        return Json.ok().tables(objects, objects.size());
+        Param p = baseServiceByName.getDefaultParam();
+        p.setPagination(1000);
+        p.addOrderBy("id", SortType.DESC);
+        p.addGroupBy("level");
+        var objects = baseServiceByName.list(p);
+        return Json.ok().tables(objects, 666);
     }
 
     /**

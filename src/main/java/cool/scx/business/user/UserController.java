@@ -144,7 +144,7 @@ public class UserController {
         var password = (String) params.get("password");
         var newUser = new Param<>(new User());
 
-        newUser.addOrderBy(SortType.ASC).queryObject.username = username;
+        newUser.addOrderBy("id", SortType.ASC).queryObject.username = username;
 
         User user = userService.get(newUser);
         if (user != null) {
@@ -214,7 +214,7 @@ public class UserController {
     public Json avatarUpdate(User queryUser) {
         var currentUser = ScxContext.getCurrentUser();
         currentUser.avatarId = queryUser.avatarId;
-        var b = userService.updateById(currentUser) != null;
+        var b = userService.update(currentUser) != null;
         ScxLogService.outLog("更改了头像 用户名是 :" + currentUser.username);
         return Json.ok().data("success", b);
     }

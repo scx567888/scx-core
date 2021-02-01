@@ -146,7 +146,7 @@ public class UserService extends BaseService<User> {
         } else {
             user.password = null;
         }
-        return updateById(user);
+        return update(user);
     }
 
     /**
@@ -263,7 +263,7 @@ public class UserService extends BaseService<User> {
         userRoleService.delete(deleteUserRole);
         saveUserDeptIds(user.id, deptIds);
         saveUserRoleIds(user.id, roleIds);
-        User update = updateById(user);
+        User update = update(user);
         update.roleIds = user.roleIds;
         update.deptIds = user.deptIds;
         return update;
@@ -300,7 +300,7 @@ public class UserService extends BaseService<User> {
 
         userRoleService.update(userRole);
         userDeptService.update(userDept);
-        return updateById(user);
+        return update(user);
     }
 
     /**

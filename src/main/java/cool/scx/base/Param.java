@@ -31,10 +31,6 @@ public final class Param<Entity> {
         return this;
     }
 
-    public Param<Entity> addOrderBy(SortType sortType) {
-        return addOrderBy("modelOrder", sortType);
-    }
-
     public Param<Entity> addGroupBy(String groupByColumn) {
         if (checkStringInFields(groupByColumn)) {
             this.groupBy.add(groupByColumn);

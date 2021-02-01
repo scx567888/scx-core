@@ -62,13 +62,6 @@ public abstract class BaseService<Entity extends BaseModel> {
         return baseDao.delete(param);
     }
 
-    public List<Entity> update(Param<Entity> param) {
-        var ids = baseDao.update(param, false);
-        var defaultParam = getDefaultParam();
-        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        return baseDao.list(defaultParam);
-    }
-
     /**
      * 根据主键查询
      *
@@ -78,18 +71,37 @@ public abstract class BaseService<Entity extends BaseModel> {
     public Entity getById(Long id) {
         var defaultParam = getDefaultParam();
         defaultParam.setPagination(1).whereSql = "id = " + id;
-        List<Entity> list = baseDao.list(defaultParam);
+        List<Entity> list = baseDao.list(defaultParam, false);
         return list.size() > 0 ? list.get(0) : null;
     }
 
-    public Entity updateById(Entity entity) {
-        var defaultParam = new Param<>(entity);
-        var ids = baseDao.update(defaultParam, false);
+    public List<Entity> update(Param<Entity> param) {
+        var ids = baseDao.update(param, false);
+        var defaultParam = getDefaultParam();
+        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
+        return baseDao.list(defaultParam, false);
+    }
+
+    public Entity update(Entity entity) {
+        var ids = baseDao.update(new Param<>(entity), false);
         return getById(ids.get(0));
     }
 
-    public Entity updateIncludeNull(Param<Entity> param) {
+    /**
+     * 根据 whereSql 更新 保护 null
+     *
+     * @param param 更新的参数
+     * @return 更新后的数据
+     */
+    public List<Entity> updateIncludeNull(Param<Entity> param) {
         var ids = baseDao.update(param, true);
+        var defaultParam = getDefaultParam();
+        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
+        return baseDao.list(defaultParam, false);
+    }
+
+    public Entity updateIncludeNull(Entity entity) {
+        var ids = baseDao.update(new Param<>(entity), true);
         return getById(ids.get(0));
     }
 
@@ -110,7 +122,7 @@ public abstract class BaseService<Entity extends BaseModel> {
         if (!ScxConfig.realDelete) {
             param.queryObject.isDeleted = false;
         }
-        return baseDao.list(param);
+        return baseDao.list(param, false);
     }
 
     public List<Map<String, Object>> listMapAll() {
@@ -123,7 +135,7 @@ public abstract class BaseService<Entity extends BaseModel> {
         if (!ScxConfig.realDelete) {
             param.queryObject.isDeleted = false;
         }
-        return baseDao.listMap(param);
+        return baseDao.listMap(param, false);
     }
 
     public Integer count(Param<Entity> param) {
@@ -167,11 +179,11 @@ public abstract class BaseService<Entity extends BaseModel> {
             param.queryObject.isDeleted = false;
         }
         param.setPagination(1);
-        var list = baseDao.list(param);
+        var list = baseDao.list(param, false);
         return list.size() > 0 ? list.get(0) : null;
     }
 
-    private Param<Entity> getDefaultParam() {
+    public Param<Entity> getDefaultParam() {
         Entity entity = null;
         try {
             entity = entityClass.getDeclaredConstructor().newInstance();

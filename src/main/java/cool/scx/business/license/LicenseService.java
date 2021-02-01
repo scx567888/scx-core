@@ -51,17 +51,17 @@ public class LicenseService extends BaseService<License> {
         //如果密钥 不符合规则 直接 返回错误
         if (date == null) {
             myLicense.flag = false;
-            updateById(myLicense);
+            update(myLicense);
             return false;
         } else if (date.getTime() < now.getTime()) {
             myLicense.flag = false;
-            updateById(myLicense);
+            update(myLicense);
             return false;
         }
         //如果上一次正确的时间 大于 当前时间 证明改过系统时间
         else if (lastTime.getTime() > now.getTime()) {
             myLicense.flag = false;
-            updateById(myLicense);
+            update(myLicense);
             return false;
         }
         //只要 数据库 lincense 的 flag  值  为 1 证明 已经过期 一次了
@@ -70,7 +70,7 @@ public class LicenseService extends BaseService<License> {
         } else {
             myLicense.flag = true;
             myLicense.lastTime = simpleDateFormat.format(now);
-            updateById(myLicense);
+            update(myLicense);
             return true;
         }
     }

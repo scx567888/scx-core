@@ -26,7 +26,7 @@ public class RoleController {
     public Json updateRole(Role bean) {
         Role parentBean = null;
         if (bean != null) {
-            parentBean = roleService.updateById(bean);
+            parentBean = roleService.update(bean);
         }
         return Json.ok().items(parentBean);
     }
