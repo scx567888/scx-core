@@ -32,7 +32,7 @@ public class DeptController {
                 bean.parentStr = str;
             }
             bean.perm = "";
-            Long save = deptService.save(bean);
+            Long save = deptService.save(bean).id;
             bean.id = save;
         }
         return Json.ok().items(bean);

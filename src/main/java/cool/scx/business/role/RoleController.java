@@ -35,7 +35,7 @@ public class RoleController {
     public Json saveRole(Role bean) {
         bean.perm = "";
         bean.type = "2";
-        bean.id = roleService.save(bean);
+        bean.id = roleService.save(bean).id;
         return Json.ok().items(bean);
     }
 }

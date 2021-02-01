@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public class NoticeService extends BaseService<Notice> {
 
     @Override
-    public Long save(Notice notice) {
+    public Notice save(Notice notice) {
         var newId = super.save(notice);
         //发送给所有人 (未在线用户登录的时候进行通知)
         if (notice.sendType == 0) {

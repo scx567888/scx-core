@@ -165,7 +165,7 @@ public final class BaseDao<Entity extends BaseModel> {
         var splitSize = 5000;
         var size = entityList.size();
         if (size > splitSize) {
-            StringUtils.println("批量插入数据量过大 , 达到" + size + "条 !!! 已显式调用 saveListLargeData() !!!", StringUtils.Color.BRIGHT_RED);
+            StringUtils.println("批量插入数据量过大 , 达到" + size + "条 !!! 已按照" + splitSize + "条进行切分 !!!", StringUtils.Color.BRIGHT_RED);
             var generatedKeys = new ArrayList<Long>(splitSize);
             int number = size / splitSize;
             for (int i = 0; i < number; i++) {
@@ -220,16 +220,7 @@ public final class BaseDao<Entity extends BaseModel> {
         return Integer.parseInt(SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject)).get(0).get("COUNT(*)").toString());
     }
 
-    public Integer delete(Param<Entity> param) {
-        //将 对象转换为 map 方便处理
-        var entityMap = ObjectUtils.beanToMap(param.queryObject);
-
-        var sql = SQLBuilder.Delete().Where(getWhereColumns(param.queryObject, false))
-                .WhereSql(param.whereSql).Table(table.tableName).GetSQL();
-        return SQLRunner.update(sql, entityMap).affectedLength;
-    }
-
-    public List<Long> update(Param<Entity> param, boolean includeNull) {
+    public SQLRunner.UpdateResult update(Param<Entity> param, boolean includeNull) {
         var beanMap = ObjectUtils.beanToMap(param.queryObject);
         Long id = param.queryObject.id;
         var sql = SQLBuilder.Update(table.tableName);
@@ -239,11 +230,23 @@ public final class BaseDao<Entity extends BaseModel> {
                     .toArray(Field[]::new);
             sql.UpdateColumns(setColumns).WhereSql(" id = :id ");
         } else if (!StringUtils.isEmpty(param.whereSql)) {
-            sql.UpdateColumns(table.canUpdateFields).WhereSql(param.whereSql);
+            var setColumns = Stream.of(table.canUpdateFields)
+                    .filter(field -> (!includeNull && ObjectUtils.getFieldValue(field, param.queryObject) != null))
+                    .toArray(Field[]::new);
+            sql.UpdateColumns(setColumns).WhereSql(param.whereSql);
         } else {
             throw new RuntimeException("更新数据时必须指定 id 或 自定义的 where 语句 !!!");
         }
-        return SQLRunner.update(sql.GetSQL(), beanMap).generatedKeys;
+        return SQLRunner.update(sql.GetSQL(), beanMap);
+    }
+
+    public Integer delete(Param<Entity> param) {
+        //将 对象转换为 map 方便处理
+        var entityMap = ObjectUtils.beanToMap(param.queryObject);
+
+        var sql = SQLBuilder.Delete().Where(getWhereColumns(param.queryObject, false))
+                .WhereSql(param.whereSql).Table(table.tableName).GetSQL();
+        return SQLRunner.update(sql, entityMap).affectedLength;
     }
 
     public List<Map<String, Object>> getFieldList(String fieldName) {

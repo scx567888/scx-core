@@ -200,7 +200,7 @@ public class UserService extends BaseService<User> {
         var passwordAndSalt = encryptPassword(user.password);
         user.password = passwordAndSalt[0];
         user.salt = passwordAndSalt[1];
-        var tempUserId = save(user);
+        var tempUserId = save(user).id;
         saveUserDeptIds(tempUserId, deptIds);
         saveUserRoleIds(tempUserId, roleIds);
         return tempUserId;

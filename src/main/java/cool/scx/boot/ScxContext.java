@@ -38,7 +38,10 @@ public final class ScxContext {
     private static Map<Class<?>, Object> initBeanMapping() {
         var tempBeanMapping = new HashMap<Class<?>, Object>();
         PackageUtils.scanPackageIncludePlugins(clazz -> {
-            if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class)) {
+            if (clazz.isAnnotationPresent(ScxService.class) ||
+                    clazz.isAnnotationPresent(ScxController.class) ||
+                    clazz.isAnnotationPresent(ScxModel.class)
+            ) {
                 tempBeanMapping.put(clazz, null);
             }
         });
@@ -146,7 +149,7 @@ public final class ScxContext {
                 }
             }
         }
-        return null;
+        throw new RuntimeException("无法创建" + c.getName() + "对应的 bean");
     }
 
     public static void register(Class<?> c) {

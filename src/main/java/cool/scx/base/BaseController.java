@@ -9,7 +9,6 @@ import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
 import cool.scx.business.user.UserService;
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.enumeration.SortType;
 import cool.scx.util.FileUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
@@ -168,11 +167,12 @@ public class BaseController {
         modelName = modelName.toLowerCase();
         var modelClass = ScxContext.getBaseModelClassByName(modelName);
         var baseServiceByName = (BaseService<?>) ScxContext.getBaseServiceByName(modelName + "service");
-        Param p = baseServiceByName.getDefaultParam();
-        p.setPagination(1000);
-        p.addOrderBy("id", SortType.DESC);
-        p.addGroupBy("level");
-        var objects = baseServiceByName.list(p);
+//        Param p =new Param<>(ScxContext.getBean(modelClass));
+//        p.setPagination(1000);
+//        p.addOrderBy("id", SortType.DESC);
+//        p.addGroupBy("level");
+
+        var objects = baseServiceByName.listByIds(100L, 120L, 240L);
         return Json.ok().tables(objects, 666);
     }
 
@@ -190,7 +190,7 @@ public class BaseController {
             modelName = modelName.toLowerCase();
             var baseService = (BaseService<BaseModel>) ScxContext.getBaseServiceByName(modelName + "service");
             var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getBaseModelClassByName(modelName));
-            var newObjectId = baseService.save(realObject);
+            var newObjectId = baseService.save(realObject).id;
             var newObject = baseService.getById(newObjectId);
             return Json.ok().items(newObject);
         }
@@ -328,7 +328,7 @@ public class BaseController {
                 u.filePath = fileWritePath;
                 u.uploadTime = LocalDateTime.now();
                 u.fileSize = fileSize;
-                u.id = uploadFileService.save(u);
+                u.id = uploadFileService.save(u).id;
                 return Json.ok().items(u);
             } else {
                 return Json.fail("上传失败");
