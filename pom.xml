@@ -7,7 +7,7 @@
     <artifactId>scx</artifactId>
     <packaging>jar</packaging>
     <name>scx</name>
-    <version>0.2.5</version>
+    <version>0.2.6</version>
     <description>scx 核心包</description>
     <url>https://github.com/scx567888/scx</url>
 
@@ -79,13 +79,25 @@
             <version>1.2.3</version>
         </dependency>
 
+        <!-- 测试 -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.3.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <repositories>
         <!-- 若想通过maven 引入 scx 包 请添加此地址作为 备用 repository -->
+        <!--        <repository>-->
+        <!--            <id>scx-maven-repo</id>-->
+        <!--            <url>https://scx.cool/maven-repo</url>-->
+        <!--        </repository>-->
         <repository>
-            <id>scx-maven-repo</id>
-            <url>https://scx.cool/maven-repo</url>
+            <id>ali-yun-maven-repo</id>
+            <url>https://maven.aliyun.com/repository/central</url>
         </repository>
     </repositories>
 
@@ -99,6 +111,17 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${project.basedir}/src/test/resources/test/test.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+
             <!-- 此插件用于设置 java 程序编译时的参数 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -129,6 +152,10 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <!-- 只包含运行依赖项 -->
+                            <includeScope>compile</includeScope>
+                            <!-- 排除 test 依赖 -->
+                            <excludeScope>test</excludeScope>
                         </configuration>
                     </execution>
                 </executions>
