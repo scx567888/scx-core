@@ -28,6 +28,7 @@
     "real-delete": false,
     "show-log": true,
     "show-gui": false,
-    "fix-table": true
+    "fix-table": true,
+    "date-time-pattern": "yyyy-MM-dd HH:mm:ss"
   }
 }

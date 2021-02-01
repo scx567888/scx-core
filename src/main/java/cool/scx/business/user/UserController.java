@@ -144,9 +144,8 @@ public class UserController {
         var password = (String) params.get("password");
         var newUser = new Param<>(new User());
 
-        newUser.addOrderBy(SortType.ASC);
+        newUser.addOrderBy(SortType.ASC).queryObject.username = username;
 
-        newUser.queryObject.username = username;
         User user = userService.get(newUser);
         if (user != null) {
             return Json.ok("userAlreadyExists");

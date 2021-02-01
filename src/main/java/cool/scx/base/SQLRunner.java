@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,6 @@ import java.util.regex.Pattern;
 public final class SQLRunner {
 
     private static final HikariDataSource dataSource;
-    private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final Pattern pattern = Pattern.compile("(:([\\w.]+))");
     private static boolean nextSqlPrintColor = false;
 
@@ -83,7 +81,7 @@ public final class SQLRunner {
         }
         if (ScxConfig.showLog) {
             var s = preparedStatement.toString();
-            StringUtils.println(format.format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":")), nextSqlPrintColor ? StringUtils.Color.BLUE : StringUtils.Color.GREEN);
+            StringUtils.println(ScxConfig.dateTimeFormatter.format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":")), nextSqlPrintColor ? StringUtils.Color.BLUE : StringUtils.Color.GREEN);
             nextSqlPrintColor = !nextSqlPrintColor;
         }
         return preparedStatement;

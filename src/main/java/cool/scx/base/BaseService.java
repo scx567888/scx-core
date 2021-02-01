@@ -77,8 +77,7 @@ public abstract class BaseService<Entity extends BaseModel> {
      */
     public Entity getById(Long id) {
         var defaultParam = getDefaultParam();
-        defaultParam.whereSql = "id = " + id;
-        defaultParam.setPagination(1);
+        defaultParam.setPagination(1).whereSql = "id = " + id;
         List<Entity> list = baseDao.list(defaultParam);
         return list.size() > 0 ? list.get(0) : null;
     }

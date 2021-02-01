@@ -3,6 +3,7 @@ package cool.scx.server;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.util.ObjectUtils;
+import cool.scx.vo.Json;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.RoutingContext;
 
@@ -99,9 +100,8 @@ public final class ScxRouteHandler {
             return method.invoke(example, finalHandlerParams);
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
-            return "服务器发生错误";
+            return Json.fail(Json.SYSTEM_ERROR, e.getMessage());
         }
-
     }
 
 }

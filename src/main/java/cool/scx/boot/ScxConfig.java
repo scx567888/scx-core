@@ -8,6 +8,7 @@ import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 
 import java.io.File;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +18,7 @@ import java.util.function.Function;
 public final class ScxConfig {
     public static final String AppKey = "H8QS91GcuNGP9735";
     public static final String tokenKey = "S-Token";
-    public static final String coreVersion = "0.2.2";
+    public static final String coreVersion = "0.2.3";
     public static final File uploadFilePath;
     public static final String datasourceUrl;
     public static final String datasourceUsername;
@@ -38,6 +39,7 @@ public final class ScxConfig {
     public static final boolean fixTable;
     public static final File pluginRoot;
     public static final Set<String> pluginDisabledList;
+    public static final DateTimeFormatter dateTimeFormatter;
     public static final String[] checkPermsUrls = new String[]{
             "/api/*",
     };
@@ -107,6 +109,10 @@ public final class ScxConfig {
         license = getConfigValue("scx.license", null, rootNode,
                 (s) -> NoCode(),
                 (f) -> StringUtils.println("✘ 未检测到 scx.license               \t -->\t 请检查 license 是否正确", StringUtils.Color.RED), JsonNode::asText, (a) -> a);
+
+        dateTimeFormatter = DateTimeFormatter.ofPattern(getConfigValue("scx.date-time-pattern", "yyyy-MM-dd HH:mm:ss", rootNode,
+                (s) -> StringUtils.println("✔ 日期格式为                          \t -->\t " + s, StringUtils.Color.GREEN),
+                (f) -> StringUtils.println("✘ 未检测到 scx.date-time-pattern        \t -->\t 已采用默认值 : " + f, StringUtils.Color.RED), JsonNode::asText, (a) -> a));
 
         cmsRoot = getConfigValue("scx.cms.root", PackageUtils.getFileByAppRoot("/c/"), rootNode,
                 (s) -> StringUtils.println("✔ Cms 根目录                         \t -->\t " + s, StringUtils.Color.GREEN),

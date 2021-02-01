@@ -46,7 +46,7 @@ public final class Param<Entity> {
 
     /**
      * @param limit 每页数量
-     * @param page
+     * @param page  分页数量
      * @return
      */
     public Param<Entity> setPagination(Integer page, Integer limit) {
