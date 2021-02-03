@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public final class SQLRunner {
@@ -48,7 +49,7 @@ public final class SQLRunner {
         return dataSource.getConnection();
     }
 
-    public static <T> ArrayList<T> query(Class<T> clazz, String sql, Map<String, Object> param) {
+    private static <T> ArrayList<T> query(String sql, Map<String, Object> param, Function<Map<String, Object>, T> convertFun) {
         var list = new ArrayList<T>();
         try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param); var resultSet = preparedStatement.executeQuery()) {
             var resultSetMetaData = resultSet.getMetaData();
@@ -59,12 +60,20 @@ public final class SQLRunner {
                 for (int i = 1; i <= count; i++) {
                     s.put(resultSetMetaData.getColumnLabel(i), resultSet.getObject(i));
                 }
-                list.add(ObjectUtils.mapToBean(s, clazz));
+                list.add(convertFun.apply(s));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static <T> List<T> query(String sql, Map<String, Object> param, Class<T> clazz) {
+        return query(sql, param, c -> ObjectUtils.mapToBean(c, clazz));
+    }
+
+    public static List<Map<String, Object>> query(String sql, Map<String, Object> param) {
+        return query(sql, param, c -> c);
     }
 
     /**
@@ -85,25 +94,6 @@ public final class SQLRunner {
             nextSqlPrintColor = !nextSqlPrintColor;
         }
         return preparedStatement;
-    }
-
-    public static List<Map<String, Object>> query(String sql, Map<String, Object> param) {
-        var list = new ArrayList<Map<String, Object>>();
-        try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param); var resultSet = preparedStatement.executeQuery()) {
-            var resultSetMetaData = resultSet.getMetaData();
-            var count = resultSetMetaData.getColumnCount();
-            //从rs中取出数据，并且封装到ArrayList中
-            while (resultSet.next()) {
-                var s = new HashMap<String, Object>();
-                for (int i = 1; i <= count; i++) {
-                    s.put(resultSetMetaData.getColumnLabel(i), resultSet.getObject(i));
-                }
-                list.add(s);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
     }
 
     public static boolean execute(String sql) {

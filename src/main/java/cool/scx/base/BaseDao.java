@@ -197,7 +197,7 @@ public final class BaseDao<Entity extends BaseModel> {
                 .OrderBy(param.orderBy)
                 .Pagination(param.getPage(), param.getLimit())
                 .GetSQL();
-        return SQLRunner.query(entityClass, sql, ObjectUtils.beanToMap(param.queryObject));
+        return SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject), entityClass);
     }
 
     public List<Map<String, Object>> listMap(Param<Entity> param, boolean ignoreLike) {
