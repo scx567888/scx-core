@@ -18,11 +18,11 @@ import java.util.function.Function;
 public final class ScxConfig {
     public static final String AppKey = "H8QS91GcuNGP9735";
     public static final String tokenKey = "S-Token";
-    public static final String coreVersion = "0.2.6";
+    public static final String coreVersion = "0.2.7";
     public static final File uploadFilePath;
-    public static final String datasourceUrl;
-    public static final String datasourceUsername;
-    public static final String datasourcePassword;
+    public static final String dataSourceUrl;
+    public static final String dataSourceUsername;
+    public static final String dataSourcePassword;
     public static final boolean confusionLoginError;
     public static final String license;
     public static final File cmsRoot;
@@ -134,11 +134,11 @@ public final class ScxConfig {
                 (s) -> StringUtils.println("✔ 允许的请求源                           \t -->\t " + s, StringUtils.Color.GREEN),
                 (f) -> StringUtils.println("✘ 未检测到 scx.allowed-origin           \t -->\t 已采用默认值 : " + f, StringUtils.Color.RED), JsonNode::asText, (a) -> a);
 
-        datasourceUrl = getConfigValue("scx.datasource.url", null, rootNode, (s) -> NoCode(), (f) -> NoCode(), JsonNode::asText, (a) -> a);
+        dataSourceUrl = getConfigValue("scx.data-source.url", null, rootNode, (s) -> NoCode(), (f) -> NoCode(), JsonNode::asText, (a) -> a);
 
-        datasourceUsername = getConfigValue("scx.datasource.username", null, rootNode, (s) -> NoCode(), (f) -> NoCode(), JsonNode::asText, (a) -> a);
+        dataSourceUsername = getConfigValue("scx.data-source.username", null, rootNode, (s) -> NoCode(), (f) -> NoCode(), JsonNode::asText, (a) -> a);
 
-        datasourcePassword = getConfigValue("scx.datasource.password", null, rootNode, (s) -> NoCode(), (f) -> NoCode(), (c) -> CryptoUtils.decryptText(c.asText()), CryptoUtils::decryptText);
+        dataSourcePassword = getConfigValue("scx.data-source.password", null, rootNode, (s) -> NoCode(), (f) -> NoCode(), (c) -> CryptoUtils.decryptText(c.asText()), CryptoUtils::decryptText);
 
         fixTable = getConfigValue("scx.fix-table", false, rootNode,
                 (s) -> StringUtils.println("✔ 修复数据表                          \t -->\t " + (s ? "是" : "否"), StringUtils.Color.GREEN),

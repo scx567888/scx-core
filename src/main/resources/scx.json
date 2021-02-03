@@ -8,7 +8,7 @@
         "scx-cms-0.0.1.jar"
       ]
     },
-    "datasource": {
+    "data-source": {
       "url": "jdbc:mysql://127.0.0.1:3306/scx?allowMultiQueries=true",
       "username": "root",
       "password": "OgaIGDNXuGHN8riHCTVsgeSro4o2IVY/wTU3+467XCYkdDT2bkoJROBhGOTcA3Z0"

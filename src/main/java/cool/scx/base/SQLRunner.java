@@ -25,9 +25,9 @@ public final class SQLRunner {
     static {
         dataSource = new HikariDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setJdbcUrl(ScxConfig.datasourceUrl);
-        dataSource.setUsername(ScxConfig.datasourceUsername);
-        dataSource.setPassword(ScxConfig.datasourcePassword);
+        dataSource.setJdbcUrl(ScxConfig.dataSourceUrl);
+        dataSource.setUsername(ScxConfig.dataSourceUsername);
+        dataSource.setPassword(ScxConfig.dataSourcePassword);
     }
 
     public static boolean testConnection() {
@@ -36,7 +36,7 @@ public final class SQLRunner {
             StringUtils.println("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]", StringUtils.Color.MAGENTA);
             return true;
         } catch (Exception e) {
-            StringUtils.println("数据源连接失败                       \t -->\t " + ScxConfig.datasourceUrl, StringUtils.Color.RED);
+            StringUtils.println("数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl, StringUtils.Color.RED);
             if (ScxConfig.showLog) {
                 e.printStackTrace();
             }
