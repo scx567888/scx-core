@@ -88,6 +88,11 @@ public final class BaseDao<Entity extends BaseModel> {
         return tempTable;
     }
 
+    /**
+     * todo  讨论 isDelete 是否应该在此处进行排除 受影响的 模块 fixTable
+     * @param clazz
+     * @return
+     */
     private static Field[] getColumnFields(Class<?> clazz) {
         return Stream.of(clazz.getFields())
                 .filter(field -> !field.isAnnotationPresent(NoColumn.class) && (ScxConfig.realDelete || !"isDeleted".equals(field.getName())))
