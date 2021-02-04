@@ -1,43 +1,44 @@
 package cool.scx.boot;
 
+import cool.scx.enumeration.Color;
 import cool.scx.util.StringUtils;
 
 public final class ScxBanner {
     static {
-        StringUtils.print("   ▄████████ ", StringUtils.Color.RED);
-        StringUtils.print(" ▄████████ ", StringUtils.Color.GREEN);
-        StringUtils.println("▀████    ▐████▀", StringUtils.Color.BLUE);
+        StringUtils.print("   ▄████████ ", Color.RED);
+        StringUtils.print(" ▄████████ ", Color.GREEN);
+        StringUtils.println("▀████    ▐████▀", Color.BLUE);
 
-        StringUtils.print("  ███    ███ ", StringUtils.Color.RED);
-        StringUtils.print("███    ███ ", StringUtils.Color.GREEN);
-        StringUtils.println("  ███▌   ████▀", StringUtils.Color.BLUE);
+        StringUtils.print("  ███    ███ ", Color.RED);
+        StringUtils.print("███    ███ ", Color.GREEN);
+        StringUtils.println("  ███▌   ████▀", Color.BLUE);
 
-        StringUtils.print("  ███    █▀  ", StringUtils.Color.RED);
-        StringUtils.print("███    █▀  ", StringUtils.Color.GREEN);
-        StringUtils.println("   ███  ▐███", StringUtils.Color.BLUE);
+        StringUtils.print("  ███    █▀  ", Color.RED);
+        StringUtils.print("███    █▀  ", Color.GREEN);
+        StringUtils.println("   ███  ▐███", Color.BLUE);
 
-        StringUtils.print("  ███        ", StringUtils.Color.RED);
-        StringUtils.print("███        ", StringUtils.Color.GREEN);
-        StringUtils.println("   ▀███▄███▀", StringUtils.Color.BLUE);
+        StringUtils.print("  ███        ", Color.RED);
+        StringUtils.print("███        ", Color.GREEN);
+        StringUtils.println("   ▀███▄███▀", Color.BLUE);
 
-        StringUtils.print("▀███████████ ", StringUtils.Color.RED);
-        StringUtils.print("███        ", StringUtils.Color.GREEN);
-        StringUtils.println("   ████▀██▄", StringUtils.Color.BLUE);
+        StringUtils.print("▀███████████ ", Color.RED);
+        StringUtils.print("███        ", Color.GREEN);
+        StringUtils.println("   ████▀██▄", Color.BLUE);
 
-        StringUtils.print("         ███ ", StringUtils.Color.RED);
-        StringUtils.print("███    █▄  ", StringUtils.Color.GREEN);
-        StringUtils.println("  ▐███  ▀███", StringUtils.Color.BLUE);
+        StringUtils.print("         ███ ", Color.RED);
+        StringUtils.print("███    █▄  ", Color.GREEN);
+        StringUtils.println("  ▐███  ▀███", Color.BLUE);
 
-        StringUtils.print("   ▄█    ███ ", StringUtils.Color.RED);
-        StringUtils.print("███    ███ ", StringUtils.Color.GREEN);
-        StringUtils.println(" ▄███     ███▄", StringUtils.Color.BLUE);
+        StringUtils.print("   ▄█    ███ ", Color.RED);
+        StringUtils.print("███    ███ ", Color.GREEN);
+        StringUtils.println(" ▄███     ███▄", Color.BLUE);
 
-        StringUtils.print(" ▄████████▀  ", StringUtils.Color.RED);
-        StringUtils.print("████████▀  ", StringUtils.Color.GREEN);
-        StringUtils.print("████       ███▄ ", StringUtils.Color.BLUE);
+        StringUtils.print(" ▄████████▀  ", Color.RED);
+        StringUtils.print("████████▀  ", Color.GREEN);
+        StringUtils.print("████       ███▄ ", Color.BLUE);
 
-        StringUtils.print(" By ", StringUtils.Color.CYAN);
-        StringUtils.println("scx567888@outlook.com", StringUtils.Color.BRIGHT_CYAN);
+        StringUtils.print(" By ", Color.CYAN);
+        StringUtils.println("scx567888@outlook.com", Color.BRIGHT_CYAN);
     }
 
     public static void init() {

@@ -1,6 +1,7 @@
 package cool.scx.server;
 
 import cool.scx.boot.ScxConfig;
+import cool.scx.enumeration.Color;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.core.AbstractVerticle;
@@ -34,7 +35,7 @@ public final class ScxVertxServer extends AbstractVerticle {
         server.requestHandler(router).listen(ScxConfig.port, http -> {
             if (http.succeeded()) {
                 startPromise.complete();
-                StringUtils.println("服务器启动成功... http://" + NetUtils.getLocalAddress() + ":" + ScxConfig.port + "/", StringUtils.Color.GREEN);
+                StringUtils.println("服务器启动成功... http://" + NetUtils.getLocalAddress() + ":" + ScxConfig.port + "/", Color.GREEN);
             } else {
                 http.cause().printStackTrace();
                 startPromise.fail(http.cause());

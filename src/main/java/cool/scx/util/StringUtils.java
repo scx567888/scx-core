@@ -1,7 +1,11 @@
 package cool.scx.util;
 
 
+import cool.scx.enumeration.Color;
+
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -9,6 +13,16 @@ import java.util.stream.Collectors;
  * String工具类
  */
 public class StringUtils {
+    private static final Map<Integer, Color> printColor = new HashMap<>();
+    private static int nextPrintColor = 0;
+
+    static {
+        var i = 0;
+        for (Color value : Color.values()) {
+            printColor.put(i, value);
+            i = i + 1;
+        }
+    }
 
     public static boolean isNotEmpty(Object str) {
         return !isEmpty(str);
@@ -67,6 +81,14 @@ public class StringUtils {
         System.out.println("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
     }
 
+    public static void printlnAutoColor(String str) {
+        if (nextPrintColor >= printColor.size()) {
+            nextPrintColor = 0;
+        }
+        System.out.println("\u001B[" + printColor.get(nextPrintColor).toString() + "m" + str + "\u001B[0m");
+        nextPrintColor = nextPrintColor + 1;
+    }
+
     public static void print(String str, Color ansiColor) {
         System.out.print("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
     }
@@ -81,53 +103,5 @@ public class StringUtils {
         return Character.toLowerCase(s.charAt(0)) + s.substring(1);
     }
 
-    public enum Color {
-
-        DEFAULT("39"),
-
-        BLACK("30"),
-
-        RED("31"),
-
-        GREEN("32"),
-
-        YELLOW("33"),
-
-        BLUE("34"),
-
-        MAGENTA("35"),
-
-        CYAN("36"),
-
-        WHITE("37"),
-
-        BRIGHT_BLACK("90"),
-
-        BRIGHT_RED("91"),
-
-        BRIGHT_GREEN("92"),
-
-        BRIGHT_YELLOW("93"),
-
-        BRIGHT_BLUE("94"),
-
-        BRIGHT_MAGENTA("95"),
-
-        BRIGHT_CYAN("96"),
-
-        BRIGHT_WHITE("97");
-
-        private final String code;
-
-        Color(String code) {
-            this.code = code;
-        }
-
-        @Override
-        public String toString() {
-            return this.code;
-        }
-
-    }
 
 }

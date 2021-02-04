@@ -2,6 +2,7 @@ package cool.scx.base;
 
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.boot.ScxConfig;
+import cool.scx.enumeration.Color;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
@@ -21,7 +22,6 @@ public final class SQLRunner {
 
     private static final HikariDataSource dataSource;
     private static final Pattern pattern = Pattern.compile("(:([\\w.]+))");
-    private static boolean nextSqlPrintColor = false;
 
     static {
         dataSource = new HikariDataSource();
@@ -34,10 +34,10 @@ public final class SQLRunner {
     public static boolean testConnection() {
         try (var conn = getConnection()) {
             var dm = conn.getMetaData();
-            StringUtils.println("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]", StringUtils.Color.MAGENTA);
+            StringUtils.println("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]", Color.MAGENTA);
             return true;
         } catch (Exception e) {
-            StringUtils.println("数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl, StringUtils.Color.RED);
+            StringUtils.println("数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl, Color.RED);
             if (ScxConfig.showLog) {
                 e.printStackTrace();
             }
@@ -90,8 +90,7 @@ public final class SQLRunner {
         }
         if (ScxConfig.showLog) {
             var s = preparedStatement.toString();
-            StringUtils.println(ScxConfig.dateTimeFormatter.format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":")), nextSqlPrintColor ? StringUtils.Color.BLUE : StringUtils.Color.GREEN);
-            nextSqlPrintColor = !nextSqlPrintColor;
+            StringUtils.printlnAutoColor(ScxConfig.dateTimeFormatter.format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":")));
         }
         return preparedStatement;
     }

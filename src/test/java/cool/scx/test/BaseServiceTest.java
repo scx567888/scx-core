@@ -23,7 +23,7 @@ public class BaseServiceTest {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpResponse<String> response = client.send(
-                HttpRequest.newBuilder(new URI("http://127.0.0.1:8080/api/user/list"))
+                HttpRequest.newBuilder(new URI("http://127.0.0.1:8080/api/user/1"))
                         .headers("Foo", "foovalue", "Bar", "barvalue")
                         .GET()
                         .build(),

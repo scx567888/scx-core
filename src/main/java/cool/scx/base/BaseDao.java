@@ -4,6 +4,7 @@ import cool.scx.annotation.Column;
 import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;
 import cool.scx.boot.ScxConfig;
+import cool.scx.enumeration.Color;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
@@ -41,13 +42,13 @@ public final class BaseDao<Entity extends BaseModel> {
                 var nonExistentFields = Stream.of(table.allFields).filter(field -> !stringArrayList.contains(StringUtils.camel2Underscore(field.getName()))).collect(Collectors.toList());
                 if (nonExistentFields.size() != 0) {
                     var columns = nonExistentFields.stream().map(field -> StringUtils.camel2Underscore(field.getName())).collect(Collectors.joining(" , ", " [ ", " ] "));
-                    StringUtils.println("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!", StringUtils.Color.BRIGHT_BLUE);
+                    StringUtils.println("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!", Color.BRIGHT_BLUE);
                     var alertSql = nonExistentFields.stream().map(field -> " ADD " + getSQLColumnByField(field)).collect(Collectors.joining(",", "", ""));
                     var s = "ALTER TABLE `" + table.tableName + "` " + alertSql + " ; ALTER TABLE `" + table.tableName + "` " + getOtherSQLByField(nonExistentFields.toArray(Field[]::new)).stream().map(str -> " ADD " + str).collect(Collectors.joining(",", "", "")) + ";";
                     SQLRunner.execute(s);
                 }
             } else {
-                StringUtils.println("未找到表 " + table.tableName + " --> 正在自动建立 !!!", StringUtils.Color.BRIGHT_MAGENTA);
+                StringUtils.println("未找到表 " + table.tableName + " --> 正在自动建立 !!!", Color.BRIGHT_MAGENTA);
                 var createTableSql = "CREATE TABLE `" + table.tableName + "` ( " + Stream.of(table.allFields).map(field -> getSQLColumnByField(field) + ",").collect(Collectors.joining("", "", "")) + String.join(",", getOtherSQLByField(table.allFields)) + ") ;";
                 SQLRunner.execute(createTableSql);
             }
@@ -165,7 +166,7 @@ public final class BaseDao<Entity extends BaseModel> {
         var splitSize = 5000;
         var size = entityList.size();
         if (size > splitSize) {
-            StringUtils.println("批量插入数据量过大 , 达到" + size + "条 !!! 已按照" + splitSize + "条进行切分 !!!", StringUtils.Color.BRIGHT_RED);
+            StringUtils.println("批量插入数据量过大 , 达到" + size + "条 !!! 已按照" + splitSize + "条进行切分 !!!", Color.BRIGHT_RED);
             var generatedKeys = new ArrayList<Long>(splitSize);
             int number = size / splitSize;
             for (int i = 0; i < number; i++) {
@@ -190,8 +191,6 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     public List<Entity> list(Param<Entity> param, boolean ignoreLike) {
-        var s = table.selectColumns;
-        System.out.println();
         var sql = SQLBuilder.Select().SelectColumns(table.selectColumns).Table(table.tableName)
                 .Where(getWhereColumns(param.queryObject, ignoreLike))
                 .WhereSql(param.whereSql)

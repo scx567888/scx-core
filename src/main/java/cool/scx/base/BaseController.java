@@ -56,9 +56,9 @@ public class BaseController {
     }
 
     @ScxMapping(value = ":modelName/:id", httpMethod = HttpMethod.GET)
-    public Json info(String modelName, Integer id) {
+    public Json info(String modelName, Long id) {
         var baseService = getBaseService(modelName);
-        var list = baseService.getById(Long.valueOf(id));
+        var list = baseService.getById(id);
         return Json.ok().items(list);
     }
 

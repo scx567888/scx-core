@@ -9,6 +9,7 @@ import cool.scx.base.BaseService;
 import cool.scx.base.SQLRunner;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
+import cool.scx.enumeration.Color;
 import cool.scx.util.DsfCycle;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
@@ -27,7 +28,7 @@ public final class ScxContext {
     private static final Map<String, BaseService<?>> baseServiceCache;
 
     static {
-        StringUtils.println("ScxContext 初始化中...", StringUtils.Color.GREEN);
+        StringUtils.println("ScxContext 初始化中...", Color.GREEN);
         beanMapping = initBeanMapping();
         ScxPlugins.pluginsClassList.forEach(ScxContext::register);
         userService = getBean(UserService.class);
@@ -161,7 +162,7 @@ public final class ScxContext {
 
     public static void fixTable() {
         if (SQLRunner.testConnection()) {
-            StringUtils.println("修复数据表中...", StringUtils.Color.MAGENTA);
+            StringUtils.println("修复数据表中...", Color.MAGENTA);
             if (ScxConfig.fixTable) {
                 PackageUtils.scanPackage((clazz) -> {
                     if (clazz.isAnnotationPresent(ScxModel.class)) {
@@ -181,7 +182,7 @@ public final class ScxContext {
     }
 
     public static void init() {
-        StringUtils.println("ScxContext 初始化完成...", StringUtils.Color.GREEN);
+        StringUtils.println("ScxContext 初始化完成...", Color.GREEN);
     }
 
     private static class SessionItem {
