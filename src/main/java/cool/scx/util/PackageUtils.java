@@ -57,7 +57,7 @@ public class PackageUtils {
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
                 var classRealPath = rootFilePath.relativize(path).toString();
                 if (classRealPath.endsWith(".class")) {
-                    var className = classRealPath.replace(".class", "").replaceAll("\\\\", ".");
+                    var className = classRealPath.replace(".class", "").replaceAll("\\\\", ".").replaceAll("/", ".");
                     fun.accept(getClassByName(className));
                 }
                 return FileVisitResult.CONTINUE;
