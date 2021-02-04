@@ -18,7 +18,7 @@ import java.util.function.Function;
 public final class ScxConfig {
     public static final String AppKey = "H8QS91GcuNGP9735";
     public static final String tokenKey = "S-Token";
-    public static final String coreVersion = "0.2.9";
+    public static final String coreVersion = "0.3.0";
     public static final File uploadFilePath;
     public static final String dataSourceUrl;
     public static final String dataSourceUsername;

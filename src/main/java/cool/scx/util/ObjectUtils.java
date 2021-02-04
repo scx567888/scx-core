@@ -68,35 +68,38 @@ public final class ObjectUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T parseSimpleType(Object value, Class<T> targetClass) {
-        if (value == null || targetClass == value.getClass()) {
-            return (T) value;
+        try {
+            if (value == null || targetClass == value.getClass()) {
+                return (T) value;
+            }
+            if (targetClass == Integer.class || targetClass == int.class) {
+                return (T) Integer.valueOf(value.toString());
+            }
+            if (targetClass == Boolean.class || targetClass == boolean.class) {
+                return (T) Boolean.valueOf(value.toString());
+            }
+            if (targetClass == Byte.class || targetClass == byte.class) {
+                return (T) Byte.valueOf(value.toString());
+            }
+            if (targetClass == Character.class || targetClass == char.class) {
+                return (T) value;
+            }
+            if (targetClass == Double.class || targetClass == double.class) {
+                return (T) Double.valueOf(value.toString());
+            }
+            if (targetClass == Float.class || targetClass == float.class) {
+                return (T) Float.valueOf(value.toString());
+            }
+            if (targetClass == Long.class || targetClass == long.class) {
+                return (T) Long.valueOf(value.toString());
+            }
+            if (targetClass == Short.class || targetClass == short.class) {
+                return (T) Short.valueOf(value.toString());
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
         }
-        if (targetClass == Integer.class || targetClass == int.class) {
-            return (T) Integer.valueOf(value.toString());
-        }
-        if (targetClass == Boolean.class || targetClass == boolean.class) {
-            return (T) Boolean.valueOf(value.toString());
-        }
-        if (targetClass == Byte.class || targetClass == byte.class) {
-            return (T) Byte.valueOf(value.toString());
-        }
-        if (targetClass == Character.class || targetClass == char.class) {
-            return (T) value;
-        }
-        if (targetClass == Double.class || targetClass == double.class) {
-            return (T) Double.valueOf(value.toString());
-        }
-        if (targetClass == Float.class || targetClass == float.class) {
-            return (T) Float.valueOf(value.toString());
-        }
-        if (targetClass == Long.class || targetClass == long.class) {
-            return (T) Long.valueOf(value.toString());
-        }
-        if (targetClass == Short.class || targetClass == short.class) {
-            return (T) Short.valueOf(value.toString());
-        }
-
-        return null;
     }
 
     public static Map<String, Object> beanToMap(Object o) {

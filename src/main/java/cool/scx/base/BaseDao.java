@@ -89,7 +89,7 @@ public final class BaseDao<Entity extends BaseModel> {
 
     private static Field[] getColumnFields(Class<?> clazz) {
         return Stream.of(clazz.getFields())
-                .filter(field -> !field.isAnnotationPresent(NoColumn.class) && (!ScxConfig.realDelete || !"isDeleted".equals(field.getName())))
+                .filter(field -> !field.isAnnotationPresent(NoColumn.class) && (ScxConfig.realDelete || !"isDeleted".equals(field.getName())))
                 .toArray(Field[]::new);
     }
 
@@ -190,6 +190,8 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     public List<Entity> list(Param<Entity> param, boolean ignoreLike) {
+        var s = table.selectColumns;
+        System.out.println();
         var sql = SQLBuilder.Select().SelectColumns(table.selectColumns).Table(table.tableName)
                 .Where(getWhereColumns(param.queryObject, ignoreLike))
                 .WhereSql(param.whereSql)

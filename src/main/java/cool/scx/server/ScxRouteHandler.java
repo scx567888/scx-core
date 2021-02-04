@@ -31,7 +31,7 @@ public final class ScxRouteHandler {
             var nowName = parameters[i].getName();
             //先尝试将 body 中的数据进行转换
             handlerParams[i] = ObjectUtils.jsonToBean(jsonStr, nowType);
-            if (handlerParams[i] == null) {
+            if (handlerParams[i] == null && rootJsonNode != null) {
                 handlerParams[i] = ObjectUtils.jsonNodeToBean(rootJsonNode.get(nowName), nowType);
             }
         }
