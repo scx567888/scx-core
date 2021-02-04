@@ -7,8 +7,8 @@ import cool.scx.boot.ScxContext;
 import cool.scx.business.system.ScxLogService;
 import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
-import cool.scx.business.user.UserService;
 import cool.scx.enumeration.HttpMethod;
+import cool.scx.enumeration.SortType;
 import cool.scx.util.FileUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
@@ -21,180 +21,101 @@ import java.util.Map;
 @ScxController("api")
 public class BaseController {
 
-
     private final ScxLogService scxLogService;
-    private final UserService userService;
-    //
-//    /**
-//     * 根据实体条件查询实体列表带 Like 条件 需要在实体类上注解@Like
-//     * 查询分页数据（提供模糊查询）
-//     *
-//     * @param param e
-//     * @return e
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public List<Entity> list(Param<Entity> param) {
-//        return baseDao.list(param);
-//    }
-//
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public List<Map<String, Object>> listMapAll() {
-//        return baseDao.listMapAll();
-//    }
-//
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public List<Map<String, Object>> listMap(Param<Entity> param) {
-//        return baseDao.listMap(param);
-//    }
-//
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Integer count(Param<Entity> param) {
-//        return baseDao.count(param, false);
-//    }
-//
-//    /**
-//     * 根据条件统计实体数 不提供模糊查询
-//     *
-//     * @param param e
-//     * @return e
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Integer countIgnoreLike(Param<Entity> param) {
-//        return baseDao.count(param, true);
-//    }
-//
-//    /**
-//     * 根据 field 获取 list 集合
-//     *
-//     * @param fieldName 字段名称
-//     * @return 以 value 为键值的 list 集合
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public List<Map<String, Object>> getFieldList(String fieldName) {
-//        return baseDao.getFieldList(fieldName);
-//    }
-//
-//    /**
-//     * 根据条件获取单个对象
-//     *
-//     * @param param a
-//     * @return e
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Entity get(Param<Entity> param) {
-//        return baseDao.get(param);
-//    }
+
     private final UploadFileService uploadFileService;
 
-    public BaseController(ScxLogService scxLogService, UserService userService, UploadFileService uploadFileService) {
+    public BaseController(ScxLogService scxLogService, UploadFileService uploadFileService) {
         this.scxLogService = scxLogService;
-        this.userService = userService;
         this.uploadFileService = uploadFileService;
     }
 
-    //    /**
-//     * 批量保存实体 (适用于少量数据 数据量 < 5000)
-//     *
-//     * @param entityList 实体集合
-//     * @return 插入成功的数据 自增主键
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public List<Long> saveList(List<Entity> entityList) {
-//        return baseDao.saveList(entityList);
-//    }
-//
-//    /**
-//     * 删除指定id的实体
-//     *
-//     * @param ids 要删除的 id 集合
-//     * @return 被删除的数据条数 用于前台分页优化
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Integer deleteByIds(Long... ids) {
-//        return baseDao.deleteByIds(ids);
-//    }
-//
-//    /**
-//     * 根据条件删除
-//     *
-//     * @param param e
-//     * @return e
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Integer delete(Param<Entity> param) {
-//        return baseDao.delete(param);
-//    }
-//
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Entity update(Param<Entity> param) {
-//        return baseDao.update(param, false);
-//    }
-//
-//    /**
-//     * 根据主键查询
-//     *
-//     * @param id e
-//     * @return e
-//     */
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Entity getById(Long id) {
-//        return baseDao.getById(id);
-//    }
-//
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Entity updateById(Entity entity) {
-//        return baseDao.update(new Param<>(entity), false);
-//    }
-//
-//    @ScxMapping(useMethodNameAsUrl = true)
-//    public Entity updateIncludeNull(Param<Entity> param) {
-//        return baseDao.update(param, true);
-//    }
-//
-    @ScxMapping(value = ":modelName/list", httpMethod = HttpMethod.GET)
-    public Json listAll(String modelName, Map<String, Object> objectMap) {
-//        var userList=new ArrayList<User>(100000);
-//        for (int i = 0; i < 100000; i++) {
-//            var u=new User();
-//            u.password="password"+i;
-//            u.username="司昌旭"+i;
-//            u.salt="salt"+i;
-//            u.level=2;
-//            userList.add(u);
-//        }
-//        List<Long> longs = userService.saveList(userList);
-
-        modelName = modelName.toLowerCase();
-        var modelClass = ScxContext.getBaseModelClassByName(modelName);
-        var baseServiceByName = (BaseService<?>) ScxContext.getBaseServiceByName(modelName + "service");
-//        Param p =new Param<>(ScxContext.getBean(modelClass));
-//        p.setPagination(1000);
-//        p.addOrderBy("id", SortType.DESC);
-//        p.addGroupBy("level");
-
-        var objects = baseServiceByName.listByIds(100L, 120L, 240L);
-        return Json.ok().tables(objects, 666);
+    @SuppressWarnings("unchecked")
+    private static <T extends BaseModel> Param<T> getParam(String modelName, Map<String, Object> params) {
+        var modelClass = (Class<T>) ScxContext.getBaseModelClassByName(modelName);
+        Param<T> p = new Param<>(ObjectUtils.mapToBean(params, modelClass));
+        p.setPagination(1000);
+        p.addOrderBy("id", SortType.DESC);
+        p.addGroupBy("level");
+        return p;
     }
 
-    /**
-     * 实体插入新对象,并返回插入的实体
-     *
-     * @param modelName model 的名称
-     * @param entityMap 前台传过来的 map 以键值对的形式表示的 实体类
-     * @return 实体
-     */
-    @ScxMapping(value = ":modelName/save", httpMethod = HttpMethod.POST)
     @SuppressWarnings("unchecked")
+    private static <T extends BaseModel> BaseService<T> getBaseService(String modelName) {
+        return (BaseService<T>) ScxContext.getBaseServiceByName(modelName.toLowerCase() + "service");
+    }
+
+    //
+    @ScxMapping(value = ":modelName/list", httpMethod = HttpMethod.POST)
+    public Json list(String modelName, Map<String, Object> params) {
+        var baseService = getBaseService(modelName);
+        var param = getParam(modelName, params);
+        var list = baseService.list(param);
+        var count = baseService.count(param);
+        return Json.ok().tables(list, count);
+    }
+
+    @ScxMapping(value = ":modelName/:id", httpMethod = HttpMethod.GET)
+    public Json info(String modelName, Integer id) {
+        var baseService = getBaseService(modelName);
+        var list = baseService.getById(Long.valueOf(id));
+        return Json.ok().items(list);
+    }
+
+    @ScxMapping(value = ":modelName", httpMethod = HttpMethod.POST)
     public Json save(String modelName, Map<String, Object> entityMap) {
-        if (entityMap != null) {
-            modelName = modelName.toLowerCase();
-            var baseService = (BaseService<BaseModel>) ScxContext.getBaseServiceByName(modelName + "service");
-            var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getBaseModelClassByName(modelName));
-            var newObjectId = baseService.save(realObject).id;
-            var newObject = baseService.getById(newObjectId);
-            return Json.ok().items(newObject);
-        }
-        return Json.fail("参数为空");
+        var baseService = getBaseService(modelName);
+        var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getBaseModelClassByName(modelName));
+        var newObjectId = baseService.save(realObject).id;
+        var newObject = baseService.getById(newObjectId);
+        return Json.ok().items(newObject);
+    }
+
+    @ScxMapping(value = ":modelName", httpMethod = HttpMethod.PUT)
+    public Json update(String modelName, Map<String, Object> entityMap) throws Exception {
+        var baseService = getBaseService(modelName);
+        var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getBaseModelClassByName(modelName));
+        var newObj = baseService.update(realObject);
+        return Json.ok().items(newObj);
+    }
+
+    @ScxMapping(value = ":modelName/:id", httpMethod = HttpMethod.DELETE)
+    public Json delete(String modelName, Integer id) throws Exception {
+        var baseService = getBaseService(modelName);
+        var deleteByIds = baseService.deleteByIds(Long.valueOf(id));
+        return Json.ok().items(deleteByIds == 1);
+    }
+
+    @ScxMapping(value = ":modelName/batchDelete", httpMethod = HttpMethod.DELETE)
+    public Json batchDelete(String modelName, Map<String, Object> params) {
+        var deleteIds = (Long[]) params.get("deleteIds");
+        var baseService = getBaseService(modelName);
+        var deletedCount = baseService.deleteByIds(deleteIds);
+        return Json.ok("success").data("deletedCount", deletedCount);
+    }
+
+    @ScxMapping(value = ":modelName/revokeDelete/:id", httpMethod = HttpMethod.GET)
+    public Json revokeDelete(String modelName, Integer id) {
+        var baseService = getBaseService(modelName);
+        var revokeDeleteCount = baseService.revokeDeleteByIds(Long.valueOf(id));
+        return Json.ok(revokeDeleteCount == 1 ? "success" : "error");
+    }
+
+    @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", httpMethod = HttpMethod.POST)
+    public Json getAutoComplete(String modelName, String fieldName) {
+        var baseService = getBaseService(modelName);
+        var fieldList = baseService.getFieldList(fieldName);
+        return Json.ok().items(fieldList);
+    }
+
+    @ScxMapping(value = ":modelName/checkUnique", httpMethod = HttpMethod.POST)
+    public Json checkUnique(String modelName, Map<String, Object> params) {
+        var baseService = getBaseService(modelName);
+        var param = getParam(modelName, params);
+        param.whereSql = "id != " + param.queryObject.id;
+        param.queryObject.id = null;
+        var b = baseService.count(param) == 0;
+        return Json.ok().data("isUnique", b);
     }
 
     /**

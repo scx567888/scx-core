@@ -4,6 +4,7 @@ import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseDao;
+import cool.scx.base.BaseModel;
 import cool.scx.base.BaseService;
 import cool.scx.base.SQLRunner;
 import cool.scx.business.user.User;
@@ -69,8 +70,9 @@ public final class ScxContext {
         }
     }
 
-    public static Class<?> getBaseModelClassByName(String str) {
-        return baseModelClassCache.get(str);
+    @SuppressWarnings("unchecked")
+    public static Class<BaseModel> getBaseModelClassByName(String str) {
+        return (Class<BaseModel>) baseModelClassCache.get(str);
     }
 
     public static BaseService<?> getBaseServiceByName(String str) {
