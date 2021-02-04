@@ -8,7 +8,6 @@ import cool.scx.business.system.ScxLogService;
 import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.enumeration.SortType;
 import cool.scx.util.FileUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
@@ -32,22 +31,25 @@ public class BaseController {
 
     @SuppressWarnings("unchecked")
     private static <T extends BaseModel> Param<T> getParam(String modelName, Map<String, Object> params) {
-        var modelClass = (Class<T>) ScxContext.getBaseModelClassByName(modelName);
+        var modelClass = (Class<T>) ScxContext.getClassByName(modelName);
         Param<T> p = new Param<>(ObjectUtils.mapToBean(params, modelClass));
-        p.setPagination(1000);
-        p.addOrderBy("id", SortType.DESC);
-        p.addGroupBy("level");
+        Integer page = (Integer) params.get("page");
+        Integer limit = (Integer) params.get("limit");
+        p.setPagination(page, limit);
         return p;
     }
 
     @SuppressWarnings("unchecked")
     private static <T extends BaseModel> BaseService<T> getBaseService(String modelName) {
-        return (BaseService<T>) ScxContext.getBaseServiceByName(modelName.toLowerCase() + "service");
+        return (BaseService<T>) ScxContext.getBean(ScxContext.getClassByName(modelName.toLowerCase() + "service"));
     }
 
     //
-    @ScxMapping(value = ":modelName/list", httpMethod = HttpMethod.POST)
+    @ScxMapping(value = ":modelName/list", httpMethod = {HttpMethod.GET, HttpMethod.POST})
     public Json list(String modelName, Map<String, Object> params) {
+        if (params == null) {
+            return Json.fail("查询参数不能为空");
+        }
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, params);
         var list = baseService.list(param);
@@ -65,7 +67,7 @@ public class BaseController {
     @ScxMapping(value = ":modelName", httpMethod = HttpMethod.POST)
     public Json save(String modelName, Map<String, Object> entityMap) {
         var baseService = getBaseService(modelName);
-        var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getBaseModelClassByName(modelName));
+        var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
         var newObjectId = baseService.save(realObject).id;
         var newObject = baseService.getById(newObjectId);
         return Json.ok().items(newObject);
@@ -74,7 +76,7 @@ public class BaseController {
     @ScxMapping(value = ":modelName", httpMethod = HttpMethod.PUT)
     public Json update(String modelName, Map<String, Object> entityMap) throws Exception {
         var baseService = getBaseService(modelName);
-        var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getBaseModelClassByName(modelName));
+        var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
         var newObj = baseService.update(realObject);
         return Json.ok().items(newObj);
     }

@@ -1,6 +1,5 @@
 package cool.scx.business.user;
 
-import cool.scx.annotation.ScxMapping;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
 import cool.scx.base.Param;
@@ -17,7 +16,6 @@ import cool.scx.business.user.exception.AuthException;
 import cool.scx.business.user.exception.TooManyErrorsException;
 import cool.scx.business.user.exception.UnknownUserException;
 import cool.scx.business.user.exception.WrongPasswordException;
-import cool.scx.enumeration.HttpMethod;
 import cool.scx.util.CryptoUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
@@ -220,7 +218,6 @@ public class UserService extends BaseService<User> {
     }
 
     @Override
-    @ScxMapping(useMethodNameAsUrl = true, httpMethod = HttpMethod.GET)
     public List<User> listAll() {
         var userDeptListFuture = CompletableFuture.supplyAsync(userDeptService::listAll);
         var userRoleListFuture = CompletableFuture.supplyAsync(userRoleService::listAll);

@@ -4,8 +4,6 @@ import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseDao;
-import cool.scx.base.BaseModel;
-import cool.scx.base.BaseService;
 import cool.scx.base.SQLRunner;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
@@ -22,43 +20,16 @@ import java.util.Map;
 public final class ScxContext {
 
     private static final ArrayList<SessionItem> scxSession = new ArrayList<>();
-    private static final Map<Class<?>, Object> beanMapping;
     private static final UserService userService;
-    private static final Map<String, Class<?>> baseModelClassCache;
-    private static final Map<String, BaseService<?>> baseServiceCache;
+    private static final Map<Class<?>, Object> beanMapping = new HashMap<>();
+    private static final Map<String, Class<?>> classNameMapping = new HashMap<>();
 
     static {
         StringUtils.println("ScxContext 初始化中...", Color.GREEN);
-        beanMapping = initBeanMapping();
+        initScxContext();
         ScxPlugins.pluginsClassList.forEach(ScxContext::register);
         userService = getBean(UserService.class);
-        baseModelClassCache = initBaseModelClassCache();
-        baseServiceCache = initBaseServiceCache();
         fixTable();
-    }
-
-    private static Map<Class<?>, Object> initBeanMapping() {
-        var tempBeanMapping = new HashMap<Class<?>, Object>();
-        PackageUtils.scanPackageIncludePlugins(clazz -> {
-            if (clazz.isAnnotationPresent(ScxService.class) ||
-                    clazz.isAnnotationPresent(ScxController.class) ||
-                    clazz.isAnnotationPresent(ScxModel.class)
-            ) {
-                tempBeanMapping.put(clazz, null);
-            }
-        });
-        //此处校验是否有循环依赖
-        tempBeanMapping.forEach((clazz, object) -> {
-            checkBean(clazz);
-        });
-        List<String> reslut = DsfCycle.find();
-        for (String string : reslut) {
-            System.err.println("循环依赖!!!" + string);
-        }
-        if (reslut.size() > 0) {
-            System.exit(1);
-        }
-        return tempBeanMapping;
     }
 
     private static void checkBean(Class<?> clazz) {
@@ -71,33 +42,29 @@ public final class ScxContext {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static Class<BaseModel> getBaseModelClassByName(String str) {
-        return (Class<BaseModel>) baseModelClassCache.get(str);
+    public static Class<?> getClassByName(String str) {
+        return classNameMapping.get(str);
     }
 
-    public static BaseService<?> getBaseServiceByName(String str) {
-        return baseServiceCache.get(str);
-    }
-
-    private static Map<String, Class<?>> initBaseModelClassCache() {
-        var tempBaseModelClassCache = new HashMap<String, Class<?>>();
+    private static void initScxContext() {
         PackageUtils.scanPackageIncludePlugins(clazz -> {
-            if (clazz.isAnnotationPresent(ScxModel.class)) {
-                tempBaseModelClassCache.put(clazz.getSimpleName().toLowerCase(), clazz);
+            if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class) || clazz.isAnnotationPresent(ScxModel.class)) {
+                beanMapping.put(clazz, null);
+                classNameMapping.put(clazz.getSimpleName().toLowerCase(), clazz);
             }
         });
-        return tempBaseModelClassCache;
-    }
-
-    private static Map<String, BaseService<?>> initBaseServiceCache() {
-        var tempBaseServiceCache = new HashMap<String, BaseService<?>>();
-        PackageUtils.scanPackageIncludePlugins(clazz -> {
-            if (clazz.isAnnotationPresent(ScxService.class)) {
-                tempBaseServiceCache.put(clazz.getSimpleName().toLowerCase(), (BaseService<?>) getBean(clazz));
-            }
+        //此处校验是否有循环依赖
+        beanMapping.forEach((clazz, object) -> {
+            checkBean(clazz);
         });
-        return tempBaseServiceCache;
+        List<String> reslut = DsfCycle.find();
+        for (String string : reslut) {
+            System.err.println("循环依赖!!!" + string);
+        }
+        if (reslut.size() > 0) {
+            System.exit(1);
+        }
+
     }
 
     public static void logoutUser() {
