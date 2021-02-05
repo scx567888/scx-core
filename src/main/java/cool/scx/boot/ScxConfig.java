@@ -19,7 +19,7 @@ import java.util.function.Function;
 public final class ScxConfig {
     public static final String AppKey = "H8QS91GcuNGP9735";
     public static final String tokenKey = "S-Token";
-    public static final String coreVersion = "0.3.3";
+    public static final String coreVersion = "0.3.4";
     public static final File uploadFilePath;
     public static final String dataSourceUrl;
     public static final String dataSourceUsername;
@@ -41,6 +41,10 @@ public final class ScxConfig {
     public static final File pluginRoot;
     public static final Set<String> pluginDisabledList;
     public static final DateTimeFormatter dateTimeFormatter;
+    public static final boolean openHttps;
+    public static final File certificatePath;
+    public static final String certificatePassword;
+
     public static final String[] checkPermsUrls = new String[]{
             "/api/*",
     };
@@ -110,6 +114,18 @@ public final class ScxConfig {
         license = getConfigValue("scx.license", null, rootNode,
                 (s) -> NoCode(),
                 (f) -> StringUtils.println("✘ 未检测到 scx.license               \t -->\t 请检查 license 是否正确", Color.RED), JsonNode::asText, (a) -> a);
+
+        openHttps = getConfigValue("scx.https.is-open", true, rootNode,
+                (s) -> StringUtils.println("✔ 是否开启 https                       \t -->\t " + (s ? "是" : "否"), Color.GREEN),
+                (f) -> StringUtils.println("✘ 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : ", Color.RED), JsonNode::asBoolean, Boolean::valueOf);
+
+        certificatePath = getConfigValue("scx.https.certificate-path", PackageUtils.getFileByAppRoot("/certificate/scx_dev.jks"), rootNode,
+                (s) -> StringUtils.println("✔ 证书路径                           \t -->\t " + s.getPath(), Color.GREEN),
+                (f) -> StringUtils.println("✘ 未检测到 scx.https.certificate-path        \t -->\t 请检查证书路径是否正确", Color.RED), (c) -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
+
+        certificatePassword = getConfigValue("scx.https.certificate-password", "", rootNode,
+                (s) -> NoCode(),
+                (f) -> StringUtils.println("✘ 未检测到 scx.license               \t -->\t 请检查证书密码是否正确", Color.RED), c -> CryptoUtils.decryptText(c.asText()), CryptoUtils::decryptText);
 
         dateTimeFormatter = DateTimeFormatter.ofPattern(getConfigValue("scx.date-time-pattern", "yyyy-MM-dd HH:mm:ss", rootNode,
                 (s) -> StringUtils.println("✔ 日期格式为                          \t -->\t " + s, Color.GREEN),

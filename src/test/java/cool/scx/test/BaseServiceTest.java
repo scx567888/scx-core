@@ -5,6 +5,7 @@ import cool.scx.boot.ScxApp;
 import cool.scx.boot.ScxContext;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
+import cool.scx.util.CryptoUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -47,6 +48,8 @@ public class BaseServiceTest {
     @Test
     public static void test3() throws URISyntaxException, IOException, InterruptedException {
 //        System.out.println(1/0);
+        String s = CryptoUtils.encryptText("12345678");
+        System.out.println(s);
     }
 
     /**

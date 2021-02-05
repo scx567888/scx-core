@@ -7,7 +7,7 @@
     <artifactId>scx</artifactId>
     <packaging>jar</packaging>
     <name>scx</name>
-    <version>0.3.3</version>
+    <version>0.3.4</version>
     <description>scx 核心包</description>
     <url>https://github.com/scx567888/scx</url>
 

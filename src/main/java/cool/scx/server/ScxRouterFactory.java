@@ -11,6 +11,7 @@ import cool.scx.vo.Html;
 import cool.scx.vo.Json;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.CookieSameSite;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -162,7 +163,12 @@ public final class ScxRouterFactory {
     }
 
     private static void registerSessionHandler(Router router, Vertx vertx) {
-        router.route().order(0).handler(SessionHandler.create(LocalSessionStore.create(vertx)));
+        var sessionHandler = SessionHandler.create(LocalSessionStore.create(vertx));
+        sessionHandler.setCookieSameSite(CookieSameSite.NONE);
+        //设置为 true 表示只允许 https
+        sessionHandler.setCookieSecureFlag(true);
+        sessionHandler.setCookieHttpOnlyFlag(true);
+        router.route().order(0).handler(sessionHandler);
     }
 
 }
