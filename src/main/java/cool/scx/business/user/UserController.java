@@ -97,7 +97,7 @@ public class UserController {
 
     @ScxMapping(value = "info", httpMethod = HttpMethod.GET)
     public Json info(RoutingContext ctx) {
-        var userId = userService.getById(ctx.get(ScxConfig.tokenKey));
+        var userId = userService.getById(ctx.session().get(ScxConfig.tokenKey));
         //从session取出用户信息
         if (userId == null) {
             return Json.fail(Json.SESSION_TIMEOUT, "登录已失效");
