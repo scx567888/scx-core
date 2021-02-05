@@ -4,7 +4,6 @@ import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
 import cool.scx.base.Param;
 import cool.scx.boot.ScxConfig;
-import cool.scx.boot.ScxContext;
 import cool.scx.business.dept.DeptService;
 import cool.scx.business.dept.UserDept;
 import cool.scx.business.dept.UserDeptService;
@@ -235,10 +234,6 @@ public class UserService extends BaseService<User> {
         }
     }
 
-
-    public List<String> getCurrentUserPermsList() {
-        return getPermStrByUser(ScxContext.getCurrentUser());
-    }
 
     public User updateUser(User user) {
         var deptIds = user.deptIds;

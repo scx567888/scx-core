@@ -43,9 +43,15 @@ public final class BaseDao<Entity extends BaseModel> {
                 if (nonExistentFields.size() != 0) {
                     var columns = nonExistentFields.stream().map(field -> StringUtils.camel2Underscore(field.getName())).collect(Collectors.joining(" , ", " [ ", " ] "));
                     StringUtils.println("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!", Color.BRIGHT_BLUE);
-                    var alertSql = nonExistentFields.stream().map(field -> " ADD " + getSQLColumnByField(field)).collect(Collectors.joining(",", "", ""));
-                    var s = "ALTER TABLE `" + table.tableName + "` " + alertSql + " ; ALTER TABLE `" + table.tableName + "` " + getOtherSQLByField(nonExistentFields.toArray(Field[]::new)).stream().map(str -> " ADD " + str).collect(Collectors.joining(",", "", "")) + ";";
-                    SQLRunner.execute(s);
+                    var addSql = nonExistentFields.stream().map(field -> " ADD " + getSQLColumnByField(field)).collect(Collectors.joining(",", "", ""));
+                    var alertSql = "ALTER TABLE `" + table.tableName + "` " + addSql;
+                    var otherSQLByField = getOtherSQLByField(nonExistentFields.toArray(Field[]::new));
+                    if (otherSQLByField.size() > 0) {
+                        alertSql += otherSQLByField.stream().map(str -> " ADD " + str).collect(Collectors.joining(",", ",", ";"));
+                    } else {
+                        alertSql += ";";
+                    }
+                    SQLRunner.execute(alertSql);
                 }
             } else {
                 StringUtils.println("未找到表 " + table.tableName + " --> 正在自动建立 !!!", Color.BRIGHT_MAGENTA);
@@ -82,41 +88,11 @@ public final class BaseDao<Entity extends BaseModel> {
         if (tempTable != null) {
             return tempTable;
         }
-        var fields = getColumnFields(clazz);
-        tempTable = new TableInfo(fields, getTableName(clazz), getSelectColumns(fields));
+        tempTable = new TableInfo(clazz);
         tableCache.put(clazz.getName(), tempTable);
         return tempTable;
     }
 
-    /**
-     * todo  讨论 isDelete 是否应该在此处进行排除 受影响的 模块 fixTable
-     *
-     * @param clazz
-     * @return
-     */
-    private static Field[] getColumnFields(Class<?> clazz) {
-        return Stream.of(clazz.getFields())
-                .filter(field -> !field.isAnnotationPresent(NoColumn.class) && (ScxConfig.realDelete || !"isDeleted".equals(field.getName())))
-                .toArray(Field[]::new);
-    }
-
-    private static String getTableName(Class<?> clazz) {
-        var scxModel = clazz.getAnnotation(ScxModel.class);
-        if (scxModel != null && StringUtils.isNotEmpty(scxModel.tableName())) {
-            return scxModel.tableName();
-        }
-        if (scxModel != null && StringUtils.isNotEmpty(scxModel.tablePrefix())) {
-            return scxModel.tablePrefix() + "_" + StringUtils.camel2Underscore(clazz.getSimpleName());
-        }
-        return "scx_" + StringUtils.camel2Underscore(clazz.getSimpleName());
-    }
-
-    private static String[] getSelectColumns(Field[] fields) {
-        return Stream.of(fields).map(field -> {
-            var camel = StringUtils.camel2Underscore(field.getName());
-            return camel.contains("_") ? camel + " AS " + field.getName() : camel;
-        }).toArray(String[]::new);
-    }
 
     private static String getSQlColumnTypeByClass(Class<?> clazz) {
         var TypeMapping = new HashMap<Class<?>, String>();
@@ -286,26 +262,48 @@ public final class BaseDao<Entity extends BaseModel> {
 
         private final String[] selectColumns;//所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
 
-        private TableInfo(Field[] _fields, String _tableName, String[] _selectColumns) {
-            canInsertFields = Arrays.stream(_fields).filter(ta -> {
-                var c = ta.getAnnotation(Column.class);
-                if (c != null) {
-                    return !c.noInsert();
-                } else {
-                    return true;
-                }
+        private TableInfo(Class<?> clazz) {
+            tableName = getTableName(clazz);
+            allFields = getAllFields(clazz);
+            canInsertFields = getCanInsertFields(allFields);
+            canUpdateFields = getCanUpdateFields(allFields);
+            selectColumns = getSelectColumns(allFields);
+        }
+
+        private static Field[] getAllFields(Class<?> clazz) {
+            return Stream.of(clazz.getFields()).filter(field -> !field.isAnnotationPresent(NoColumn.class)).toArray(Field[]::new);
+        }
+
+        private static Field[] getCanInsertFields(Field[] allFields) {
+            return Arrays.stream(allFields).filter(ta -> {
+                var column = ta.getAnnotation(Column.class);
+                return column == null || !column.noInsert();
             }).toArray(Field[]::new);
-            canUpdateFields = Arrays.stream(_fields).filter(ta -> {
-                var c = ta.getAnnotation(Column.class);
-                if (c == null) {
-                    return true;
-                } else {
-                    return !c.noUpdate();
-                }
+        }
+
+        private static Field[] getCanUpdateFields(Field[] allFields) {
+            return Arrays.stream(allFields).filter(ta -> {
+                var column = ta.getAnnotation(Column.class);
+                return column == null || !column.noUpdate();
             }).toArray(Field[]::new);
-            allFields = _fields;
-            tableName = _tableName;
-            selectColumns = _selectColumns;
+        }
+
+        private static String[] getSelectColumns(Field[] allFields) {
+            return Stream.of(allFields).filter(field -> ScxConfig.realDelete || !"isDeleted".equals(field.getName())).map(field -> {
+                var underscore = StringUtils.camel2Underscore(field.getName());
+                return underscore.contains("_") ? underscore + " AS " + field.getName() : underscore;
+            }).toArray(String[]::new);
+        }
+
+        private static String getTableName(Class<?> clazz) {
+            var scxModel = clazz.getAnnotation(ScxModel.class);
+            if (scxModel != null && StringUtils.isNotEmpty(scxModel.tableName())) {
+                return scxModel.tableName();
+            }
+            if (scxModel != null && StringUtils.isNotEmpty(scxModel.tablePrefix())) {
+                return scxModel.tablePrefix() + "_" + StringUtils.camel2Underscore(clazz.getSimpleName());
+            }
+            return "scx_" + StringUtils.camel2Underscore(clazz.getSimpleName());
         }
     }
 }

@@ -1,10 +1,5 @@
 package cool.scx.boot;
 
-import cool.scx.util.PackageUtils;
-
-import java.io.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 public final class ScxListener {
     static {
 //        try {

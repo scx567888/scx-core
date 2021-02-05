@@ -1,7 +1,7 @@
 package cool.scx.business.system;
 
-import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
+import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
 import cool.scx.base.Param;
 import cool.scx.boot.ScxConfig;
@@ -9,7 +9,7 @@ import cool.scx.boot.ScxContext;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.util.NetUtils;
 
-@ScxController("api/scxLogService")
+@ScxService
 public class ScxLogService extends BaseService<ScxLog> {
 
 
@@ -63,7 +63,7 @@ public class ScxLogService extends BaseService<ScxLog> {
             var log = new ScxLog();
             log.userIp = NetUtils.getIpAddr();
             try {
-                log.username = ScxContext.getCurrentUser().username;
+                log.username = ScxContext.getCurrentUser(null).username;
                 log.type = 1;
             } catch (Exception e) {
                 log.username = "系统日志";

@@ -4,7 +4,6 @@ import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.boot.ScxConfig;
 import cool.scx.boot.ScxContext;
-import cool.scx.business.user.User;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
@@ -16,10 +15,8 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
-import io.vertx.ext.web.handler.CorsHandler;
-import io.vertx.ext.web.handler.SessionHandler;
-import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.Session;
+import io.vertx.ext.web.handler.*;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 
 import java.util.Arrays;
@@ -29,13 +26,22 @@ public final class ScxRouterFactory {
 
     public static Router getRouter(Vertx vertx) {
         var router = Router.router(vertx);
-//        router.route().handler(CookieHandler.c);
-        router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
+        //  注册 session 处理器
+        registerSessionHandler(router, vertx);
+        // 注册 跨域 处理器
         registerCorsHandler(router);
+        // 处理 body 请求体处理器
         registerBodyHandler(router);
+        // 处理 scx 权限处理器 此处校验是否登录
         registerScxPermsHandler(router);
+        // 处理 scxMapping 处理器 此处校验是否拥有权限
         registerScxMappingHandler(router);
+        // 静态文件 处理器
         registerStaticHandler(router);
+        // 异常处理器
+        router.route().failureHandler(ErrorHandler.create(vertx));
+        // 当以上所有处理器都无法匹配时 向客户端返回 404
+        router.route().handler(handle -> handle.fail(404));
         return router;
     }
 
@@ -45,21 +51,13 @@ public final class ScxRouterFactory {
             @Override
             public void handle(RoutingContext ctx) {
                 String url = ctx.request().uri().split("\\?")[0];
-                if (!excludeCheckPermsUrls.contains(url)) {
-                    String sToken = ctx.request().getHeader("S-Token");
-                    User user = ScxContext.getUserFromSessionByToken(sToken);
-                    if (user == null) {
-//                        HttpServerResponse response = ctx.response();
-//                        response.putHeader("content-type", "application/json; charset=utf-8");
-//                        response.end(ObjectUtils.beanToJson(Json.fail(Json.ILLEGAL_TOKEN, "未登录")));
-                        ctx.next();
-                    } else {
-                        ctx.next();
-                    }
+                if (!excludeCheckPermsUrls.contains(url) && ctx.session().get(ScxConfig.tokenKey) == null) {
+                    HttpServerResponse response = ctx.response();
+                    response.putHeader("content-type", "application/json; charset=utf-8");
+                    response.end(ObjectUtils.beanToJson(Json.fail(Json.ILLEGAL_TOKEN, "未登录")));
                 } else {
                     ctx.next();
                 }
-
             }
         };
         for (String checkPermsUrl : ScxConfig.checkPermsUrls) {
@@ -116,6 +114,9 @@ public final class ScxRouterFactory {
     }
 
     private static void callHandler(RoutingContext ctx, ScxRouteHandler scxRouteHandler) {
+        Session session = ctx.session();
+        Object name = session.get("name");
+        System.out.println(name);
         var response = ctx.response();
         fillContentType(response, scxRouteHandler);
         response.end(getStringFormObject(scxRouteHandler.getResult(ctx)));
@@ -158,6 +159,10 @@ public final class ScxRouterFactory {
 
     private static void registerStaticHandler(Router router) {
         router.route(ScxConfig.cmsResourceUrl).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations.getPath()));
+    }
+
+    private static void registerSessionHandler(Router router, Vertx vertx) {
+        router.route().order(0).handler(SessionHandler.create(LocalSessionStore.create(vertx)));
     }
 
 }
