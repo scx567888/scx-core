@@ -10,6 +10,7 @@ import cool.scx.util.StringUtils;
 
 import java.io.File;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -152,11 +153,11 @@ public final class ScxConfig {
                 (s) -> StringUtils.println("✔ 允许的请求源                           \t -->\t " + s, Color.GREEN),
                 (f) -> StringUtils.println("✘ 未检测到 scx.allowed-origin           \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asText, (a) -> a);
 
-        dataSourceUrl = getConfigValue("scx.data-source.url", null, (s) -> NoCode(), (f) -> NoCode(), JsonNode::asText, (a) -> a);
+        dataSourceUrl = getConfigValue("scx.data-source.url");
 
-        dataSourceUsername = getConfigValue("scx.data-source.username", null, (s) -> NoCode(), (f) -> NoCode(), JsonNode::asText, (a) -> a);
+        dataSourceUsername = getConfigValue("scx.data-source.username");
 
-        dataSourcePassword = getConfigValue("scx.data-source.password", null, (s) -> NoCode(), (f) -> NoCode(), (c) -> CryptoUtils.decryptText(c.asText()), CryptoUtils::decryptText);
+        dataSourcePassword = CryptoUtils.decryptText(getConfigValue("scx.data-source.password"));
 
         fixTable = getConfigValue("scx.fix-table", false,
                 (s) -> StringUtils.println("✔ 修复数据表                          \t -->\t " + (s ? "是" : "否"), Color.GREEN),
@@ -185,6 +186,39 @@ public final class ScxConfig {
             StringUtils.println("✘ 配置文件已损坏!!!", Color.RED);
         }
         return rootNode;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getConfigValue(String keyPath, T defaultVal) {
+        return (T) getConfigValue(keyPath, defaultVal, ScxConfig::NoCode, ScxConfig::NoCode, (c) -> {
+            if (c.isArray()) {
+                var tempList = new ArrayList<Object>();
+                c.forEach(cc -> tempList.add(getValueByJsonNode(cc)));
+                return tempList;
+            } else {
+                return getValueByJsonNode(c);
+            }
+        }, (a) -> a);
+    }
+
+    public static <T> T getConfigValue(String keyPath) {
+        return getConfigValue(keyPath, null);
+    }
+
+    private static Object getValueByJsonNode(JsonNode jsonNode) {
+        if (jsonNode.isInt()) {
+            return jsonNode.asInt();
+        }
+        if (jsonNode.isLong()) {
+            return jsonNode.asLong();
+        }
+        if (jsonNode.isDouble()) {
+            return jsonNode.asDouble();
+        }
+        if (jsonNode.isBoolean()) {
+            return jsonNode.asBoolean();
+        }
+        return jsonNode.asText();
     }
 
     public static <T> T getConfigValue(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun, Function<JsonNode, T> convertFun, Function<String, T> convertArgFun) {
@@ -223,7 +257,7 @@ public final class ScxConfig {
 
 
     //为了保持 lambda 表达式的整洁
-    public static void NoCode() {
+    public static void NoCode(Object... objects) {
 
     }
 
