@@ -6,7 +6,7 @@
         <img src="https://dev.azure.com/scx567888/scx/_apis/build/status/scx567888.scx?branchName=master"/>
     </a>
     <a target="_blank" href="https://github.com/scx567888/scx">
-        <img src="https://img.shields.io/badge/version-0.3.4-blueviolet"/>
+        <img src="https://img.shields.io/badge/version-0.3.5-blueviolet"/>
     </a> 
     <a target="_blank" href="https://github.com/scx567888/scx">
         <img src="https://img.shields.io/github/languages/code-size/scx567888/scx?color=orange"/>
