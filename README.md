@@ -20,7 +20,7 @@
 </p>
 <p align="center">
    <a target="_blank" href="https://github.com/spring-projects/spring-boot">
-        <img src="https://img.shields.io/badge/Vert.x-4.0.0-blue"/>
+        <img src="https://img.shields.io/badge/Vert.x-4.0.2-blue"/>
     </a>
     <a target="_blank" href="https://github.com/apache/poi">
         <img src="https://img.shields.io/badge/Freemarker-2.3.30-blue"/>
