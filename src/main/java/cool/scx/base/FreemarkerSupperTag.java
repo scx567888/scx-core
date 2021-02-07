@@ -36,15 +36,25 @@ public interface FreemarkerSupperTag extends TemplateDirectiveModel {
      */
     Object getParams(Map params);
 
+
     /**
      * 获取 long 参数
+     *
+     * @param params p
+     * @param key    k
+     * @return l
      */
     default Long getLong(Map params, String key) {
         return Long.valueOf(getString(params, key));
     }
 
+
     /**
      * 获取 String 参数
+     *
+     * @param params p
+     * @param key    k
+     * @return s
      */
     default String getString(Map params, String key) {
         Object element = params.get(key);
@@ -57,8 +67,13 @@ public interface FreemarkerSupperTag extends TemplateDirectiveModel {
         return value;
     }
 
+
     /**
      * 获取 int 参数
+     *
+     * @param params params
+     * @param key    key
+     * @return i
      */
     default Integer getInt(Map params, String key) {
         return Integer.valueOf(getString(params, key));

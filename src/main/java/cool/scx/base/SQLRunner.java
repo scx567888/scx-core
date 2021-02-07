@@ -76,8 +76,15 @@ public final class SQLRunner {
         return query(sql, param, c -> c);
     }
 
+
     /**
      * 使用参数值 paramMap，填充 PreparedStatement
+     *
+     * @param con      连接对象
+     * @param sql      未处理的sql 语句
+     * @param paramMap 参数 map
+     * @return PreparedStatement
+     * @throws SQLException sql 异常
      */
     public static PreparedStatement getPreparedStatement(Connection con, String sql, Map<String, Object> paramMap) throws SQLException {
         var matcher = pattern.matcher(sql);

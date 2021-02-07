@@ -56,6 +56,8 @@ public class UserController {
      * 系统无法登录 此处新建一个用户 名为 admin 密码为 password 的超级管理员用户
      *
      * @param username 用户 包含用户名和密码
+     * @param password 密码
+     * @param ctx      上下文
      * @return json
      */
     @ScxMapping
@@ -192,14 +194,21 @@ public class UserController {
     /**
      * 退出登录方法 清空 session 里的登录数据
      *
+     * @param ctx RoutingContext
      * @return 是否成功退出
      */
-    @ScxMapping()
+    @ScxMapping
     public Json logout(RoutingContext ctx) {
         ScxContext.logoutUser(ctx);
         return Json.ok("User Logged Out");
     }
 
+    /**
+     * 根据用户名查找用户
+     *
+     * @param queryUser 查询的用户
+     * @return 是否查找到
+     */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json findByUsername(User queryUser) {
         var user = userService.findByUsername(queryUser.username);
@@ -233,7 +242,8 @@ public class UserController {
     /**
      * 用户自己更新的信息
      *
-     * @param params 用户信息
+     * @param params  用户信息
+     * @param context 上下问
      * @return 通知
      */
     @ScxMapping(useMethodNameAsUrl = true)

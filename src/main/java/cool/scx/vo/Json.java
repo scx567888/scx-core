@@ -77,7 +77,8 @@ public final class Json extends HashMap<String, Object> {
     /**
      * 自定义 code 码
      *
-     * @param message 带有自定义 code 码的错误信息
+     * @param code    自定义的 code 码
+     * @param message 消息
      * @return json
      */
     public static Json fail(int code, String message) {
@@ -87,14 +88,22 @@ public final class Json extends HashMap<String, Object> {
 
     /**
      * 设置操作返回的数据，数据使用自定义的key存储
+     *
+     * @param dataKey 自定义的key
+     * @param dataVal 值
+     * @return json
      */
     public Json data(String dataKey, Object dataVal) {
         this.put(dataKey, dataVal);
         return this;
     }
 
+
     /**
      * 设置操作返回的数据集合
+     *
+     * @param dataVal 数据
+     * @return json
      */
     public Json items(Object dataVal) {
         this.put("items", dataVal);

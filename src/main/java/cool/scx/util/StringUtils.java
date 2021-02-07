@@ -45,8 +45,8 @@ public class StringUtils {
     }
 
     /**
-     * 驼峰模式字符串转换为下划线字符串 <br/>
-     * 如：camelStr:"UserInfo"    separator:'_' <br/>
+     * 驼峰模式字符串转换为下划线字符串 <br>
+     * 如：camelStr:"UserInfo"    separator:'_' <br>
      * return "user_info"
      *
      * @param camelStr 驼峰字符串

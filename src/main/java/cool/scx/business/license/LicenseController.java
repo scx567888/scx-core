@@ -60,6 +60,8 @@ public class LicenseController {
     /**
      * 生成密钥
      *
+     * @param adminPassword adminPassword
+     * @param stopTime      stopTime
      * @return 密钥生成页面
      */
     @ScxMapping("/make")
@@ -75,6 +77,7 @@ public class LicenseController {
     /**
      * 恢复 License
      *
+     * @param adminPassword adminPassword
      * @return 密钥生成页面
      */
     @ScxMapping("/recovery")

@@ -91,12 +91,14 @@ public class UserService extends BaseService<User> {
         return false;
     }
 
+
     /**
      * 解密密码 返回加密后的密码 和盐值
      * 用于登录或找回密码
+     *
+     * @param username 用户名
+     * @return 寻找到的用户
      */
-
-
     public User findByUsername(String username) {
         var param = new Param<>(new User());
         param.queryObject.username = username;

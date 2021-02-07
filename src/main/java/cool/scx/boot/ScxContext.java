@@ -59,10 +59,12 @@ public final class ScxContext {
         ctx.session().remove(ScxConfig.tokenKey);
     }
 
+
     /**
-     * 获取当前用户
+     * 根据 RoutingContext 获取当前用户
      *
-     * @return
+     * @param ctx RoutingContext
+     * @return 当前用户
      */
     public static User getCurrentUser(RoutingContext ctx) {
         Long currentUserId = ctx.session().get(ScxConfig.tokenKey);

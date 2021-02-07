@@ -63,8 +63,14 @@ public final class ObjectUtils {
         return objectMapper.convertValue(map, clazz);
     }
 
+
     /**
      * 处理字符串，基础类型以及对应的包装类型
+     *
+     * @param value       需要处理的值
+     * @param targetClass 需要返回的类型
+     * @param <T>         T
+     * @return 处理后的值
      */
     @SuppressWarnings("unchecked")
     public static <T> T parseSimpleType(Object value, Class<T> targetClass) {

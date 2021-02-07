@@ -25,6 +25,8 @@ public class ScxLogService extends BaseService<ScxLog> {
 
     /**
      * 只在控制台打印日志
+     *
+     * @param o 日志内容
      */
     public static void outLog(Object o) {
         if (ScxConfig.showLog) {
@@ -55,8 +57,12 @@ public class ScxLogService extends BaseService<ScxLog> {
         recordLog(title, title);
     }
 
+
     /**
      * 记录日志到数据库
+     *
+     * @param title   日志标题
+     * @param content 日志内容
      */
     public void recordLog(String title, String content) {
         if (ScxConfig.showLog) {

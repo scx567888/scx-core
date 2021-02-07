@@ -20,7 +20,7 @@ import java.util.function.Function;
 public final class ScxConfig {
     public static final String AppKey = "H8QS91GcuNGP9735";
     public static final String tokenKey = "S-Token";
-    public static final String coreVersion = "0.3.5";
+    public static final String coreVersion = "0.3.6";
     public static final String sessionCookieName = "scx.session";
     public static final JsonNode scxConfigJsonNode;
     public static final File uploadFilePath;

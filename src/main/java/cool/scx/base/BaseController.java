@@ -13,7 +13,10 @@ import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.vo.Json;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -120,13 +123,19 @@ public class BaseController {
         return Json.ok().data("isUnique", b);
     }
 
+
     /**
      * 通用下载资源方法
      *
-     * @param fileName 要下载的文件名
+     * @param year      year
+     * @param month     month
+     * @param day       day
+     * @param hour      hour
+     * @param timestamp timestamp
+     * @param fileName  要下载的文件名
      */
     @ScxMapping("/download/:year/:month/:day/:hour/:timestamp/:fileName")
-    public void download(String year, String month, String day, String hour, String timestamp, String fileName) throws UnsupportedEncodingException {
+    public void download(String year, String month, String day, String hour, String timestamp, String fileName) {
         var fullPath = ScxConfig.uploadFilePath + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName;
         //FileUtils.downloadFile(response, request, fullPath);
         scxLogService.outAndRecordLog("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + fileName);
@@ -136,8 +145,12 @@ public class BaseController {
     /**
      * 通用查看图片方法
      *
-     * @param fileName 要下载的文件名
-     *                 下载文件或错误
+     * @param year      year
+     * @param month     month
+     * @param day       day
+     * @param hour      hour
+     * @param timestamp timestamp
+     * @param fileName  要下载的文件名
      */
     @ScxMapping("/showPicture/:year/:month:/:day/:hour/:timestamp/:fileName")
     public void showPicture(String year,
@@ -169,10 +182,23 @@ public class BaseController {
 
 
     /**
+     *
+     *
+     * @param file
+     * @param fileName
+     * @return
+     */
+
+
+    /**
      * 单个文件上传 和 分片文件上传
      *
-     * @param file     文件
-     * @param fileName 文件名
+     * @param file         文件
+     * @param fileName     文件名
+     * @param fileSize     文件大小
+     * @param chunksNumber 当前分片数
+     * @param chunk        总分片数
+     * @param type         文件类型 , 分为 单个文件和分片文件
      * @return 文件保存的路径
      */
     @ScxMapping("/upload")

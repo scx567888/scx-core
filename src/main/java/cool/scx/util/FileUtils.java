@@ -14,11 +14,11 @@ import java.util.*;
  */
 public class FileUtils {
 
-    /**
-     * 文件 下载 公共方法
-     *
-     * @param response response
-     */
+//    /**
+//     * 文件 下载 公共方法
+//     *
+//     * @param response response
+//     */
     //public static void downloadFile(HttpServletResponse response, HttpServletRequest request, String downloadFilePath) throws UnsupportedEncodingException {
     //    var downloadFile = new File(downloadFilePath);
     //    var context = request.getServletContext();
@@ -105,12 +105,12 @@ public class FileUtils {
     //    }
     //}
 
-    /**
-     * 展示图片 通用方法
-     *
-     * @param response a
-     * @param file     a
-     */
+//    /**
+//     * 展示图片 通用方法
+//     *
+//     * @param response a
+//     * @param file     a
+//     */
     //public static void showPicture(HttpServletResponse response, File file, Integer width, Integer height) {
     //    var imageContentType = new HashMap<String, String>();
     //    imageContentType.put("jpg", "image/jpeg");
@@ -284,6 +284,7 @@ public class FileUtils {
     /**
      * 获取文件夹下的文件列表
      *
+     * @param filePath 文件路径
      * @return 文件列表
      * @throws IOException 读取错误
      */

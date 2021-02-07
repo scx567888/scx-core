@@ -18,10 +18,12 @@ public class LicenseService extends BaseService<License> {
         this.scxLogService = scxLogService;
     }
 
+
     /**
      * 加密时间
      *
      * @param endDate 截至时间
+     * @return 加密后的字符串
      */
     public String encryptionTime(String endDate) {
         var encrypt = "";
