@@ -168,6 +168,7 @@ public final class ScxRouterFactory {
         //设置为 true 表示只允许 https
         sessionHandler.setCookieSecureFlag(true);
         sessionHandler.setCookieHttpOnlyFlag(true);
+        sessionHandler.setSessionCookieName(ScxConfig.sessionCookieName);
         router.route().order(0).handler(sessionHandler);
     }
 
