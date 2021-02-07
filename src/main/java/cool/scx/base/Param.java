@@ -8,6 +8,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * <p>Param class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class Param<Entity> {
     private final Field[] entityFields;
     public Map<String, SortType> orderBy = new HashMap<>();//排序的字段
@@ -17,11 +23,23 @@ public final class Param<Entity> {
     private Integer page = 0;//分页用
     private Integer limit = 0;//分页用
 
+    /**
+     * <p>Constructor for Param.</p>
+     *
+     * @param queryObject a Entity object.
+     */
     public Param(Entity queryObject) {
         this.queryObject = queryObject;
         this.entityFields = queryObject.getClass().getFields();
     }
 
+    /**
+     * <p>addOrderBy.</p>
+     *
+     * @param orderByColumn a {@link java.lang.String} object.
+     * @param sortType a {@link cool.scx.enumeration.SortType} object.
+     * @return a {@link cool.scx.base.Param} object.
+     */
     public Param<Entity> addOrderBy(String orderByColumn, SortType sortType) {
         if (checkStringInFields(orderByColumn)) {
             this.orderBy.put(orderByColumn, sortType);
@@ -31,6 +49,12 @@ public final class Param<Entity> {
         return this;
     }
 
+    /**
+     * <p>addGroupBy.</p>
+     *
+     * @param groupByColumn a {@link java.lang.String} object.
+     * @return a {@link cool.scx.base.Param} object.
+     */
     public Param<Entity> addGroupBy(String groupByColumn) {
         if (checkStringInFields(groupByColumn)) {
             this.groupBy.add(groupByColumn);
@@ -41,6 +65,8 @@ public final class Param<Entity> {
     }
 
     /**
+     * <p>setPagination.</p>
+     *
      * @param limit 每页数量
      * @param page  分页数量
      * @return p
@@ -55,6 +81,12 @@ public final class Param<Entity> {
         return this;
     }
 
+    /**
+     * <p>setPagination.</p>
+     *
+     * @param limit a {@link java.lang.Integer} object.
+     * @return a {@link cool.scx.base.Param} object.
+     */
     public Param<Entity> setPagination(Integer limit) {
         if (limit >= 0) {
             this.page = 1;
@@ -65,10 +97,20 @@ public final class Param<Entity> {
         return this;
     }
 
+    /**
+     * <p>Getter for the field <code>page</code>.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer getPage() {
         return page;
     }
 
+    /**
+     * <p>Getter for the field <code>limit</code>.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer getLimit() {
         return limit;
     }

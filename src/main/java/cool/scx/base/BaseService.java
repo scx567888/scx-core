@@ -9,12 +9,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+/**
+ * <p>Abstract BaseService class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public abstract class BaseService<Entity extends BaseModel> {
 
     private final BaseDao<Entity> baseDao;
     private final Class<Entity> entityClass;
 
     @SuppressWarnings("unchecked")
+    /**
+     * <p>Constructor for BaseService.</p>
+     */
     public BaseService() {
         entityClass = (Class<Entity>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         baseDao = new BaseDao<>(entityClass);
@@ -79,6 +88,12 @@ public abstract class BaseService<Entity extends BaseModel> {
 
     }
 
+    /**
+     * <p>deleteList.</p>
+     *
+     * @param entityList a {@link java.util.List} object.
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer deleteList(List<Entity> entityList) {
         var deleteCount = 0;
         if (ScxConfig.realDelete) {
@@ -130,6 +145,12 @@ public abstract class BaseService<Entity extends BaseModel> {
 
     }
 
+    /**
+     * <p>revokeDeleteList.</p>
+     *
+     * @param entityList a {@link java.util.List} object.
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer revokeDeleteList(List<Entity> entityList) {
         var deleteCount = 0;
         if (ScxConfig.realDelete) {
@@ -167,6 +188,12 @@ public abstract class BaseService<Entity extends BaseModel> {
         return baseDao.delete(param);
     }
 
+    /**
+     * <p>deleteListIgnoreConfig.</p>
+     *
+     * @param entityList a {@link java.util.List} object.
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer deleteListIgnoreConfig(List<Entity> entityList) {
         var deleteCount = 0;
         for (Entity entity : entityList) {
@@ -176,6 +203,12 @@ public abstract class BaseService<Entity extends BaseModel> {
         return deleteCount;
     }
 
+    /**
+     * <p>update.</p>
+     *
+     * @param param a {@link cool.scx.base.Param} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Entity> update(Param<Entity> param) {
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
         var ids = baseDao.update(param, true);
@@ -185,6 +218,12 @@ public abstract class BaseService<Entity extends BaseModel> {
         return baseDao.list(defaultParam, false);
     }
 
+    /**
+     * <p>update.</p>
+     *
+     * @param entity a Entity object.
+     * @return a Entity object.
+     */
     public Entity update(Entity entity) {
         var param = new Param<>(entity);
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
@@ -211,6 +250,12 @@ public abstract class BaseService<Entity extends BaseModel> {
         return baseDao.list(defaultParam, false);
     }
 
+    /**
+     * <p>updateIncludeNull.</p>
+     *
+     * @param entity a Entity object.
+     * @return a Entity object.
+     */
     public Entity updateIncludeNull(Entity entity) {
         var param = new Param<>(entity);
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
@@ -249,6 +294,12 @@ public abstract class BaseService<Entity extends BaseModel> {
         return list.size() > 0 ? list.get(0) : null;
     }
 
+    /**
+     * <p>getWithLike.</p>
+     *
+     * @param param a {@link cool.scx.base.Param} object.
+     * @return a Entity object.
+     */
     public Entity getWithLike(Param<Entity> param) {
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
         param.setPagination(1);
@@ -267,6 +318,12 @@ public abstract class BaseService<Entity extends BaseModel> {
         return baseDao.count(param, true);
     }
 
+    /**
+     * <p>countWithLike.</p>
+     *
+     * @param param a {@link cool.scx.base.Param} object.
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer countWithLike(Param<Entity> param) {
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
         return baseDao.count(param, false);
@@ -284,6 +341,12 @@ public abstract class BaseService<Entity extends BaseModel> {
         return baseDao.list(param, true);
     }
 
+    /**
+     * <p>listByIds.</p>
+     *
+     * @param ids a {@link java.lang.Long} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Entity> listByIds(Long... ids) {
         var defaultParam = new Param<>(ScxContext.getBean(entityClass));
         defaultParam.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
@@ -291,16 +354,34 @@ public abstract class BaseService<Entity extends BaseModel> {
         return baseDao.list(defaultParam, true);
     }
 
+    /**
+     * <p>listWithLike.</p>
+     *
+     * @param param a {@link cool.scx.base.Param} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Entity> listWithLike(Param<Entity> param) {
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
         return baseDao.list(param, false);
     }
 
+    /**
+     * <p>listMap.</p>
+     *
+     * @param param a {@link cool.scx.base.Param} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Map<String, Object>> listMap(Param<Entity> param) {
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
         return baseDao.listMap(param, true);
     }
 
+    /**
+     * <p>listMapByIds.</p>
+     *
+     * @param ids a {@link java.lang.Long} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Map<String, Object>> listMapByIds(Long... ids) {
         var defaultParam = new Param<>(ScxContext.getBean(entityClass));
         defaultParam.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
@@ -308,17 +389,33 @@ public abstract class BaseService<Entity extends BaseModel> {
         return baseDao.listMap(defaultParam, true);
     }
 
+    /**
+     * <p>listMapWithLike.</p>
+     *
+     * @param param a {@link cool.scx.base.Param} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Map<String, Object>> listMapWithLike(Param<Entity> param) {
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
         return baseDao.listMap(param, false);
     }
 
+    /**
+     * <p>listAll.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Entity> listAll() {
         var param = new Param<>(ScxContext.getBean(entityClass)).addOrderBy("id", SortType.DESC);
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
         return baseDao.list(param, false);
     }
 
+    /**
+     * <p>listMapAll.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Map<String, Object>> listMapAll() {
         var param = new Param<>(ScxContext.getBean(entityClass)).addOrderBy("id", SortType.DESC);
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;

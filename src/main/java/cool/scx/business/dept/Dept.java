@@ -8,6 +8,9 @@ import cool.scx.base.BaseModel;
 
 /**
  * 部门
+ *
+ * @author 司昌旭
+ * @version 0.3.6
  */
 @ScxModel(tablePrefix = "core")
 public class Dept extends BaseModel {

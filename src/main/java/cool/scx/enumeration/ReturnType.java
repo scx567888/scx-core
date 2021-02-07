@@ -1,5 +1,11 @@
 package cool.scx.enumeration;
 
+/**
+ * <p>ReturnType class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public enum ReturnType {
     JSON("JSON"),
     HTML("HTML"),
@@ -12,6 +18,7 @@ public enum ReturnType {
         this.return_type_str = returnTypeStr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return this.return_type_str;

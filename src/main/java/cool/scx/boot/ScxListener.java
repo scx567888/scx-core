@@ -1,5 +1,11 @@
 package cool.scx.boot;
 
+/**
+ * <p>ScxListener class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class ScxListener {
     static {
 //        try {
@@ -26,6 +32,9 @@ public final class ScxListener {
 //        }));
     }
 
+    /**
+     * <p>init.</p>
+     */
     public static void init() {
 
     }

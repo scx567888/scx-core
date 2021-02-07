@@ -8,8 +8,20 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+/**
+ * <p>NetUtils class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class NetUtils {
 
+    /**
+     * <p>isLocalePortUsing.</p>
+     *
+     * @param port a int.
+     * @return a boolean.
+     */
     public static boolean isLocalePortUsing(int port) {
         var flag = true;
         try {
@@ -19,6 +31,14 @@ public final class NetUtils {
         return flag;
     }
 
+    /**
+     * <p>isPortUsing.</p>
+     *
+     * @param host a {@link java.lang.String} object.
+     * @param port a int.
+     * @return a boolean.
+     * @throws java.net.UnknownHostException if any.
+     */
     public static boolean isPortUsing(String host, int port) throws UnknownHostException {
         boolean flag = false;
         var theAddress = InetAddress.getByName(host);
@@ -32,6 +52,9 @@ public final class NetUtils {
         return flag;
     }
 
+    /**
+     * <p>text.</p>
+     */
     public static void text() {
         String url = "https://www.baidu.com";
         String s = sendHttpRequest(url, "GET");
@@ -39,6 +62,8 @@ public final class NetUtils {
     }
 
     /**
+     * <p>sendHttpRequest.</p>
+     *
      * @param urlParam      url
      * @param requestMethod 请求方式
      * @return 返回String类型的字符串 ，如果请求失败，返回null
@@ -181,6 +206,12 @@ public final class NetUtils {
         return null;
     }
 
+    /**
+     * <p>normalizeHostAddress.</p>
+     *
+     * @param localHost a {@link java.net.InetAddress} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String normalizeHostAddress(final InetAddress localHost) {
         if (localHost instanceof Inet6Address) {
             return "[" + localHost.getHostAddress() + "]";

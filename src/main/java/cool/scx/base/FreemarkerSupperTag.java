@@ -11,10 +11,13 @@ import java.util.Map;
  * Freemarker 标签父类
  * <p>
  * 让子类实现后，利用模版设计模式，委派给子类
+ *
+ * @author 司昌旭
+ * @version 0.3.6
  */
-
 public interface FreemarkerSupperTag extends TemplateDirectiveModel {
 
+    /** {@inheritDoc} */
     @Override
     default void execute(Environment environment, Map params, TemplateModel[] model, TemplateDirectiveBody body) throws TemplateException, IOException {
         Object paramWrap = getParams(params);
@@ -25,6 +28,11 @@ public interface FreemarkerSupperTag extends TemplateDirectiveModel {
     }
 
 
+    /**
+     * <p>getVariable.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String getVariable();
 
     /**

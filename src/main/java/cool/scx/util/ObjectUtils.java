@@ -13,6 +13,12 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <p>ObjectUtils class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class ObjectUtils {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -27,6 +33,12 @@ public final class ObjectUtils {
         objectMapper.registerModule(timeModule);
     }
 
+    /**
+     * <p>beanToJson.</p>
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String beanToJson(Object o) {
         try {
             return objectMapper.writeValueAsString(o);
@@ -35,6 +47,12 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * <p>JsonToTree.</p>
+     *
+     * @param json a {@link java.lang.String} object.
+     * @return a {@link com.fasterxml.jackson.databind.JsonNode} object.
+     */
     public static JsonNode JsonToTree(String json) {
         try {
             return objectMapper.readTree(json);
@@ -43,6 +61,14 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * <p>jsonToBean.</p>
+     *
+     * @param json a {@link java.lang.String} object.
+     * @param clazz a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     public static <T> T jsonToBean(String json, Class<T> clazz) {
         try {
             return objectMapper.readValue(json, clazz);
@@ -51,6 +77,14 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * <p>jsonNodeToBean.</p>
+     *
+     * @param jsonNode a {@link com.fasterxml.jackson.databind.JsonNode} object.
+     * @param clazz a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     public static <T> T jsonNodeToBean(JsonNode jsonNode, Class<T> clazz) {
         try {
             return objectMapper.treeToValue(jsonNode, clazz);
@@ -59,6 +93,14 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * <p>mapToBean.</p>
+     *
+     * @param map a {@link java.util.Map} object.
+     * @param clazz a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     public static <T> T mapToBean(Map<String, ?> map, Class<T> clazz) {
         return objectMapper.convertValue(map, clazz);
     }
@@ -108,10 +150,23 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * <p>beanToMap.</p>
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link java.util.Map} object.
+     */
     public static Map<String, Object> beanToMap(Object o) {
         return objectMapper.convertValue(o, mapType);
     }
 
+    /**
+     * <p>beanToMapWithIndex.</p>
+     *
+     * @param index a {@link java.lang.Integer} object.
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link java.util.Map} object.
+     */
     public static Map<String, Object> beanToMapWithIndex(Integer index, Object o) {
         var clazzFields = o.getClass().getFields(); // 获取所有方法
         var objectMap = new HashMap<String, Object>(1 + (int) (clazzFields.length / 0.75));

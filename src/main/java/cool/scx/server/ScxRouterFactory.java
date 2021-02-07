@@ -23,8 +23,20 @@ import io.vertx.ext.web.sstore.LocalSessionStore;
 import java.util.Arrays;
 import java.util.HashSet;
 
+/**
+ * <p>ScxRouterFactory class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class ScxRouterFactory {
 
+    /**
+     * <p>getRouter.</p>
+     *
+     * @param vertx a {@link io.vertx.core.Vertx} object.
+     * @return a {@link io.vertx.ext.web.Router} object.
+     */
     public static Router getRouter(Vertx vertx) {
         var router = Router.router(vertx);
         //  注册 session 处理器

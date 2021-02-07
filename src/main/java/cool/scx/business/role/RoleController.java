@@ -6,15 +6,31 @@ import cool.scx.base.Param;
 import cool.scx.enumeration.SortType;
 import cool.scx.vo.Json;
 
+/**
+ * <p>RoleController class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxController
 public class RoleController {
 
     RoleService roleService;
 
+    /**
+     * <p>Constructor for RoleController.</p>
+     *
+     * @param roleService a {@link cool.scx.business.role.RoleService} object.
+     */
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
     }
 
+    /**
+     * <p>listRole.</p>
+     *
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json listRole() {
         var param = new Param<>(new Role());
@@ -22,6 +38,12 @@ public class RoleController {
         return Json.ok().items(roleService.list(param));
     }
 
+    /**
+     * <p>updateRole.</p>
+     *
+     * @param bean a {@link cool.scx.business.role.Role} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json updateRole(Role bean) {
         Role parentBean = null;
@@ -31,6 +53,12 @@ public class RoleController {
         return Json.ok().items(parentBean);
     }
 
+    /**
+     * <p>saveRole.</p>
+     *
+     * @param bean a {@link cool.scx.business.role.Role} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json saveRole(Role bean) {
         bean.perm = "";

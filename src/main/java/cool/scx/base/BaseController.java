@@ -20,6 +20,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+/**
+ * <p>BaseController class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxController("api")
 public class BaseController {
 
@@ -27,6 +33,12 @@ public class BaseController {
 
     private final UploadFileService uploadFileService;
 
+    /**
+     * <p>Constructor for BaseController.</p>
+     *
+     * @param scxLogService a {@link cool.scx.business.system.ScxLogService} object.
+     * @param uploadFileService a {@link cool.scx.business.uploadfile.UploadFileService} object.
+     */
     public BaseController(ScxLogService scxLogService, UploadFileService uploadFileService) {
         this.scxLogService = scxLogService;
         this.uploadFileService = uploadFileService;
@@ -48,6 +60,13 @@ public class BaseController {
     }
 
     //
+    /**
+     * <p>list.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(value = ":modelName/list", httpMethod = {HttpMethod.GET, HttpMethod.POST})
     public Json list(String modelName, Map<String, Object> params) {
         if (params == null) {
@@ -60,6 +79,13 @@ public class BaseController {
         return Json.ok().tables(list, count);
     }
 
+    /**
+     * <p>info.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     * @param id a {@link java.lang.Long} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(value = ":modelName/:id", httpMethod = HttpMethod.GET)
     public Json info(String modelName, Long id) {
         var baseService = getBaseService(modelName);
@@ -67,6 +93,13 @@ public class BaseController {
         return Json.ok().items(list);
     }
 
+    /**
+     * <p>save.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     * @param entityMap a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(value = ":modelName", httpMethod = HttpMethod.POST)
     public Json save(String modelName, Map<String, Object> entityMap) {
         var baseService = getBaseService(modelName);
@@ -76,6 +109,14 @@ public class BaseController {
         return Json.ok().items(newObject);
     }
 
+    /**
+     * <p>update.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     * @param entityMap a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     * @throws java.lang.Exception if any.
+     */
     @ScxMapping(value = ":modelName", httpMethod = HttpMethod.PUT)
     public Json update(String modelName, Map<String, Object> entityMap) throws Exception {
         var baseService = getBaseService(modelName);
@@ -84,6 +125,14 @@ public class BaseController {
         return Json.ok().items(newObj);
     }
 
+    /**
+     * <p>delete.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     * @param id a {@link java.lang.Integer} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     * @throws java.lang.Exception if any.
+     */
     @ScxMapping(value = ":modelName/:id", httpMethod = HttpMethod.DELETE)
     public Json delete(String modelName, Integer id) throws Exception {
         var baseService = getBaseService(modelName);
@@ -91,6 +140,13 @@ public class BaseController {
         return Json.ok().items(deleteByIds == 1);
     }
 
+    /**
+     * <p>batchDelete.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(value = ":modelName/batchDelete", httpMethod = HttpMethod.DELETE)
     public Json batchDelete(String modelName, Map<String, Object> params) {
         var deleteIds = (Long[]) params.get("deleteIds");
@@ -99,6 +155,13 @@ public class BaseController {
         return Json.ok("success").data("deletedCount", deletedCount);
     }
 
+    /**
+     * <p>revokeDelete.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     * @param id a {@link java.lang.Integer} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(value = ":modelName/revokeDelete/:id", httpMethod = HttpMethod.GET)
     public Json revokeDelete(String modelName, Integer id) {
         var baseService = getBaseService(modelName);
@@ -106,6 +169,13 @@ public class BaseController {
         return Json.ok(revokeDeleteCount == 1 ? "success" : "error");
     }
 
+    /**
+     * <p>getAutoComplete.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     * @param fieldName a {@link java.lang.String} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", httpMethod = HttpMethod.POST)
     public Json getAutoComplete(String modelName, String fieldName) {
         var baseService = getBaseService(modelName);
@@ -113,6 +183,13 @@ public class BaseController {
         return Json.ok().items(fieldList);
     }
 
+    /**
+     * <p>checkUnique.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(value = ":modelName/checkUnique", httpMethod = HttpMethod.POST)
     public Json checkUnique(String modelName, Map<String, Object> params) {
         var baseService = getBaseService(modelName);

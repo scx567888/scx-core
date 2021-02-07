@@ -9,11 +9,22 @@ import cool.scx.util.CryptoUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * <p>LicenseService class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxService
 public class LicenseService extends BaseService<License> {
 
     private final ScxLogService scxLogService;
 
+    /**
+     * <p>Constructor for LicenseService.</p>
+     *
+     * @param scxLogService a {@link cool.scx.business.system.ScxLogService} object.
+     */
     public LicenseService(ScxLogService scxLogService) {
         this.scxLogService = scxLogService;
     }
@@ -35,6 +46,11 @@ public class LicenseService extends BaseService<License> {
         return encrypt;
     }
 
+    /**
+     * <p>passLicense.</p>
+     *
+     * @return a boolean.
+     */
     public boolean passLicense() {
         var myLicense = getById(1L);
 

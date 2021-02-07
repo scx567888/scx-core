@@ -16,9 +16,21 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
+/**
+ * <p>TemplateController class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxController("template")
 public class TemplateController {
 
+    /**
+     * <p>Index.</p>
+     *
+     * @return a {@link cool.scx.vo.Json} object.
+     * @throws java.io.IOException if any.
+     */
     @ScxMapping(httpMethod = {HttpMethod.GET, HttpMethod.POST})
     public Json Index() throws IOException {
         var fileList = FileUtils.getFileList(ScxConfig.cmsRoot.getPath());
@@ -29,6 +41,12 @@ public class TemplateController {
         return Json.ok().data("cmsRootTreeList", collect);
     }
 
+    /**
+     * <p>getFileContent.</p>
+     *
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping("getFileContent")
     public Json getFileContent(Map<String, String> params) {
         String filePath = params.get("filePath");
@@ -40,6 +58,12 @@ public class TemplateController {
         }
     }
 
+    /**
+     * <p>setFileContent.</p>
+     *
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping("setFileContent")
     public Json setFileContent(Map<String, String> params) {
         String filePath = params.get("filePath");
@@ -50,6 +74,13 @@ public class TemplateController {
     }
 
 
+    /**
+     * <p>delete.</p>
+     *
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     * @throws java.io.IOException if any.
+     */
     @ScxMapping("file/delete")
     public Json delete(Map<String, String> params) throws IOException {
         String filePath = params.get("filePath");
@@ -58,6 +89,14 @@ public class TemplateController {
         return Json.ok();
     }
 
+    /**
+     * <p>upload.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @param filePath a {@link java.lang.String} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     * @throws java.io.IOException if any.
+     */
     @ScxMapping(value = "upload", unCheckedPerms = true)
     public Json upload(File file, String filePath) throws IOException {
         //filePath = filePath + "\\" + file.getOriginalFilename();
@@ -65,6 +104,13 @@ public class TemplateController {
         return Json.ok();
     }
 
+    /**
+     * <p>rename.</p>
+     *
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     * @throws java.io.IOException if any.
+     */
     @ScxMapping("file/rename")
     public Json rename(Map<String, String> params) throws IOException {
         String newFilePath = params.get("newFilePath");

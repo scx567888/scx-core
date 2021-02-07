@@ -11,15 +11,32 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * <p>RoleService class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxService
 public class RoleService extends BaseService<Role> {
 
     private final UserRoleService userRoleService;
 
+    /**
+     * <p>Constructor for RoleService.</p>
+     *
+     * @param userRoleService a {@link cool.scx.business.role.UserRoleService} object.
+     */
     public RoleService(UserRoleService userRoleService) {
         this.userRoleService = userRoleService;
     }
 
+    /**
+     * <p>getRoleListByUser.</p>
+     *
+     * @param user a {@link cool.scx.business.user.User} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Role> getRoleListByUser(User user) {
         var userRoleParam = new Param<>(new UserRole());
         userRoleParam.queryObject.userId = user.id;
@@ -34,6 +51,12 @@ public class RoleService extends BaseService<Role> {
         }
     }
 
+    /**
+     * <p>saveRoleListWithUserId.</p>
+     *
+     * @param userId a {@link java.lang.Long} object.
+     * @param roleIds a {@link java.lang.String} object.
+     */
     public void saveRoleListWithUserId(Long userId, String roleIds) {
         if (!StringUtils.isEmpty(roleIds)) {
             var idArr = Arrays.stream(roleIds.split(",")).filter(id -> !StringUtils.isEmpty(id)).map(id -> {
@@ -47,12 +70,23 @@ public class RoleService extends BaseService<Role> {
         }
     }
 
+    /**
+     * <p>deleteByUserId.</p>
+     *
+     * @param id a {@link java.lang.Long} object.
+     */
     public void deleteByUserId(Long id) {
         var userDept = new Param<>(new UserRole());
         userDept.queryObject.userId = id;
         userRoleService.delete(userDept);
     }
 
+    /**
+     * <p>findRoleByUserId.</p>
+     *
+     * @param userId a {@link java.lang.Long} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<UserRole> findRoleByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {
             var userRole = new Param<>(new UserRole());

@@ -5,6 +5,9 @@ import cool.scx.base.BaseModel;
 
 /**
  * 日志记录表
+ *
+ * @author 司昌旭
+ * @version 0.3.6
  */
 @ScxModel(tablePrefix = "core")
 public class ScxLog extends BaseModel {

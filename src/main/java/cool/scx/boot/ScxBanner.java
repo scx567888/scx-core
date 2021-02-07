@@ -3,6 +3,12 @@ package cool.scx.boot;
 import cool.scx.enumeration.Color;
 import cool.scx.util.StringUtils;
 
+/**
+ * <p>ScxBanner class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class ScxBanner {
     static {
         StringUtils.print("   ▄████████ ", Color.RED);
@@ -41,6 +47,9 @@ public final class ScxBanner {
         StringUtils.println("scx567888@outlook.com", Color.BRIGHT_CYAN);
     }
 
+    /**
+     * <p>init.</p>
+     */
     public static void init() {
 
     }

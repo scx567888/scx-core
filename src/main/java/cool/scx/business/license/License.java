@@ -5,6 +5,9 @@ import cool.scx.base.BaseModel;
 
 /**
  * 项目 license
+ *
+ * @author 司昌旭
+ * @version 0.3.6
  */
 @ScxModel(tablePrefix = "core")
 public class License extends BaseModel {

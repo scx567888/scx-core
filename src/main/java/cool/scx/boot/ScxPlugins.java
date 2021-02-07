@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * <p>ScxPlugins class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class ScxPlugins {
 
+    /** Constant <code>pluginsClassList</code> */
     public static List<Class<?>> pluginsClassList = new ArrayList<>();
 
     static {
@@ -34,6 +41,9 @@ public final class ScxPlugins {
         }
     }
 
+    /**
+     * <p>init.</p>
+     */
     public static void init() {
         StringUtils.println("ScxPlugins 初始化完成...", Color.YELLOW);
     }

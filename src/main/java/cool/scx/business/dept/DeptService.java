@@ -11,15 +11,32 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * <p>DeptService class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxService
 public class DeptService extends BaseService<Dept> {
 
     private final UserDeptService userDeptService;
 
+    /**
+     * <p>Constructor for DeptService.</p>
+     *
+     * @param userDeptService a {@link cool.scx.business.dept.UserDeptService} object.
+     */
     public DeptService(UserDeptService userDeptService) {
         this.userDeptService = userDeptService;
     }
 
+    /**
+     * <p>getDeptListByUser.</p>
+     *
+     * @param user a {@link cool.scx.business.user.User} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Dept> getDeptListByUser(User user) {
         var userDeptParam = new Param<>(new UserDept());
         userDeptParam.queryObject.userId = user.id;
@@ -35,6 +52,12 @@ public class DeptService extends BaseService<Dept> {
     }
 
 
+    /**
+     * <p>saveDeptListWithUserId.</p>
+     *
+     * @param userId a {@link java.lang.Long} object.
+     * @param deptIds a {@link java.lang.String} object.
+     */
     public void saveDeptListWithUserId(Long userId, String deptIds) {
         if (!StringUtils.isEmpty(deptIds)) {
             var idArr = Arrays.stream(deptIds.split(",")).filter(id -> !StringUtils.isEmpty(id)).map(id -> {
@@ -48,12 +71,23 @@ public class DeptService extends BaseService<Dept> {
         }
     }
 
+    /**
+     * <p>deleteByUserId.</p>
+     *
+     * @param id a {@link java.lang.Long} object.
+     */
     public void deleteByUserId(Long id) {
         var userDept = new Param<>(new UserDept());
         userDept.queryObject.userId = id;
         userDeptService.delete(userDept);
     }
 
+    /**
+     * <p>findDeptByUserId.</p>
+     *
+     * @param userId a {@link java.lang.Long} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<UserDept> findDeptByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {
             var ud = new Param<>(new UserDept());

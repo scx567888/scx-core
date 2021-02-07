@@ -4,11 +4,22 @@ import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
 
+/**
+ * <p>LicenseController class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxController("/license")
 public class LicenseController {
 
     private final LicenseService licenseService;
 
+    /**
+     * <p>Constructor for LicenseController.</p>
+     *
+     * @param licenseService a {@link cool.scx.business.license.LicenseService} object.
+     */
     public LicenseController(LicenseService licenseService) {
         this.licenseService = licenseService;
     }
@@ -24,6 +35,12 @@ public class LicenseController {
         return getHtml("");
     }
 
+    /**
+     * <p>getHtml.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String getHtml(String s) {
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"zh-cn\" xmlns:th=\"http://www.thymeleaf.org\">\n" +

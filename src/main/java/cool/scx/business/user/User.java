@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 
 /**
  * 用户类 包含所有人员信息 通过 level 进行区分人员类型 如 学生 教师 等
+ *
+ * @author 司昌旭
+ * @version 0.3.6
  */
 @ScxModel(tablePrefix = "core")
 public class User extends BaseModel {

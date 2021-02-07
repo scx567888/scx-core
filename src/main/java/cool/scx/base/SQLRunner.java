@@ -18,6 +18,12 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+/**
+ * <p>SQLRunner class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class SQLRunner {
 
     private static final HikariDataSource dataSource;
@@ -31,6 +37,11 @@ public final class SQLRunner {
         dataSource.setPassword(ScxConfig.dataSourcePassword);
     }
 
+    /**
+     * <p>testConnection.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean testConnection() {
         try (var conn = getConnection()) {
             var dm = conn.getMetaData();
@@ -45,6 +56,12 @@ public final class SQLRunner {
         }
     }
 
+    /**
+     * <p>getConnection.</p>
+     *
+     * @return a Connection object.
+     * @throws java.sql.SQLException if any.
+     */
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
@@ -68,10 +85,26 @@ public final class SQLRunner {
         return list;
     }
 
+    /**
+     * <p>query.</p>
+     *
+     * @param sql a {@link java.lang.String} object.
+     * @param param a {@link java.util.Map} object.
+     * @param clazz a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a {@link java.util.List} object.
+     */
     public static <T> List<T> query(String sql, Map<String, Object> param, Class<T> clazz) {
         return query(sql, param, c -> ObjectUtils.mapToBean(c, clazz));
     }
 
+    /**
+     * <p>query.</p>
+     *
+     * @param sql a {@link java.lang.String} object.
+     * @param param a {@link java.util.Map} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Map<String, Object>> query(String sql, Map<String, Object> param) {
         return query(sql, param, c -> c);
     }
@@ -84,7 +117,7 @@ public final class SQLRunner {
      * @param sql      未处理的sql 语句
      * @param paramMap 参数 map
      * @return PreparedStatement
-     * @throws SQLException sql 异常
+     * @throws java.sql.SQLException if any.
      */
     public static PreparedStatement getPreparedStatement(Connection con, String sql, Map<String, Object> paramMap) throws SQLException {
         var matcher = pattern.matcher(sql);
@@ -102,6 +135,12 @@ public final class SQLRunner {
         return preparedStatement;
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param sql a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public static boolean execute(String sql) {
         try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, new HashMap<>())) {
             preparedStatement.execute();
@@ -112,6 +151,13 @@ public final class SQLRunner {
         }
     }
 
+    /**
+     * <p>update.</p>
+     *
+     * @param sql a {@link java.lang.String} object.
+     * @param param a {@link java.util.Map} object.
+     * @return a {@link cool.scx.base.SQLRunner.UpdateResult} object.
+     */
     public static UpdateResult update(String sql, Map<String, Object> param) {
         try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param)) {
             var affectedLength = preparedStatement.executeUpdate();

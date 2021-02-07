@@ -4,6 +4,12 @@ package cool.scx.business.cms;
 import cool.scx.annotation.ScxController;
 import cool.scx.vo.Html;
 
+/**
+ * <p>IndexController class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxController
 public class IndexController {
 

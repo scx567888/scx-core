@@ -28,6 +28,12 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+/**
+ * <p>UserService class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxService
 public class UserService extends BaseService<User> {
     private static final HashMap<String, LoginError> loginErrorMap = new HashMap<>();
@@ -38,6 +44,14 @@ public class UserService extends BaseService<User> {
     private final UserDeptService userDeptService;
     private final UserRoleService userRoleService;
 
+    /**
+     * <p>Constructor for UserService.</p>
+     *
+     * @param deptService a {@link cool.scx.business.dept.DeptService} object.
+     * @param roleService a {@link cool.scx.business.role.RoleService} object.
+     * @param userDeptService a {@link cool.scx.business.dept.UserDeptService} object.
+     * @param userRoleService a {@link cool.scx.business.role.UserRoleService} object.
+     */
     public UserService(DeptService deptService, RoleService roleService, UserDeptService userDeptService, UserRoleService userRoleService) {
         this.deptService = deptService;
         this.roleService = roleService;
@@ -45,6 +59,14 @@ public class UserService extends BaseService<User> {
         this.userRoleService = userRoleService;
     }
 
+    /**
+     * <p>login.</p>
+     *
+     * @param username a {@link java.lang.String} object.
+     * @param password a {@link java.lang.String} object.
+     * @return a {@link cool.scx.business.user.User} object.
+     * @throws cool.scx.business.user.exception.AuthException if any.
+     */
     public User login(String username, String password) throws AuthException {
         var now = LocalDateTime.now();
         var ip = NetUtils.getIpAddr();
@@ -137,6 +159,12 @@ public class UserService extends BaseService<User> {
         return permList;
     }
 
+    /**
+     * <p>updateUserPassword.</p>
+     *
+     * @param user a {@link cool.scx.business.user.User} object.
+     * @return a {@link cool.scx.business.user.User} object.
+     */
     public User updateUserPassword(User user) {
         if (!StringUtils.isEmpty(user.password)) {
             var passwordAndSalt = encryptPassword(user.password);
@@ -218,6 +246,7 @@ public class UserService extends BaseService<User> {
         return deleteByIds(id) == 1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<User> listAll() {
         var userDeptListFuture = CompletableFuture.supplyAsync(userDeptService::listAll);
@@ -237,6 +266,12 @@ public class UserService extends BaseService<User> {
     }
 
 
+    /**
+     * <p>updateUser.</p>
+     *
+     * @param user a {@link cool.scx.business.user.User} object.
+     * @return a {@link cool.scx.business.user.User} object.
+     */
     public User updateUser(User user) {
         var deptIds = user.deptIds;
         var roleIds = user.roleIds;
@@ -275,6 +310,13 @@ public class UserService extends BaseService<User> {
         return updateUserAndDept(id, false);
     }
 
+    /**
+     * <p>updateUserAndDept.</p>
+     *
+     * @param id a {@link java.lang.Long} object.
+     * @param b a boolean.
+     * @return a {@link cool.scx.business.user.User} object.
+     */
     public User updateUserAndDept(Long id, boolean b) {
         var user = new User();
         var userRole = new Param<>(new UserRole());

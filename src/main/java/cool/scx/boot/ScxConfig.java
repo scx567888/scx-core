@@ -17,40 +17,77 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * <p>ScxConfig class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class ScxConfig {
+    /** Constant <code>AppKey="H8QS91GcuNGP9735"</code> */
     public static final String AppKey = "H8QS91GcuNGP9735";
+    /** Constant <code>tokenKey="S-Token"</code> */
     public static final String tokenKey = "S-Token";
+    /** Constant <code>coreVersion="0.3.6"</code> */
     public static final String coreVersion = "0.3.6";
+    /** Constant <code>sessionCookieName="scx.session"</code> */
     public static final String sessionCookieName = "scx.session";
+    /** Constant <code>scxConfigJsonNode</code> */
     public static final JsonNode scxConfigJsonNode;
+    /** Constant <code>uploadFilePath</code> */
     public static final File uploadFilePath;
+    /** Constant <code>dataSourceUrl=""</code> */
     public static final String dataSourceUrl;
+    /** Constant <code>dataSourceUsername=""</code> */
     public static final String dataSourceUsername;
+    /** Constant <code>dataSourcePassword=""</code> */
     public static final String dataSourcePassword;
+    /** Constant <code>confusionLoginError=</code> */
     public static final boolean confusionLoginError;
+    /** Constant <code>license=""</code> */
     public static final String license;
+    /** Constant <code>cmsRoot</code> */
     public static final File cmsRoot;
+    /** Constant <code>cmsResourceUrl=""</code> */
     public static final String cmsResourceUrl;
+    /** Constant <code>cmsResourceLocations</code> */
     public static final File cmsResourceLocations;
+    /** Constant <code>cmsResourceSuffix=""</code> */
     public static final String cmsResourceSuffix;
+    /** Constant <code>showLog=</code> */
     public static final boolean showLog;
+    /** Constant <code>showGui=</code> */
     public static final boolean showGui;
+    /** Constant <code>realDelete=</code> */
     public static final boolean realDelete;
+    /** Constant <code>port=</code> */
     public static final int port;
+    /** Constant <code>allowedOrigin=""</code> */
     public static final String allowedOrigin;
+    /** Constant <code>loginErrorLockTimes=</code> */
     public static final int loginErrorLockTimes;
+    /** Constant <code>loginErrorLockSecond=</code> */
     public static final int loginErrorLockSecond;
+    /** Constant <code>fixTable=</code> */
     public static final boolean fixTable;
+    /** Constant <code>pluginRoot</code> */
     public static final File pluginRoot;
+    /** Constant <code>pluginDisabledList</code> */
     public static final Set<String> pluginDisabledList;
+    /** Constant <code>dateTimeFormatter</code> */
     public static final DateTimeFormatter dateTimeFormatter;
+    /** Constant <code>openHttps=</code> */
     public static final boolean openHttps;
+    /** Constant <code>certificatePath</code> */
     public static final File certificatePath;
+    /** Constant <code>certificatePassword=""</code> */
     public static final String certificatePassword;
 
+    /** Constant <code>checkPermsUrls</code> */
     public static final String[] checkPermsUrls = new String[]{
             "/api/*",
     };
+    /** Constant <code>excludeCheckPermsUrls</code> */
     public static final String[] excludeCheckPermsUrls = new String[]{
             "/api/user/login",
             "/api/user/login",
@@ -171,6 +208,11 @@ public final class ScxConfig {
         return p;
     }
 
+    /**
+     * <p>getScxJsonConfig.</p>
+     *
+     * @return a {@link com.fasterxml.jackson.databind.JsonNode} object.
+     */
     public static JsonNode getScxJsonConfig() {
         JsonNode rootNode = null;
         var mapper = new ObjectMapper();
@@ -185,10 +227,25 @@ public final class ScxConfig {
     }
 
 
+    /**
+     * <p>getConfigValue.</p>
+     *
+     * @param keyPath a {@link java.lang.String} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     public static <T> T getConfigValue(String keyPath) {
         return getConfigValue(keyPath, null);
     }
 
+    /**
+     * <p>getConfigValue.</p>
+     *
+     * @param keyPath a {@link java.lang.String} object.
+     * @param defaultVal a T object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     @SuppressWarnings("unchecked")
     public static <T> T getConfigValue(String keyPath, T defaultVal) {
         return (T) getConfigValue(keyPath, defaultVal, ScxConfig::NoCode, ScxConfig::NoCode, c -> {
@@ -202,10 +259,35 @@ public final class ScxConfig {
         }, a -> a);
     }
 
+    /**
+     * <p>getConfigValue.</p>
+     *
+     * @param keyPath a {@link java.lang.String} object.
+     * @param defaultVal a T object.
+     * @param successFun a {@link java.util.function.Consumer} object.
+     * @param failFun a {@link java.util.function.Consumer} object.
+     * @param convertFun a {@link java.util.function.Function} object.
+     * @param convertArgFun a {@link java.util.function.Function} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     public static <T> T getConfigValue(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun, Function<JsonNode, T> convertFun, Function<String, T> convertArgFun) {
         return getConfigValue(keyPath, defaultVal, successFun, failFun, convertFun, convertArgFun, scxConfigJsonNode);
     }
 
+    /**
+     * <p>getConfigValue.</p>
+     *
+     * @param keyPath a {@link java.lang.String} object.
+     * @param defaultVal a T object.
+     * @param successFun a {@link java.util.function.Consumer} object.
+     * @param failFun a {@link java.util.function.Consumer} object.
+     * @param convertFun a {@link java.util.function.Function} object.
+     * @param convertArgFun a {@link java.util.function.Function} object.
+     * @param jsonNodeVal a {@link com.fasterxml.jackson.databind.JsonNode} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     public static <T> T getConfigValue(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun, Function<JsonNode, T> convertFun, Function<String, T> convertArgFun, JsonNode jsonNodeVal) {
         for (String parameter : ScxApp.getParameters()) {
             if (parameter.startsWith("--" + keyPath + "=")) {
@@ -253,10 +335,18 @@ public final class ScxConfig {
     }
 
     //为了保持 lambda 表达式的整洁
+    /**
+     * <p>NoCode.</p>
+     *
+     * @param objects a {@link java.lang.Object} object.
+     */
     public static void NoCode(Object... objects) {
 
     }
 
+    /**
+     * <p>init.</p>
+     */
     public static void init() {
         StringUtils.println("ScxConfig 初始化完成...", Color.BRIGHT_BLUE);
     }

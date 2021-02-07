@@ -6,7 +6,14 @@ import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import freemarker.template.Configuration;
 
+/**
+ * <p>ScxCmsConfig class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class ScxCmsConfig {
+    /** Constant <code>freemarkerConfig</code> */
     public static final Configuration freemarkerConfig;
 
     static {
@@ -43,6 +50,9 @@ public final class ScxCmsConfig {
         return configuration;
     }
 
+    /**
+     * <p>init.</p>
+     */
     public static void init() {
 
     }

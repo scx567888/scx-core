@@ -6,6 +6,9 @@ import cool.scx.base.BaseModel;
 
 /**
  * 角色
+ *
+ * @author 司昌旭
+ * @version 0.3.6
  */
 @ScxModel(tablePrefix = "core")
 public class Role extends BaseModel {

@@ -17,13 +17,31 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
 
+/**
+ * <p>PackageUtils class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public class PackageUtils {
 
+    /**
+     * <p>scanPackageIncludePlugins.</p>
+     *
+     * @param fun a {@link java.util.function.Consumer} object.
+     * @param classOrJarPaths a {@link java.net.URL} object.
+     */
     public static void scanPackageIncludePlugins(Consumer<Class<?>> fun, URL... classOrJarPaths) {
         ScxPlugins.pluginsClassList.forEach(fun);
         scanPackage(fun, classOrJarPaths);
     }
 
+    /**
+     * <p>scanPackage.</p>
+     *
+     * @param fun a {@link java.util.function.Consumer} object.
+     * @param classOrJarPaths a {@link java.net.URL} object.
+     */
     public static void scanPackage(Consumer<Class<?>> fun, URL... classOrJarPaths) {
         if (classOrJarPaths.length == 0) {
             classOrJarPaths = Arrays.stream(ScxApp.getClassSources()).map(PackageUtils::getClassSourceRealPath).toArray(URL[]::new);
@@ -41,6 +59,12 @@ public class PackageUtils {
         }
     }
 
+    /**
+     * <p>getClassSourceRealPath.</p>
+     *
+     * @param source a {@link java.lang.Class} object.
+     * @return a {@link java.net.URL} object.
+     */
     public static URL getClassSourceRealPath(Class<?> source) {
         return source.getProtectionDomain().getCodeSource().getLocation();
     }
@@ -85,6 +109,13 @@ public class PackageUtils {
         }
     }
 
+    /**
+     * <p>scanPackageByJar.</p>
+     *
+     * @param fun a {@link java.util.function.Consumer} object.
+     * @param jarFileUrl a {@link java.net.URL} object.
+     * @throws java.io.IOException if any.
+     */
     public static void scanPackageByJar(Consumer<Class<?>> fun, URL jarFileUrl) throws IOException {
         var entries = new JarFile(jarFileUrl.getFile()).entries();
         var jarClassLoader = new URLClassLoader(new URL[]{jarFileUrl});//获得类加载器
@@ -110,15 +141,31 @@ public class PackageUtils {
         }
     }
 
+    /**
+     * <p>getFileByAppRoot.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @return a {@link java.io.File} object.
+     */
     public static File getFileByAppRoot(String path) {
         return path.startsWith("absPath:") ? new File(path.replaceAll("absPath:", "")) : new File(getAppRoot(), path);
     }
 
+    /**
+     * <p>getAppRoot.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public static File getAppRoot() {
         var file = new File(getClassSourceRealPath(ScxApp.getAppClassSources()).getFile());
         return file.getPath().endsWith(".jar") ? file.getParentFile() : file;
     }
 
+    /**
+     * <p>getBasePackages.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     */
     public static String[] getBasePackages() {
         return Arrays.stream(ScxApp.getClassSources()).map(Class::getPackageName).toArray(String[]::new);
     }

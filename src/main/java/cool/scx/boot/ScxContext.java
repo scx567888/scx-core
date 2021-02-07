@@ -15,6 +15,12 @@ import io.vertx.ext.web.RoutingContext;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <p>ScxContext class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class ScxContext {
 
     private static final Map<Class<?>, Object> beanMapping = new HashMap<>();
@@ -40,6 +46,12 @@ public final class ScxContext {
 //        }
     }
 
+    /**
+     * <p>getClassByName.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link java.lang.Class} object.
+     */
     public static Class<?> getClassByName(String str) {
         return classNameMapping.get(str);
     }
@@ -55,6 +67,11 @@ public final class ScxContext {
         checkBeanCyclicDependency();
     }
 
+    /**
+     * <p>logoutUser.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     */
     public static void logoutUser(RoutingContext ctx) {
         ctx.session().remove(ScxConfig.tokenKey);
     }
@@ -71,6 +88,13 @@ public final class ScxContext {
         return getBean(UserService.class).getById(currentUserId);
     }
 
+    /**
+     * <p>getBean.</p>
+     *
+     * @param c a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     @SuppressWarnings("unchecked")
     public static <T> T getBean(Class<T> c) {
         Object o = beanMapping.get(c);
@@ -96,10 +120,18 @@ public final class ScxContext {
         throw new RuntimeException("无法创建" + c.getName() + "对应的 bean");
     }
 
+    /**
+     * <p>register.</p>
+     *
+     * @param c a {@link java.lang.Class} object.
+     */
     public static void register(Class<?> c) {
         beanMapping.put(c, null);
     }
 
+    /**
+     * <p>fixTable.</p>
+     */
     public static void fixTable() {
         if (SQLRunner.testConnection()) {
             StringUtils.println("修复数据表中...", Color.MAGENTA);
@@ -117,6 +149,9 @@ public final class ScxContext {
         }
     }
 
+    /**
+     * <p>init.</p>
+     */
     public static void init() {
         StringUtils.println("ScxContext 初始化完成...", Color.GREEN);
     }

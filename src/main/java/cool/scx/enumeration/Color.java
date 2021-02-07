@@ -1,5 +1,11 @@
 package cool.scx.enumeration;
 
+/**
+ * <p>Color class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public enum Color {
 
     DEFAULT("39"),
@@ -42,6 +48,7 @@ public enum Color {
         this.code = code;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return this.code;

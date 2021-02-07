@@ -10,15 +10,32 @@ import cool.scx.vo.Json;
 
 import java.util.Map;
 
+/**
+ * <p>UploadController class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxController
 public class UploadController {
 
     final UploadFileService uploadFileService;
 
+    /**
+     * <p>Constructor for UploadController.</p>
+     *
+     * @param uploadFileService a {@link cool.scx.business.uploadfile.UploadFileService} object.
+     */
     public UploadController(UploadFileService uploadFileService) {
         this.uploadFileService = uploadFileService;
     }
 
+    /**
+     * <p>deleteFile.</p>
+     *
+     * @param id a {@link java.lang.Long} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping
     public Json deleteFile(Long id) {
         var result = true;
@@ -31,6 +48,12 @@ public class UploadController {
         return result ? Json.ok("success") : Json.ok("error");
     }
 
+    /**
+     * <p>listFile.</p>
+     *
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping()
     public Json listFile(Map<String, Object> params) {
         var param = new Param<>(new UploadFile());

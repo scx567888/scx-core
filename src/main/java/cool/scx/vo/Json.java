@@ -3,6 +3,12 @@ package cool.scx.vo;
 
 import java.util.HashMap;
 
+/**
+ * <p>Json class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class Json extends HashMap<String, Object> {
 
     /**
@@ -50,6 +56,11 @@ public final class Json extends HashMap<String, Object> {
         this.put("message", message);
     }
 
+    /**
+     * <p>ok.</p>
+     *
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     public static Json ok() {
         return new Json();
     }

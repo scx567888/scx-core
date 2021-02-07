@@ -9,6 +9,12 @@ import cool.scx.boot.ScxContext;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.util.NetUtils;
 
+/**
+ * <p>ScxLogService class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxService
 public class ScxLogService extends BaseService<ScxLog> {
 
@@ -34,6 +40,12 @@ public class ScxLogService extends BaseService<ScxLog> {
         }
     }
 
+    /**
+     * <p>getName.</p>
+     *
+     * @param name a {@link java.lang.Long} object.
+     * @param age a {@link java.lang.Integer} object.
+     */
     @ScxMapping(value = ":name", httpMethod = HttpMethod.GET)
     public void getName(Long name, Integer age) {
         var a = new Param<>(new ScxLog());
@@ -53,6 +65,11 @@ public class ScxLogService extends BaseService<ScxLog> {
         recordLog((String) o);
     }
 
+    /**
+     * <p>recordLog.</p>
+     *
+     * @param title a {@link java.lang.String} object.
+     */
     public void recordLog(String title) {
         recordLog(title, title);
     }

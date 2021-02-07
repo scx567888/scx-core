@@ -6,6 +6,9 @@ import cool.scx.base.BaseModel;
 
 /**
  * 用户部门关联表
+ *
+ * @author 司昌旭
+ * @version 0.3.6
  */
 @ScxModel(tablePrefix = "core")
 public class UserDept extends BaseModel {

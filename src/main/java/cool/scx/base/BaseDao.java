@@ -14,17 +14,33 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * <p>BaseDao class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class BaseDao<Entity extends BaseModel> {
 
     private static final Map<String, TableInfo> tableCache = new ConcurrentHashMap<>(256);
     private final TableInfo table;
     private final Class<Entity> entityClass;
 
+    /**
+     * <p>Constructor for BaseDao.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     */
     public BaseDao(Class<Entity> clazz) {
         table = getTableInfo(clazz);
         entityClass = clazz;
     }
 
+    /**
+     * <p>fixTable.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     */
     public static void fixTable(Class<?> clazz) {
         var table = getTableInfo(clazz);
         try (var connection = SQLRunner.getConnection()) {
@@ -83,6 +99,12 @@ public final class BaseDao<Entity extends BaseModel> {
         return list;
     }
 
+    /**
+     * <p>getTableInfo.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     * @return a {@link cool.scx.base.BaseDao.TableInfo} object.
+     */
     public static TableInfo getTableInfo(Class<?> clazz) {
         var tempTable = tableCache.get(clazz.getName());
         if (tempTable != null) {
@@ -138,12 +160,24 @@ public final class BaseDao<Entity extends BaseModel> {
         return columnName + type + notNull + autoIncrement + defaultValue + onUpdate;
     }
 
+    /**
+     * <p>save.</p>
+     *
+     * @param entity a Entity object.
+     * @return a {@link java.lang.Long} object.
+     */
     public Long save(Entity entity) {
         var c = Stream.of(table.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
         var sql = SQLBuilder.Insert(table.tableName).Columns(c).Values(c).GetSQL();
         return SQLRunner.update(sql, ObjectUtils.beanToMap(entity)).generatedKeys.get(0);
     }
 
+    /**
+     * <p>saveList.</p>
+     *
+     * @param entityList a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Long> saveList(List<Entity> entityList) {
         var splitSize = 5000;
         var size = entityList.size();
@@ -172,6 +206,13 @@ public final class BaseDao<Entity extends BaseModel> {
         return SQLRunner.update(sql, map).generatedKeys;
     }
 
+    /**
+     * <p>list.</p>
+     *
+     * @param param a {@link cool.scx.base.Param} object.
+     * @param ignoreLike a boolean.
+     * @return a {@link java.util.List} object.
+     */
     public List<Entity> list(Param<Entity> param, boolean ignoreLike) {
         var sql = SQLBuilder.Select().SelectColumns(table.selectColumns).Table(table.tableName)
                 .Where(getWhereColumns(param.queryObject, ignoreLike))
@@ -183,6 +224,13 @@ public final class BaseDao<Entity extends BaseModel> {
         return SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject), entityClass);
     }
 
+    /**
+     * <p>listMap.</p>
+     *
+     * @param param a {@link cool.scx.base.Param} object.
+     * @param ignoreLike a boolean.
+     * @return a {@link java.util.List} object.
+     */
     public List<Map<String, Object>> listMap(Param<Entity> param, boolean ignoreLike) {
         var sql = SQLBuilder.Select().SelectColumns(table.selectColumns).Table(table.tableName)
                 .Where(getWhereColumns(param.queryObject, ignoreLike))
@@ -194,6 +242,13 @@ public final class BaseDao<Entity extends BaseModel> {
         return SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject));
     }
 
+    /**
+     * <p>count.</p>
+     *
+     * @param param a {@link cool.scx.base.Param} object.
+     * @param ignoreLike a boolean.
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer count(Param<Entity> param, boolean ignoreLike) {
         var sql = SQLBuilder.Select(table.tableName).SelectColumns(new String[]{"COUNT(*)"})
                 .Where(getWhereColumns(param.queryObject, ignoreLike))
@@ -203,6 +258,13 @@ public final class BaseDao<Entity extends BaseModel> {
         return Integer.parseInt(SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject)).get(0).get("COUNT(*)").toString());
     }
 
+    /**
+     * <p>update.</p>
+     *
+     * @param param a {@link cool.scx.base.Param} object.
+     * @param includeNull a boolean.
+     * @return a {@link cool.scx.base.SQLRunner.UpdateResult} object.
+     */
     public SQLRunner.UpdateResult update(Param<Entity> param, boolean includeNull) {
         var beanMap = ObjectUtils.beanToMap(param.queryObject);
         Long id = param.queryObject.id;
@@ -223,6 +285,12 @@ public final class BaseDao<Entity extends BaseModel> {
         return SQLRunner.update(sql.GetSQL(), beanMap);
     }
 
+    /**
+     * <p>delete.</p>
+     *
+     * @param param a {@link cool.scx.base.Param} object.
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer delete(Param<Entity> param) {
         //将 对象转换为 map 方便处理
         var entityMap = ObjectUtils.beanToMap(param.queryObject);
@@ -232,6 +300,12 @@ public final class BaseDao<Entity extends BaseModel> {
         return SQLRunner.update(sql, entityMap).affectedLength;
     }
 
+    /**
+     * <p>getFieldList.</p>
+     *
+     * @param fieldName a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Map<String, Object>> getFieldList(String fieldName) {
         if (Arrays.stream(table.allFields).filter(field -> field.getName().equals(fieldName)).count() == 1) {
             var sql = SQLBuilder.Select(table.tableName).SelectColumns(new String[]{StringUtils.camel2Underscore(fieldName) + " As value "})

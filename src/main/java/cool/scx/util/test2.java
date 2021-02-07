@@ -2,6 +2,12 @@ package cool.scx.util;
 
 import java.util.Scanner;
 
+/**
+ * <p>test2 class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public class test2 {
     //邻接矩阵
     static int[][] graph = new int[200][200];
@@ -12,6 +18,11 @@ public class test2 {
     //是否是DAG（有向无环图）
     static boolean isDAG = true;
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         test2 t = new test2();
         t.create();

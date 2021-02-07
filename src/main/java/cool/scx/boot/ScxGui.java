@@ -9,6 +9,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * <p>ScxGui class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class ScxGui {
     static {
         if (ScxConfig.showGui) {
@@ -17,10 +23,16 @@ public final class ScxGui {
         }
     }
 
+    /**
+     * <p>init.</p>
+     */
     public static void init() {
 
     }
 
+    /**
+     * <p>getGui.</p>
+     */
     public static void getGui() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

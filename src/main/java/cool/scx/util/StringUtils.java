@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 
 /**
  * String工具类
+ *
+ * @author 司昌旭
+ * @version 0.3.6
  */
 public class StringUtils {
     private static final Map<Integer, Color> printColor = new HashMap<>();
@@ -24,10 +27,22 @@ public class StringUtils {
         }
     }
 
+    /**
+     * <p>isNotEmpty.</p>
+     *
+     * @param str a {@link java.lang.Object} object.
+     * @return a boolean.
+     */
     public static boolean isNotEmpty(Object str) {
         return !isEmpty(str);
     }
 
+    /**
+     * <p>isEmpty.</p>
+     *
+     * @param object a {@link java.lang.Object} object.
+     * @return a boolean.
+     */
     public static boolean isEmpty(Object object) {
         if (object == null) {
             return true;
@@ -73,14 +88,30 @@ public class StringUtils {
         return stringBuilder.toString();
     }
 
+    /**
+     * <p>getUUID.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String getUUID() {
         return UUID.randomUUID().toString();
     }
 
+    /**
+     * <p>println.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     * @param ansiColor a {@link cool.scx.enumeration.Color} object.
+     */
     public static void println(String str, Color ansiColor) {
         System.out.println("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
     }
 
+    /**
+     * <p>printlnAutoColor.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     */
     public static void printlnAutoColor(String str) {
         if (nextPrintColor >= printColor.size()) {
             nextPrintColor = 0;
@@ -89,15 +120,33 @@ public class StringUtils {
         nextPrintColor = nextPrintColor + 1;
     }
 
+    /**
+     * <p>print.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     * @param ansiColor a {@link cool.scx.enumeration.Color} object.
+     */
     public static void print(String str, Color ansiColor) {
         System.out.print("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
     }
 
+    /**
+     * <p>cleanHttpUrl.</p>
+     *
+     * @param url a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String cleanHttpUrl(String... url) {
         var tempFullUrl = String.join("/", url);
         return Arrays.stream(tempFullUrl.split("/")).filter(s -> !"".equals(s)).collect(Collectors.joining("/", "/", ""));
     }
 
+    /**
+     * <p>getModelNameByControllerName.</p>
+     *
+     * @param controllerName a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String getModelNameByControllerName(String controllerName) {
         var s = controllerName.replace("Controller", "");
         return Character.toLowerCase(s.charAt(0)) + s.substring(1);

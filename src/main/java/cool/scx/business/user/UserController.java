@@ -29,6 +29,12 @@ import io.vertx.ext.web.RoutingContext;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * <p>UserController class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxController("api/user")
 public class UserController {
 
@@ -40,6 +46,17 @@ public class UserController {
     private final UserRoleService userRoleService;
     private final UserDeptService userDeptService;
 
+    /**
+     * <p>Constructor for UserController.</p>
+     *
+     * @param userService a {@link cool.scx.business.user.UserService} object.
+     * @param scxLogService a {@link cool.scx.business.system.ScxLogService} object.
+     * @param licenseService a {@link cool.scx.business.license.LicenseService} object.
+     * @param deptService a {@link cool.scx.business.dept.DeptService} object.
+     * @param roleService a {@link cool.scx.business.role.RoleService} object.
+     * @param userRoleService a {@link cool.scx.business.role.UserRoleService} object.
+     * @param userDeptService a {@link cool.scx.business.dept.UserDeptService} object.
+     */
     public UserController(UserService userService, ScxLogService scxLogService, LicenseService licenseService, DeptService deptService, RoleService roleService, UserRoleService userRoleService, UserDeptService userDeptService) {
         this.userService = userService;
         this.scxLogService = scxLogService;
@@ -97,6 +114,12 @@ public class UserController {
         }
     }
 
+    /**
+     * <p>info.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(value = "info", httpMethod = HttpMethod.GET)
     public Json info(RoutingContext ctx) {
         var userId = userService.getById(ctx.session().get(ScxConfig.tokenKey));
@@ -140,6 +163,12 @@ public class UserController {
         return Json.ok("success").data("deletedCount", deleteIds.size());
     }
 
+    /**
+     * <p>register.</p>
+     *
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping
     public Json register(Map<String, Object> params) {
         var username = (String) params.get("username");
@@ -161,6 +190,12 @@ public class UserController {
     }
 
 
+    /**
+     * <p>getUserById.</p>
+     *
+     * @param id a {@link java.lang.Long} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(value = ":id", httpMethod = HttpMethod.GET)
     public Json getUserById(Long id) {
         if (StringUtils.isNotEmpty(id)) {
@@ -173,6 +208,12 @@ public class UserController {
     }
 
 
+    /**
+     * <p>addUser.</p>
+     *
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping
     public Json addUser(Map<String, Object> params) {
         var user = ObjectUtils.mapToBean(params, User.class);
@@ -182,6 +223,12 @@ public class UserController {
         return Json.ok().items(user);
     }
 
+    /**
+     * <p>updateUser.</p>
+     *
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json updateUser(Map<String, Object> params) {
         var user = ObjectUtils.mapToBean(params, User.class);
@@ -219,6 +266,13 @@ public class UserController {
         }
     }
 
+    /**
+     * <p>avatarUpdate.</p>
+     *
+     * @param queryUser a {@link cool.scx.business.user.User} object.
+     * @param context a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json avatarUpdate(User queryUser, RoutingContext context) {
         var currentUser = ScxContext.getCurrentUser(context);
@@ -228,6 +282,12 @@ public class UserController {
         return Json.ok().data("success", b);
     }
 
+    /**
+     * <p>getUserLog.</p>
+     *
+     * @param context a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json getUserLog(RoutingContext context) {
         var currentUser = ScxContext.getCurrentUser(context);
@@ -271,6 +331,12 @@ public class UserController {
         return Json.ok(userService.revokeDeleteUser(id) != null ? "success" : "error");
     }
 
+    /**
+     * <p>listUser.</p>
+     *
+     * @param params a {@link java.util.Map} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json listUser(Map<String, Object> params) {
         var user = new Param<>(ObjectUtils.mapToBean(params, User.class));
@@ -312,6 +378,11 @@ public class UserController {
         return Json.ok().tables(list, count);
     }
 
+    /**
+     * <p>listSubUser.</p>
+     *
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json listSubUser() {
         var userAndDeptTree = new ArrayList<HashMap<String, Object>>();
@@ -348,6 +419,5 @@ public class UserController {
         }
         return Json.ok().items(userAndDeptTree);
     }
-
 
 }

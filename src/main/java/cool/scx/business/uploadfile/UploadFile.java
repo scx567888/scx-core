@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 
 /**
  * 文件上传表
+ *
+ * @author 司昌旭
+ * @version 0.3.6
  */
 @ScxModel(tablePrefix = "core")
 public class UploadFile extends BaseModel {

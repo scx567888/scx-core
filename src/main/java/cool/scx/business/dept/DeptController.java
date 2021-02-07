@@ -9,15 +9,32 @@ import cool.scx.vo.Json;
 
 import java.util.Objects;
 
+/**
+ * <p>DeptController class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxController
 public class DeptController {
 
     private final DeptService deptService;
 
+    /**
+     * <p>Constructor for DeptController.</p>
+     *
+     * @param deptService a {@link cool.scx.business.dept.DeptService} object.
+     */
     public DeptController(DeptService deptService) {
         this.deptService = deptService;
     }
 
+    /**
+     * <p>saveDept.</p>
+     *
+     * @param bean a {@link cool.scx.business.dept.Dept} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json saveDept(Dept bean) {
         if (bean != null) {
@@ -38,6 +55,11 @@ public class DeptController {
         return Json.ok().items(bean);
     }
 
+    /**
+     * <p>listDept.</p>
+     *
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     public Json listDept() {
         var p = new Param<>(new Dept());
         p.addOrderBy("level", SortType.DESC)
@@ -46,6 +68,12 @@ public class DeptController {
         return Json.ok().items(deptList);
     }
 
+    /**
+     * <p>updateDept.</p>
+     *
+     * @param bean a {@link cool.scx.business.dept.Dept} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     public Json updateDept(Dept bean) {
         Dept parentBean = null;
         if (bean != null) {
@@ -69,6 +97,12 @@ public class DeptController {
     }
 
 
+    /**
+     * <p>delete.</p>
+     *
+     * @param id a {@link java.lang.Long} object.
+     * @return a {@link cool.scx.vo.Json} object.
+     */
     public Json delete(Long id) {
         if (StringUtils.isNotEmpty(id)) {
             var dept = new Param<>(new Dept());

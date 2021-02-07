@@ -1,5 +1,11 @@
 package cool.scx.enumeration;
 
+/**
+ * <p>HttpMethod class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public enum HttpMethod {
     POST("POST"),
     GET("GET"),
@@ -17,6 +23,7 @@ public enum HttpMethod {
         this.http_method_str = httpMethodStr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return this.http_method_str;

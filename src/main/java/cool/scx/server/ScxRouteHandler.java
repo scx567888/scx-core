@@ -11,17 +11,37 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+/**
+ * <p>ScxRouteHandler class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class ScxRouteHandler {
     public final Method method;
     public final Object example;
     public final ScxMapping scxMapping;
 
+    /**
+     * <p>Constructor for ScxRouteHandler.</p>
+     *
+     * @param method a {@link java.lang.reflect.Method} object.
+     * @param example a {@link java.lang.Object} object.
+     * @param scxMapping a {@link cool.scx.annotation.ScxMapping} object.
+     */
     public ScxRouteHandler(Method method, Object example, ScxMapping scxMapping) {
         this.method = method;
         this.example = example;
         this.scxMapping = scxMapping;
     }
 
+    /**
+     * <p>getHandlerParamsFromJson.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param parameters an array of {@link java.lang.reflect.Parameter} objects.
+     * @return an array of {@link java.lang.Object} objects.
+     */
     public static Object[] getHandlerParamsFromJson(RoutingContext ctx, Parameter[] parameters) {
         var handlerParams = new Object[parameters.length];
         String jsonStr = ctx.request().method() != HttpMethod.GET ? ctx.getBodyAsString() : "";
@@ -38,6 +58,13 @@ public final class ScxRouteHandler {
         return handlerParams;
     }
 
+    /**
+     * <p>getHandlerParamsFromFormAttributes.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param parameters an array of {@link java.lang.reflect.Parameter} objects.
+     * @return an array of {@link java.lang.Object} objects.
+     */
     public static Object[] getHandlerParamsFromFormAttributes(RoutingContext ctx, Parameter[] parameters) {
         var handlerParams = new Object[parameters.length];
         var request = ctx.request();
@@ -47,6 +74,13 @@ public final class ScxRouteHandler {
         return handlerParams;
     }
 
+    /**
+     * <p>getHandlerParamsFromPath.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param parameters an array of {@link java.lang.reflect.Parameter} objects.
+     * @return an array of {@link java.lang.Object} objects.
+     */
     public static Object[] getHandlerParamsFromPath(RoutingContext ctx, Parameter[] parameters) {
         var pathParams = ctx.pathParams();
         var handlerParams = new Object[parameters.length];
@@ -56,6 +90,13 @@ public final class ScxRouteHandler {
         return handlerParams;
     }
 
+    /**
+     * <p>getHandlerParamsFromQuery.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param parameters an array of {@link java.lang.reflect.Parameter} objects.
+     * @return an array of {@link java.lang.Object} objects.
+     */
     public static Object[] getHandlerParamsFromQuery(RoutingContext ctx, Parameter[] parameters) {
         var queryParams = ctx.queryParams();
         var handlerParams = new Object[parameters.length];
@@ -65,6 +106,12 @@ public final class ScxRouteHandler {
         return handlerParams;
     }
 
+    /**
+     * <p>getResult.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a {@link java.lang.Object} object.
+     */
     public Object getResult(RoutingContext ctx) {
         var parameters = method.getParameters();
         var handlerParamsFromJson = getHandlerParamsFromJson(ctx, parameters);

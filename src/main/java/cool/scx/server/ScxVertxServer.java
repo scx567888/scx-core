@@ -12,23 +12,43 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
 
+/**
+ * <p>ScxVertxServer class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 public final class ScxVertxServer extends AbstractVerticle {
 
+    /** Constant <code>eventBus</code> */
     public static EventBus eventBus;
+    /** Constant <code>server</code> */
     public static HttpServer server;
 
+    /**
+     * <p>init.</p>
+     */
     public static void init() {
         Vertx.vertx().deployVerticle(new ScxVertxServer());
     }
 
+    /**
+     * <p>Getter for the field <code>eventBus</code>.</p>
+     *
+     * @return a {@link io.vertx.core.eventbus.EventBus} object.
+     */
     public static EventBus getEventBus() {
         return eventBus;
     }
 
+    /**
+     * <p>stopServer.</p>
+     */
     public static void stopServer() {
         server.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void start(Promise<Void> startPromise) {
         var httpServerOptions = new HttpServerOptions();

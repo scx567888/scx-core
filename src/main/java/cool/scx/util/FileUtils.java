@@ -11,6 +11,9 @@ import java.util.*;
 
 /**
  * 文件 操作类
+ *
+ * @author 司昌旭
+ * @version 0.3.6
  */
 public class FileUtils {
 
@@ -192,6 +195,13 @@ public class FileUtils {
     //}
 
     //这个方法就是改变配置文件的
+    /**
+     * <p>changeUploadFileConfig.</p>
+     *
+     * @param fileName a {@link java.lang.String} object.
+     * @param nowChunk a {@link java.lang.Integer} object.
+     * @param chunkTotal a {@link java.lang.Integer} object.
+     */
     public static void changeUploadFileConfig(String fileName, Integer nowChunk, Integer chunkTotal) {
         var configFilePath = ScxConfig.uploadFilePath + "TEMP\\" + fileName + "\\" + ".scxUpload";
         var config = new File(configFilePath);
@@ -214,6 +224,11 @@ public class FileUtils {
         }
     }
 
+    /**
+     * <p>getDateStr.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String getDateStr() {
         var cale = Calendar.getInstance();
         String str;
@@ -225,6 +240,12 @@ public class FileUtils {
         return str;
     }
 
+    /**
+     * <p>deleteFileByPath.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public static boolean deleteFileByPath(String path) {
         var file = new File(path);
         if (file.isDirectory()) {
@@ -248,6 +269,13 @@ public class FileUtils {
     }
 
     //文件全上传完了 将临时文件 重命名 移动至 上传文件夹并 删除临时文件
+    /**
+     * <p>validateFile.</p>
+     *
+     * @param fileName a {@link java.lang.String} object.
+     * @param fileWritePath a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public static boolean validateFile(String fileName, String fileWritePath) {
         var moveFrom = FileSystems.getDefault().getPath(ScxConfig.uploadFilePath.getPath() + "temp\\" + fileName + "\\" + fileName + ".scxTemp");
         var moveto = FileSystems.getDefault().getPath(ScxConfig.uploadFilePath.getPath() + fileWritePath);
@@ -286,7 +314,7 @@ public class FileUtils {
      *
      * @param filePath 文件路径
      * @return 文件列表
-     * @throws IOException 读取错误
+     * @throws java.io.IOException if any.
      */
     public static List<FileInfo> getFileList(String filePath) throws IOException {
         var fileList = new LinkedList<FileInfo>();
@@ -364,6 +392,12 @@ public class FileUtils {
         }
     }
 
+    /**
+     * <p>deleteIfExists.</p>
+     *
+     * @param dir a {@link java.nio.file.Path} object.
+     * @throws java.io.IOException if any.
+     */
     public static void deleteIfExists(Path dir) throws IOException {
         try {
             Files.deleteIfExists(dir);

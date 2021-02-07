@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 
 /**
  * 最基本的 model 包含最基础的元数据
+ *
+ * @author 司昌旭
+ * @version 0.3.6
  */
 public abstract class BaseModel {
 

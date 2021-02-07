@@ -7,9 +7,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * <p>NoticeService class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
 @ScxService
 public class NoticeService extends BaseService<Notice> {
 
+    /** {@inheritDoc} */
     @Override
     public Notice save(Notice notice) {
         var newId = super.save(notice);
