@@ -211,7 +211,7 @@ public abstract class BaseService<Entity extends BaseModel> {
      */
     public List<Entity> update(Param<Entity> param) {
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
-        var ids = baseDao.update(param, true);
+        var ids = baseDao.update(param, false);
         var defaultParam = new Param<>(ScxContext.getBean(entityClass));
         defaultParam.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
         defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
