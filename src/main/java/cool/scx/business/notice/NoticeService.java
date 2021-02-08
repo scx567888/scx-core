@@ -16,7 +16,9 @@ import java.util.stream.Stream;
 @ScxService
 public class NoticeService extends BaseService<Notice> {
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Notice save(Notice notice) {
         var newId = super.save(notice);

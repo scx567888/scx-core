@@ -16,7 +16,9 @@ import java.util.List;
  */
 public final class ScxPlugins {
 
-    /** Constant <code>pluginsClassList</code> */
+    /**
+     * Constant <code>pluginsClassList</code>
+     */
     public static List<Class<?>> pluginsClassList = new ArrayList<>();
 
     static {

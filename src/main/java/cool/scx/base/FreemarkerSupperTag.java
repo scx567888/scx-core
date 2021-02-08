@@ -17,7 +17,9 @@ import java.util.Map;
  */
 public interface FreemarkerSupperTag extends TemplateDirectiveModel {
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     default void execute(Environment environment, Map params, TemplateModel[] model, TemplateDirectiveBody body) throws TemplateException, IOException {
         Object paramWrap = getParams(params);

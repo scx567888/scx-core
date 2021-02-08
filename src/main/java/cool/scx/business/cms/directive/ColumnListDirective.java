@@ -16,13 +16,17 @@ public class ColumnListDirective implements FreemarkerSupperTag {
 
     ColumnService columnService = new ColumnService();
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getParams(Map params) {
         return columnService.listMapAll();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getVariable() {
         return "column_list";

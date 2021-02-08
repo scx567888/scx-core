@@ -209,7 +209,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>list.</p>
      *
-     * @param param a {@link cool.scx.base.Param} object.
+     * @param param      a {@link cool.scx.base.Param} object.
      * @param ignoreLike a boolean.
      * @return a {@link java.util.List} object.
      */
@@ -227,7 +227,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>listMap.</p>
      *
-     * @param param a {@link cool.scx.base.Param} object.
+     * @param param      a {@link cool.scx.base.Param} object.
      * @param ignoreLike a boolean.
      * @return a {@link java.util.List} object.
      */
@@ -245,7 +245,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>count.</p>
      *
-     * @param param a {@link cool.scx.base.Param} object.
+     * @param param      a {@link cool.scx.base.Param} object.
      * @param ignoreLike a boolean.
      * @return a {@link java.lang.Integer} object.
      */
@@ -261,7 +261,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>update.</p>
      *
-     * @param param a {@link cool.scx.base.Param} object.
+     * @param param       a {@link cool.scx.base.Param} object.
      * @param includeNull a boolean.
      * @return a {@link cool.scx.base.SQLRunner.UpdateResult} object.
      */

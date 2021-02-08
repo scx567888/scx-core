@@ -13,7 +13,9 @@ import freemarker.template.Configuration;
  * @version 0.3.6
  */
 public final class ScxCmsConfig {
-    /** Constant <code>freemarkerConfig</code> */
+    /**
+     * Constant <code>freemarkerConfig</code>
+     */
     public static final Configuration freemarkerConfig;
 
     static {

@@ -44,7 +44,7 @@ public class ScxLogService extends BaseService<ScxLog> {
      * <p>getName.</p>
      *
      * @param name a {@link java.lang.Long} object.
-     * @param age a {@link java.lang.Integer} object.
+     * @param age  a {@link java.lang.Integer} object.
      */
     @ScxMapping(value = ":name", httpMethod = HttpMethod.GET)
     public void getName(Long name, Integer age) {

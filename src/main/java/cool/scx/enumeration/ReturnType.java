@@ -18,7 +18,9 @@ public enum ReturnType {
         this.return_type_str = returnTypeStr;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return this.return_type_str;

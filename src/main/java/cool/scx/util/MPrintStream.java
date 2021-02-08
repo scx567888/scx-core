@@ -17,7 +17,7 @@ public class MPrintStream extends PrintStream {
     /**
      * <p>Constructor for MPrintStream.</p>
      *
-     * @param out a {@link java.io.OutputStream} object.
+     * @param out       a {@link java.io.OutputStream} object.
      * @param jTextArea a {@link javax.swing.JTextArea} object.
      */
     public MPrintStream(OutputStream out, JTextArea jTextArea) {
@@ -26,7 +26,9 @@ public class MPrintStream extends PrintStream {
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(byte[] buf, int off, int len) {
         final String message = new String(buf, off, len);

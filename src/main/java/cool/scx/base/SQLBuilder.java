@@ -216,7 +216,7 @@ public final class SQLBuilder {
     /**
      * <p>Pagination.</p>
      *
-     * @param page a {@link java.lang.Integer} object.
+     * @param page  a {@link java.lang.Integer} object.
      * @param limit a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.base.SQLBuilder} object.
      */

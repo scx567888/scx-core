@@ -48,7 +48,9 @@ public enum Color {
         this.code = code;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return this.code;

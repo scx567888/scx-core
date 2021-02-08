@@ -35,7 +35,7 @@ public final class CryptoUtils {
      * <p>decryptPassword.</p>
      *
      * @param encryptedPassword a {@link java.lang.String} object.
-     * @param salt a {@link java.lang.String} object.
+     * @param salt              a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.
      */
     public static String decryptPassword(String encryptedPassword, String salt) {

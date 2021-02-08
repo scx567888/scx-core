@@ -5,6 +5,7 @@ import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
 //栏目
+
 /**
  * <p>Column class.</p>
  *

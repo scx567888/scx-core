@@ -22,6 +22,7 @@ public abstract class BaseService<Entity extends BaseModel> {
 
     @SuppressWarnings("unchecked")
     /**
+     *
      * <p>Constructor for BaseService.</p>
      */
     public BaseService() {

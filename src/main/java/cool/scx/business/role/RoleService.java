@@ -54,7 +54,7 @@ public class RoleService extends BaseService<Role> {
     /**
      * <p>saveRoleListWithUserId.</p>
      *
-     * @param userId a {@link java.lang.Long} object.
+     * @param userId  a {@link java.lang.Long} object.
      * @param roleIds a {@link java.lang.String} object.
      */
     public void saveRoleListWithUserId(Long userId, String roleIds) {

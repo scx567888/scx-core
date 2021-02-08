@@ -47,8 +47,8 @@ public class UserService extends BaseService<User> {
     /**
      * <p>Constructor for UserService.</p>
      *
-     * @param deptService a {@link cool.scx.business.dept.DeptService} object.
-     * @param roleService a {@link cool.scx.business.role.RoleService} object.
+     * @param deptService     a {@link cool.scx.business.dept.DeptService} object.
+     * @param roleService     a {@link cool.scx.business.role.RoleService} object.
      * @param userDeptService a {@link cool.scx.business.dept.UserDeptService} object.
      * @param userRoleService a {@link cool.scx.business.role.UserRoleService} object.
      */
@@ -246,7 +246,9 @@ public class UserService extends BaseService<User> {
         return deleteByIds(id) == 1;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<User> listAll() {
         var userDeptListFuture = CompletableFuture.supplyAsync(userDeptService::listAll);
@@ -314,7 +316,7 @@ public class UserService extends BaseService<User> {
      * <p>updateUserAndDept.</p>
      *
      * @param id a {@link java.lang.Long} object.
-     * @param b a boolean.
+     * @param b  a boolean.
      * @return a {@link cool.scx.business.user.User} object.
      */
     public User updateUserAndDept(Long id, boolean b) {

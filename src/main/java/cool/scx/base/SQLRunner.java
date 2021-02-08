@@ -88,10 +88,10 @@ public final class SQLRunner {
     /**
      * <p>query.</p>
      *
-     * @param sql a {@link java.lang.String} object.
+     * @param sql   a {@link java.lang.String} object.
      * @param param a {@link java.util.Map} object.
      * @param clazz a {@link java.lang.Class} object.
-     * @param <T> a T object.
+     * @param <T>   a T object.
      * @return a {@link java.util.List} object.
      */
     public static <T> List<T> query(String sql, Map<String, Object> param, Class<T> clazz) {
@@ -101,7 +101,7 @@ public final class SQLRunner {
     /**
      * <p>query.</p>
      *
-     * @param sql a {@link java.lang.String} object.
+     * @param sql   a {@link java.lang.String} object.
      * @param param a {@link java.util.Map} object.
      * @return a {@link java.util.List} object.
      */
@@ -154,7 +154,7 @@ public final class SQLRunner {
     /**
      * <p>update.</p>
      *
-     * @param sql a {@link java.lang.String} object.
+     * @param sql   a {@link java.lang.String} object.
      * @param param a {@link java.util.Map} object.
      * @return a {@link cool.scx.base.SQLRunner.UpdateResult} object.
      */

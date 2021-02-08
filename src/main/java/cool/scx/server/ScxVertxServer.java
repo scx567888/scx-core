@@ -20,9 +20,13 @@ import io.vertx.core.net.JksOptions;
  */
 public final class ScxVertxServer extends AbstractVerticle {
 
-    /** Constant <code>eventBus</code> */
+    /**
+     * Constant <code>eventBus</code>
+     */
     public static EventBus eventBus;
-    /** Constant <code>server</code> */
+    /**
+     * Constant <code>server</code>
+     */
     public static HttpServer server;
 
     /**
@@ -48,7 +52,9 @@ public final class ScxVertxServer extends AbstractVerticle {
         server.close();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void start(Promise<Void> startPromise) {
         var httpServerOptions = new HttpServerOptions();

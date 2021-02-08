@@ -25,8 +25,8 @@ public final class ScxRouteHandler {
     /**
      * <p>Constructor for ScxRouteHandler.</p>
      *
-     * @param method a {@link java.lang.reflect.Method} object.
-     * @param example a {@link java.lang.Object} object.
+     * @param method     a {@link java.lang.reflect.Method} object.
+     * @param example    a {@link java.lang.Object} object.
      * @param scxMapping a {@link cool.scx.annotation.ScxMapping} object.
      */
     public ScxRouteHandler(Method method, Object example, ScxMapping scxMapping) {
@@ -38,7 +38,7 @@ public final class ScxRouteHandler {
     /**
      * <p>getHandlerParamsFromJson.</p>
      *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param ctx        a {@link io.vertx.ext.web.RoutingContext} object.
      * @param parameters an array of {@link java.lang.reflect.Parameter} objects.
      * @return an array of {@link java.lang.Object} objects.
      */
@@ -61,7 +61,7 @@ public final class ScxRouteHandler {
     /**
      * <p>getHandlerParamsFromFormAttributes.</p>
      *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param ctx        a {@link io.vertx.ext.web.RoutingContext} object.
      * @param parameters an array of {@link java.lang.reflect.Parameter} objects.
      * @return an array of {@link java.lang.Object} objects.
      */
@@ -77,7 +77,7 @@ public final class ScxRouteHandler {
     /**
      * <p>getHandlerParamsFromPath.</p>
      *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param ctx        a {@link io.vertx.ext.web.RoutingContext} object.
      * @param parameters an array of {@link java.lang.reflect.Parameter} objects.
      * @return an array of {@link java.lang.Object} objects.
      */
@@ -93,7 +93,7 @@ public final class ScxRouteHandler {
     /**
      * <p>getHandlerParamsFromQuery.</p>
      *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param ctx        a {@link io.vertx.ext.web.RoutingContext} object.
      * @param parameters an array of {@link java.lang.reflect.Parameter} objects.
      * @return an array of {@link java.lang.Object} objects.
      */

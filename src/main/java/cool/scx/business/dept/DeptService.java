@@ -55,7 +55,7 @@ public class DeptService extends BaseService<Dept> {
     /**
      * <p>saveDeptListWithUserId.</p>
      *
-     * @param userId a {@link java.lang.Long} object.
+     * @param userId  a {@link java.lang.Long} object.
      * @param deptIds a {@link java.lang.String} object.
      */
     public void saveDeptListWithUserId(Long userId, String deptIds) {

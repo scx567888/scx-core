@@ -100,7 +100,7 @@ public class StringUtils {
     /**
      * <p>println.</p>
      *
-     * @param str a {@link java.lang.String} object.
+     * @param str       a {@link java.lang.String} object.
      * @param ansiColor a {@link cool.scx.enumeration.Color} object.
      */
     public static void println(String str, Color ansiColor) {
@@ -123,7 +123,7 @@ public class StringUtils {
     /**
      * <p>print.</p>
      *
-     * @param str a {@link java.lang.String} object.
+     * @param str       a {@link java.lang.String} object.
      * @param ansiColor a {@link cool.scx.enumeration.Color} object.
      */
     public static void print(String str, Color ansiColor) {

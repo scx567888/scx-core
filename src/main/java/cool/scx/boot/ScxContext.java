@@ -91,7 +91,7 @@ public final class ScxContext {
     /**
      * <p>getBean.</p>
      *
-     * @param c a {@link java.lang.Class} object.
+     * @param c   a {@link java.lang.Class} object.
      * @param <T> a T object.
      * @return a T object.
      */

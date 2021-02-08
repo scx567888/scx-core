@@ -2,6 +2,7 @@ package cool.scx.base;
 
 import cool.scx.annotation.Column;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
  * @author 司昌旭
  * @version 0.3.6
  */
-public abstract class BaseModel {
+public abstract class BaseModel implements Serializable {
 
     /**
      * id

@@ -32,7 +32,7 @@ public final class Html {
     /**
      * <p>add.</p>
      *
-     * @param key a {@link java.lang.String} object.
+     * @param key   a {@link java.lang.String} object.
      * @param value a {@link java.lang.Object} object.
      * @return a {@link cool.scx.vo.Html} object.
      */

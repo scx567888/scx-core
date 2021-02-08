@@ -6,10 +6,9 @@ import cool.scx.boot.ScxContext;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.util.CryptoUtils;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -46,16 +45,30 @@ public class BaseServiceTest {
     }
 
     @Test
-    public static void test3() throws URISyntaxException, IOException, InterruptedException {
+    public static void test3() throws URISyntaxException, IOException, InterruptedException, ClassNotFoundException {
 //        System.out.println(1/0);
         String s = CryptoUtils.encryptText("12345678");
+        User user = new User();
+        user.username = "司昌旭";
+        user.password = "12345678";
+
+
+        var path = "C:\\Users\\scx56\\Documents\\123\\object.dat";
+//创建对象流并输出到文件object.dat
+        var output = new ObjectOutputStream(new FileOutputStream(path));
+//将object对象写到文件中
+        output.writeObject(user);
+
+        var input = new ObjectInputStream(new FileInputStream(path));
+        var object = (User) input.readObject();
+
         System.out.println(s);
     }
 
     /**
      * 启动服务器
      */
-    @BeforeClass
+//    @BeforeClass
     public void beforeClass() {
         ScxApp.run(ScxCoreApp.class);
     }

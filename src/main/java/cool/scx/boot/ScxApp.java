@@ -23,7 +23,7 @@ public final class ScxApp {
      * <p>run.</p>
      *
      * @param source a {@link java.lang.Class} object.
-     * @param args a {@link java.lang.String} object.
+     * @param args   a {@link java.lang.String} object.
      */
     public static void run(Class<?> source, String... args) {
         run(new Class[]{source}, args);
@@ -33,7 +33,7 @@ public final class ScxApp {
      * <p>run.</p>
      *
      * @param source an array of {@link java.lang.Class} objects.
-     * @param args a {@link java.lang.String} object.
+     * @param args   a {@link java.lang.String} object.
      */
     public static void run(Class<?>[] source, String... args) {
         parameters = args;

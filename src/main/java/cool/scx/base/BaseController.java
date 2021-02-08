@@ -36,7 +36,7 @@ public class BaseController {
     /**
      * <p>Constructor for BaseController.</p>
      *
-     * @param scxLogService a {@link cool.scx.business.system.ScxLogService} object.
+     * @param scxLogService     a {@link cool.scx.business.system.ScxLogService} object.
      * @param uploadFileService a {@link cool.scx.business.uploadfile.UploadFileService} object.
      */
     public BaseController(ScxLogService scxLogService, UploadFileService uploadFileService) {
@@ -60,11 +60,12 @@ public class BaseController {
     }
 
     //
+
     /**
      * <p>list.</p>
      *
      * @param modelName a {@link java.lang.String} object.
-     * @param params a {@link java.util.Map} object.
+     * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName/list", httpMethod = {HttpMethod.GET, HttpMethod.POST})
@@ -83,7 +84,7 @@ public class BaseController {
      * <p>info.</p>
      *
      * @param modelName a {@link java.lang.String} object.
-     * @param id a {@link java.lang.Long} object.
+     * @param id        a {@link java.lang.Long} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName/:id", httpMethod = HttpMethod.GET)
@@ -129,7 +130,7 @@ public class BaseController {
      * <p>delete.</p>
      *
      * @param modelName a {@link java.lang.String} object.
-     * @param id a {@link java.lang.Integer} object.
+     * @param id        a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Json} object.
      * @throws java.lang.Exception if any.
      */
@@ -144,7 +145,7 @@ public class BaseController {
      * <p>batchDelete.</p>
      *
      * @param modelName a {@link java.lang.String} object.
-     * @param params a {@link java.util.Map} object.
+     * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName/batchDelete", httpMethod = HttpMethod.DELETE)
@@ -159,7 +160,7 @@ public class BaseController {
      * <p>revokeDelete.</p>
      *
      * @param modelName a {@link java.lang.String} object.
-     * @param id a {@link java.lang.Integer} object.
+     * @param id        a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName/revokeDelete/:id", httpMethod = HttpMethod.GET)
@@ -187,7 +188,7 @@ public class BaseController {
      * <p>checkUnique.</p>
      *
      * @param modelName a {@link java.lang.String} object.
-     * @param params a {@link java.util.Map} object.
+     * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName/checkUnique", httpMethod = HttpMethod.POST)

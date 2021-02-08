@@ -1,6 +1,7 @@
 package cool.scx.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -31,6 +32,7 @@ public final class ObjectUtils {
         timeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(ScxConfig.dateTimeFormatter));
         timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(ScxConfig.dateTimeFormatter));
         objectMapper.registerModule(timeModule);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     /**
@@ -64,9 +66,9 @@ public final class ObjectUtils {
     /**
      * <p>jsonToBean.</p>
      *
-     * @param json a {@link java.lang.String} object.
+     * @param json  a {@link java.lang.String} object.
      * @param clazz a {@link java.lang.Class} object.
-     * @param <T> a T object.
+     * @param <T>   a T object.
      * @return a T object.
      */
     public static <T> T jsonToBean(String json, Class<T> clazz) {
@@ -81,8 +83,8 @@ public final class ObjectUtils {
      * <p>jsonNodeToBean.</p>
      *
      * @param jsonNode a {@link com.fasterxml.jackson.databind.JsonNode} object.
-     * @param clazz a {@link java.lang.Class} object.
-     * @param <T> a T object.
+     * @param clazz    a {@link java.lang.Class} object.
+     * @param <T>      a T object.
      * @return a T object.
      */
     public static <T> T jsonNodeToBean(JsonNode jsonNode, Class<T> clazz) {
@@ -96,9 +98,9 @@ public final class ObjectUtils {
     /**
      * <p>mapToBean.</p>
      *
-     * @param map a {@link java.util.Map} object.
+     * @param map   a {@link java.util.Map} object.
      * @param clazz a {@link java.lang.Class} object.
-     * @param <T> a T object.
+     * @param <T>   a T object.
      * @return a T object.
      */
     public static <T> T mapToBean(Map<String, ?> map, Class<T> clazz) {
@@ -164,7 +166,7 @@ public final class ObjectUtils {
      * <p>beanToMapWithIndex.</p>
      *
      * @param index a {@link java.lang.Integer} object.
-     * @param o a {@link java.lang.Object} object.
+     * @param o     a {@link java.lang.Object} object.
      * @return a {@link java.util.Map} object.
      */
     public static Map<String, Object> beanToMapWithIndex(Integer index, Object o) {

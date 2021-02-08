@@ -49,11 +49,11 @@ public class UserController {
     /**
      * <p>Constructor for UserController.</p>
      *
-     * @param userService a {@link cool.scx.business.user.UserService} object.
-     * @param scxLogService a {@link cool.scx.business.system.ScxLogService} object.
-     * @param licenseService a {@link cool.scx.business.license.LicenseService} object.
-     * @param deptService a {@link cool.scx.business.dept.DeptService} object.
-     * @param roleService a {@link cool.scx.business.role.RoleService} object.
+     * @param userService     a {@link cool.scx.business.user.UserService} object.
+     * @param scxLogService   a {@link cool.scx.business.system.ScxLogService} object.
+     * @param licenseService  a {@link cool.scx.business.license.LicenseService} object.
+     * @param deptService     a {@link cool.scx.business.dept.DeptService} object.
+     * @param roleService     a {@link cool.scx.business.role.RoleService} object.
      * @param userRoleService a {@link cool.scx.business.role.UserRoleService} object.
      * @param userDeptService a {@link cool.scx.business.dept.UserDeptService} object.
      */
@@ -270,7 +270,7 @@ public class UserController {
      * <p>avatarUpdate.</p>
      *
      * @param queryUser a {@link cool.scx.business.user.User} object.
-     * @param context a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param context   a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)

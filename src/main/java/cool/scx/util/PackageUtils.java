@@ -28,7 +28,7 @@ public class PackageUtils {
     /**
      * <p>scanPackageIncludePlugins.</p>
      *
-     * @param fun a {@link java.util.function.Consumer} object.
+     * @param fun             a {@link java.util.function.Consumer} object.
      * @param classOrJarPaths a {@link java.net.URL} object.
      */
     public static void scanPackageIncludePlugins(Consumer<Class<?>> fun, URL... classOrJarPaths) {
@@ -39,7 +39,7 @@ public class PackageUtils {
     /**
      * <p>scanPackage.</p>
      *
-     * @param fun a {@link java.util.function.Consumer} object.
+     * @param fun             a {@link java.util.function.Consumer} object.
      * @param classOrJarPaths a {@link java.net.URL} object.
      */
     public static void scanPackage(Consumer<Class<?>> fun, URL... classOrJarPaths) {
@@ -112,7 +112,7 @@ public class PackageUtils {
     /**
      * <p>scanPackageByJar.</p>
      *
-     * @param fun a {@link java.util.function.Consumer} object.
+     * @param fun        a {@link java.util.function.Consumer} object.
      * @param jarFileUrl a {@link java.net.URL} object.
      * @throws java.io.IOException if any.
      */

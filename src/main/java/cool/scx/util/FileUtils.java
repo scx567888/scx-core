@@ -195,11 +195,12 @@ public class FileUtils {
     //}
 
     //这个方法就是改变配置文件的
+
     /**
      * <p>changeUploadFileConfig.</p>
      *
-     * @param fileName a {@link java.lang.String} object.
-     * @param nowChunk a {@link java.lang.Integer} object.
+     * @param fileName   a {@link java.lang.String} object.
+     * @param nowChunk   a {@link java.lang.Integer} object.
      * @param chunkTotal a {@link java.lang.Integer} object.
      */
     public static void changeUploadFileConfig(String fileName, Integer nowChunk, Integer chunkTotal) {
@@ -269,10 +270,11 @@ public class FileUtils {
     }
 
     //文件全上传完了 将临时文件 重命名 移动至 上传文件夹并 删除临时文件
+
     /**
      * <p>validateFile.</p>
      *
-     * @param fileName a {@link java.lang.String} object.
+     * @param fileName      a {@link java.lang.String} object.
      * @param fileWritePath a {@link java.lang.String} object.
      * @return a boolean.
      */

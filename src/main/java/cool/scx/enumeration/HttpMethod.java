@@ -23,7 +23,9 @@ public enum HttpMethod {
         this.http_method_str = httpMethodStr;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return this.http_method_str;

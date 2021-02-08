@@ -92,7 +92,7 @@ public class TemplateController {
     /**
      * <p>upload.</p>
      *
-     * @param file a {@link java.io.File} object.
+     * @param file     a {@link java.io.File} object.
      * @param filePath a {@link java.lang.String} object.
      * @return a {@link cool.scx.vo.Json} object.
      * @throws java.io.IOException if any.

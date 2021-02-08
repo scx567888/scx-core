@@ -37,7 +37,7 @@ public final class Param<Entity> {
      * <p>addOrderBy.</p>
      *
      * @param orderByColumn a {@link java.lang.String} object.
-     * @param sortType a {@link cool.scx.enumeration.SortType} object.
+     * @param sortType      a {@link cool.scx.enumeration.SortType} object.
      * @return a {@link cool.scx.base.Param} object.
      */
     public Param<Entity> addOrderBy(String orderByColumn, SortType sortType) {

@@ -16,13 +16,17 @@ public class ArticleListDirective implements FreemarkerSupperTag {
 
     ArticleService articleService = new ArticleService();
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getParams(Map params) {
         return articleService.listMapAll();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getVariable() {
         return "article_list";
