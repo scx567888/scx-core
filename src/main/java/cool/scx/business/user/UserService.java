@@ -247,7 +247,11 @@ public class UserService extends BaseService<User> {
     }
 
 
-    /** 重写方法 */
+    /**
+     * {@inheritDoc}
+     * <p>
+     * 重写方法
+     */
     @Override
     public List<User> listAll() {
         var userDeptListFuture = CompletableFuture.supplyAsync(userDeptService::listAll);

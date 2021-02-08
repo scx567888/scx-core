@@ -49,6 +49,8 @@ public enum Color {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * 重写方法
      */
     @Override

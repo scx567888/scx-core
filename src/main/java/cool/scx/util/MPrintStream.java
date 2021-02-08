@@ -26,7 +26,11 @@ public class MPrintStream extends PrintStream {
     }
 
 
-    /** 重写方法 */
+    /**
+     * {@inheritDoc}
+     * <p>
+     * 重写方法
+     */
     @Override
     public void write(byte[] buf, int off, int len) {
         final String message = new String(buf, off, len);

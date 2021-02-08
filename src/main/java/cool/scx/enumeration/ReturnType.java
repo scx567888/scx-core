@@ -19,7 +19,11 @@ public enum ReturnType {
     }
 
 
-    /** 重写方法 */
+    /**
+     * {@inheritDoc}
+     * <p>
+     * 重写方法
+     */
     @Override
     public String toString() {
         return this.return_type_str;

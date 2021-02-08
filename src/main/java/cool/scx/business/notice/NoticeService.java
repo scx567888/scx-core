@@ -16,7 +16,11 @@ import java.util.stream.Stream;
 @ScxService
 public class NoticeService extends BaseService<Notice> {
 
-    /** 重写方法 */
+    /**
+     * {@inheritDoc}
+     * <p>
+     * 重写方法
+     */
     @Override
     public Notice save(Notice notice) {
         var newId = super.save(notice);
