@@ -17,7 +17,8 @@ public class ArticleListDirective implements FreemarkerSupperTag {
     ArticleService articleService = new ArticleService();
 
     /**
-     * {@inheritDoc}
+     *
+     * 获取参数
      */
     @Override
     public Object getParams(Map params) {
@@ -25,7 +26,8 @@ public class ArticleListDirective implements FreemarkerSupperTag {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * 获取 自定义标签 的名称
      */
     @Override
     public String getVariable() {

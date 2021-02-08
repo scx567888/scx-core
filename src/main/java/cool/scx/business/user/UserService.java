@@ -246,9 +246,8 @@ public class UserService extends BaseService<User> {
         return deleteByIds(id) == 1;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
+    /** 重写方法 */
     @Override
     public List<User> listAll() {
         var userDeptListFuture = CompletableFuture.supplyAsync(userDeptService::listAll);

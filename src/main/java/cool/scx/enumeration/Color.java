@@ -49,7 +49,7 @@ public enum Color {
     }
 
     /**
-     * {@inheritDoc}
+     * 重写方法
      */
     @Override
     public String toString() {

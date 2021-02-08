@@ -16,9 +16,8 @@ public enum SortType {
         this.sort_str = code;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
+    /** 重写方法 */
     @Override
     public String toString() {
         return this.sort_str;

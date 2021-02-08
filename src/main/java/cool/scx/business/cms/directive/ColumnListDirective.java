@@ -16,9 +16,7 @@ public class ColumnListDirective implements FreemarkerSupperTag {
 
     ColumnService columnService = new ColumnService();
 
-    /**
-     * {@inheritDoc}
-     */
+    /** 重写方法 */
     @Override
     public Object getParams(Map params) {
         return columnService.listMapAll();
@@ -26,6 +24,8 @@ public class ColumnListDirective implements FreemarkerSupperTag {
 
     /**
      * {@inheritDoc}
+     *
+     * 获取自定义 标签名称
      */
     @Override
     public String getVariable() {

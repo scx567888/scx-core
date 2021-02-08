@@ -23,9 +23,7 @@ public enum HttpMethod {
         this.http_method_str = httpMethodStr;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** 重写方法 */
     @Override
     public String toString() {
         return this.http_method_str;

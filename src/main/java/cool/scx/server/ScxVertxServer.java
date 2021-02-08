@@ -52,8 +52,9 @@ public final class ScxVertxServer extends AbstractVerticle {
         server.close();
     }
 
+
     /**
-     * {@inheritDoc}
+     * 重写方法
      */
     @Override
     public void start(Promise<Void> startPromise) {
