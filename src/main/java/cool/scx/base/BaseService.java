@@ -30,23 +30,6 @@ public abstract class BaseService<Entity extends BaseModel> {
         baseDao = new BaseDao<>(entityClass);
     }
 
-    private BaseService(Class<Entity> clazz) {
-        entityClass = clazz;
-        baseDao = new BaseDao<>(entityClass);
-    }
-
-    public static <E extends BaseModel> List<E> listAll(Class<E> entityClass) {
-        var bDao = new BaseDao<>(entityClass);
-        var param = new Param<>(ScxContext.getBean(entityClass)).addOrderBy("id", SortType.DESC);
-        param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
-        return bDao.list(param, false);
-    }
-
-    public static <E extends BaseModel> BaseService<E> create(Class<E> clazz) {
-//        return new BaseService<E>(clazz);
-        return null;
-    }
-
     /**
      * 实体插入新对象,并返回主键id值
      *
@@ -424,10 +407,9 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return a {@link java.util.List} object.
      */
     public List<Entity> listAll() {
-        return listAll(entityClass);
-//        var param = new Param<>(ScxContext.getBean(entityClass)).addOrderBy("id", SortType.DESC);
-//        param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
-//        return baseDao.list(param, false);
+        var param = new Param<>(ScxContext.getBean(entityClass)).addOrderBy("id", SortType.DESC);
+        param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
+        return baseDao.list(param, false);
     }
 
     /**
