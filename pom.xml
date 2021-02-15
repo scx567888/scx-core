@@ -2,14 +2,11 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
 
     <groupId>cool.scx</groupId>
     <artifactId>scx</artifactId>
-    <packaging>jar</packaging>
-    <name>scx</name>
     <version>0.3.6</version>
-    <description>scx 核心包</description>
-    <url>https://github.com/scx567888/scx</url>
 
     <properties>
         <!-- 项目构建时的字符集 强烈建议采用默认值 UTF-8 -->
@@ -79,14 +76,6 @@
             <version>1.2.3</version>
         </dependency>
 
-        <!-- 测试 -->
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>7.3.0</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <repositories>
@@ -111,50 +100,6 @@
 
     <build>
         <plugins>
-            <!-- 此插件用于测试 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
-                <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>${project.basedir}/src/test/resources/test/test.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                </configuration>
-            </plugin>
-            <!-- 此插件用于打包 java doc -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <charset>UTF-8</charset>
-                    <docencoding>UTF-8</docencoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- 此插件用于打包源码 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <!-- 此插件用于设置 java 程序编译时的参数 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -162,6 +107,7 @@
                 <version>3.8.1</version>
                 <configuration>
                     <compilerArgs>
+                        <!-- 使编译后 class 文件携带参数名称 -->
                         <arg>-parameters</arg>
                     </compilerArgs>
                     <!-- 指定编译时的jdk 版本 -->
@@ -185,10 +131,6 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <!-- 只包含运行依赖项 -->
-                            <includeScope>compile</includeScope>
-                            <!-- 排除 test 依赖 -->
-                            <excludeScope>test</excludeScope>
                         </configuration>
                     </execution>
                 </executions>
