@@ -4,7 +4,7 @@ import cool.scx.boot.ScxConfig;
 import org.jasypt.util.text.AES256TextEncryptor;
 
 /**
- * <p>CryptoUtils class.</p>
+ * 加密解密工具类
  *
  * @author 司昌旭
  * @version 0.3.6
@@ -12,6 +12,12 @@ import org.jasypt.util.text.AES256TextEncryptor;
 public final class CryptoUtils {
 
     private CryptoUtils() {
+    }
+
+    private static AES256TextEncryptor getEncryptor(String encryptorPassword) {
+        var encryptors = new AES256TextEncryptor();
+        encryptors.setPassword(encryptorPassword);
+        return encryptors;
     }
 
     /**
@@ -22,24 +28,18 @@ public final class CryptoUtils {
      * @return 加密后的密码
      */
     public static String encryptPassword(String password, String salt) {
-        return init(salt + ScxConfig.AppKey).encrypt(password);
-    }
-
-    private static AES256TextEncryptor init(String str) {
-        var encryptors = new AES256TextEncryptor();
-        encryptors.setPassword(str);
-        return encryptors;
+        return getEncryptor(salt + ScxConfig.AppKey).encrypt(password);
     }
 
     /**
-     * <p>decryptPassword.</p>
+     * 解密密码
      *
-     * @param encryptedPassword a {@link java.lang.String} object.
-     * @param salt              a {@link java.lang.String} object.
-     * @return a {@link java.lang.String} object.
+     * @param encryptedPassword 加密后的密码
+     * @param salt              盐值
+     * @return 解密后的密码
      */
     public static String decryptPassword(String encryptedPassword, String salt) {
-        return init(salt + ScxConfig.AppKey).decrypt(encryptedPassword);
+        return getEncryptor(salt + ScxConfig.AppKey).decrypt(encryptedPassword);
     }
 
     /**
@@ -49,7 +49,7 @@ public final class CryptoUtils {
      * @return a {@link java.lang.String} object.
      */
     public static String encryptText(String text) {
-        return init(ScxConfig.AppKey).encrypt(text);
+        return getEncryptor(ScxConfig.AppKey).encrypt(text);
     }
 
     /**
@@ -59,7 +59,7 @@ public final class CryptoUtils {
      * @return a {@link java.lang.String} object.
      */
     public static String decryptText(String text) {
-        return init(ScxConfig.AppKey).decrypt(text);
+        return getEncryptor(ScxConfig.AppKey).decrypt(text);
     }
 
 }

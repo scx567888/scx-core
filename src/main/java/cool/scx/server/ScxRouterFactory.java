@@ -127,9 +127,6 @@ public final class ScxRouterFactory {
     }
 
     private static void callHandler(RoutingContext ctx, ScxRouteHandler scxRouteHandler) {
-        Session session = ctx.session();
-        Object name = session.get("name");
-        System.out.println(name);
         var response = ctx.response();
         fillContentType(response, scxRouteHandler);
         response.end(getStringFormObject(scxRouteHandler.getResult(ctx)));
