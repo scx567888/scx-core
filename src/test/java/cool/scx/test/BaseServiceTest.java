@@ -1,7 +1,6 @@
 package cool.scx.test;
 
 import cool.scx.ScxCoreApp;
-import cool.scx.base.BaseService;
 import cool.scx.boot.ScxApp;
 import cool.scx.boot.ScxContext;
 import cool.scx.business.user.User;
