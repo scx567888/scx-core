@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 public final class BaseDao<Entity extends BaseModel> {
 
     private static final Map<String, TableInfo> tableCache = new ConcurrentHashMap<>(256);
+    private static final int splitSize = 5000;
     private final TableInfo table;
     private final Class<Entity> entityClass;
 
@@ -179,12 +180,11 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link java.util.List} object.
      */
     public List<Long> saveList(List<Entity> entityList) {
-        var splitSize = 5000;
         var size = entityList.size();
         if (size > splitSize) {
             StringUtils.println("批量插入数据量过大 , 达到" + size + "条 !!! 已按照" + splitSize + "条进行切分 !!!", Color.BRIGHT_RED);
             var generatedKeys = new ArrayList<Long>(splitSize);
-            int number = size / splitSize;
+            double number = Math.ceil(1.0 * size / splitSize);
             for (int i = 0; i < number; i++) {
                 generatedKeys.addAll(saveList(entityList.subList(i * splitSize, (Math.min((i + 1) * splitSize, size)))));
             }

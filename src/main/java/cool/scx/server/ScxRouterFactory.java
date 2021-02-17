@@ -114,8 +114,8 @@ public final class ScxRouterFactory {
                 Arrays.stream(clazz.getMethods()).filter(method -> method.isAnnotationPresent(ScxMapping.class)).forEach(method -> {
                     method.setAccessible(true);
                     var scxMapping = method.getAnnotation(ScxMapping.class);
-                    var url = scxMapping.useMethodNameAsUrl() && "".equals(scxMapping.value()) ? StringUtils.cleanHttpUrl("api", StringUtils.getModelNameByControllerName(clazz.getSimpleName()), method.getName())
-                            : StringUtils.cleanHttpUrl(scxController.value(), scxMapping.value());
+                    var url = scxMapping.useMethodNameAsUrl() && "".equals(scxMapping.value()) ? StringUtils.clearHttpUrl("api", StringUtils.getApiNameByControllerName(clazz), method.getName())
+                            : StringUtils.clearHttpUrl(scxController.value(), scxMapping.value());
                     Arrays.asList(scxMapping.httpMethod()).forEach(httpMethod ->
                             router.route(HttpMethod.valueOf(httpMethod.toString()), url)
                                     .order((url.contains(":") || url.contains("*")) ? 2 : 1)

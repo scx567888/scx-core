@@ -98,6 +98,16 @@ public class StringUtils {
     }
 
     /**
+     * <p>print.</p>
+     *
+     * @param str       a {@link java.lang.String} object.
+     * @param ansiColor a {@link cool.scx.enumeration.Color} object.
+     */
+    public static void print(String str, Color ansiColor) {
+        System.out.print("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
+    }
+
+    /**
      * <p>println.</p>
      *
      * @param str       a {@link java.lang.String} object.
@@ -108,7 +118,7 @@ public class StringUtils {
     }
 
     /**
-     * <p>printlnAutoColor.</p>
+     * 打印自动颜色
      *
      * @param str a {@link java.lang.String} object.
      */
@@ -121,36 +131,26 @@ public class StringUtils {
     }
 
     /**
-     * <p>print.</p>
+     * 清理分隔符错误的路径如 清理前 : a/b//c -- 清理后 : /a/b/c
      *
-     * @param str       a {@link java.lang.String} object.
-     * @param ansiColor a {@link cool.scx.enumeration.Color} object.
+     * @param url 需要清理的 url 集合
+     * @return 清理后的结果
      */
-    public static void print(String str, Color ansiColor) {
-        System.out.print("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
+    public static String clearHttpUrl(String... url) {
+        return Arrays.stream(String.join("/", url).split("/")).filter(s -> !"".equals(s)).collect(Collectors.joining("/", "/", ""));
     }
 
     /**
-     * <p>cleanHttpUrl.</p>
+     * 根据 controller 获取 api 的 名称
+     * 例 1 : UserController -- user
+     * 例 2 : AppleColorController -- appleColor
      *
-     * @param url a {@link java.lang.String} object.
-     * @return a {@link java.lang.String} object.
+     * @param controllerClass controller 的 Class
+     * @return 处理后的路径
      */
-    public static String cleanHttpUrl(String... url) {
-        var tempFullUrl = String.join("/", url);
-        return Arrays.stream(tempFullUrl.split("/")).filter(s -> !"".equals(s)).collect(Collectors.joining("/", "/", ""));
-    }
-
-    /**
-     * <p>getModelNameByControllerName.</p>
-     *
-     * @param controllerName a {@link java.lang.String} object.
-     * @return a {@link java.lang.String} object.
-     */
-    public static String getModelNameByControllerName(String controllerName) {
-        var s = controllerName.replace("Controller", "");
+    public static String getApiNameByControllerName(Class<?> controllerClass) {
+        var s = controllerClass.getSimpleName().replace("Controller", "");
         return Character.toLowerCase(s.charAt(0)) + s.substring(1);
     }
-
 
 }

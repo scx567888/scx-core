@@ -1,32 +1,42 @@
 package cool.scx.vo;
 
-
 import cool.scx.boot.ScxCmsConfig;
 import cool.scx.boot.ScxConfig;
+import freemarker.template.Template;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <p>Html class.</p>
+ * html 渲染类
  *
  * @author 司昌旭
  * @version 0.3.6
  */
 public final class Html {
 
-    private final String pagePath;
+    private final Template template;
 
     private final Map<String, Object> dataMap = new HashMap<>();
 
     /**
-     * <p>Constructor for Html.</p>
+     * 构造函数
      *
-     * @param pagePath a {@link java.lang.String} object.
+     * @param pagePath 模板的路径
      */
     public Html(String pagePath) {
-        this.pagePath = pagePath;
+        template = getTemplateByPath(pagePath);
+    }
+
+    private static Template getTemplateByPath(String pagePath) {
+        try {
+            return ScxCmsConfig.freemarkerConfig.getTemplate(pagePath + ScxConfig.cmsResourceSuffix);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -37,20 +47,19 @@ public final class Html {
      * @return a {@link cool.scx.vo.Html} object.
      */
     public Html add(String key, Object value) {
-        this.dataMap.put(key, value);
+        dataMap.put(key, value);
         return this;
     }
 
     /**
-     * <p>getHtmlStr.</p>
+     * 根据 dataMap 利用 freemarker 进行渲染
      *
-     * @return a {@link java.lang.String} object.
+     * @return 获取 html 字符串
      */
     public String getHtmlStr() {
-        StringWriter sw = new StringWriter();
+        var sw = new StringWriter();
         try {
-            var template = ScxCmsConfig.freemarkerConfig.getTemplate(pagePath + ScxConfig.cmsResourceSuffix);
-            template.process(this.dataMap, sw);
+            template.process(dataMap, sw);
         } catch (Exception e) {
             e.printStackTrace();
         }
