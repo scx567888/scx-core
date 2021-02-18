@@ -26,9 +26,7 @@ public class BaseServiceTest {
     public static void test2() {
         var bean = ScxContext.getBean(UserService.class);
         var users = bean.listAll();
-        for (User user : users) {
-            System.out.println(user.nickName);
-        }
+        System.out.println("共查询" + users.size() + "条数据");
     }
 
 
