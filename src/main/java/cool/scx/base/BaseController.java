@@ -56,7 +56,12 @@ public class BaseController {
 
     @SuppressWarnings("unchecked")
     private static <T extends BaseModel> BaseService<T> getBaseService(String modelName) {
-        return (BaseService<T>) ScxContext.getBean(ScxContext.getClassByName(modelName.toLowerCase() + "service"));
+        try {
+            var o = ScxContext.getBean(ScxContext.getClassByName(modelName.toLowerCase() + "service"));
+            return (BaseService<T>) o;
+        } catch (Exception e) {
+            throw new RuntimeException(modelName.toLowerCase() + "service : 不存在!!!");
+        }
     }
 
     //

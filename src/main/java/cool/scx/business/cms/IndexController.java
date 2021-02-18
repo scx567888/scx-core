@@ -1,6 +1,5 @@
 package cool.scx.business.cms;
 
-import cool.scx.annotation.ScxController;
 import cool.scx.base.Param;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
@@ -12,7 +11,7 @@ import cool.scx.vo.Html;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxController
+//@ScxController
 public class IndexController {
 
     private final UserService userService;

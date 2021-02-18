@@ -11,6 +11,7 @@ import cool.scx.enumeration.Color;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.ext.web.RoutingContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,29 +26,17 @@ import java.util.Map;
 public final class ScxContext {
 
     private static final ArrayList<SessionItem> scxSession = new ArrayList<>();
-    private static final Map<Class<?>, Object> beanMapping = new HashMap<>();
-    private static final Map<String, Class<?>> classNameMapping = new HashMap<>();
+    private static final Map<String, Class<?>> scxBeanClassNameMapping = new HashMap<>();
     private static final UserService userService;
+    private static final AnnotationConfigApplicationContext applicationContext;
 
     static {
         StringUtils.println("ScxContext 初始化中...", Color.GREEN);
+        applicationContext = new AnnotationConfigApplicationContext(PackageUtils.getBasePackages());
+        ScxPlugins.pluginsClassList.forEach(applicationContext::register);
         initScxContext();
-        ScxPlugins.pluginsClassList.forEach(ScxContext::register);
         fixTable();
         userService = getBean(UserService.class);
-    }
-
-    /**
-     * todo 检查 bean 是否存在循环依赖 如果存在直接 报错
-     */
-    private static void checkBeanCyclicDependency() {
-//        var parameterTypes = clazz.getConstructors()[0].getGenericParameterTypes();
-//        for (var type : parameterTypes) {
-//            var s = clazz.getName();
-//            var a = ((Class<?>) type).getName();
-//            DsfCycle.addLine(s, a);
-//            System.out.println(s + " " + a);
-//        }
     }
 
     /**
@@ -57,20 +46,16 @@ public final class ScxContext {
      * @return a {@link java.lang.Class} object.
      */
     public static Class<?> getClassByName(String str) {
-        return classNameMapping.get(str);
+        return scxBeanClassNameMapping.get(str);
     }
 
     private static void initScxContext() {
         PackageUtils.scanPackageIncludePlugins(clazz -> {
             if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class) || clazz.isAnnotationPresent(ScxModel.class)) {
-                beanMapping.put(clazz, null);
-                classNameMapping.put(clazz.getSimpleName().toLowerCase(), clazz);
+                scxBeanClassNameMapping.put(clazz.getSimpleName().toLowerCase(), clazz);
             }
         });
-        //此处校验是否有循环依赖
-        checkBeanCyclicDependency();
     }
-
 
     /**
      * 根据 RoutingContext 获取当前用户
@@ -90,38 +75,8 @@ public final class ScxContext {
      * @param <T> a T object.
      * @return a T object.
      */
-    @SuppressWarnings("unchecked")
     public static <T> T getBean(Class<T> c) {
-        Object o = beanMapping.get(c);
-        if (o != null) {
-            return (T) o;
-        } else {
-            var constructors = c.getConstructors();
-            for (var constructor : constructors) {
-                var genericParameterTypes = constructor.getGenericParameterTypes();
-                var p = new Object[genericParameterTypes.length];
-                for (int i = 0; i < genericParameterTypes.length; i++) {
-                    p[i] = getBean((Class<?>) genericParameterTypes[i]);
-                }
-                try {
-                    o = constructor.newInstance(p);
-                    beanMapping.put(c, o);
-                    return (T) o;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        throw new RuntimeException("无法创建" + c.getName() + "对应的 bean");
-    }
-
-    /**
-     * <p>register.</p>
-     *
-     * @param c a {@link java.lang.Class} object.
-     */
-    public static void register(Class<?> c) {
-        beanMapping.put(c, null);
+        return applicationContext.getBean(c);
     }
 
     /**
@@ -131,10 +86,10 @@ public final class ScxContext {
         if (SQLRunner.testConnection()) {
             StringUtils.println("修复数据表中...", Color.MAGENTA);
             if (ScxConfig.fixTable) {
-                beanMapping.forEach((k, v) -> {
-                    if (k.isAnnotationPresent(ScxModel.class)) {
+                scxBeanClassNameMapping.forEach((k, v) -> {
+                    if (v.isAnnotationPresent(ScxModel.class)) {
                         try {
-                            BaseDao.fixTable(k);
+                            BaseDao.fixTable(v);
                         } catch (Exception ignored) {
 
                         }

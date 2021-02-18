@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * <p>ScxConfig class.</p>
+ * 配置文件类
  *
  * @author 司昌旭
  * @version 0.3.6
@@ -35,7 +35,7 @@ public final class ScxConfig {
     /**
      * Constant <code>coreVersion="0.3.6"</code>
      */
-    public static final String coreVersion = "0.4.1";
+    public static final String coreVersion = "0.4.3";
     /**
      * Constant <code>scxConfigJsonNode</code>
      */
@@ -129,11 +129,11 @@ public final class ScxConfig {
      */
     public static final boolean openHttps;
     /**
-     * Constant <code>certificatePath</code>
+     * ssh 证书路径
      */
     public static final File certificatePath;
     /**
-     * Constant <code>certificatePassword=""</code>
+     * ssh 证书密码
      */
     public static final String certificatePassword;
 

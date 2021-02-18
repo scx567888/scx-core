@@ -20,6 +20,8 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -117,44 +119,53 @@ public final class ScxRouterFactory {
      * @param router
      */
     private static void registerScxMappingHandler(Router router) {
-        var a = new HashSet<TempRoute>();
-
-        var b = new HashSet<TempRoute>();
-
+        var a = new ArrayList<TempRoute>();
+        var b = new ArrayList<TempRoute>();
         PackageUtils.scanPackageIncludePlugins(clazz -> {
-            if (clazz.isAnnotationPresent(ScxController.class)) {
-                var scxController = clazz.getAnnotation(ScxController.class);
-                Arrays.stream(clazz.getMethods()).filter(method -> method.isAnnotationPresent(ScxMapping.class)).forEach(method -> {
+            var scxController = clazz.getAnnotation(ScxController.class);
+            if (scxController != null) {
+                for (Method method : clazz.getMethods()) {
                     method.setAccessible(true);
-                    var scxMapping = method.getAnnotation(ScxMapping.class);
-                    var url = scxMapping.useMethodNameAsUrl() && "".equals(scxMapping.value()) ? StringUtils.clearHttpUrl("api", StringUtils.getApiNameByControllerName(clazz), method.getName())
-                            : StringUtils.clearHttpUrl(scxController.value(), scxMapping.value());
-                    if (url.contains(":") || url.contains("*")) {
-                        a.add(new TempRoute(url, scxMapping.httpMethod(), new ScxRouteHandler(method, ScxContext.getBean(clazz), scxMapping)));
-                    } else {
-                        b.add(new TempRoute(url, scxMapping.httpMethod(), new ScxRouteHandler(method, ScxContext.getBean(clazz), scxMapping)));
+                    ScxMapping scxMapping = method.getAnnotation(ScxMapping.class);
+                    if (scxMapping != null) {
+                        var url = scxMapping.useMethodNameAsUrl() && "".equals(scxMapping.value()) ? StringUtils.clearHttpUrl("api", StringUtils.getApiNameByControllerName(clazz), method.getName())
+                                : StringUtils.clearHttpUrl(scxController.value(), scxMapping.value());
+                        if (url.contains(":") || url.contains("*")) {
+                            a.add(new TempRoute(url, method, clazz, scxMapping));
+                        } else {
+                            b.add(new TempRoute(url, method, clazz, scxMapping));
+                        }
                     }
-
-                });
+                }
             }
         });
+        b.addAll(a);
         b.forEach(b1 -> {
-            var scxMapping = b1.scxRouteHandler.scxMapping;
+            var scxMapping = b1.scxMapping;
             var url = b1.url;
-            var rh = b1.scxRouteHandler;
-
+            var method = b1.method;
+            var clazz = b1.clazz;
             //    不校验任何东西
             if (scxMapping.unCheckedLogin()) {
                 Arrays.asList(scxMapping.httpMethod()).forEach(httpMethod ->
                         router.route(HttpMethod.valueOf(httpMethod.toString()), url)
-                                .blockingHandler(ctx -> callHandler(ctx, rh)));
+                                .blockingHandler(ctx ->
+                                        {
+                                            try {
+                                                var s = new ScxRouteHandler(method, ScxContext.getBean(clazz), scxMapping);
+                                                callHandler(ctx, s);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                ));
             }
             //    校验登录 但不校验权限
             else if (scxMapping.unCheckedPerms()) {
                 checkedLogin(router, url);
                 Arrays.asList(scxMapping.httpMethod()).forEach(httpMethod ->
                         router.route(HttpMethod.valueOf(httpMethod.toString()), url)
-                                .blockingHandler(ctx -> callHandler(ctx, rh)));
+                                .blockingHandler(ctx -> callHandler(ctx, new ScxRouteHandler(method, ScxContext.getBean(clazz), scxMapping))));
             }
             //校验登录和权限
             else {
@@ -162,36 +173,10 @@ public final class ScxRouterFactory {
                 checkedPerms(router, url);
                 Arrays.asList(scxMapping.httpMethod()).forEach(httpMethod ->
                         router.route(HttpMethod.valueOf(httpMethod.toString()), url)
-                                .blockingHandler(ctx -> callHandler(ctx, rh)));
+                                .blockingHandler(ctx -> callHandler(ctx, new ScxRouteHandler(method, ScxContext.getBean(clazz), scxMapping))));
             }
         });
-        a.forEach(a1 -> {
-            var scxMapping = a1.scxRouteHandler.scxMapping;
-            var url = a1.url;
-            var rh = a1.scxRouteHandler;
 
-            //    不校验任何东西
-            if (scxMapping.unCheckedLogin()) {
-                Arrays.asList(scxMapping.httpMethod()).forEach(httpMethod ->
-                        router.route(HttpMethod.valueOf(httpMethod.toString()), url)
-                                .blockingHandler(ctx -> callHandler(ctx, rh)));
-            }
-            //    校验登录 但不校验权限
-            else if (scxMapping.unCheckedPerms()) {
-                checkedLogin(router, url);
-                Arrays.asList(scxMapping.httpMethod()).forEach(httpMethod ->
-                        router.route(HttpMethod.valueOf(httpMethod.toString()), url)
-                                .blockingHandler(ctx -> callHandler(ctx, rh)));
-            }
-            //校验登录和权限
-            else {
-                checkedLogin(router, url);
-                checkedPerms(router, url);
-                Arrays.asList(scxMapping.httpMethod()).forEach(httpMethod ->
-                        router.route(HttpMethod.valueOf(httpMethod.toString()), url)
-                                .blockingHandler(ctx -> callHandler(ctx, rh)));
-            }
-        });
     }
 
     private static void callHandler(RoutingContext ctx, ScxRouteHandler scxRouteHandler) {
@@ -241,13 +226,15 @@ public final class ScxRouterFactory {
 
     private static class TempRoute {
         String url;
-        cool.scx.enumeration.HttpMethod[] httpMethods;
-        ScxRouteHandler scxRouteHandler;
+        Method method;
+        Class<?> clazz;
+        ScxMapping scxMapping;
 
-        public TempRoute(String url, cool.scx.enumeration.HttpMethod[] httpMethods, ScxRouteHandler scxRouteHandler) {
+        public TempRoute(String url, Method method, Class<?> clazz, ScxMapping scxMapping) {
             this.url = url;
-            this.httpMethods = httpMethods;
-            this.scxRouteHandler = scxRouteHandler;
+            this.method = method;
+            this.clazz = clazz;
+            this.scxMapping = scxMapping;
         }
     }
 
