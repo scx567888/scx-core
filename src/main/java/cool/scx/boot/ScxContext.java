@@ -12,6 +12,7 @@ import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.ext.web.RoutingContext;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,14 +24,17 @@ import java.util.Map;
  */
 public final class ScxContext {
 
+    private static final ArrayList<SessionItem> scxSession = new ArrayList<>();
     private static final Map<Class<?>, Object> beanMapping = new HashMap<>();
     private static final Map<String, Class<?>> classNameMapping = new HashMap<>();
+    private static final UserService userService;
 
     static {
         StringUtils.println("ScxContext 初始化中...", Color.GREEN);
         initScxContext();
         ScxPlugins.pluginsClassList.forEach(ScxContext::register);
         fixTable();
+        userService = getBean(UserService.class);
     }
 
     /**
@@ -67,15 +71,6 @@ public final class ScxContext {
         checkBeanCyclicDependency();
     }
 
-    /**
-     * <p>logoutUser.</p>
-     *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
-     */
-    public static void logoutUser(RoutingContext ctx) {
-        ctx.session().remove(ScxConfig.tokenKey);
-    }
-
 
     /**
      * 根据 RoutingContext 获取当前用户
@@ -84,8 +79,8 @@ public final class ScxContext {
      * @return 当前用户
      */
     public static User getCurrentUser(RoutingContext ctx) {
-        Long currentUserId = ctx.session().get(ScxConfig.tokenKey);
-        return getBean(UserService.class).getById(currentUserId);
+        String token = ctx.request().getHeader(ScxConfig.tokenKey);
+        return getUserFromSessionByToken(token);
     }
 
     /**
@@ -154,6 +149,46 @@ public final class ScxContext {
      */
     public static void init() {
         StringUtils.println("ScxContext 初始化完成...", Color.GREEN);
+    }
+
+    /**
+     * <p>logoutUser.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     */
+    public static void logoutUser(RoutingContext ctx) {
+        var token = ctx.request().getHeader(ScxConfig.tokenKey);
+        scxSession.removeIf(i -> i.token.equals(token));
+    }
+
+    public static void addUserToSession(String token, String username) {
+        var sessionItem = scxSession.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);
+        if (sessionItem == null) {
+            scxSession.add(new SessionItem(token, username, new ArrayList<>()));
+        } else {
+            sessionItem.username = username;
+            sessionItem.token = token;
+        }
+    }
+
+    public static User getUserFromSessionByToken(String token) {
+        var sessionItem = scxSession.stream().filter(u -> u.token.equals(token)).findAny().orElse(null);
+        if (sessionItem == null) {
+            return null;
+        }
+        return userService.findByUsername(sessionItem.username);
+    }
+
+    private static class SessionItem {
+        public String token;//唯一的
+        public String username;//唯一的
+        public ArrayList<Object> userSessionList;
+
+        public SessionItem(String _token, String _username, ArrayList<Object> _userSessionList) {
+            token = _token;
+            username = _username;
+            userSessionList = _userSessionList;
+        }
     }
 
 }

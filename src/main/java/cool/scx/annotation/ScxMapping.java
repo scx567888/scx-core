@@ -19,6 +19,8 @@ import java.lang.annotation.Target;
 public @interface ScxMapping {
     boolean unCheckedPerms() default false;
 
+    boolean unCheckedLogin() default false;
+
     String value() default "";
 
     boolean useMethodNameAsUrl() default true;

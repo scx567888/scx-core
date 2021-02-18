@@ -47,6 +47,7 @@ public final class ScxApp {
         ScxListener.init();
         ScxVertxServer.init();
         ScxGui.init();
+        ScxLicense.init();
     }
 
     /**

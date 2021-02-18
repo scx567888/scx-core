@@ -1,5 +1,6 @@
 package cool.scx.vo;
 
+import cool.scx.base.BaseModel;
 import cool.scx.boot.ScxCmsConfig;
 import cool.scx.boot.ScxConfig;
 import cool.scx.util.ObjectUtils;
@@ -52,8 +53,10 @@ public final class Html {
         Object stringObjectMap;
         if (value instanceof List) {
             stringObjectMap = ObjectUtils.beanListToMapList(value);
-        } else {
+        } else if (value instanceof BaseModel) {
             stringObjectMap = ObjectUtils.beanToMap(value);
+        } else {
+            stringObjectMap = value;
         }
         dataMap.put(key, stringObjectMap);
         return this;

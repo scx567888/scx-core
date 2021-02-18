@@ -35,11 +35,7 @@ public final class ScxConfig {
     /**
      * Constant <code>coreVersion="0.3.6"</code>
      */
-    public static final String coreVersion = "0.4.0";
-    /**
-     * Constant <code>sessionCookieName="scx.session"</code>
-     */
-    public static final String sessionCookieName = "scx.session";
+    public static final String coreVersion = "0.4.1";
     /**
      * Constant <code>scxConfigJsonNode</code>
      */
@@ -140,21 +136,6 @@ public final class ScxConfig {
      * Constant <code>certificatePassword=""</code>
      */
     public static final String certificatePassword;
-
-    /**
-     * Constant <code>checkPermsUrls</code>
-     */
-    public static final String[] checkPermsUrls = new String[]{
-            "/api/*",
-    };
-    /**
-     * Constant <code>excludeCheckPermsUrls</code>
-     */
-    public static final String[] excludeCheckPermsUrls = new String[]{
-            "/api/user/login",
-            "/api/user/login",
-            "/api/user/login",
-    };
 
     static {
         StringUtils.println("ScxConfig v" + coreVersion + " 初始化中...", Color.BRIGHT_BLUE);

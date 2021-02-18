@@ -3,7 +3,7 @@
 </p>
 <p align="center">
     <a target="_blank" href="https://github.com/scx567888/scx">
-        <img src="https://img.shields.io/badge/version-0.4.0-ff69b4"/>
+        <img src="https://img.shields.io/badge/version-0.4.1-ff69b4"/>
     </a> 
     <a target="_blank" href="https://github.com/scx567888/scx">
         <img src="https://img.shields.io/github/languages/code-size/scx567888/scx?color=orange"/>
@@ -20,7 +20,7 @@
         <img src="https://img.shields.io/badge/Vert.x-4.0.2-blue"/>
     </a>
     <a target="_blank" href="https://github.com/apache/poi">
-        <img src="https://img.shields.io/badge/Freemarker-2.3.30-blue"/>
+        <img src="https://img.shields.io/badge/Freemarker-2.3.31-blue"/>
     </a>
     <a target="_blank" href="https://github.com/apache/poi">
         <img src="https://img.shields.io/badge/Jackson-2.12.1-blue"/>
@@ -37,7 +37,7 @@
 <dependency>
     <groupId>cool.scx</groupId>
     <artifactId>scx</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
 </dependency>
 ```
 

@@ -9,7 +9,6 @@ import cool.scx.business.dept.Dept;
 import cool.scx.business.dept.DeptService;
 import cool.scx.business.dept.UserDept;
 import cool.scx.business.dept.UserDeptService;
-import cool.scx.business.license.LicenseService;
 import cool.scx.business.role.RoleService;
 import cool.scx.business.role.UserRole;
 import cool.scx.business.role.UserRoleService;
@@ -40,7 +39,6 @@ public class UserController {
 
     private final UserService userService;
     private final ScxLogService scxLogService;
-    private final LicenseService licenseService;
     private final DeptService deptService;
     private final RoleService roleService;
     private final UserRoleService userRoleService;
@@ -51,16 +49,14 @@ public class UserController {
      *
      * @param userService     a {@link cool.scx.business.user.UserService} object.
      * @param scxLogService   a {@link cool.scx.business.system.ScxLogService} object.
-     * @param licenseService  a {@link cool.scx.business.license.LicenseService} object.
      * @param deptService     a {@link cool.scx.business.dept.DeptService} object.
      * @param roleService     a {@link cool.scx.business.role.RoleService} object.
      * @param userRoleService a {@link cool.scx.business.role.UserRoleService} object.
      * @param userDeptService a {@link cool.scx.business.dept.UserDeptService} object.
      */
-    public UserController(UserService userService, ScxLogService scxLogService, LicenseService licenseService, DeptService deptService, RoleService roleService, UserRoleService userRoleService, UserDeptService userDeptService) {
+    public UserController(UserService userService, ScxLogService scxLogService, DeptService deptService, RoleService roleService, UserRoleService userRoleService, UserDeptService userDeptService) {
         this.userService = userService;
         this.scxLogService = scxLogService;
-        this.licenseService = licenseService;
         this.deptService = deptService;
         this.roleService = roleService;
         this.userRoleService = userRoleService;
@@ -77,26 +73,18 @@ public class UserController {
      * @param ctx      上下文
      * @return json
      */
-    @ScxMapping
+    @ScxMapping(unCheckedLogin = true)
     public Json login(String username, String password, RoutingContext ctx) {
-        if (StringUtils.isEmpty(username)) {
-            return Json.fail("用户名不能为空");
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+            return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
         }
-        if (StringUtils.isEmpty(password)) {
-            return Json.fail("密码不能为空");
-        }
-        var licenseRight = licenseService.passLicense();
-
-        if (!licenseRight) {
-            return Json.fail(Json.FAIL_CODE, "licenseError");
-        }
-
         try {
             //登录
             var loginUser = userService.login(username, password);
-            ctx.session().put(ScxConfig.tokenKey, loginUser.id);
+            var token = StringUtils.getUUID();
+            ScxContext.addUserToSession(token, loginUser.username);
             //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
-            return Json.ok("loginSuccess");
+            return Json.ok().data("token", token);
         } catch (UnknownUserException uue) {
             return Json.fail(ScxConfig.confusionLoginError ? "usernameOrPasswordError" : "userNotFound");
         } catch (WrongPasswordException wpe) {
@@ -117,12 +105,13 @@ public class UserController {
     /**
      * <p>info.</p>
      *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param token a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = "info", httpMethod = HttpMethod.GET)
-    public Json info(RoutingContext ctx) {
-        var userId = userService.getById(ctx.session().get(ScxConfig.tokenKey));
+
+    @ScxMapping(value = "info/:token", httpMethod = HttpMethod.GET, unCheckedLogin = true)
+    public Json info(String token) {
+        var userId = ScxContext.getUserFromSessionByToken(token);
         //从session取出用户信息
         if (userId == null) {
             return Json.fail(Json.SESSION_TIMEOUT, "登录已失效");
