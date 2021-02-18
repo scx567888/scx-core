@@ -3,7 +3,7 @@
 </p>
 <p align="center">
     <a target="_blank" href="https://github.com/scx567888/scx">
-        <img src="https://img.shields.io/badge/version-0.3.9-ff69b4"/>
+        <img src="https://img.shields.io/badge/version-0.4.0-ff69b4"/>
     </a> 
     <a target="_blank" href="https://github.com/scx567888/scx">
         <img src="https://img.shields.io/github/languages/code-size/scx567888/scx?color=orange"/>
@@ -37,7 +37,7 @@
 <dependency>
     <groupId>cool.scx</groupId>
     <artifactId>scx</artifactId>
-    <version>0.3.9</version>
+    <version>0.4.0</version>
 </dependency>
 ```
 
@@ -53,5 +53,5 @@ public class YourApp {
 
 3. 运行 main 方法 。
 
-[更多信息请查看文档](./docs/index.md) <br/>
-[更新日志](./docs/CHANGELOG.md)
+[更多信息请查看文档](https://github.com/scx567888/scx/wiki) <br/>
+[更新日志](https://github.com/scx567888/scx/wiki/CHANGELOG)

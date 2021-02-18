@@ -22,6 +22,9 @@ public abstract class BaseService<Entity extends BaseModel> {
     private final Class<Entity> entityClass;
 
     @SuppressWarnings("unchecked")
+    /**
+     * Constructor for BaseService
+     */
     public BaseService() {
         entityClass = (Class<Entity>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         baseDao = new BaseDao<>(entityClass);

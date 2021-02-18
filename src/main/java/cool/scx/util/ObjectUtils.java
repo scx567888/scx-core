@@ -165,6 +165,12 @@ public final class ObjectUtils {
         return objectMapper.convertValue(o, mapType);
     }
 
+    /**
+     * <p>beanListToMapList.</p>
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Map<String, Object>> beanListToMapList(Object o) {
         return objectMapper.convertValue(o, mapListType);
     }

@@ -30,6 +30,11 @@ public class IndexController {
      */
     @ScxMapping(value = "/", httpMethod = {HttpMethod.POST, HttpMethod.GET})
     public Html Index(Long name, String age) {
+//        try {
+//            Thread.sleep(1000);   // 耗时任务
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 //        var s=new ArrayList<User>();
 //        for (int i = 0; i < 99999; i++) {
 //            User u=new User();
