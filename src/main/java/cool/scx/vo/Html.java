@@ -2,11 +2,13 @@ package cool.scx.vo;
 
 import cool.scx.boot.ScxCmsConfig;
 import cool.scx.boot.ScxConfig;
+import cool.scx.util.ObjectUtils;
 import freemarker.template.Template;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +49,13 @@ public final class Html {
      * @return a {@link cool.scx.vo.Html} object.
      */
     public Html add(String key, Object value) {
-        dataMap.put(key, value);
+        Object stringObjectMap;
+        if (value instanceof List) {
+            stringObjectMap = ObjectUtils.beanListToMapList(value);
+        } else {
+            stringObjectMap = ObjectUtils.beanToMap(value);
+        }
+        dataMap.put(key, stringObjectMap);
         return this;
     }
 

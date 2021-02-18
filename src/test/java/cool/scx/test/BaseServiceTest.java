@@ -1,21 +1,10 @@
 package cool.scx.test;
 
-import cool.scx.ScxCoreApp;
-import cool.scx.boot.ScxApp;
-import cool.scx.boot.ScxContext;
-import cool.scx.business.user.User;
-import cool.scx.business.user.UserService;
-import cool.scx.util.CryptoUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.*;
-import java.net.URI;
+import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.List;
 
 public class BaseServiceTest {
 

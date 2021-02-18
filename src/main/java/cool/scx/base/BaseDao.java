@@ -225,24 +225,6 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     /**
-     * <p>listMap.</p>
-     *
-     * @param param      a {@link cool.scx.base.Param} object.
-     * @param ignoreLike a boolean.
-     * @return a {@link java.util.List} object.
-     */
-    public List<Map<String, Object>> listMap(Param<Entity> param, boolean ignoreLike) {
-        var sql = SQLBuilder.Select().SelectColumns(table.selectColumns).Table(table.tableName)
-                .Where(getWhereColumns(param.queryObject, ignoreLike))
-                .WhereSql(param.whereSql)
-                .GroupBy(param.groupBy)
-                .OrderBy(param.orderBy)
-                .Pagination(param.getPage(), param.getLimit())
-                .GetSQL();
-        return SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject));
-    }
-
-    /**
      * <p>count.</p>
      *
      * @param param      a {@link cool.scx.base.Param} object.

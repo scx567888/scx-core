@@ -3,7 +3,7 @@
 </p>
 <p align="center">
     <a target="_blank" href="https://github.com/scx567888/scx">
-        <img src="https://img.shields.io/badge/version-0.3.8-ff69b4"/>
+        <img src="https://img.shields.io/badge/version-0.3.9-ff69b4"/>
     </a> 
     <a target="_blank" href="https://github.com/scx567888/scx">
         <img src="https://img.shields.io/github/languages/code-size/scx567888/scx?color=orange"/>
@@ -32,24 +32,26 @@
 ### 使用方法
 
 1. 将此项目引入到您自己的项目中 。
+
 ``` xml
 <dependency>
     <groupId>cool.scx</groupId>
     <artifactId>scx</artifactId>
-    <version>0.3.8</version>
+    <version>0.3.9</version>
 </dependency>
 ```
+
 2. 编写启动类
 
 ``` java
 public class YourApp {
     public static void main(String[] args) {
-        ScxApp.run(ScxCoreApp.class, args);
+        ScxApp.run(YourApp.class, args);
     }
 }
 ```
 
-运行 main 方法即可运行 。
+3. 运行 main 方法 。
 
 [更多信息请查看文档](./docs/index.md) <br/>
 [更新日志](./docs/CHANGELOG.md)

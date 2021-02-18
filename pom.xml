@@ -7,7 +7,7 @@
     <artifactId>scx</artifactId>
     <packaging>jar</packaging>
     <name>scx</name>
-    <version>0.3.8</version>
+    <version>0.3.9</version>
     <description>scx 核心包</description>
     <url>https://github.com/scx567888/scx</url>
 
@@ -89,46 +89,39 @@
 
     </dependencies>
 
+    <!-- 此项目的 licenses -->
     <licenses>
         <license>
-            <name>The MIT License</name>
+            <name>MIT License</name>
             <url>https://github.com/scx567888/scx/blob/master/LICENSE</url>
         </license>
     </licenses>
 
-    <repositories>
-        <!-- 暂未将 jar 托管至中央仓库 若想使用 请添加此地址作为 备用 repository -->
-        <!--        <repository>-->
-        <!--            <id>scx-maven-repo</id>-->
-        <!--            <url>https://scx.cool/maven-repo</url>-->
-        <!--        </repository>-->
-        <repository>
-            <id>ali-yun-maven-repo</id>
-            <url>https://maven.aliyun.com/repository/central</url>
-        </repository>
-    </repositories>
-
+    <!-- 开发者信息 -->
     <developers>
         <developer>
-            <name>scx567888</name>
+            <name>司昌旭</name>
             <email>scx567888@outlook.com</email>
             <organization>https://github.com/scx567888</organization>
             <url>https://scx.cool</url>
         </developer>
     </developers>
 
+    <!-- scm -->
     <scm>
         <connection>scm:git:https://github.com/scx567888/scx.git</connection>
         <developerConnection>scm:git:https://github.com/scx567888/scx.git</developerConnection>
         <url>https://github.com/scx567888/scx</url>
     </scm>
 
+    <!-- mvn deploy 发布的路径 -->
     <distributionManagement>
-        <!-- mvn deploy 发布的路径 -->
+        <!-- release 版本 -->
         <repository>
             <id>oss-sonatype</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
+        <!-- snapshots (快照) 版本 -->
         <snapshotRepository>
             <id>oss-sonatype</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -181,6 +174,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- 对 jar 包等文件进行 pgp 签名 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -188,7 +182,6 @@
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>sign</goal>
                         </goals>

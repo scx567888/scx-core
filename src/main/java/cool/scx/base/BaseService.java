@@ -5,12 +5,13 @@ import cool.scx.boot.ScxContext;
 import cool.scx.enumeration.SortType;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * <p>Abstract BaseService class.</p>
+ * 最基本的 service 类 业务 service 需继承此类
  *
  * @author 司昌旭
  * @version 0.3.6
@@ -21,10 +22,6 @@ public abstract class BaseService<Entity extends BaseModel> {
     private final Class<Entity> entityClass;
 
     @SuppressWarnings("unchecked")
-    /**
-     *
-     * <p>Constructor for BaseService.</p>
-     */
     public BaseService() {
         entityClass = (Class<Entity>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         baseDao = new BaseDao<>(entityClass);
@@ -38,10 +35,7 @@ public abstract class BaseService<Entity extends BaseModel> {
      */
     public Entity save(Entity entity) {
         var newId = baseDao.save(entity);
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.setPagination(1).whereSql = "id = " + newId;
-        List<Entity> list = baseDao.list(defaultParam, false);
-        return list.size() > 0 ? list.get(0) : null;
+        return getById(newId);
     }
 
     /**
@@ -51,7 +45,11 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return 插入成功的数据 自增主键
      */
     public List<Long> saveList(List<Entity> entityList) {
-        return baseDao.saveList(entityList);
+        if (entityList == null || entityList.size() == 0) {
+            return new ArrayList<>();
+        } else {
+            return baseDao.saveList(entityList);
+        }
     }
 
     /**
@@ -112,7 +110,6 @@ public abstract class BaseService<Entity extends BaseModel> {
         return deleteCount;
     }
 
-
     /**
      * 删除指定id的实体
      *
@@ -131,7 +128,7 @@ public abstract class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据条件删除
+     * 根据条件恢复删除
      *
      * @param param e
      * @return e
@@ -165,7 +162,6 @@ public abstract class BaseService<Entity extends BaseModel> {
         }
         return deleteCount;
     }
-
 
     /**
      * 删除指定id的实体
@@ -276,10 +272,8 @@ public abstract class BaseService<Entity extends BaseModel> {
      */
     public Entity getById(Long id) {
         var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.setPagination(1).whereSql = "id = " + id;
-        defaultParam.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
-        var list = baseDao.list(defaultParam, false);
-        return list.size() > 0 ? list.get(0) : null;
+        defaultParam.whereSql = "id = " + id;
+        return get(defaultParam);
     }
 
     /**
@@ -367,41 +361,6 @@ public abstract class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * <p>listMap.</p>
-     *
-     * @param param a {@link cool.scx.base.Param} object.
-     * @return a {@link java.util.List} object.
-     */
-    public List<Map<String, Object>> listMap(Param<Entity> param) {
-        param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
-        return baseDao.listMap(param, true);
-    }
-
-    /**
-     * <p>listMapByIds.</p>
-     *
-     * @param ids a {@link java.lang.Long} object.
-     * @return a {@link java.util.List} object.
-     */
-    public List<Map<String, Object>> listMapByIds(Long... ids) {
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
-        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        return baseDao.listMap(defaultParam, true);
-    }
-
-    /**
-     * <p>listMapWithLike.</p>
-     *
-     * @param param a {@link cool.scx.base.Param} object.
-     * @return a {@link java.util.List} object.
-     */
-    public List<Map<String, Object>> listMapWithLike(Param<Entity> param) {
-        param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
-        return baseDao.listMap(param, false);
-    }
-
-    /**
      * <p>listAll.</p>
      *
      * @return a {@link java.util.List} object.
@@ -410,17 +369,6 @@ public abstract class BaseService<Entity extends BaseModel> {
         var param = new Param<>(ScxContext.getBean(entityClass)).addOrderBy("id", SortType.DESC);
         param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
         return baseDao.list(param, false);
-    }
-
-    /**
-     * <p>listMapAll.</p>
-     *
-     * @return a {@link java.util.List} object.
-     */
-    public List<Map<String, Object>> listMapAll() {
-        var param = new Param<>(ScxContext.getBean(entityClass)).addOrderBy("id", SortType.DESC);
-        param.queryObject.isDeleted = ScxConfig.realDelete ? null : false;
-        return baseDao.listMap(param, false);
     }
 
     /**

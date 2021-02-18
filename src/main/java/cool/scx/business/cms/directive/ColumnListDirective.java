@@ -23,7 +23,7 @@ public class ColumnListDirective implements FreemarkerSupperTag {
      */
     @Override
     public Object getParams(Map params) {
-        return columnService.listMapAll();
+        return columnService.listAll();
     }
 
     /**

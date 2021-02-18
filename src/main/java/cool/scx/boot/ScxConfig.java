@@ -35,7 +35,7 @@ public final class ScxConfig {
     /**
      * Constant <code>coreVersion="0.3.6"</code>
      */
-    public static final String coreVersion = "0.3.8";
+    public static final String coreVersion = "0.3.9";
     /**
      * Constant <code>sessionCookieName="scx.session"</code>
      */

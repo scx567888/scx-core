@@ -50,7 +50,6 @@ public class ScxLogService extends BaseService<ScxLog> {
     public void getName(Long name, Integer age) {
         var a = new Param<>(new ScxLog());
         a.setPagination(10);
-        listMap(a);
         get(a);
         System.out.println(name + "--" + age);
     }

@@ -12,6 +12,7 @@ import cool.scx.boot.ScxConfig;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +25,8 @@ public final class ObjectUtils {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final TypeReference<Map<String, Object>> mapType = new TypeReference<>() {
+    };
+    private static final TypeReference<List<Map<String, Object>>> mapListType = new TypeReference<>() {
     };
 
     static {
@@ -160,6 +163,10 @@ public final class ObjectUtils {
      */
     public static Map<String, Object> beanToMap(Object o) {
         return objectMapper.convertValue(o, mapType);
+    }
+
+    public static List<Map<String, Object>> beanListToMapList(Object o) {
+        return objectMapper.convertValue(o, mapListType);
     }
 
     /**
