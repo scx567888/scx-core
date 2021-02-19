@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
     <name>scx</name>
     <version>0.4.4</version>
-    <description>scx 核心包</description>
+    <description>SCX is a "web development framework"; goal is to provide a simple and fast development experience.</description>
     <url>https://github.com/scx567888/scx</url>
 
     <properties>
