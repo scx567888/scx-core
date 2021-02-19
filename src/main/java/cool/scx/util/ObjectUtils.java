@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import cool.scx.base.BaseModel;
 import cool.scx.boot.ScxConfig;
 
 import java.lang.reflect.Field;
@@ -163,6 +164,24 @@ public final class ObjectUtils {
      */
     public static Map<String, Object> beanToMap(Object o) {
         return objectMapper.convertValue(o, mapType);
+    }
+
+    // 将对象转成字符串
+    public static Object objectToMapDeep(Object obj) {
+        Object ooo = null;
+        try {
+            String s = objectMapper.writeValueAsString(obj);
+            if (obj instanceof List) {
+                ooo = objectMapper.readValue(s, List.class);
+            } else if (obj instanceof BaseModel || obj instanceof Map) {
+                ooo = objectMapper.readValue(s, Map.class);
+            } else {
+                ooo = obj;
+            }
+        } catch (Exception e) {
+
+        }
+        return ooo;
     }
 
     /**
