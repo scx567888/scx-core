@@ -16,7 +16,7 @@ import cool.scx.vo.Json;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxController
+//@ScxController
 public class IndexController {
 
     private final UserService userService;
@@ -33,7 +33,7 @@ public class IndexController {
      * @param age  测试参数
      * @return 页面
      */
-    @ScxMapping(value = "/:name", httpMethod = HttpMethod.GET, unCheckedLogin = true)
+//    @ScxMapping(value = "/:name", httpMethod = HttpMethod.GET, unCheckedLogin = true)
     public Json Index(String name, Long age, @BodyParam User user) {
         var users = userService.list(new Param<>(new User()).setPagination(1000));
         Html index = new Html("index");
