@@ -6,10 +6,10 @@ import cool.scx.base.BaseVo;
 import cool.scx.boot.ScxConfig;
 import cool.scx.boot.ScxContext;
 import cool.scx.business.user.User;
+import cool.scx.exception.HttpResponseException;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.vo.Html;
 import cool.scx.vo.Json;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -63,7 +63,7 @@ public final class ScxRouterFactory {
                 if (currentUser == null) {
                     HttpServerResponse response = ctx.response();
                     response.putHeader("content-type", "application/json; charset=utf-8");
-                    response.end(Json.fail(Json.ILLEGAL_TOKEN, "未登录").getString());
+                    response.end(Json.fail(Json.ILLEGAL_TOKEN, "未登录").getBuffer());
                 } else {
                     ctx.next();
                 }
@@ -147,16 +147,7 @@ public final class ScxRouterFactory {
             if (scxMapping.unCheckedLogin()) {
                 Arrays.asList(scxMapping.httpMethod()).forEach(httpMethod ->
                         router.route(HttpMethod.valueOf(httpMethod.toString()), url)
-                                .blockingHandler(ctx ->
-                                        {
-                                            try {
-                                                var s = new ScxRouteHandler(method, ScxContext.getBean(clazz), scxMapping);
-                                                callHandler(ctx, s);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                ));
+                                .blockingHandler(ctx -> callHandler(ctx, new ScxRouteHandler(method, ScxContext.getBean(clazz), scxMapping))));
             }
             //    校验登录 但不校验权限
             else if (scxMapping.unCheckedPerms()) {
@@ -179,47 +170,42 @@ public final class ScxRouterFactory {
 
     private static void callHandler(RoutingContext ctx, ScxRouteHandler scxRouteHandler) {
         var response = ctx.response();
-        fillContentType(response, scxRouteHandler);
-        response.end(getStringFormObject(scxRouteHandler.getResult(ctx)));
-    }
-
-    private static String getStringFormObject(Object result) {
-        if (result instanceof String) {
-            return (String) result;
+        Object result;
+        try {
+            result = scxRouteHandler.getResult(ctx);
+        } catch (Exception e) {
+            var cause = e.getCause();
+            // 我们后面会自定义一些其他 自定义异常
+            //在此处进行截获处理
+            if (cause instanceof HttpResponseException) {
+                ((HttpResponseException) cause).errFun.accept(ctx);
+                ctx.end();
+                return;
+            }
+            response.end(Json.fail(Json.SYSTEM_ERROR, e.getMessage()).getBuffer());
+            e.printStackTrace();
+            return;
+        }
+        if (result instanceof String || result instanceof Integer || result instanceof Double || result instanceof Boolean) {
+            response.putHeader("Content-Type", "text/plain; charset=utf-8");
+            response.end(result.toString());
+            return;
         }
         if (result instanceof BaseVo) {
-            return ((BaseVo) result).getString();
+            BaseVo baseVo = (BaseVo) result;
+            response.putHeader("Content-Type", baseVo.getContentType());
+            String contentDisposition = baseVo.getContentDisposition();
+            if (StringUtils.isNotEmpty(contentDisposition)) {
+                response.putHeader("Content-Disposition", contentDisposition);
+            }
+            response.end(baseVo.getBuffer());
+            return;
         }
-        return ObjectUtils.beanToJson(result);
-    }
-
-    private static void fillContentType(HttpServerResponse response, ScxRouteHandler scxRouteHandler) {
-        var contentType = "text/plain";
-        switch (scxRouteHandler.scxMapping.returnType()) {
-            case JSON:
-                contentType = "application/json; charset=utf-8";
-                break;
-            case HTML:
-                contentType = "text/html; charset=utf-8";
-                break;
-            case AUTO:
-                Class<?> returnType = scxRouteHandler.method.getReturnType();
-                if (returnType == Html.class) {
-                    contentType = "text/html; charset=utf-8";
-                } else if (returnType == Json.class) {
-                    contentType = "application/json; charset=utf-8";
-                } else {
-                    contentType = "application/json; charset=utf-8";
-                }
-                break;
-            default:
-        }
-        response.putHeader("content-type", contentType);
+        response.end(ObjectUtils.beanToJson(result));
     }
 
     private static void registerStaticHandler(Router router) {
         router.route(ScxConfig.cmsResourceUrl).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations.getPath()));
     }
-
 
 }

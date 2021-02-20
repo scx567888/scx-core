@@ -5,6 +5,7 @@ import cool.scx.boot.ScxCmsConfig;
 import cool.scx.boot.ScxConfig;
 import cool.scx.util.ObjectUtils;
 import freemarker.template.Template;
+import io.vertx.core.buffer.Buffer;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -53,19 +54,30 @@ public final class Html implements BaseVo {
         return this;
     }
 
+
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * 根据 dataMap 利用 freemarker 进行渲染
      */
     @Override
-    public String getString() {
+    public Buffer getBuffer() {
         var sw = new StringWriter();
         try {
             template.process(dataMap, sw);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return sw.toString();
+        return Buffer.buffer(sw.toString());
+    }
+
+    @Override
+    public String getContentType() {
+        return "text/html; charset=utf-8";
+    }
+
+    @Override
+    public String getContentDisposition() {
+        return null;
     }
 }

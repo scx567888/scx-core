@@ -3,10 +3,16 @@ package cool.scx.business.cms;
 import cool.scx.annotation.BodyParam;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
+import cool.scx.base.Param;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.vo.Json;
+import cool.scx.util.FileType;
+import cool.scx.util.FileTypeUtils;
+import cool.scx.vo.Html;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * <p>IndexController class.</p>
@@ -14,7 +20,7 @@ import cool.scx.vo.Json;
  * @author 司昌旭
  * @version 0.3.6
  */
-//@ScxController
+@ScxController
 public class IndexController {
 
     private final UserService userService;
@@ -32,18 +38,20 @@ public class IndexController {
     /**
      * 跳转至首页 测试
      *
-     * @return 页面
      * @param user a {@link cool.scx.business.user.User} object.
+     * @return 页面
      */
-//    @ScxMapping(value = "/", httpMethod = HttpMethod.POST, unCheckedLogin = true)
-    public Json Index(@BodyParam("user.myuser") User user) {
+    @ScxMapping(value = "/", httpMethod = HttpMethod.GET, unCheckedLogin = true)
+    public Html Index(@BodyParam Map user) {
+        FileType fileTypeByHead = FileTypeUtils.getFileTypeByHead(new File("C:\\Users\\scx56\\Desktop\\1"));
         System.out.println();
-//        var users = userService.list(new Param<>(new User()).setPagination(1000));
-//        Html index = new Html("index");
-//        index.add("userList", users);
-//        index.add("name", name);
-//        index.add("age", age);
-        return Json.ok();
+        System.out.println();
+        var users = userService.list(new Param<>(new User()).setPagination(1000));
+        Html index = new Html("index");
+        index.add("userList", users);
+        index.add("name", "name");
+        index.add("age", "age");
+        return index;
     }
 
 }

@@ -1,5 +1,7 @@
 package cool.scx.base;
 
+import io.vertx.core.buffer.Buffer;
+
 /**
  * <p>BaseVo interface.</p>
  *
@@ -12,5 +14,9 @@ public interface BaseVo {
      *
      * @return a {@link java.lang.String} object.
      */
-    String getString();
+    Buffer getBuffer();
+
+    String getContentType();
+
+    String getContentDisposition();
 }

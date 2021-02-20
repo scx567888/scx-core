@@ -3,6 +3,7 @@ package cool.scx.vo;
 
 import cool.scx.base.BaseVo;
 import cool.scx.util.ObjectUtils;
+import io.vertx.core.buffer.Buffer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -140,9 +141,18 @@ public final class Json implements BaseVo {
         return this;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public String getString() {
-        return ObjectUtils.beanToJson(jsonMap);
+    public Buffer getBuffer() {
+        return Buffer.buffer(ObjectUtils.beanToJson(jsonMap));
+    }
+
+    @Override
+    public String getContentType() {
+        return "application/json; charset=utf-8";
+    }
+
+    @Override
+    public String getContentDisposition() {
+        return null;
     }
 }

@@ -119,7 +119,7 @@ public final class ScxContext {
     /**
      * <p>addUserToSession.</p>
      *
-     * @param token a {@link java.lang.String} object.
+     * @param token    a {@link java.lang.String} object.
      * @param username a {@link java.lang.String} object.
      */
     public static void addUserToSession(String token, String username) {

@@ -1,4 +1,4 @@
-package cool.scx.business.user.exception;
+package cool.scx.exception;
 
 /**
  * <p>UnknownUserException class.</p>

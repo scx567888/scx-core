@@ -1,5 +1,7 @@
 package cool.scx.business.user;
 
+import cool.scx.annotation.BodyParam;
+import cool.scx.annotation.PathParam;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.base.Param;
@@ -14,12 +16,12 @@ import cool.scx.business.role.UserRole;
 import cool.scx.business.role.UserRoleService;
 import cool.scx.business.system.ScxLog;
 import cool.scx.business.system.ScxLogService;
-import cool.scx.business.user.exception.AuthException;
-import cool.scx.business.user.exception.TooManyErrorsException;
-import cool.scx.business.user.exception.UnknownUserException;
-import cool.scx.business.user.exception.WrongPasswordException;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.enumeration.SortType;
+import cool.scx.exception.AuthException;
+import cool.scx.exception.TooManyErrorsException;
+import cool.scx.exception.UnknownUserException;
+import cool.scx.exception.WrongPasswordException;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
@@ -74,7 +76,7 @@ public class UserController {
      * @return json
      */
     @ScxMapping(unCheckedLogin = true)
-    public Json login(String username, String password, RoutingContext ctx) {
+    public Json login(@BodyParam("username") String username, @BodyParam("password") String password, RoutingContext ctx) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
         }
@@ -110,7 +112,7 @@ public class UserController {
      */
 
     @ScxMapping(value = "info/:token", httpMethod = HttpMethod.GET, unCheckedLogin = true)
-    public Json info(String token) {
+    public Json info(@PathParam String token) {
         var userId = ScxContext.getUserFromSessionByToken(token);
         //从session取出用户信息
         if (userId == null) {

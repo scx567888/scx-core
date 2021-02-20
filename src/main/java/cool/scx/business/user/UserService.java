@@ -11,10 +11,10 @@ import cool.scx.business.role.RoleService;
 import cool.scx.business.role.UserRole;
 import cool.scx.business.role.UserRoleService;
 import cool.scx.business.system.ScxLogService;
-import cool.scx.business.user.exception.AuthException;
-import cool.scx.business.user.exception.TooManyErrorsException;
-import cool.scx.business.user.exception.UnknownUserException;
-import cool.scx.business.user.exception.WrongPasswordException;
+import cool.scx.exception.AuthException;
+import cool.scx.exception.TooManyErrorsException;
+import cool.scx.exception.UnknownUserException;
+import cool.scx.exception.WrongPasswordException;
 import cool.scx.util.CryptoUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
@@ -65,7 +65,7 @@ public class UserService extends BaseService<User> {
      * @param username a {@link java.lang.String} object.
      * @param password a {@link java.lang.String} object.
      * @return a {@link cool.scx.business.user.User} object.
-     * @throws cool.scx.business.user.exception.AuthException if any.
+     * @throws cool.scx.exception.AuthException if any.
      */
     public User login(String username, String password) throws AuthException {
         var now = LocalDateTime.now();

@@ -6,11 +6,9 @@ import cool.scx.annotation.QueryParam;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.vo.Json;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.RoutingContext;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
@@ -46,7 +44,7 @@ public final class ScxRouteHandler {
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link java.lang.Object} object.
      */
-    public Object getResult(RoutingContext ctx) {
+    public Object getResult(RoutingContext ctx) throws Exception {
         var parameters = method.getParameters();
         //先从多个来源获取参数 并缓存起来
         //todo 现在没有做 参数来源缓存
@@ -87,13 +85,7 @@ public final class ScxRouteHandler {
             finalHandlerParams[i] = getParamFromPath(ctx, parameters[i].getName(), false, parameters[i]);
             //---------------------
         }
-
-        try {
-            return method.invoke(example, finalHandlerParams);
-        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            return Json.fail(Json.SYSTEM_ERROR, e.getMessage());
-        }
+        return method.invoke(example, finalHandlerParams);
     }
 
     private Object getParamFromPath(RoutingContext ctx, String pathParamValue, boolean pathParamPolymerize, Parameter parameter) {

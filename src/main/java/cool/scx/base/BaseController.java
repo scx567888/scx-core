@@ -1,5 +1,7 @@
 package cool.scx.base;
 
+import cool.scx.annotation.PathParam;
+import cool.scx.annotation.QueryParam;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.boot.ScxConfig;
@@ -8,15 +10,18 @@ import cool.scx.business.system.ScxLogService;
 import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.util.FileUtils;
-import cool.scx.util.NetUtils;
-import cool.scx.util.ObjectUtils;
+import cool.scx.exception.HttpResponseException;
+import cool.scx.util.*;
+import cool.scx.vo.Binary;
 import cool.scx.vo.Json;
+import io.vertx.ext.web.RoutingContext;
+import net.coobird.thumbnailator.Thumbnails;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -235,17 +240,52 @@ public class BaseController {
      * @param timestamp timestamp
      * @param fileName  要下载的文件名
      */
-    @ScxMapping("/showPicture/:year/:month:/:day/:hour/:timestamp/:fileName")
-    public void showPicture(String year,
-                            String month,
-                            String day,
-                            String hour,
-                            String timestamp,
-                            String fileName) {
-        var filePath = ScxConfig.uploadFilePath + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName;
-        //var width = request.getParameter("w") != null ? Integer.parseInt(request.getParameter("w")) : null;
-        //var height = request.getParameter("h") != null ? Integer.parseInt(request.getParameter("h")) : null;
-        //FileUtils.showPicture(response, new File(filePath), width, height);
+    @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", httpMethod = HttpMethod.GET, unCheckedLogin = true)
+    public Binary showPicture(String year,
+                              String month,
+                              String day,
+                              String hour,
+                              String timestamp,
+                              String fileName,
+                              @QueryParam("w") Integer width,
+                              @QueryParam("h") Integer height, RoutingContext ctx) throws HttpResponseException {
+
+        var filePath = ScxConfig.uploadFilePath + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName;
+        var file = new File(filePath);
+
+        if (!file.exists()) {
+            throw new HttpResponseException(context -> context.response().setStatusCode(404));
+        }
+        //设置缓存 减少服务器压力
+        ctx.response().putHeader("Cache-Control", "max-age=2628000");
+        FileType imageFileType = FileTypeUtils.getImageFileType(file);
+        try {
+            var out = new ByteArrayOutputStream();
+            if (imageFileType == null) {
+                var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file)).getImage();
+                var myImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+                var g = myImage.createGraphics();
+                g.drawImage(image, 0, 0, null);
+                g.dispose();
+                ImageIO.write(myImage, "png", out);
+                return new Binary(out.toByteArray());
+            } else if (height == null && width == null) {
+                return new Binary(file);
+            } else {
+                var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
+                if (height == null || height > image.getHeight()) {
+                    height = image.getHeight();
+                }
+                if (width == null || width > image.getWidth()) {
+                    width = image.getWidth();
+                }
+                Thumbnails.of(file).size(width, height).keepAspectRatio(false).toOutputStream(out);
+                return new Binary(out.toByteArray());
+            }
+        } catch (Exception e) {
+            throw new HttpResponseException(context -> context.response().setStatusCode(404));
+        }
+
     }
 
 
@@ -256,11 +296,43 @@ public class BaseController {
      *           下载文件或错误
      */
     @ScxMapping("/showPictureById/:id")
-    public void showPictureById(Long id) {
+    public Binary showPictureById(@PathParam Long id, @QueryParam("w") Integer width,
+                                  @QueryParam("h") Integer height, RoutingContext ctx) throws HttpResponseException {
         var uploadFile = uploadFileService.getById(id);
-        //var width = request.getParameter("w") != null ? Integer.parseInt(request.getParameter("w")) : null;
-        //var height = request.getParameter("h") != null ? Integer.parseInt(request.getParameter("h")) : null;
-        //FileUtils.showPicture(response, new File(ScxContext.uploadFilePath + uploadFile.filePath), width, height);
+        var file = new File(ScxConfig.uploadFilePath + "/" + uploadFile.filePath);
+
+        if (!file.exists()) {
+            throw new HttpResponseException(context -> context.response().setStatusCode(404));
+        }
+        //设置缓存 减少服务器压力
+        ctx.response().putHeader("Cache-Control", "max-age=2628000");
+        FileType imageFileType = FileTypeUtils.getImageFileType(file);
+        try {
+            var out = new ByteArrayOutputStream();
+            if (imageFileType == null) {
+                var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file)).getImage();
+                var myImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+                var g = myImage.createGraphics();
+                g.drawImage(image, 0, 0, null);
+                g.dispose();
+                ImageIO.write(myImage, "png", out);
+                return new Binary(out.toByteArray());
+            } else if (height == null && width == null) {
+                return new Binary(file);
+            } else {
+                var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
+                if (height == null || height > image.getHeight()) {
+                    height = image.getHeight();
+                }
+                if (width == null || width > image.getWidth()) {
+                    width = image.getWidth();
+                }
+                Thumbnails.of(file).size(width, height).keepAspectRatio(false).toOutputStream(out);
+                return new Binary(out.toByteArray());
+            }
+        } catch (Exception e) {
+            throw new HttpResponseException(context -> context.response().setStatusCode(404));
+        }
     }
 
 
