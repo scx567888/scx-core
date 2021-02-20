@@ -239,6 +239,11 @@ public class BaseController {
      * @param hour      hour
      * @param timestamp timestamp
      * @param fileName  要下载的文件名
+     * @param width a {@link java.lang.Integer} object.
+     * @param height a {@link java.lang.Integer} object.
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a {@link cool.scx.vo.Binary} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", httpMethod = HttpMethod.GET, unCheckedLogin = true)
     public Binary showPicture(String year,
@@ -259,8 +264,7 @@ public class BaseController {
         //设置缓存 减少服务器压力
         ctx.response().putHeader("Cache-Control", "max-age=2628000");
         FileType imageFileType = FileTypeUtils.getImageFileType(file);
-        try {
-            var out = new ByteArrayOutputStream();
+        try(var out = new ByteArrayOutputStream()) {
             if (imageFileType == null) {
                 var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file)).getImage();
                 var myImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
@@ -294,6 +298,11 @@ public class BaseController {
      *
      * @param id 要显示的图片 id
      *           下载文件或错误
+     * @param width a {@link java.lang.Integer} object.
+     * @param height a {@link java.lang.Integer} object.
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a {@link cool.scx.vo.Binary} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping("/showPictureById/:id")
     public Binary showPictureById(@PathParam Long id, @QueryParam("w") Integer width,

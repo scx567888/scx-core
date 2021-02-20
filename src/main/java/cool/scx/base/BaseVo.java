@@ -16,7 +16,17 @@ public interface BaseVo {
      */
     Buffer getBuffer();
 
+    /**
+     * <p>getContentType.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String getContentType();
 
+    /**
+     * <p>getContentDisposition.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String getContentDisposition();
 }

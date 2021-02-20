@@ -4,6 +4,12 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.util.function.Consumer;
 
+/**
+ * <p>HttpResponseException class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class HttpResponseException extends Exception {
 
     public final Consumer<RoutingContext> errFun;

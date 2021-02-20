@@ -141,16 +141,19 @@ public final class Json implements BaseVo {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Buffer getBuffer() {
         return Buffer.buffer(ObjectUtils.beanToJson(jsonMap));
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getContentType() {
         return "application/json; charset=utf-8";
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getContentDisposition() {
         return null;

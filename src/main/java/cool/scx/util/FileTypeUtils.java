@@ -5,6 +5,12 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>FileTypeUtils class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class FileTypeUtils {
 
     /**
@@ -69,8 +75,8 @@ public class FileTypeUtils {
     /**
      * 得到文件的文件头
      *
-     * @param src
-     * @return
+     * @param src an array of {@link byte} objects.
+     * @return a {@link java.lang.String} object.
      */
     public static String bytesToHexString(byte[] src) {
         var stringBuilder = new StringBuilder();
@@ -90,8 +96,11 @@ public class FileTypeUtils {
 
 
     /**
-     * @param file
-     * @return
+     * <p>getFileTypeBySuffix.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @param FILE_TYPE_LIST a {@link java.util.List} object.
+     * @return a {@link cool.scx.util.FileType} object.
      */
     public static FileType getFileTypeBySuffix(File file, List<FileType> FILE_TYPE_LIST) {
         var fileName = file.getName();
@@ -100,16 +109,25 @@ public class FileTypeUtils {
     }
 
 
+    /**
+     * <p>getFileTypeByHead.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @return a {@link cool.scx.util.FileType} object.
+     */
     public static FileType getFileTypeByHead(File file) {
         return getFileTypeByHead(file, ALL_FILE_TYPE_LIST);
     }
 
     /**
+     * <p>getFileTypeByHead.</p>
      *
+     * @param file a {@link java.io.File} object.
+     * @param FILE_TYPE_LIST a {@link java.util.List} object.
+     * @return a {@link cool.scx.util.FileType} object.
      */
     public static FileType getFileTypeByHead(File file, List<FileType> FILE_TYPE_LIST) {
-        try {
-            var is = new FileInputStream(file);
+        try (var is = new FileInputStream(file)) {
             byte[] b = new byte[10];
             is.read(b, 0, b.length);
             var fileCode = bytesToHexString(b);
@@ -119,6 +137,12 @@ public class FileTypeUtils {
         }
     }
 
+    /**
+     * <p>getImageFileType.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @return a {@link cool.scx.util.FileType} object.
+     */
     public static FileType getImageFileType(File file) {
         return getFileTypeBySuffix(file, IMAGE_FILE_TYPE_LIST);
     }

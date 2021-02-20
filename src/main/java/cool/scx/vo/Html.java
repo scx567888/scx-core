@@ -71,11 +71,13 @@ public final class Html implements BaseVo {
         return Buffer.buffer(sw.toString());
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getContentType() {
         return "text/html; charset=utf-8";
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getContentDisposition() {
         return null;

@@ -43,6 +43,7 @@ public final class ScxRouteHandler {
      *
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link java.lang.Object} object.
+     * @throws java.lang.Exception if any.
      */
     public Object getResult(RoutingContext ctx) throws Exception {
         var parameters = method.getParameters();
