@@ -33,9 +33,9 @@ public final class ScxConfig {
      */
     public static final String tokenKey = "S-Token";
     /**
-     * Constant <code>coreVersion="0.3.6"</code>
+     * 核心包版本
      */
-    public static final String coreVersion = "0.4.4";
+    public static final String coreVersion = "0.5.0";
     /**
      * Constant <code>scxConfigJsonNode</code>
      */
