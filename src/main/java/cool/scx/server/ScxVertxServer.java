@@ -19,7 +19,7 @@ import java.util.List;
  * <p>ScxVertxServer class.</p>
  *
  * @author 司昌旭
- * @version 0.3.6
+ * @version 0.5.8
  */
 public final class ScxVertxServer extends AbstractVerticle {
 
@@ -75,10 +75,6 @@ public final class ScxVertxServer extends AbstractVerticle {
         server = vertx.createHttpServer(httpServerOptions);
         eventBus = vertx.eventBus();
         var router = ScxRouterFactory.getRouter(vertx);
-        List<Route> routes = router.getRoutes();
-        for (Route route : routes) {
-            StringUtils.printlnAutoColor(route.getPath() + " " + route.methods());
-        }
         server.requestHandler(router).listen(http -> {
             if (http.succeeded()) {
                 startPromise.complete();
