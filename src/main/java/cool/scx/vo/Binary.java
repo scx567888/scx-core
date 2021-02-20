@@ -1,7 +1,7 @@
 package cool.scx.vo;
 
 import cool.scx.base.BaseVo;
-import cool.scx.enumeration.BinaryType;
+import cool.scx.util.FileType;
 import cool.scx.util.FileTypeUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.core.buffer.Buffer;
@@ -15,7 +15,7 @@ public class Binary implements BaseVo {
     private byte[] bytes;
     private Boolean download = false;
     private String downloadName = "";
-    private BinaryType binaryType;
+    private FileType binaryType;
 
     public Binary(String filePath) {
         try {
@@ -33,12 +33,12 @@ public class Binary implements BaseVo {
         bytes = _bytes;
     }
 
-    public Binary(String filePath, BinaryType _binaryType) {
+    public Binary(String filePath, FileType _binaryType) {
         file = new File(filePath);
         binaryType = _binaryType;
     }
 
-    public Binary(File _file, BinaryType _binaryType) {
+    public Binary(File _file, FileType _binaryType) {
         file = _file;
         binaryType = _binaryType;
     }
