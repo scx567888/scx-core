@@ -108,7 +108,12 @@ public final class ObjectUtils {
      * @return a T object.
      */
     public static <T> T mapToBean(Map<String, ?> map, Class<T> clazz) {
-        return objectMapper.convertValue(map, clazz);
+        try {
+            return objectMapper.convertValue(map, clazz);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
 

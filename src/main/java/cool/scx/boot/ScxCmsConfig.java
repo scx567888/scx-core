@@ -1,6 +1,6 @@
 package cool.scx.boot;
 
-import cool.scx.base.FreemarkerSupperTag;
+import cool.scx.base.BaseTemplateDirective;
 import cool.scx.enumeration.Color;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
@@ -39,9 +39,9 @@ public final class ScxCmsConfig {
         //自定义的指令就在这里添加
 
         PackageUtils.scanPackageIncludePlugins(clazz -> {
-            if (!clazz.isInterface() && FreemarkerSupperTag.class.isAssignableFrom(clazz)) {
+            if (!clazz.isInterface() && BaseTemplateDirective.class.isAssignableFrom(clazz)) {
                 try {
-                    var myDirective = (FreemarkerSupperTag) clazz.getDeclaredConstructor().newInstance();
+                    var myDirective = (BaseTemplateDirective) clazz.getDeclaredConstructor().newInstance();
                     StringUtils.println("已加载自定义 Freemarker 标签 [" + myDirective.getVariable() + "] Class -> " + clazz.getName(), Color.BLUE);
                     configuration.setSharedVariable(myDirective.getVariable(), myDirective);
                 } catch (Exception e) {

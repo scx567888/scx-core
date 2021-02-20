@@ -1,7 +1,7 @@
 package cool.scx.business.cms.directive;
 
 
-import cool.scx.base.FreemarkerSupperTag;
+import cool.scx.base.BaseTemplateDirective;
 import cool.scx.business.cms.ArticleService;
 
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-public class ArticleListDirective implements FreemarkerSupperTag {
+public class ArticleListDirective implements BaseTemplateDirective {
 
     ArticleService articleService = new ArticleService();
 

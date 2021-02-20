@@ -15,7 +15,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-public interface FreemarkerSupperTag extends TemplateDirectiveModel {
+public interface BaseTemplateDirective extends TemplateDirectiveModel {
 
 
     /**

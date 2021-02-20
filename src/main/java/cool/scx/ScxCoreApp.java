@@ -3,16 +3,17 @@ package cool.scx;
 import cool.scx.boot.ScxApp;
 
 /**
- * <p>ScxCoreApp class.</p>
+ * 核心模块启动类
  *
  * @author 司昌旭
  * @version 0.3.6
  */
 public class ScxCoreApp {
+
     /**
-     * <p>main.</p>
+     * 核心启动方法
      *
-     * @param args an array of {@link java.lang.String} objects.
+     * @param args 外部参数
      */
     public static void main(String[] args) {
         ScxApp.run(ScxCoreApp.class, args);

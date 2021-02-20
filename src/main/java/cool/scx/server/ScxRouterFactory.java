@@ -2,6 +2,7 @@ package cool.scx.server;
 
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
+import cool.scx.base.BaseVo;
 import cool.scx.boot.ScxConfig;
 import cool.scx.boot.ScxContext;
 import cool.scx.business.user.User;
@@ -62,16 +63,13 @@ public final class ScxRouterFactory {
                 if (currentUser == null) {
                     HttpServerResponse response = ctx.response();
                     response.putHeader("content-type", "application/json; charset=utf-8");
-                    response.end(ObjectUtils.beanToJson(Json.fail(Json.ILLEGAL_TOKEN, "未登录")));
+                    response.end(Json.fail(Json.ILLEGAL_TOKEN, "未登录").getString());
                 } else {
                     ctx.next();
                 }
             }
         };
-        router.post(url).handler(s);
-        router.put(url).handler(s);
-        router.delete(url).handler(s);
-        router.get(url).handler(s);
+        router.route(url).handler(s);
     }
 
     /**
@@ -186,12 +184,11 @@ public final class ScxRouterFactory {
     }
 
     private static String getStringFormObject(Object result) {
-        var aClass = result.getClass();
-        if (aClass == String.class) {
-            return result.toString();
+        if (result instanceof String) {
+            return (String) result;
         }
-        if (aClass == Html.class) {
-            return ((Html) result).getHtmlStr();
+        if (result instanceof BaseVo) {
+            return ((BaseVo) result).getString();
         }
         return ObjectUtils.beanToJson(result);
     }
@@ -224,18 +221,5 @@ public final class ScxRouterFactory {
         router.route(ScxConfig.cmsResourceUrl).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations.getPath()));
     }
 
-    private static class TempRoute {
-        String url;
-        Method method;
-        Class<?> clazz;
-        ScxMapping scxMapping;
-
-        public TempRoute(String url, Method method, Class<?> clazz, ScxMapping scxMapping) {
-            this.url = url;
-            this.method = method;
-            this.clazz = clazz;
-            this.scxMapping = scxMapping;
-        }
-    }
 
 }

@@ -1,15 +1,19 @@
 package cool.scx.vo;
 
 
+import cool.scx.base.BaseVo;
+import cool.scx.util.ObjectUtils;
+
 import java.util.HashMap;
+import java.util.Map;
 
 /**
- * <p>Json class.</p>
+ * Json 格式的返回值
  *
  * @author 司昌旭
  * @version 0.3.6
  */
-public final class Json extends HashMap<String, Object> {
+public final class Json implements BaseVo {
 
     /**
      * 成功的 code
@@ -36,13 +40,15 @@ public final class Json extends HashMap<String, Object> {
      */
     public static final int SYSTEM_ERROR = 50;
 
+    private final Map<String, Object> jsonMap = new HashMap<>();
+
 
     /**
      * 无参构造：操作成功返回的响应信息
      */
     public Json() {
-        this.put("code", SUCCESS_CODE);
-        this.put("message", "ok");
+        jsonMap.put("code", SUCCESS_CODE);
+        jsonMap.put("message", "ok");
     }
 
     /**
@@ -52,8 +58,8 @@ public final class Json extends HashMap<String, Object> {
      * @param message 消息
      */
     public Json(int code, String message) {
-        this.put("code", code);
-        this.put("message", message);
+        jsonMap.put("code", code);
+        jsonMap.put("message", message);
     }
 
     /**
@@ -105,7 +111,7 @@ public final class Json extends HashMap<String, Object> {
      * @return json
      */
     public Json data(String dataKey, Object dataVal) {
-        this.put(dataKey, dataVal);
+        jsonMap.put(dataKey, dataVal);
         return this;
     }
 
@@ -117,7 +123,7 @@ public final class Json extends HashMap<String, Object> {
      * @return json
      */
     public Json items(Object dataVal) {
-        this.put("items", dataVal);
+        jsonMap.put("items", dataVal);
         return this;
     }
 
@@ -129,8 +135,13 @@ public final class Json extends HashMap<String, Object> {
      * @return json
      */
     public Json tables(Object items, Integer total) {
-        this.put("items", items);
-        this.put("total", total);
+        jsonMap.put("items", items);
+        jsonMap.put("total", total);
         return this;
+    }
+
+    @Override
+    public String getString() {
+        return ObjectUtils.beanToJson(jsonMap);
     }
 }

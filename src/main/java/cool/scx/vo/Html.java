@@ -1,5 +1,6 @@
 package cool.scx.vo;
 
+import cool.scx.base.BaseVo;
 import cool.scx.boot.ScxCmsConfig;
 import cool.scx.boot.ScxConfig;
 import cool.scx.util.ObjectUtils;
@@ -16,7 +17,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-public final class Html {
+public final class Html implements BaseVo {
 
     private final Template template;
 
@@ -57,7 +58,8 @@ public final class Html {
      *
      * @return 获取 html 字符串
      */
-    public String getHtmlStr() {
+    @Override
+    public String getString() {
         var sw = new StringWriter();
         try {
             template.process(dataMap, sw);

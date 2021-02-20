@@ -19,7 +19,7 @@ public final class Param<Entity> {
     public Map<String, SortType> orderBy = new HashMap<>();//排序的字段
     public Set<String> groupBy = new HashSet<>();//自定义分组 SQL 添加
     public String whereSql = "";//自定义WHERE SQL添加
-    public Entity queryObject = null;
+    public Entity queryObject;
     private Integer page = 0;//分页用
     private Integer limit = 0;//分页用
 

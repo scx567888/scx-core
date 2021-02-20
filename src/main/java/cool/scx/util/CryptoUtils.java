@@ -14,6 +14,10 @@ public final class CryptoUtils {
     private CryptoUtils() {
     }
 
+    /**
+     * @param encryptorPassword 加密解密密钥
+     * @return 加密解密工具类对象
+     */
     private static AES256TextEncryptor getEncryptor(String encryptorPassword) {
         var encryptors = new AES256TextEncryptor();
         encryptors.setPassword(encryptorPassword);
@@ -43,20 +47,20 @@ public final class CryptoUtils {
     }
 
     /**
-     * <p>encryptText.</p>
+     * 加密字符串
      *
-     * @param text a {@link java.lang.String} object.
-     * @return a {@link java.lang.String} object.
+     * @param text 待加密的字符串
+     * @return a 密文
      */
     public static String encryptText(String text) {
         return getEncryptor(ScxConfig.AppKey).encrypt(text);
     }
 
     /**
-     * <p>decryptText.</p>
+     * 解密字符串
      *
-     * @param text a {@link java.lang.String} object.
-     * @return a {@link java.lang.String} object.
+     * @param text 密文
+     * @return a 结果
      */
     public static String decryptText(String text) {
         return getEncryptor(ScxConfig.AppKey).decrypt(text);

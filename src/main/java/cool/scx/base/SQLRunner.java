@@ -176,13 +176,5 @@ public final class SQLRunner {
         }
     }
 
-    public static class UpdateResult {
-        public final Integer affectedLength;
-        public final List<Long> generatedKeys;
 
-        UpdateResult(Integer affectedLength, List<Long> generatedKeys) {
-            this.affectedLength = affectedLength;
-            this.generatedKeys = generatedKeys;
-        }
-    }
 }
