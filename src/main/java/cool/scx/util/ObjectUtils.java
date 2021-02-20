@@ -11,6 +11,7 @@ import cool.scx.base.BaseModel;
 import cool.scx.boot.ScxConfig;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -87,13 +88,14 @@ public final class ObjectUtils {
      * <p>jsonNodeToBean.</p>
      *
      * @param jsonNode a {@link com.fasterxml.jackson.databind.JsonNode} object.
-     * @param clazz    a {@link java.lang.Class} object.
+     * @param type     a {@link java.lang.Class} object.
      * @param <T>      a T object.
      * @return a T object.
      */
-    public static <T> T jsonNodeToBean(JsonNode jsonNode, Class<T> clazz) {
+    public static <T> T jsonNodeToBean(JsonNode jsonNode, Type type) {
+        var reader = objectMapper.readerFor(objectMapper.getTypeFactory().constructType(type));
         try {
-            return objectMapper.treeToValue(jsonNode, clazz);
+            return reader.readValue(jsonNode);
         } catch (Exception e) {
             return null;
         }
@@ -172,6 +174,12 @@ public final class ObjectUtils {
     }
 
     // 将对象转成字符串
+    /**
+     * <p>objectToMapDeep.</p>
+     *
+     * @param obj a {@link java.lang.Object} object.
+     * @return a {@link java.lang.Object} object.
+     */
     public static Object objectToMapDeep(Object obj) {
         Object ooo = null;
         try {

@@ -138,7 +138,7 @@ public final class ScxRouteHandler {
                         jsonNode = jsonNode.get(s);
                     }
                 }
-                return ObjectUtils.jsonNodeToBean(jsonNode, parameter.getType());
+                return ObjectUtils.jsonNodeToBean(jsonNode, parameter.getParameterizedType());
             }
         } else {
             var formAttributes = ctx.request().formAttributes();

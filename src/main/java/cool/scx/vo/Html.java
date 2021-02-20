@@ -54,9 +54,9 @@ public final class Html implements BaseVo {
     }
 
     /**
-     * 根据 dataMap 利用 freemarker 进行渲染
+     * {@inheritDoc}
      *
-     * @return 获取 html 字符串
+     * 根据 dataMap 利用 freemarker 进行渲染
      */
     @Override
     public String getString() {

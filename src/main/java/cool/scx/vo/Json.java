@@ -140,6 +140,7 @@ public final class Json implements BaseVo {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getString() {
         return ObjectUtils.beanToJson(jsonMap);

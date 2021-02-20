@@ -116,6 +116,12 @@ public final class ScxContext {
         scxSession.removeIf(i -> i.token.equals(token));
     }
 
+    /**
+     * <p>addUserToSession.</p>
+     *
+     * @param token a {@link java.lang.String} object.
+     * @param username a {@link java.lang.String} object.
+     */
     public static void addUserToSession(String token, String username) {
         var sessionItem = scxSession.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);
         if (sessionItem == null) {
@@ -126,6 +132,12 @@ public final class ScxContext {
         }
     }
 
+    /**
+     * <p>getUserFromSessionByToken.</p>
+     *
+     * @param token a {@link java.lang.String} object.
+     * @return a {@link cool.scx.business.user.User} object.
+     */
     public static User getUserFromSessionByToken(String token) {
         var sessionItem = scxSession.stream().filter(u -> u.token.equals(token)).findAny().orElse(null);
         if (sessionItem == null) {

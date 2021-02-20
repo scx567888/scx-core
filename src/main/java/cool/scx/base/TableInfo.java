@@ -10,6 +10,12 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+/**
+ * <p>TableInfo class.</p>
+ *
+ * @author 司昌旭
+ * @version 0.5.0
+ */
 public class TableInfo {
     public final Field[] canUpdateFields;//实体类型不含@NoColunm 和@NoUpdate 注解的field
 
@@ -21,6 +27,11 @@ public class TableInfo {
 
     public final String[] selectColumns;//所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
 
+    /**
+     * <p>Constructor for TableInfo.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     */
     protected TableInfo(Class<?> clazz) {
         tableName = getTableName(clazz);
         allFields = getAllFields(clazz);

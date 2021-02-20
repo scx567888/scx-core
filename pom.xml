@@ -8,7 +8,10 @@
     <packaging>jar</packaging>
     <name>scx</name>
     <version>0.5.0</version>
-    <description>SCX is a "web development framework"; goal is to provide a simple and fast development experience.</description>
+    <description>
+        SCX is a "web development framework";
+        Goal is to provide a simple and fast development experience.
+    </description>
     <url>https://github.com/scx567888/scx</url>
 
     <properties>
