@@ -41,8 +41,8 @@ public class Image implements BaseVo {
     /**
      * <p>Constructor for Image.</p>
      *
-     * @param _file a {@link java.io.File} object.
-     * @param _width a {@link java.lang.Integer} object.
+     * @param _file   a {@link java.io.File} object.
+     * @param _width  a {@link java.lang.Integer} object.
      * @param _height a {@link java.lang.Integer} object.
      */
     public Image(File _file, Integer _width, Integer _height) {
@@ -51,7 +51,9 @@ public class Image implements BaseVo {
         height = _height;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendToClient(RoutingContext context) {
         var response = context.response();

@@ -132,8 +132,8 @@ public final class NetUtils {
      * 本方法先从Header中获取X-Real-IP，如果不存在再从X-Forwarded-For获得第一个IP(用,分割)，
      * 如果还不存在则调用Request .getRemoteAddr()。
      *
-     * @return IP
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return IP
      */
     public static String getIpAddr(RoutingContext context) {
         HttpServerRequest request = context.request();
