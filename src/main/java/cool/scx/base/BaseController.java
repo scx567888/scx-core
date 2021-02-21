@@ -232,7 +232,7 @@ public class BaseController {
         }
         scxLogService.outAndRecordLog("ip 为 :" + NetUtils.getIpAddr(ctx) + "的用户 下载了" + fileName);
         //  这里让文件限速到 500 kb 并且支持断点续传
-        return new Download(file, file.getName(), true, 512000L);
+        return new Download(file, file.getName(), 512000L);
     }
 
 
