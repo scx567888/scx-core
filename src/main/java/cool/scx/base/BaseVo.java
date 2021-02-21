@@ -9,5 +9,11 @@ import io.vertx.ext.web.RoutingContext;
  * @version 0.5.0
  */
 public interface BaseVo {
+    /**
+     * <p>sendToClient.</p>
+     *
+     * @param context a {@link io.vertx.ext.web.RoutingContext} object.
+     * @throws java.lang.Exception if any.
+     */
     void sendToClient(RoutingContext context) throws Exception;
 }

@@ -10,6 +10,12 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * <p>Download class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class Download implements BaseVo {
     /**
      * 待下载的文件
@@ -29,18 +35,44 @@ public class Download implements BaseVo {
      */
     public Long throttle;
 
+    /**
+     * <p>Constructor for Download.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     */
     public Download(File file) {
         this(file, file.getName());
     }
 
+    /**
+     * <p>Constructor for Download.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @param downloadName a {@link java.lang.String} object.
+     */
     public Download(File file, String downloadName) {
         this(file, downloadName, true);
     }
 
+    /**
+     * <p>Constructor for Download.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @param downloadName a {@link java.lang.String} object.
+     * @param resume a {@link java.lang.Boolean} object.
+     */
     public Download(File file, String downloadName, Boolean resume) {
         this(file, downloadName, resume, 512000L);
     }
 
+    /**
+     * <p>Constructor for Download.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @param downloadName a {@link java.lang.String} object.
+     * @param resume a {@link java.lang.Boolean} object.
+     * @param throttle a {@link java.lang.Long} object.
+     */
     public Download(File file, String downloadName, Boolean resume, Long throttle) {
         this.file = file;
         this.downloadName = downloadName;
@@ -48,6 +80,7 @@ public class Download implements BaseVo {
         this.throttle = throttle;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void sendToClient(RoutingContext context) throws Exception {
         var request = context.request();

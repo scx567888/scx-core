@@ -18,7 +18,6 @@ import java.util.*;
 public class FileUtils {
 
 
-
     //public static boolean uploadFile(MultipartFile file, String fileName, Integer index, Integer chunkTotal) {
     //    String tempFilePath;
     //    if (index == -1) {
@@ -39,6 +38,29 @@ public class FileUtils {
     //}
 
     //这个方法就是改变配置文件的
+
+    /**
+     * 所有文件类型
+     */
+    public final static List<FileType> ALL_FILE_TYPE_LIST;
+    /**
+     * 图片文件类型
+     */
+    public final static List<FileType> IMAGE_FILE_TYPE_LIST;
+    /**
+     * 其他文件类型
+     */
+    public final static List<FileType> OTHER_FILE_TYPE_LIST;
+
+    //文件全上传完了 将临时文件 重命名 移动至 上传文件夹并 删除临时文件
+
+    static {
+        IMAGE_FILE_TYPE_LIST = getImageFileTypeList();
+        OTHER_FILE_TYPE_LIST = getOtherFileType();
+        ALL_FILE_TYPE_LIST = new ArrayList<>();
+        ALL_FILE_TYPE_LIST.addAll(IMAGE_FILE_TYPE_LIST);
+        ALL_FILE_TYPE_LIST.addAll(OTHER_FILE_TYPE_LIST);
+    }
 
     /**
      * <p>changeUploadFileConfig.</p>
@@ -112,8 +134,6 @@ public class FileUtils {
         return true;
 
     }
-
-    //文件全上传完了 将临时文件 重命名 移动至 上传文件夹并 删除临时文件
 
     /**
      * <p>validateFile.</p>
@@ -264,27 +284,6 @@ public class FileUtils {
         }
     }
 
-    /**
-     * 所有文件类型
-     */
-    public final static List<FileType> ALL_FILE_TYPE_LIST;
-    /**
-     * 图片文件类型
-     */
-    public final static List<FileType> IMAGE_FILE_TYPE_LIST;
-    /**
-     * 其他文件类型
-     */
-    public final static List<FileType> OTHER_FILE_TYPE_LIST;
-
-    static {
-        IMAGE_FILE_TYPE_LIST = getImageFileTypeList();
-        OTHER_FILE_TYPE_LIST = getOtherFileType();
-        ALL_FILE_TYPE_LIST = new ArrayList<>();
-        ALL_FILE_TYPE_LIST.addAll(IMAGE_FILE_TYPE_LIST);
-        ALL_FILE_TYPE_LIST.addAll(OTHER_FILE_TYPE_LIST);
-    }
-
     private static ArrayList<FileType> getImageFileTypeList() {
         var f = new ArrayList<FileType>();
         f.add(new FileType("ffd8ffe000104a464946", "jpg", "image/jpeg", "JPEG (jpg)"));
@@ -351,7 +350,7 @@ public class FileUtils {
      *
      * @param file           a {@link java.io.File} object.
      * @param FILE_TYPE_LIST a {@link java.util.List} object.
-     * @return a {@link FileType} object.
+     * @return a {@link cool.scx.util.FileType} object.
      */
     public static FileType getFileTypeBySuffix(File file, List<FileType> FILE_TYPE_LIST) {
         var fileName = file.getName();
@@ -364,7 +363,7 @@ public class FileUtils {
      * <p>getFileTypeByHead.</p>
      *
      * @param file a {@link java.io.File} object.
-     * @return a {@link FileType} object.
+     * @return a {@link cool.scx.util.FileType} object.
      */
     public static FileType getFileTypeByHead(File file) {
         return getFileTypeByHead(file, ALL_FILE_TYPE_LIST);
@@ -375,7 +374,7 @@ public class FileUtils {
      *
      * @param file           a {@link java.io.File} object.
      * @param FILE_TYPE_LIST a {@link java.util.List} object.
-     * @return a {@link FileType} object.
+     * @return a {@link cool.scx.util.FileType} object.
      */
     public static FileType getFileTypeByHead(File file, List<FileType> FILE_TYPE_LIST) {
         try (var is = new FileInputStream(file)) {
@@ -392,7 +391,7 @@ public class FileUtils {
      * <p>getImageFileType.</p>
      *
      * @param file a {@link java.io.File} object.
-     * @return a {@link FileType} object.
+     * @return a {@link cool.scx.util.FileType} object.
      */
     public static FileType getImageFileType(File file) {
         return getFileTypeBySuffix(file, IMAGE_FILE_TYPE_LIST);

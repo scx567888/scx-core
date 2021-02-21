@@ -66,6 +66,7 @@ public class UserService extends BaseService<User> {
      * @param username a {@link java.lang.String} object.
      * @param password a {@link java.lang.String} object.
      * @return a {@link cool.scx.business.user.User} object.
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      * @throws cool.scx.exception.AuthException if any.
      */
     public User login(String username, String password, RoutingContext ctx) throws AuthException {

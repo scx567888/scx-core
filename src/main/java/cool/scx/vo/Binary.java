@@ -59,7 +59,7 @@ public class Binary implements BaseVo {
      * <p>Constructor for Binary.</p>
      *
      * @param filePath    a {@link java.lang.String} object.
-     * @param _binaryType a {@link FileType} object.
+     * @param _binaryType a {@link cool.scx.util.FileType} object.
      */
     public Binary(String filePath, FileType _binaryType) {
         file = new File(filePath);
@@ -70,7 +70,7 @@ public class Binary implements BaseVo {
      * <p>Constructor for Binary.</p>
      *
      * @param _file       a {@link java.io.File} object.
-     * @param _binaryType a {@link FileType} object.
+     * @param _binaryType a {@link cool.scx.util.FileType} object.
      */
     public Binary(File _file, FileType _binaryType) {
         file = _file;
@@ -79,8 +79,9 @@ public class Binary implements BaseVo {
 
     /**
      * {@inheritDoc}
+     *
+     * @return a {@link io.vertx.core.buffer.Buffer} object.
      */
-
     public Buffer getBuffer() {
         try {
             if (file == null) {
@@ -100,16 +101,18 @@ public class Binary implements BaseVo {
 
     /**
      * {@inheritDoc}
+     *
+     * @return a {@link java.lang.String} object.
      */
-
     public String getContentType() {
         return FileUtils.getFileTypeByHead(file).contentType;
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @return a {@link java.lang.String} object.
      */
-
     public String getContentDisposition() {
         if (download) {
             if (StringUtils.isNotEmpty(downloadName)) {
@@ -124,6 +127,11 @@ public class Binary implements BaseVo {
     }
 
 
+    /**
+     * <p>aaa.</p>
+     *
+     * @param response a {@link io.vertx.ext.web.RoutingContext} object.
+     */
     public void aaa(RoutingContext response) {
 //        response.putHeader("Content-Type", baseVo.getContentType());
 //        String contentDisposition = baseVo.getContentDisposition();
@@ -156,15 +164,24 @@ public class Binary implements BaseVo {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void sendToClient(RoutingContext context) {
 
     }
 
+    /**
+     * <p>isDownload.</p>
+     *
+     * @return a {@link cool.scx.vo.Binary} object.
+     */
     public Binary isDownload() {
         return null;
     }
 
+    /**
+     * <p>Setter for the field <code>downloadName</code>.</p>
+     */
     public void setDownloadName() {
 
     }

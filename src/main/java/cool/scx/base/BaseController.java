@@ -219,6 +219,10 @@ public class BaseController {
      * @param hour      hour
      * @param timestamp timestamp
      * @param fileName  要下载的文件名
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a {@link cool.scx.vo.Download} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws java.io.UnsupportedEncodingException if any.
      */
     @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", httpMethod = HttpMethod.GET, unCheckedLogin = true)
     public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {

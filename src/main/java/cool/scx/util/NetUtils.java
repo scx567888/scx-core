@@ -133,6 +133,7 @@ public final class NetUtils {
      * 如果还不存在则调用Request .getRemoteAddr()。
      *
      * @return IP
+     * @param context a {@link io.vertx.ext.web.RoutingContext} object.
      */
     public static String getIpAddr(RoutingContext context) {
         HttpServerRequest request = context.request();

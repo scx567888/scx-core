@@ -80,6 +80,7 @@ public class ScxLogService extends BaseService<ScxLog> {
      *
      * @param title   日志标题
      * @param content 日志内容
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      */
     public void recordLog(String title, String content, RoutingContext ctx) {
         if (ScxConfig.showLog) {
