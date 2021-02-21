@@ -1,6 +1,6 @@
 package cool.scx.base;
 
-import io.vertx.core.buffer.Buffer;
+import io.vertx.ext.web.RoutingContext;
 
 /**
  * <p>BaseVo interface.</p>
@@ -9,24 +9,5 @@ import io.vertx.core.buffer.Buffer;
  * @version 0.5.0
  */
 public interface BaseVo {
-    /**
-     * <p>getString.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    Buffer getBuffer();
-
-    /**
-     * <p>getContentType.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    String getContentType();
-
-    /**
-     * <p>getContentDisposition.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    String getContentDisposition();
+    void sendToClient(RoutingContext context) throws Exception;
 }

@@ -2,9 +2,10 @@ package cool.scx.vo;
 
 import cool.scx.base.BaseVo;
 import cool.scx.util.FileType;
-import cool.scx.util.FileTypeUtils;
+import cool.scx.util.FileUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.ext.web.RoutingContext;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,8 +58,8 @@ public class Binary implements BaseVo {
     /**
      * <p>Constructor for Binary.</p>
      *
-     * @param filePath a {@link java.lang.String} object.
-     * @param _binaryType a {@link cool.scx.util.FileType} object.
+     * @param filePath    a {@link java.lang.String} object.
+     * @param _binaryType a {@link FileType} object.
      */
     public Binary(String filePath, FileType _binaryType) {
         file = new File(filePath);
@@ -68,16 +69,18 @@ public class Binary implements BaseVo {
     /**
      * <p>Constructor for Binary.</p>
      *
-     * @param _file a {@link java.io.File} object.
-     * @param _binaryType a {@link cool.scx.util.FileType} object.
+     * @param _file       a {@link java.io.File} object.
+     * @param _binaryType a {@link FileType} object.
      */
     public Binary(File _file, FileType _binaryType) {
         file = _file;
         binaryType = _binaryType;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     */
+
     public Buffer getBuffer() {
         try {
             if (file == null) {
@@ -95,14 +98,18 @@ public class Binary implements BaseVo {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     */
+
     public String getContentType() {
-        return FileTypeUtils.getFileTypeByHead(file).contentType;
+        return FileUtils.getFileTypeByHead(file).contentType;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     */
+
     public String getContentDisposition() {
         if (download) {
             if (StringUtils.isNotEmpty(downloadName)) {
@@ -114,6 +121,16 @@ public class Binary implements BaseVo {
             return "attachment;";
         }
         return null;
+    }
+
+
+    public void aaa(RoutingContext response) {
+//        response.putHeader("Content-Type", baseVo.getContentType());
+//        String contentDisposition = baseVo.getContentDisposition();
+//        if (StringUtils.isNotEmpty(contentDisposition)) {
+//            response.putHeader("Content-Disposition", contentDisposition);
+//        }
+//        response.end(baseVo.getBuffer());
     }
 
     /**
@@ -137,5 +154,18 @@ public class Binary implements BaseVo {
         download = true;
         downloadName = b;
         return this;
+    }
+
+    @Override
+    public void sendToClient(RoutingContext context) {
+
+    }
+
+    public Binary isDownload() {
+        return null;
+    }
+
+    public void setDownloadName() {
+
     }
 }

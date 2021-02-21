@@ -1,5 +1,8 @@
 package cool.scx.util;
 
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.ext.web.RoutingContext;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -131,36 +134,35 @@ public final class NetUtils {
      *
      * @return IP
      */
-    public static String getIpAddr() {
-        //var request = ScxContext.getHttpRequest();
-        //var ip = request.getHeader("X-Real-IP");
-        //if (StringUtils.isNotEmpty(ip) && !"unknown".equalsIgnoreCase(ip)) {
-        //    if (ip.contains("../") || ip.contains("..\\")) {
-        //        return "";
-        //    }
-        //    return ip;
-        //}
-        //ip = request.getHeader("X-Forwarded-For");
-        //if (StringUtils.isNotEmpty(ip) && !"unknown".equalsIgnoreCase(ip)) {
-        //    // 多次反向代理后会有多个IP值，第一个为真实IP。
-        //    int index = ip.indexOf(',');
-        //    if (index != -1) {
-        //        ip = ip.substring(0, index);
-        //    }
-        //    if (ip.contains("../") || ip.contains("..\\")) {
-        //        return "";
-        //    }
-        //} else {
-        //    ip = request.getRemoteAddr();
-        //    if (ip.contains("../") || ip.contains("..\\")) {
-        //        return "";
-        //    }
-        //    if (ip.equals("0:0:0:0:0:0:0:1")) {
-        //        ip = "127.0.0.1";
-        //    }
-        //}
-        //return ip;
-        return "";
+    public static String getIpAddr(RoutingContext context) {
+        HttpServerRequest request = context.request();
+        var ip = request.getHeader("X-Real-IP");
+        if (StringUtils.isNotEmpty(ip) && !"unknown".equalsIgnoreCase(ip)) {
+            if (ip.contains("../") || ip.contains("..\\")) {
+                return "";
+            }
+            return ip;
+        }
+        ip = request.getHeader("X-Forwarded-For");
+        if (StringUtils.isNotEmpty(ip) && !"unknown".equalsIgnoreCase(ip)) {
+            // 多次反向代理后会有多个IP值，第一个为真实IP。
+            int index = ip.indexOf(',');
+            if (index != -1) {
+                ip = ip.substring(0, index);
+            }
+            if (ip.contains("../") || ip.contains("..\\")) {
+                return "";
+            }
+        } else {
+            ip = request.remoteAddress().host();
+            if (ip.contains("../") || ip.contains("..\\")) {
+                return "";
+            }
+            if (ip.equals("0:0:0:0:0:0:0:1")) {
+                ip = "127.0.0.1";
+            }
+        }
+        return ip;
     }
 
     /**

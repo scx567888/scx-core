@@ -15,8 +15,8 @@ public class FileType {
     /**
      * <p>Constructor for FileType.</p>
      *
-     * @param head a {@link java.lang.String} object.
-     * @param suffix a {@link java.lang.String} object.
+     * @param head        a {@link java.lang.String} object.
+     * @param suffix      a {@link java.lang.String} object.
      * @param contentType a {@link java.lang.String} object.
      * @param description a {@link java.lang.String} object.
      */

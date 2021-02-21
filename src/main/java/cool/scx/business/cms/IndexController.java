@@ -8,7 +8,7 @@ import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.util.FileType;
-import cool.scx.util.FileTypeUtils;
+import cool.scx.util.FileUtils;
 import cool.scx.vo.Html;
 
 import java.io.File;
@@ -43,7 +43,7 @@ public class IndexController {
      */
     @ScxMapping(value = "/", httpMethod = HttpMethod.GET, unCheckedLogin = true)
     public Html Index(@BodyParam Map user) {
-        FileType fileTypeByHead = FileTypeUtils.getFileTypeByHead(new File("C:\\Users\\scx56\\Desktop\\1"));
+        FileType fileTypeByHead = FileUtils.getFileTypeByHead(new File("C:\\Users\\scx56\\Desktop\\1"));
         System.out.println();
         System.out.println();
         var users = userService.list(new Param<>(new User()).setPagination(1000));

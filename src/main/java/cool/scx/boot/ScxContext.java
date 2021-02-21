@@ -146,16 +146,5 @@ public final class ScxContext {
         return userService.findByUsername(sessionItem.username);
     }
 
-    private static class SessionItem {
-        public String token;//唯一的
-        public String username;//唯一的
-        public ArrayList<Object> userSessionList;
-
-        public SessionItem(String _token, String _username, ArrayList<Object> _userSessionList) {
-            token = _token;
-            username = _username;
-            userSessionList = _userSessionList;
-        }
-    }
 
 }

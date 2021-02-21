@@ -11,16 +11,14 @@ import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.exception.HttpResponseException;
-import cool.scx.util.*;
-import cool.scx.vo.Binary;
+import cool.scx.util.FileUtils;
+import cool.scx.util.NetUtils;
+import cool.scx.util.ObjectUtils;
+import cool.scx.vo.Download;
+import cool.scx.vo.Image;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
-import net.coobird.thumbnailator.Thumbnails;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -222,11 +220,15 @@ public class BaseController {
      * @param timestamp timestamp
      * @param fileName  要下载的文件名
      */
-    @ScxMapping("/download/:year/:month/:day/:hour/:timestamp/:fileName")
-    public void download(String year, String month, String day, String hour, String timestamp, String fileName) {
-        var fullPath = ScxConfig.uploadFilePath + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName;
-        //FileUtils.downloadFile(response, request, fullPath);
-        scxLogService.outAndRecordLog("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + fileName);
+    @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", httpMethod = HttpMethod.GET, unCheckedLogin = true)
+    public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {
+        var file = new File(ScxConfig.uploadFilePath + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName);
+        if (!file.exists()) {
+            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("No Found"));
+        }
+        scxLogService.outAndRecordLog("ip 为 :" + NetUtils.getIpAddr(ctx) + "的用户 下载了" + fileName);
+        //  这里让文件限速到 500 kb 并且支持断点续传
+        return new Download(file, file.getName(), true, 512000L);
     }
 
 
@@ -239,120 +241,28 @@ public class BaseController {
      * @param hour      hour
      * @param timestamp timestamp
      * @param fileName  要下载的文件名
-     * @param width a {@link java.lang.Integer} object.
-     * @param height a {@link java.lang.Integer} object.
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param width     a {@link java.lang.Integer} object.
+     * @param height    a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Binary} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", httpMethod = HttpMethod.GET, unCheckedLogin = true)
-    public Binary showPicture(String year,
-                              String month,
-                              String day,
-                              String hour,
-                              String timestamp,
-                              String fileName,
-                              @QueryParam("w") Integer width,
-                              @QueryParam("h") Integer height, RoutingContext ctx) throws HttpResponseException {
-
-        var filePath = ScxConfig.uploadFilePath + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName;
-        var file = new File(filePath);
-
-        if (!file.exists()) {
-            throw new HttpResponseException(context -> context.response().setStatusCode(404));
-        }
-        //设置缓存 减少服务器压力
-        ctx.response().putHeader("Cache-Control", "max-age=2628000");
-        FileType imageFileType = FileTypeUtils.getImageFileType(file);
-        try(var out = new ByteArrayOutputStream()) {
-            if (imageFileType == null) {
-                var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file)).getImage();
-                var myImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-                var g = myImage.createGraphics();
-                g.drawImage(image, 0, 0, null);
-                g.dispose();
-                ImageIO.write(myImage, "png", out);
-                return new Binary(out.toByteArray());
-            } else if (height == null && width == null) {
-                return new Binary(file);
-            } else {
-                var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
-                if (height == null || height > image.getHeight()) {
-                    height = image.getHeight();
-                }
-                if (width == null || width > image.getWidth()) {
-                    width = image.getWidth();
-                }
-                Thumbnails.of(file).size(width, height).keepAspectRatio(false).toOutputStream(out);
-                return new Binary(out.toByteArray());
-            }
-        } catch (Exception e) {
-            throw new HttpResponseException(context -> context.response().setStatusCode(404));
-        }
-
+    public Image showPicture(String year, String month, String day, String hour, String timestamp, String fileName, @QueryParam("w") Integer width, @QueryParam("h") Integer height) {
+        return new Image(new File(ScxConfig.uploadFilePath + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName), width, height);
     }
-
 
     /**
      * 通用查看图片方法
      *
-     * @param id 要显示的图片 id
-     *           下载文件或错误
-     * @param width a {@link java.lang.Integer} object.
+     * @param id     要显示的图片 id
+     *               下载文件或错误
+     * @param width  a {@link java.lang.Integer} object.
      * @param height a {@link java.lang.Integer} object.
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.vo.Binary} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping("/showPictureById/:id")
-    public Binary showPictureById(@PathParam Long id, @QueryParam("w") Integer width,
-                                  @QueryParam("h") Integer height, RoutingContext ctx) throws HttpResponseException {
-        var uploadFile = uploadFileService.getById(id);
-        var file = new File(ScxConfig.uploadFilePath + "/" + uploadFile.filePath);
-
-        if (!file.exists()) {
-            throw new HttpResponseException(context -> context.response().setStatusCode(404));
-        }
-        //设置缓存 减少服务器压力
-        ctx.response().putHeader("Cache-Control", "max-age=2628000");
-        FileType imageFileType = FileTypeUtils.getImageFileType(file);
-        try {
-            var out = new ByteArrayOutputStream();
-            if (imageFileType == null) {
-                var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file)).getImage();
-                var myImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-                var g = myImage.createGraphics();
-                g.drawImage(image, 0, 0, null);
-                g.dispose();
-                ImageIO.write(myImage, "png", out);
-                return new Binary(out.toByteArray());
-            } else if (height == null && width == null) {
-                return new Binary(file);
-            } else {
-                var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
-                if (height == null || height > image.getHeight()) {
-                    height = image.getHeight();
-                }
-                if (width == null || width > image.getWidth()) {
-                    width = image.getWidth();
-                }
-                Thumbnails.of(file).size(width, height).keepAspectRatio(false).toOutputStream(out);
-                return new Binary(out.toByteArray());
-            }
-        } catch (Exception e) {
-            throw new HttpResponseException(context -> context.response().setStatusCode(404));
-        }
+    public Image showPictureById(@PathParam Long id, @QueryParam("w") Integer width, @QueryParam("h") Integer height) {
+        return new Image(new File(ScxConfig.uploadFilePath + "/" + uploadFileService.getById(id).filePath), width, height);
     }
-
-
-    /**
-     *
-     *
-     * @param file
-     * @param fileName
-     * @return
-     */
-
 
     /**
      * 单个文件上传 和 分片文件上传

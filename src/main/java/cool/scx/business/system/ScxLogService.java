@@ -8,6 +8,7 @@ import cool.scx.boot.ScxConfig;
 import cool.scx.boot.ScxContext;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.util.NetUtils;
+import io.vertx.ext.web.RoutingContext;
 
 /**
  * <p>ScxLogService class.</p>
@@ -70,7 +71,7 @@ public class ScxLogService extends BaseService<ScxLog> {
      * @param title a {@link java.lang.String} object.
      */
     public void recordLog(String title) {
-        recordLog(title, title);
+//        recordLog(title, title);
     }
 
 
@@ -80,10 +81,10 @@ public class ScxLogService extends BaseService<ScxLog> {
      * @param title   日志标题
      * @param content 日志内容
      */
-    public void recordLog(String title, String content) {
+    public void recordLog(String title, String content, RoutingContext ctx) {
         if (ScxConfig.showLog) {
             var log = new ScxLog();
-            log.userIp = NetUtils.getIpAddr();
+            log.userIp = NetUtils.getIpAddr(ctx);
             try {
                 log.username = ScxContext.getCurrentUser(null).username;
                 log.type = 1;

@@ -14,7 +14,6 @@ import cool.scx.vo.Json;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -61,9 +60,7 @@ public final class ScxRouterFactory {
             public void handle(RoutingContext ctx) {
                 User currentUser = ScxContext.getCurrentUser(ctx);
                 if (currentUser == null) {
-                    HttpServerResponse response = ctx.response();
-                    response.putHeader("content-type", "application/json; charset=utf-8");
-                    response.end(Json.fail(Json.ILLEGAL_TOKEN, "未登录").getBuffer());
+                    Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(ctx);
                 } else {
                     ctx.next();
                 }
@@ -182,7 +179,7 @@ public final class ScxRouterFactory {
                 ctx.end();
                 return;
             }
-            response.end(Json.fail(Json.SYSTEM_ERROR, e.getMessage()).getBuffer());
+            Json.fail(Json.SYSTEM_ERROR, e.getMessage()).sendToClient(ctx);
             e.printStackTrace();
             return;
         }
@@ -192,13 +189,11 @@ public final class ScxRouterFactory {
             return;
         }
         if (result instanceof BaseVo) {
-            BaseVo baseVo = (BaseVo) result;
-            response.putHeader("Content-Type", baseVo.getContentType());
-            String contentDisposition = baseVo.getContentDisposition();
-            if (StringUtils.isNotEmpty(contentDisposition)) {
-                response.putHeader("Content-Disposition", contentDisposition);
+            try {
+                ((BaseVo) result).sendToClient(ctx);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            response.end(baseVo.getBuffer());
             return;
         }
         response.end(ObjectUtils.beanToJson(result));

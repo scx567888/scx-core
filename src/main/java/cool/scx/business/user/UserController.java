@@ -82,7 +82,7 @@ public class UserController {
         }
         try {
             //登录
-            var loginUser = userService.login(username, password);
+            var loginUser = userService.login(username, password, ctx);
             var token = StringUtils.getUUID();
             ScxContext.addUserToSession(token, loginUser.username);
             //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
@@ -306,7 +306,7 @@ public class UserController {
         currentUser.password = queryUser.password;
         currentUser.salt = null;
         var b = userService.updateUserPassword(currentUser) != null;
-        scxLogService.recordLog("更新了自己的信息", "用户名是 :" + currentUser.username);
+        scxLogService.recordLog("更新了自己的信息", "用户名是 :" + currentUser.username, context);
         return Json.ok().data("success", b);
     }
 

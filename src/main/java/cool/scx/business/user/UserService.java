@@ -18,6 +18,7 @@ import cool.scx.exception.WrongPasswordException;
 import cool.scx.util.CryptoUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
+import io.vertx.ext.web.RoutingContext;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -67,9 +68,9 @@ public class UserService extends BaseService<User> {
      * @return a {@link cool.scx.business.user.User} object.
      * @throws cool.scx.exception.AuthException if any.
      */
-    public User login(String username, String password) throws AuthException {
+    public User login(String username, String password, RoutingContext ctx) throws AuthException {
         var now = LocalDateTime.now();
-        var ip = NetUtils.getIpAddr();
+        var ip = NetUtils.getIpAddr(ctx);
         var loginError = loginErrorMap.get(ip);
         if (loginError == null) {
             var le = new LoginError(LocalDateTime.now(), 0);

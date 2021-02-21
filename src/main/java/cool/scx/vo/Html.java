@@ -6,6 +6,7 @@ import cool.scx.boot.ScxConfig;
 import cool.scx.util.ObjectUtils;
 import freemarker.template.Template;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.ext.web.RoutingContext;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -54,32 +55,16 @@ public final class Html implements BaseVo {
         return this;
     }
 
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * 根据 dataMap 利用 freemarker 进行渲染
-     */
     @Override
-    public Buffer getBuffer() {
+    public void sendToClient(RoutingContext context) {
         var sw = new StringWriter();
         try {
             template.process(dataMap, sw);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Buffer.buffer(sw.toString());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getContentType() {
-        return "text/html; charset=utf-8";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getContentDisposition() {
-        return null;
+        var response = context.response();
+        response.putHeader("Content-Type", "text/html; charset=utf-8");
+        response.end(Buffer.buffer(sw.toString()));
     }
 }
