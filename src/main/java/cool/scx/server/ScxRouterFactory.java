@@ -5,6 +5,7 @@ import cool.scx.annotation.ScxMapping;
 import cool.scx.boot.ScxConfig;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
+import cool.scx.vo.Image;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpMethod;
@@ -33,6 +34,7 @@ public final class ScxRouterFactory {
      */
     public static Router getRouter(Vertx vertx) {
         var router = Router.router(vertx);
+        registerFaviconIcoHandler(router);
         registerCookieHandler(router);
         registerCorsHandler(router);
         registerBodyHandler(router);
@@ -41,6 +43,16 @@ public final class ScxRouterFactory {
         // 当以上所有处理器都无法匹配时 向客户端返回 404
         router.route().handler(handle -> handle.fail(404));
         return router;
+    }
+
+    /**
+     * 注册 FaviconIco 图标 handler
+     *
+     * @param router
+     */
+    private static void registerFaviconIcoHandler(Router router) {
+        Image image = new Image(ScxConfig.cmsFaviconIcoPath);
+        router.route(HttpMethod.GET, "/favicon.ico").handler(image::sendToClient);
     }
 
     /**
@@ -126,7 +138,6 @@ public final class ScxRouterFactory {
      * 设置 session
      *
      * @param router
-     * @param vertx
      */
     private static void registerCookieHandler(Router router) {
         router.route().handler(c -> {

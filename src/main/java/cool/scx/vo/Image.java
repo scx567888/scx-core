@@ -57,7 +57,8 @@ public class Image implements BaseVo {
     @Override
     public void sendToClient(RoutingContext context) {
         var response = context.response();
-        response.putHeader("Cache-Control", "max-age=2628000");
+        response.putHeader("cache-control", "public,immutable,max-age=2628000");
+        response.putHeader("accept-ranges", "bytes");
         // 图片不存在 这里抛出不存在异常
         if (!file.exists()) {
             response.setStatusCode(404).end("No Found");
@@ -74,12 +75,14 @@ public class Image implements BaseVo {
                 g.drawImage(image, 0, 0, null);
                 g.dispose();
                 ImageIO.write(myImage, "png", out);
+                response.putHeader("content-type", "image/png");
                 response.end(Buffer.buffer(out.toByteArray()));
             } else if (height == null && width == null) {
                 // 没有宽高 直接返回图片本身
                 try (var input = new FileInputStream(file)) {
                     byte[] byt = new byte[input.available()];
                     int read = input.read(byt);
+                    response.putHeader("content-type", imageFileType.contentType);
                     response.end(Buffer.buffer(byt));
                     byt = null;
                 }
@@ -93,6 +96,7 @@ public class Image implements BaseVo {
                     width = image.getWidth();
                 }
                 Thumbnails.of(file).size(width, height).keepAspectRatio(false).toOutputStream(out);
+                response.putHeader("content-type", imageFileType.contentType);
                 response.end(Buffer.buffer(out.toByteArray()));
             }
         } catch (Exception e) {

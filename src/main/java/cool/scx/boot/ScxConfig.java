@@ -85,6 +85,10 @@ public final class ScxConfig {
      */
     public static final String cmsResourceSuffix;
     /**
+     *
+     */
+    public static final File cmsFaviconIcoPath;
+    /**
      * Constant <code>showLog=</code>
      */
     public static final boolean showLog;
@@ -230,6 +234,10 @@ public final class ScxConfig {
         cmsResourceSuffix = getConfigValue("scx.cms.resource-suffix", ".html",
                 s -> StringUtils.println("✔ Cms 静态资源后缀                       \t -->\t " + s, Color.GREEN),
                 f -> StringUtils.println("✘ 未检测到 scx.cms.resource-suffix   \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asText, a -> a);
+
+        cmsFaviconIcoPath = getConfigValue("scx.cms.favicon-ico-path", PackageUtils.getFileByAppRoot("/c/favicon.ico"),
+                s -> StringUtils.println("✔ Cms Favicon Ico 路径                  \t -->\t " + s, Color.GREEN),
+                f -> StringUtils.println("✘ 未检测到 scx.cms.favicon-ico-path   \t -->\t 已采用默认值 : " + f, Color.RED), (c) -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
 
         allowedOrigin = getConfigValue("scx.allowed-origin", "*",
                 s -> StringUtils.println("✔ 允许的请求源                           \t -->\t " + s, Color.GREEN),

@@ -18,7 +18,8 @@
       "root": "/c/",
       "resource-url": "/static/*",
       "resource-locations": "absPath:C:/Users/scx56/Projects/scx/src/main/resources/c/static/",
-      "resource-suffix": ".html"
+      "resource-suffix": ".html",
+      "favicon-ico-path": "absPath:C:/Users/scx56/Projects/scx/src/main/resources/c/favicon.ico"
     },
     "confusion-login-error": false,
     "login-error-lock-times": 3,

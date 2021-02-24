@@ -25,5 +25,5 @@ public @interface ScxMapping {
 
     boolean useMethodNameAsUrl() default true;
 
-    RequestMethod[] method() default {RequestMethod.POST};
+    RequestMethod[] method() default {RequestMethod.GET, RequestMethod.POST};
 }
