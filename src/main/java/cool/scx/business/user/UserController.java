@@ -114,28 +114,19 @@ public class UserController {
 
     @ScxMapping(value = "info/:token", method = RequestMethod.GET)
     public Json info(@PathParam String token) {
-        var userId = ScxContext.getCurrentUserByToken(token);
+        var user = ScxContext.getCurrentUserByToken(token);
         //从session取出用户信息
-        if (userId == null) {
+        if (user == null) {
             return Json.fail(Json.SESSION_TIMEOUT, "登录已失效");
         } else {
-            //每次都从数据库中获取用户
-            var user = userService.getById(userId.id);
             //返回登录用户的信息给前台 含用户的所有角色和权限
             var permList = userService.getPermStrByUser(user);
-            //这里无论 是否有权限 都要给一个最基本的首页权限
-            List<String> perms = new ArrayList<>();
-            if (permList == null || permList.size() == 0) {
-                perms.add("/dashboard");
-            } else {
-                perms = permList;
-            }
             return Json.ok()
                     .data("userId", user.id)
                     .data("name", user.username)
                     .data("nickName", user.nickName)
                     .data("avatarId", user.avatarId)
-                    .data("perms", perms);
+                    .data("perms", permList);
         }
     }
 

@@ -33,7 +33,7 @@
         <hikaricp.version>4.0.2</hikaricp.version>
         <!-- jasypt 版本 -->
         <jasypt.version>1.9.3</jasypt.version>
-        <!-- thumbnailator 版本 -->
+        <!-- 图像处理包 版本 -->
         <thumbnailator.version>0.4.13</thumbnailator.version>
         <!-- slf4j 版本 -->
         <slf4j.version>1.7.30</slf4j.version>

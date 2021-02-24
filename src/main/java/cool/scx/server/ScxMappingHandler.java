@@ -12,7 +12,6 @@ import cool.scx.vo.Json;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Method;
@@ -39,6 +38,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
     public final Class<?> clazz;
     public final String url;
     public final Set<HttpMethod> httpMethods;
+    public final String permStr;
 
     /**
      * <p>Constructor for ScxRouteHandler.</p>
@@ -55,6 +55,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         this.url = getUrl();
         this.isRegexUrl = isRegexUrl();
         this.httpMethods = getHttpMethod();
+        this.permStr = clazz.getSimpleName() + ":" + method.getName();
     }
 
     /**
@@ -126,16 +127,6 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
     }
 
     /**
-     * todo
-     *
-     * @param router
-     * @param url
-     */
-    private static void checkedPerms(Router router, String url) {
-//        ctx.next();
-    }
-
-    /**
      * <p>multiMapToMap.</p>
      *
      * @param multiMap a {@link io.vertx.core.MultiMap} object.
@@ -149,25 +140,51 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         return map;
     }
 
-    private boolean checkedLogin(ScxMapping scxMapping, RoutingContext ctx) {
+    /**
+     * 同时验证登录和权限
+     *
+     * @param context 上下文对象
+     * @return 验证结果 true 为 允许继续向下进行处理 false 表示截至继续允许
+     */
+    private boolean checkedLoginAndPerms(RoutingContext context) {
+        //如果 不检查登录 对应的也没有必要检查 权限 所以直接返回 true
         if (scxMapping.checkedLogin() == CheckLoginType.None) {
             return true;
-        }
-        if (scxMapping.checkedLogin() == CheckLoginType.Header) {
-            User currentUser = ScxContext.getCurrentUserByHeader(ctx);
+        } else {
+            //当前登录的用户
+            User currentUser = null;
+            // 根据不同的验证来源 获取用户
+            if (scxMapping.checkedLogin() == CheckLoginType.Header) {
+                currentUser = ScxContext.getCurrentUserByHeader(context);
+            } else if (scxMapping.checkedLogin() == CheckLoginType.Cookie) {
+                currentUser = ScxContext.getCurrentUserByCookie(context);
+            }
+            //session 中没有用户证明没有登录 返回 false
             if (currentUser == null) {
-                Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(ctx);
+                Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
                 return false;
+            } else {
+                //这里就是 需要登录 并且 能够获取到当前登录用户的
+                //不需要 检查权限 直接返回 true
+                if (scxMapping.unCheckedPerms()) {
+                    return true;
+                } else {
+                    //这里就是 管理员级别  不受权限验证
+                    if (currentUser.level < 5) {
+                        return true;
+                    } else {
+                        //获取用户全部的权限字符串
+                        var permStrByUser = ScxContext.userService.getPermStrByUser(currentUser);
+                        if (permStrByUser.contains(permStr)) {
+                            return true;
+                        } else {
+                            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
+                            return false;
+                        }
+                    }
+                }
             }
         }
-        if (scxMapping.checkedLogin() == CheckLoginType.Cookie) {
-            User currentUser = ScxContext.getCurrentUserByCookie(ctx);
-            if (currentUser == null) {
-                Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(ctx);
-                return false;
-            }
-        }
-        return true;
     }
 
     private String getUrl() {
@@ -251,8 +268,9 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
      */
     @Override
     public void handle(RoutingContext context) {
-
-        boolean b = checkedLogin(scxMapping, context);
+        //检查是否登录 并且权限是否正确
+        boolean b = checkedLoginAndPerms(context);
+        //这里验证失败不需要返回 因为 对相应的客户端的相应的处理已经在 checkedLoginAndPerms 中完成
         if (!b) {
             return;
         }
@@ -283,6 +301,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             try {
                 ((BaseVo) result).sendToClient(context);
             } catch (Exception e) {
+                //此处暂时未对异常进行处理
                 e.printStackTrace();
             }
             return;

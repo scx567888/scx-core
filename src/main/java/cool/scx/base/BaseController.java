@@ -9,6 +9,7 @@ import cool.scx.boot.ScxContext;
 import cool.scx.business.system.ScxLogService;
 import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
+import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.RequestMethod;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.FileUtils;
@@ -77,7 +78,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws cool.scx.exception.HttpResponseException if any.
      */
-    @ScxMapping(value = ":modelName/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @ScxMapping(value = ":modelName/list", method = {RequestMethod.GET, RequestMethod.POST}, checkedLogin = CheckLoginType.Header)
     public Json list(String modelName, Map<String, Object> params) throws HttpResponseException {
         if (params == null) {
             return Json.fail("查询参数不能为空");

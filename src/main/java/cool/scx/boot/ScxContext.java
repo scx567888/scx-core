@@ -25,9 +25,9 @@ import java.util.Map;
  */
 public final class ScxContext {
 
+    public static final UserService userService;
     private static final ArrayList<SessionItem> scxSession = new ArrayList<>();
     private static final Map<String, Class<?>> scxBeanClassNameMapping = new HashMap<>();
-    private static final UserService userService;
     private static final AnnotationConfigApplicationContext applicationContext;
 
     static {
@@ -164,6 +164,7 @@ public final class ScxContext {
         if (sessionItem == null) {
             return null;
         }
+        //每次都从数据库中获取用户 保证 权限设置的及时性 但是为了 性能 此处应该做缓存 todo
         return userService.findByUsername(sessionItem.username);
     }
 

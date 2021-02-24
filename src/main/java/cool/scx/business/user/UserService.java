@@ -22,9 +22,9 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -143,12 +143,13 @@ public class UserService extends BaseService<User> {
 
     /**
      * 根据用户获取 权限串
+     * todo 需要做缓存 减少数据库查询压力
      *
      * @param user 用户
      * @return s
      */
-    public List<String> getPermStrByUser(User user) {
-        var permList = new ArrayList<String>();
+    public HashSet<String> getPermStrByUser(User user) {
+        var permList = new HashSet<String>();
         //如果是超级管理员或管理员 直接设置为 *
         if (user.level < 5) {
             permList.add("*");
@@ -157,6 +158,8 @@ public class UserService extends BaseService<User> {
             permList.addAll(Arrays.asList(roleListStr));
             var deptListStr = deptService.getDeptListByUser(user).stream().filter(dept -> StringUtils.isNotEmpty(dept.perm)).map(Dept -> Dept.perm).collect(Collectors.joining(";")).split(";");
             permList.addAll(Arrays.asList(deptListStr));
+            //这里无论 是否有权限 都要给一个最基本的首页权限 不然用户进不去首页
+            permList.add("/dashboard");
         }
         return permList;
     }
