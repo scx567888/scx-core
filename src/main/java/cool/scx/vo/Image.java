@@ -51,7 +51,9 @@ public class Image implements BaseVo {
         height = _height;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendToClient(RoutingContext context) {
         var response = context.response();

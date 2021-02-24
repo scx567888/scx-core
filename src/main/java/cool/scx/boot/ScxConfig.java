@@ -32,7 +32,9 @@ public final class ScxConfig {
      * Constant <code>tokenKey="S-Token"</code>
      */
     public static final String tokenKey = "S-Token";
-    /** Constant <code>cookieKey="S-Cookie"</code> */
+    /**
+     * Constant <code>cookieKey="S-Cookie"</code>
+     */
     public static final String cookieKey = "S-Cookie";
     /**
      * 核心包版本

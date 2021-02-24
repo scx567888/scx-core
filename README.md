@@ -3,27 +3,30 @@
 </p>
 <p align="center">
     <a target="_blank" href="https://github.com/scx567888/scx">
-        <img src="https://img.shields.io/badge/version-0.7.4-ff69b4"/>
+        <img src="https://img.shields.io/badge/version-0.7.4-ff69b4" alt="version"/>
     </a> 
     <a target="_blank" href="https://github.com/scx567888/scx">
-        <img src="https://img.shields.io/github/languages/code-size/scx567888/scx?color=orange"/>
+        <img src="https://img.shields.io/github/languages/code-size/scx567888/scx?color=orange" alt="code-size"/>
     </a>
     <a target="_blank" href="https://github.com/scx567888/scx/issues">
-        <img src="https://img.shields.io/github/issues/scx567888/scx"/>
+        <img src="https://img.shields.io/github/issues/scx567888/scx" alt="issues"/>
     </a> 
     <a target="_blank" href="https://github.com/scx567888/scx/blob/master/LICENSE">
-        <img src="https://img.shields.io/github/license/scx567888/scx"/>
+        <img src="https://img.shields.io/github/license/scx567888/scx" alt="license"/>
     </a>
 </p>
 <p align="center">
-   <a target="_blank" href="https://github.com/spring-projects/spring-boot">
-        <img src="https://img.shields.io/badge/Vert.x-4.0.2-blue"/>
+   <a target="_blank" href="https://github.com/eclipse-vertx/vert.x">
+        <img src="https://img.shields.io/badge/Vert.x-4.0.2-blue" alt="Vert.x"/>
     </a>
-    <a target="_blank" href="https://github.com/apache/poi">
-        <img src="https://img.shields.io/badge/Freemarker-2.3.31-blue"/>
+    <a target="_blank" href="https://github.com/apache/freemarker">
+        <img src="https://img.shields.io/badge/Freemarker-2.3.31-blue" alt="freemarker"/>
     </a>
-    <a target="_blank" href="https://github.com/apache/poi">
-        <img src="https://img.shields.io/badge/Jackson-2.12.1-blue"/>
+    <a target="_blank" href="https://github.com/FasterXML/jackson">
+        <img src="https://img.shields.io/badge/Jackson-2.12.1-blue" alt="jackson"/>
+    </a>
+    <a target="_blank" href="https://github.com/FasterXML/jackson">
+        <img src="https://img.shields.io/badge/Jackson-2.12.1-blue" alt="jackson"/>
     </a>
 </p>
 
