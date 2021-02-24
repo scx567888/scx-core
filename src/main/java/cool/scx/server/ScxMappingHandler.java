@@ -42,8 +42,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
      * <p>Constructor for ScxRouteHandler.</p>
      *
      * @param method     a {@link java.lang.reflect.Method} object.
-     * @param example    a {@link java.lang.Object} object.
-     * @param scxMapping a {@link cool.scx.annotation.ScxMapping} object.
+     * @param clazz a {@link java.lang.Class} object.
      */
     public ScxMappingHandler(Class<?> clazz, Method method) {
         this.clazz = clazz;
@@ -222,6 +221,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                 .collect(Collectors.toSet());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(RoutingContext context) {
         if (!scxMapping.unCheckedLogin()) {
@@ -263,6 +263,5 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         }
         response.end(ObjectUtils.beanToJson(result));
     }
-
 
 }

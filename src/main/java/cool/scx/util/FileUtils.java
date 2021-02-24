@@ -358,6 +358,12 @@ public class FileUtils {
         return FILE_TYPE_LIST.stream().filter(fileType -> fileType.suffix.equals(fileSuffix)).findAny().orElse(null);
     }
 
+    /**
+     * <p>getFileTypeBySuffix.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @return a {@link cool.scx.util.FileType} object.
+     */
     public static FileType getFileTypeBySuffix(File file) {
         return getFileTypeBySuffix(file, ALL_FILE_TYPE_LIST);
     }

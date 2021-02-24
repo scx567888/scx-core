@@ -20,7 +20,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxController
+//@ScxController
 public class IndexController {
 
     private final UserService userService;
@@ -41,7 +41,7 @@ public class IndexController {
      * @param user a {@link cool.scx.business.user.User} object.
      * @return 页面
      */
-    @ScxMapping(value = "/", method = RequestMethod.GET, unCheckedLogin = true)
+//    @ScxMapping(value = "/", method = RequestMethod.GET, unCheckedLogin = true)
     public Html Index(@BodyParam Map user) {
         FileType fileTypeByHead = FileUtils.getFileTypeByHead(new File("C:\\Users\\scx56\\Desktop\\1"));
         var users = userService.list(new Param<>(new User()).setPagination(1000));

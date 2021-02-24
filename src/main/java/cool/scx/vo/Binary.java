@@ -164,9 +164,7 @@ public class Binary implements BaseVo {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void sendToClient(RoutingContext context) {
 
