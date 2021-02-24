@@ -25,6 +25,9 @@ import java.util.Map;
  */
 public final class ScxContext {
 
+    /**
+     * Constant <code>userService</code>
+     */
     public static final UserService userService;
     private static final ArrayList<SessionItem> scxSession = new ArrayList<>();
     private static final Map<String, Class<?>> scxBeanClassNameMapping = new HashMap<>();

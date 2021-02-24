@@ -14,7 +14,7 @@ public interface BaseVo {
      * 向客户端发送相应的方法
      *
      * @param context 上下文对象
-     * @throws java.lang.Exception 这里的异常 会被转发到 scxMappingHandler 进行处理
+     * @throws java.lang.Exception if any.
      */
     void sendToClient(RoutingContext context) throws Exception;
 }
