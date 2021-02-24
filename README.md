@@ -25,8 +25,8 @@
     <a target="_blank" href="https://github.com/FasterXML/jackson">
         <img src="https://img.shields.io/badge/Jackson-2.12.1-blue" alt="jackson"/>
     </a>
-    <a target="_blank" href="https://github.com/FasterXML/jackson">
-        <img src="https://img.shields.io/badge/Jackson-2.12.1-blue" alt="jackson"/>
+    <a target="_blank" href="https://github.com/brettwooldridge/HikariCP">
+        <img src="https://img.shields.io/badge/HikariCP-4.0.2-blue" alt="HikariCP"/>
     </a>
 </p>
 
