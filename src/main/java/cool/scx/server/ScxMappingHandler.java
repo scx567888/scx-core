@@ -134,6 +134,12 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
 //        ctx.next();
     }
 
+    /**
+     * <p>multiMapToMap.</p>
+     *
+     * @param multiMap a {@link io.vertx.core.MultiMap} object.
+     * @return a {@link java.util.Map} object.
+     */
     public static Map<String, Object> multiMapToMap(MultiMap multiMap) {
         var map = new HashMap<String, Object>();
         for (var m : multiMap) {

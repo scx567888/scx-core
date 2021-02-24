@@ -75,6 +75,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/list", method = {RequestMethod.GET, RequestMethod.POST})
     public Json list(String modelName, Map<String, Object> params) throws HttpResponseException {
@@ -94,6 +95,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param id        a {@link java.lang.Long} object.
      * @return a {@link cool.scx.vo.Json} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/:id", method = RequestMethod.GET)
     public Json info(String modelName, Long id) throws HttpResponseException {
@@ -108,6 +110,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param entityMap a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName", method = RequestMethod.POST)
     public Json save(String modelName, Map<String, Object> entityMap) throws HttpResponseException {
@@ -155,6 +158,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/batchDelete", method = RequestMethod.DELETE)
     public Json batchDelete(String modelName, Map<String, Object> params) throws HttpResponseException {
@@ -170,6 +174,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param id        a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Json} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/revokeDelete/:id", method = RequestMethod.GET)
     public Json revokeDelete(String modelName, Integer id) throws HttpResponseException {
@@ -184,6 +189,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param fieldName a {@link java.lang.String} object.
      * @return a {@link cool.scx.vo.Json} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", method = RequestMethod.POST)
     public Json getAutoComplete(String modelName, String fieldName) throws HttpResponseException {
@@ -198,6 +204,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/checkUnique", method = RequestMethod.POST)
     public Json checkUnique(String modelName, Map<String, Object> params) throws HttpResponseException {
