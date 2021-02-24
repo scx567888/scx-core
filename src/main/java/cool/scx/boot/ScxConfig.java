@@ -32,6 +32,7 @@ public final class ScxConfig {
      * Constant <code>tokenKey="S-Token"</code>
      */
     public static final String tokenKey = "S-Token";
+    public static final String cookieKey = "S-Cookie";
     /**
      * 核心包版本
      */
@@ -136,6 +137,7 @@ public final class ScxConfig {
      * ssh 证书密码
      */
     public static final String certificatePassword;
+
 
     static {
         StringUtils.println("ScxConfig v" + coreVersion + " 初始化中...", Color.BRIGHT_BLUE);

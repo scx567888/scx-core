@@ -16,6 +16,7 @@ import cool.scx.business.role.UserRole;
 import cool.scx.business.role.UserRoleService;
 import cool.scx.business.system.ScxLog;
 import cool.scx.business.system.ScxLogService;
+import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.RequestMethod;
 import cool.scx.enumeration.SortType;
 import cool.scx.exception.AuthException;
@@ -75,7 +76,7 @@ public class UserController {
      * @param ctx      上下文
      * @return json
      */
-    @ScxMapping(unCheckedLogin = true)
+    @ScxMapping(checkedLogin = CheckLoginType.None)
     public Json login(@BodyParam("username") String username, @BodyParam("password") String password, RoutingContext ctx) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
@@ -111,9 +112,9 @@ public class UserController {
      * @return a {@link cool.scx.vo.Json} object.
      */
 
-    @ScxMapping(value = "info/:token", method = RequestMethod.GET, unCheckedLogin = true)
+    @ScxMapping(value = "info/:token", method = RequestMethod.GET)
     public Json info(@PathParam String token) {
-        var userId = ScxContext.getUserFromSessionByToken(token);
+        var userId = ScxContext.getCurrentUserByToken(token);
         //从session取出用户信息
         if (userId == null) {
             return Json.fail(Json.SESSION_TIMEOUT, "登录已失效");
@@ -237,7 +238,7 @@ public class UserController {
      */
     @ScxMapping
     public Json logout(RoutingContext ctx) {
-        ScxContext.logoutUser(ctx);
+        ScxContext.logoutUserByHeader(ctx);
         return Json.ok("User Logged Out");
     }
 
@@ -266,7 +267,7 @@ public class UserController {
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json avatarUpdate(User queryUser, RoutingContext context) {
-        var currentUser = ScxContext.getCurrentUser(context);
+        var currentUser = ScxContext.getCurrentUserByHeader(context);
         currentUser.avatarId = queryUser.avatarId;
         var b = userService.update(currentUser) != null;
         ScxLogService.outLog("更改了头像 用户名是 :" + currentUser.username);
@@ -281,7 +282,7 @@ public class UserController {
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json getUserLog(RoutingContext context) {
-        var currentUser = ScxContext.getCurrentUser(context);
+        var currentUser = ScxContext.getCurrentUserByHeader(context);
         var scxLog = new Param<>(new ScxLog());
         scxLog.queryObject.username = currentUser.username;
         scxLog.queryObject.type = 1;
@@ -300,7 +301,7 @@ public class UserController {
     @ScxMapping(useMethodNameAsUrl = true)
     public Json infoUpdate(Map<String, Object> params, RoutingContext context) {
         var queryUser = ObjectUtils.mapToBean(params, User.class);
-        var currentUser = ScxContext.getCurrentUser(context);
+        var currentUser = ScxContext.getCurrentUserByHeader(context);
         currentUser.nickName = queryUser.nickName;
         currentUser.phone = queryUser.phone;
         currentUser.password = queryUser.password;

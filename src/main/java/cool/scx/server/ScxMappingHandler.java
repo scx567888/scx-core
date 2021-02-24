@@ -4,6 +4,7 @@ import cool.scx.annotation.*;
 import cool.scx.base.BaseVo;
 import cool.scx.boot.ScxContext;
 import cool.scx.business.user.User;
+import cool.scx.enumeration.CheckLoginType;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
@@ -148,11 +149,23 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         return map;
     }
 
-    private boolean checkedLogin(RoutingContext ctx) {
-        User currentUser = ScxContext.getCurrentUser(ctx);
-        if (currentUser == null) {
-            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(ctx);
-            return false;
+    private boolean checkedLogin(ScxMapping scxMapping, RoutingContext ctx) {
+        if (scxMapping.checkedLogin() == CheckLoginType.None) {
+            return true;
+        }
+        if (scxMapping.checkedLogin() == CheckLoginType.Header) {
+            User currentUser = ScxContext.getCurrentUserByHeader(ctx);
+            if (currentUser == null) {
+                Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(ctx);
+                return false;
+            }
+        }
+        if (scxMapping.checkedLogin() == CheckLoginType.Cookie) {
+            User currentUser = ScxContext.getCurrentUserByCookie(ctx);
+            if (currentUser == null) {
+                Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(ctx);
+                return false;
+            }
         }
         return true;
     }
@@ -238,11 +251,10 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
      */
     @Override
     public void handle(RoutingContext context) {
-        if (!scxMapping.unCheckedLogin()) {
-            boolean b = checkedLogin(context);
-            if (!b) {
-                return;
-            }
+
+        boolean b = checkedLogin(scxMapping, context);
+        if (!b) {
+            return;
         }
 
         var response = context.response();

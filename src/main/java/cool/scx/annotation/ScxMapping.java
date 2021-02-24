@@ -1,5 +1,6 @@
 package cool.scx.annotation;
 
+import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.RequestMethod;
 
 import java.lang.annotation.ElementType;
@@ -18,7 +19,7 @@ import java.lang.annotation.Target;
 public @interface ScxMapping {
     boolean unCheckedPerms() default false;
 
-    boolean unCheckedLogin() default false;
+    CheckLoginType checkedLogin() default CheckLoginType.None;
 
     String value() default "";
 

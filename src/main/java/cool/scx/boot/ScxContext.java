@@ -63,9 +63,14 @@ public final class ScxContext {
      * @param ctx RoutingContext
      * @return 当前用户
      */
-    public static User getCurrentUser(RoutingContext ctx) {
+    public static User getCurrentUserByHeader(RoutingContext ctx) {
         String token = ctx.request().getHeader(ScxConfig.tokenKey);
-        return getUserFromSessionByToken(token);
+        return getCurrentUserByToken(token);
+    }
+
+    public static User getCurrentUserByCookie(RoutingContext ctx) {
+        String token = ctx.getCookie(ScxConfig.cookieKey).getValue();
+        return getCurrentUserByToken(token);
     }
 
     /**
@@ -111,8 +116,13 @@ public final class ScxContext {
      *
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      */
-    public static void logoutUser(RoutingContext ctx) {
+    public static void logoutUserByHeader(RoutingContext ctx) {
         var token = ctx.request().getHeader(ScxConfig.tokenKey);
+        scxSession.removeIf(i -> i.token.equals(token));
+    }
+
+    public static void logoutUserByCookie(RoutingContext ctx) {
+        var token = ctx.getCookie(ScxConfig.cookieKey).getValue();
         scxSession.removeIf(i -> i.token.equals(token));
     }
 
@@ -138,13 +148,12 @@ public final class ScxContext {
      * @param token a {@link java.lang.String} object.
      * @return a {@link cool.scx.business.user.User} object.
      */
-    public static User getUserFromSessionByToken(String token) {
+    public static User getCurrentUserByToken(String token) {
         var sessionItem = scxSession.stream().filter(u -> u.token.equals(token)).findAny().orElse(null);
         if (sessionItem == null) {
             return null;
         }
         return userService.findByUsername(sessionItem.username);
     }
-
 
 }

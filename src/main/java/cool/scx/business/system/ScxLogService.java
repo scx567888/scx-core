@@ -87,7 +87,7 @@ public class ScxLogService extends BaseService<ScxLog> {
             var log = new ScxLog();
             log.userIp = NetUtils.getIpAddr(ctx);
             try {
-                log.username = ScxContext.getCurrentUser(null).username;
+                log.username = ScxContext.getCurrentUserByHeader(ctx).username;
                 log.type = 1;
             } catch (Exception e) {
                 log.username = "系统日志";

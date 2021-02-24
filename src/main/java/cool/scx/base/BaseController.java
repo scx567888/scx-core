@@ -231,7 +231,7 @@ public class BaseController {
      * @throws cool.scx.exception.HttpResponseException if any.
      * @throws java.io.UnsupportedEncodingException     if any.
      */
-    @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET, unCheckedLogin = true)
+    @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET)
     public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {
         var file = new File(ScxConfig.uploadFilePath + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName);
         if (!file.exists()) {
@@ -256,7 +256,7 @@ public class BaseController {
      * @param height    a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Binary} object.
      */
-    @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET, unCheckedLogin = true)
+    @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET)
     public Image showPicture(String year, String month, String day, String hour, String timestamp, String fileName, @QueryParam("w") Integer width, @QueryParam("h") Integer height) {
         return new Image(new File(ScxConfig.uploadFilePath + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName), width, height);
     }

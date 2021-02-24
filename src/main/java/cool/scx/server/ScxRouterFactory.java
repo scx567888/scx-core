@@ -4,8 +4,11 @@ import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.boot.ScxConfig;
 import cool.scx.util.PackageUtils;
+import cool.scx.util.StringUtils;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.impl.CookieImpl;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
@@ -30,6 +33,7 @@ public final class ScxRouterFactory {
      */
     public static Router getRouter(Vertx vertx) {
         var router = Router.router(vertx);
+        registerCookieHandler(router);
         registerCorsHandler(router);
         registerBodyHandler(router);
         registerScxMappingHandler(router);
@@ -116,6 +120,22 @@ public final class ScxRouterFactory {
      */
     private static void registerStaticHandler(Router router) {
         router.route(ScxConfig.cmsResourceUrl).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations.getPath()));
+    }
+
+    /**
+     * 设置 session
+     *
+     * @param router
+     * @param vertx
+     */
+    private static void registerCookieHandler(Router router) {
+        router.route().handler(c -> {
+            if (c.getCookie(ScxConfig.cookieKey) == null) {
+                Cookie cookie = new CookieImpl(ScxConfig.cookieKey, StringUtils.getUUID());
+                c.addCookie(cookie);
+            }
+            c.next();
+        });
     }
 
 }
