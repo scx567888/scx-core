@@ -102,7 +102,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
     }
 
     private static Object getParamFromBody(String jsonStr, Map<String, Object> formAttributesMap, String bodyParamValue, Parameter parameter) {
-        if (StringUtils.isNotEmpty(jsonStr)) {
+        if (formAttributesMap.size() == 0) {
             if (StringUtils.isEmpty(bodyParamValue)) {
                 return ObjectUtils.jsonToBean(jsonStr, parameter.getType());
             } else {
