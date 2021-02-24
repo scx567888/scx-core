@@ -36,8 +36,8 @@ public class IndexController {
     /**
      * 跳转至首页 测试
      *
-     * @param user a {@link cool.scx.business.user.User} object.
      * @return 页面
+     * @param routingContext a {@link io.vertx.ext.web.RoutingContext} object.
      */
 //    @ScxMapping(value = "/", method = RequestMethod.GET,checkedLogin = CheckLoginType.Cookie    )
     public Html Index(RoutingContext routingContext) {

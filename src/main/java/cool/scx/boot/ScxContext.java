@@ -68,6 +68,12 @@ public final class ScxContext {
         return getCurrentUserByToken(token);
     }
 
+    /**
+     * <p>getCurrentUserByCookie.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a {@link cool.scx.business.user.User} object.
+     */
     public static User getCurrentUserByCookie(RoutingContext ctx) {
         String token = ctx.getCookie(ScxConfig.cookieKey).getValue();
         return getCurrentUserByToken(token);
@@ -121,6 +127,11 @@ public final class ScxContext {
         scxSession.removeIf(i -> i.token.equals(token));
     }
 
+    /**
+     * <p>logoutUserByCookie.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     */
     public static void logoutUserByCookie(RoutingContext ctx) {
         var token = ctx.getCookie(ScxConfig.cookieKey).getValue();
         scxSession.removeIf(i -> i.token.equals(token));
