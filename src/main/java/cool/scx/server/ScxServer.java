@@ -11,7 +11,6 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
-import io.vertx.ext.web.Route;
 
 /**
  * <p>ScxVertxServer class.</p>

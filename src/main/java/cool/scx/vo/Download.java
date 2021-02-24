@@ -59,9 +59,9 @@ public class Download implements BaseVo {
     /**
      * <p>Constructor for Download.</p>
      *
-     * @param _file a {@link java.io.File} object.
+     * @param _file         a {@link java.io.File} object.
      * @param _downloadName a {@link java.lang.String} object.
-     * @param _throttle a long.
+     * @param _throttle     a long.
      */
     public Download(File _file, String _downloadName, long _throttle) {
         this.file = _file;
@@ -79,7 +79,7 @@ public class Download implements BaseVo {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * todo 现在的大文件过度占用内存 此处需要优化
      */
     @Override

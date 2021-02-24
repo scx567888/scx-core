@@ -222,16 +222,16 @@ public class BaseController {
      * @param ctx       a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.vo.Download} object.
      * @throws cool.scx.exception.HttpResponseException if any.
-     * @throws java.io.UnsupportedEncodingException if any.
+     * @throws java.io.UnsupportedEncodingException     if any.
      */
     @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET, unCheckedLogin = true)
     public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {
         var file = new File(ScxConfig.uploadFilePath + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName);
         if (!file.exists()) {
-            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("No Found"));
+            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("要下载的文件不存在或已被删除!!!"));
         }
         scxLogService.outAndRecordLog("ip 为 :" + NetUtils.getIpAddr(ctx) + "的用户 下载了" + fileName);
-        //  这里让文件限速到 500 kb 并且支持断点续传
+        //  这里让文件限速到 500 kb
         return new Download(file, file.getName(), 512000L);
     }
 
