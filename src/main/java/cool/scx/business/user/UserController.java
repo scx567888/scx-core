@@ -399,7 +399,7 @@ public class UserController {
                 }
             }
         }
-        var p = new Param<Dept>(new Dept());
+        var p = new Param<>(new Dept());
         p.addOrderBy("level", SortType.DESC).addOrderBy("deptOrder", SortType.DESC);
         for (Dept dept : deptService.list(p)) {
             var tempDeptMap = new HashMap<String, Object>();

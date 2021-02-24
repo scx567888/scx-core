@@ -32,7 +32,7 @@ public class Binary implements BaseVo {
     public Binary(String filePath) {
         try {
             file = new File(filePath);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

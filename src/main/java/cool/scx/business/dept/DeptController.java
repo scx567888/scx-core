@@ -49,8 +49,7 @@ public class DeptController {
                 bean.parentStr = str;
             }
             bean.perm = "";
-            Long save = deptService.save(bean).id;
-            bean.id = save;
+            bean.id = deptService.save(bean).id;
         }
         return Json.ok().items(bean);
     }
@@ -77,7 +76,7 @@ public class DeptController {
     public Json updateDept(Dept bean) {
         Dept parentBean = null;
         if (bean != null) {
-            if (bean.parentId != null && StringUtils.isNotEmpty(bean.parentId) && !(0 == bean.parentId)) {
+            if (StringUtils.isNotEmpty(bean.parentId) && !(0 == bean.parentId)) {
                 parentBean = deptService.getById(bean.parentId);
                 if (parentBean != null && parentBean.perm != null && !"".equals(parentBean.perm)) {
                     parentBean.perm = "";

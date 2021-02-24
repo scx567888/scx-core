@@ -192,7 +192,7 @@ public final class ObjectUtils {
             } else {
                 ooo = obj;
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
         return ooo;
