@@ -14,6 +14,7 @@ import cool.scx.exception.HttpResponseException;
 import cool.scx.util.FileUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
+import cool.scx.util.StringUtils;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
 import cool.scx.vo.Json;
@@ -58,12 +59,12 @@ public class BaseController {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends BaseModel> BaseService<T> getBaseService(String modelName) {
+    private static <T extends BaseModel> BaseService<T> getBaseService(String modelName) throws HttpResponseException {
         try {
             var o = ScxContext.getBean(ScxContext.getClassByName(modelName.toLowerCase() + "service"));
             return (BaseService<T>) o;
         } catch (Exception e) {
-            throw new RuntimeException(modelName.toLowerCase() + "service : 不存在!!!");
+            throw new HttpResponseException(ctx->  Json.fail(modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
         }
     }
 
@@ -77,7 +78,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName/list", method = {RequestMethod.GET, RequestMethod.POST})
-    public Json list(String modelName, Map<String, Object> params) {
+    public Json list(String modelName, Map<String, Object> params) throws HttpResponseException {
         if (params == null) {
             return Json.fail("查询参数不能为空");
         }
@@ -96,7 +97,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName/:id", method = RequestMethod.GET)
-    public Json info(String modelName, Long id) {
+    public Json info(String modelName, Long id) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var list = baseService.getById(id);
         return Json.ok().items(list);
@@ -110,7 +111,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName", method = RequestMethod.POST)
-    public Json save(String modelName, Map<String, Object> entityMap) {
+    public Json save(String modelName, Map<String, Object> entityMap) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
         var newObjectId = baseService.save(realObject).id;
@@ -157,7 +158,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName/batchDelete", method = RequestMethod.DELETE)
-    public Json batchDelete(String modelName, Map<String, Object> params) {
+    public Json batchDelete(String modelName, Map<String, Object> params) throws HttpResponseException {
         var deleteIds = (Long[]) params.get("deleteIds");
         var baseService = getBaseService(modelName);
         var deletedCount = baseService.deleteByIds(deleteIds);
@@ -172,7 +173,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName/revokeDelete/:id", method = RequestMethod.GET)
-    public Json revokeDelete(String modelName, Integer id) {
+    public Json revokeDelete(String modelName, Integer id) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var revokeDeleteCount = baseService.revokeDeleteByIds(Long.valueOf(id));
         return Json.ok(revokeDeleteCount == 1 ? "success" : "error");
@@ -186,7 +187,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", method = RequestMethod.POST)
-    public Json getAutoComplete(String modelName, String fieldName) {
+    public Json getAutoComplete(String modelName, String fieldName) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var fieldList = baseService.getFieldList(fieldName);
         return Json.ok().items(fieldList);
@@ -200,7 +201,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":modelName/checkUnique", method = RequestMethod.POST)
-    public Json checkUnique(String modelName, Map<String, Object> params) {
+    public Json checkUnique(String modelName, Map<String, Object> params) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, params);
         param.whereSql = "id != " + param.queryObject.id;
