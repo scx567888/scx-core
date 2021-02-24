@@ -46,7 +46,7 @@ public final class ScxContext {
      * @return a {@link java.lang.Class} object.
      */
     public static Class<?> getClassByName(String str) {
-        return scxBeanClassNameMapping.get(str);
+        return scxBeanClassNameMapping.get(str.toLowerCase());
     }
 
     private static void initScxContext() {

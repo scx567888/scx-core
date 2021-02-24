@@ -14,7 +14,6 @@ import cool.scx.exception.HttpResponseException;
 import cool.scx.util.FileUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
-import cool.scx.util.StringUtils;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
 import cool.scx.vo.Json;
@@ -64,7 +63,7 @@ public class BaseController {
             var o = ScxContext.getBean(ScxContext.getClassByName(modelName.toLowerCase() + "service"));
             return (BaseService<T>) o;
         } catch (Exception e) {
-            throw new HttpResponseException(ctx->  Json.fail(modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
+            throw new HttpResponseException(ctx -> Json.fail(modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
         }
     }
 
