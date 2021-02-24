@@ -9,7 +9,7 @@ import cool.scx.boot.ScxContext;
 import cool.scx.business.system.ScxLogService;
 import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
-import cool.scx.enumeration.HttpMethod;
+import cool.scx.enumeration.RequestMethod;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.FileUtils;
 import cool.scx.util.NetUtils;
@@ -76,7 +76,7 @@ public class BaseController {
      * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = ":modelName/list", httpMethod = {HttpMethod.GET, HttpMethod.POST})
+    @ScxMapping(value = ":modelName/list", method = {RequestMethod.GET, RequestMethod.POST})
     public Json list(String modelName, Map<String, Object> params) {
         if (params == null) {
             return Json.fail("查询参数不能为空");
@@ -95,7 +95,7 @@ public class BaseController {
      * @param id        a {@link java.lang.Long} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = ":modelName/:id", httpMethod = HttpMethod.GET)
+    @ScxMapping(value = ":modelName/:id", method = RequestMethod.GET)
     public Json info(String modelName, Long id) {
         var baseService = getBaseService(modelName);
         var list = baseService.getById(id);
@@ -109,7 +109,7 @@ public class BaseController {
      * @param entityMap a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = ":modelName", httpMethod = HttpMethod.POST)
+    @ScxMapping(value = ":modelName", method = RequestMethod.POST)
     public Json save(String modelName, Map<String, Object> entityMap) {
         var baseService = getBaseService(modelName);
         var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
@@ -126,7 +126,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws java.lang.Exception if any.
      */
-    @ScxMapping(value = ":modelName", httpMethod = HttpMethod.PUT)
+    @ScxMapping(value = ":modelName", method = RequestMethod.PUT)
     public Json update(String modelName, Map<String, Object> entityMap) throws Exception {
         var baseService = getBaseService(modelName);
         var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
@@ -142,7 +142,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws java.lang.Exception if any.
      */
-    @ScxMapping(value = ":modelName/:id", httpMethod = HttpMethod.DELETE)
+    @ScxMapping(value = ":modelName/:id", method = RequestMethod.DELETE)
     public Json delete(String modelName, Integer id) throws Exception {
         var baseService = getBaseService(modelName);
         var deleteByIds = baseService.deleteByIds(Long.valueOf(id));
@@ -156,7 +156,7 @@ public class BaseController {
      * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = ":modelName/batchDelete", httpMethod = HttpMethod.DELETE)
+    @ScxMapping(value = ":modelName/batchDelete", method = RequestMethod.DELETE)
     public Json batchDelete(String modelName, Map<String, Object> params) {
         var deleteIds = (Long[]) params.get("deleteIds");
         var baseService = getBaseService(modelName);
@@ -171,7 +171,7 @@ public class BaseController {
      * @param id        a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = ":modelName/revokeDelete/:id", httpMethod = HttpMethod.GET)
+    @ScxMapping(value = ":modelName/revokeDelete/:id", method = RequestMethod.GET)
     public Json revokeDelete(String modelName, Integer id) {
         var baseService = getBaseService(modelName);
         var revokeDeleteCount = baseService.revokeDeleteByIds(Long.valueOf(id));
@@ -185,7 +185,7 @@ public class BaseController {
      * @param fieldName a {@link java.lang.String} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", httpMethod = HttpMethod.POST)
+    @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", method = RequestMethod.POST)
     public Json getAutoComplete(String modelName, String fieldName) {
         var baseService = getBaseService(modelName);
         var fieldList = baseService.getFieldList(fieldName);
@@ -199,7 +199,7 @@ public class BaseController {
      * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = ":modelName/checkUnique", httpMethod = HttpMethod.POST)
+    @ScxMapping(value = ":modelName/checkUnique", method = RequestMethod.POST)
     public Json checkUnique(String modelName, Map<String, Object> params) {
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, params);
@@ -224,7 +224,7 @@ public class BaseController {
      * @throws cool.scx.exception.HttpResponseException if any.
      * @throws java.io.UnsupportedEncodingException     if any.
      */
-    @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", httpMethod = HttpMethod.GET, unCheckedLogin = true)
+    @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET, unCheckedLogin = true)
     public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {
         var file = new File(ScxConfig.uploadFilePath + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName);
         if (!file.exists()) {
@@ -249,7 +249,7 @@ public class BaseController {
      * @param height    a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Binary} object.
      */
-    @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", httpMethod = HttpMethod.GET, unCheckedLogin = true)
+    @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET, unCheckedLogin = true)
     public Image showPicture(String year, String month, String day, String hour, String timestamp, String fileName, @QueryParam("w") Integer width, @QueryParam("h") Integer height) {
         return new Image(new File(ScxConfig.uploadFilePath + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName), width, height);
     }

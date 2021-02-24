@@ -1,6 +1,6 @@
 package cool.scx.annotation;
 
-import cool.scx.enumeration.HttpMethod;
+import cool.scx.enumeration.RequestMethod;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,5 +24,5 @@ public @interface ScxMapping {
 
     boolean useMethodNameAsUrl() default true;
 
-    HttpMethod[] httpMethod() default {HttpMethod.POST};
+    RequestMethod[] method() default {RequestMethod.POST};
 }

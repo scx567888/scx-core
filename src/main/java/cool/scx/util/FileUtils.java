@@ -358,6 +358,10 @@ public class FileUtils {
         return FILE_TYPE_LIST.stream().filter(fileType -> fileType.suffix.equals(fileSuffix)).findAny().orElse(null);
     }
 
+    public static FileType getFileTypeBySuffix(File file) {
+        return getFileTypeBySuffix(file, ALL_FILE_TYPE_LIST);
+    }
+
 
     /**
      * <p>getFileTypeByHead.</p>

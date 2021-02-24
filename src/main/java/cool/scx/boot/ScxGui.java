@@ -1,7 +1,7 @@
 package cool.scx.boot;
 
 
-import cool.scx.server.ScxVertxServer;
+import cool.scx.server.ScxServer;
 import cool.scx.util.MPrintStream;
 
 import javax.swing.*;
@@ -65,7 +65,7 @@ public final class ScxGui {
         JButton button = new JButton("停止服务器");
         // 监听button的选择路径
         button.addActionListener(e -> {
-            ScxVertxServer.stopServer();
+            ScxServer.stopServer();
             System.out.println(123);
             System.out.println("打印这句话");
             System.out.println(123);
@@ -75,7 +75,7 @@ public final class ScxGui {
         JButton button1 = new JButton("启动服务器");
         // 监听button的选择路径
         button1.addActionListener(e -> {
-            ScxVertxServer.init();
+            ScxServer.init();
             System.out.println(123);
             System.out.println("打印这句话");
             System.out.println(123);

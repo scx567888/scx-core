@@ -3,7 +3,7 @@ package cool.scx.business.cms;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.boot.ScxConfig;
-import cool.scx.enumeration.HttpMethod;
+import cool.scx.enumeration.RequestMethod;
 import cool.scx.util.FileUtils;
 import cool.scx.vo.Json;
 
@@ -31,7 +31,7 @@ public class TemplateController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws java.io.IOException if any.
      */
-    @ScxMapping(httpMethod = {HttpMethod.GET, HttpMethod.POST})
+    @ScxMapping(method = {RequestMethod.GET, RequestMethod.POST})
     public Json Index() throws IOException {
         var fileList = FileUtils.getFileList(ScxConfig.cmsRoot.getPath());
         var collect = fileList.stream().filter(fileInfo -> "Directory".equals(fileInfo.type)).collect(Collectors.toList());

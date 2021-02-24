@@ -35,7 +35,7 @@ public final class ScxConfig {
     /**
      * 核心包版本
      */
-    public static final String coreVersion = "0.6.1";
+    public static final String coreVersion = "0.7.0";
     /**
      * Constant <code>scxConfigJsonNode</code>
      */

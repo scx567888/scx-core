@@ -3,11 +3,9 @@ package cool.scx.util;
 
 import cool.scx.enumeration.Color;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * String工具类
@@ -130,27 +128,5 @@ public class StringUtils {
         nextPrintColor = nextPrintColor + 1;
     }
 
-    /**
-     * 清理分隔符错误的路径如 清理前 : a/b//c -- 清理后 : /a/b/c
-     *
-     * @param url 需要清理的 url 集合
-     * @return 清理后的结果
-     */
-    public static String clearHttpUrl(String... url) {
-        return Arrays.stream(String.join("/", url).split("/")).filter(s -> !"".equals(s)).collect(Collectors.joining("/", "/", ""));
-    }
-
-    /**
-     * 根据 controller 获取 api 的 名称
-     * 例 1 : UserController -- user
-     * 例 2 : AppleColorController -- appleColor
-     *
-     * @param controllerClass controller 的 Class
-     * @return 处理后的路径
-     */
-    public static String getApiNameByControllerName(Class<?> controllerClass) {
-        var s = controllerClass.getSimpleName().replace("Controller", "");
-        return Character.toLowerCase(s.charAt(0)) + s.substring(1);
-    }
 
 }

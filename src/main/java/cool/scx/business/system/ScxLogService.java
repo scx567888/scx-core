@@ -6,7 +6,7 @@ import cool.scx.base.BaseService;
 import cool.scx.base.Param;
 import cool.scx.boot.ScxConfig;
 import cool.scx.boot.ScxContext;
-import cool.scx.enumeration.HttpMethod;
+import cool.scx.enumeration.RequestMethod;
 import cool.scx.util.NetUtils;
 import io.vertx.ext.web.RoutingContext;
 
@@ -47,7 +47,7 @@ public class ScxLogService extends BaseService<ScxLog> {
      * @param name a {@link java.lang.Long} object.
      * @param age  a {@link java.lang.Integer} object.
      */
-    @ScxMapping(value = ":name", httpMethod = HttpMethod.GET)
+    @ScxMapping(value = ":name", method = RequestMethod.GET)
     public void getName(Long name, Integer age) {
         var a = new Param<>(new ScxLog());
         a.setPagination(10);
@@ -80,7 +80,7 @@ public class ScxLogService extends BaseService<ScxLog> {
      *
      * @param title   日志标题
      * @param content 日志内容
-     * @param ctx     a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param ctx     object.
      */
     public void recordLog(String title, String content, RoutingContext ctx) {
         if (ScxConfig.showLog) {

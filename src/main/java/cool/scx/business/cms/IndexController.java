@@ -6,7 +6,7 @@ import cool.scx.annotation.ScxMapping;
 import cool.scx.base.Param;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
-import cool.scx.enumeration.HttpMethod;
+import cool.scx.enumeration.RequestMethod;
 import cool.scx.util.FileType;
 import cool.scx.util.FileUtils;
 import cool.scx.vo.Html;
@@ -41,11 +41,9 @@ public class IndexController {
      * @param user a {@link cool.scx.business.user.User} object.
      * @return 页面
      */
-    @ScxMapping(value = "/", httpMethod = HttpMethod.GET, unCheckedLogin = true)
+    @ScxMapping(value = "/", method = RequestMethod.GET, unCheckedLogin = true)
     public Html Index(@BodyParam Map user) {
         FileType fileTypeByHead = FileUtils.getFileTypeByHead(new File("C:\\Users\\scx56\\Desktop\\1"));
-        System.out.println();
-        System.out.println();
         var users = userService.list(new Param<>(new User()).setPagination(1000));
         Html index = new Html("index");
         index.add("userList", users);

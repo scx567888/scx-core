@@ -16,7 +16,7 @@ import cool.scx.business.role.UserRole;
 import cool.scx.business.role.UserRoleService;
 import cool.scx.business.system.ScxLog;
 import cool.scx.business.system.ScxLogService;
-import cool.scx.enumeration.HttpMethod;
+import cool.scx.enumeration.RequestMethod;
 import cool.scx.enumeration.SortType;
 import cool.scx.exception.AuthException;
 import cool.scx.exception.TooManyErrorsException;
@@ -107,11 +107,11 @@ public class UserController {
     /**
      * <p>info.</p>
      *
-     * @param token a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param token a  object.
      * @return a {@link cool.scx.vo.Json} object.
      */
 
-    @ScxMapping(value = "info/:token", httpMethod = HttpMethod.GET, unCheckedLogin = true)
+    @ScxMapping(value = "info/:token", method = RequestMethod.GET, unCheckedLogin = true)
     public Json info(@PathParam String token) {
         var userId = ScxContext.getUserFromSessionByToken(token);
         //从session取出用户信息
@@ -187,7 +187,7 @@ public class UserController {
      * @param id a {@link java.lang.Long} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = ":id", httpMethod = HttpMethod.GET)
+    @ScxMapping(value = ":id", method = RequestMethod.GET)
     public Json getUserById(Long id) {
         if (StringUtils.isNotEmpty(id)) {
             var user = userService.getById(id);
@@ -261,7 +261,7 @@ public class UserController {
      * <p>avatarUpdate.</p>
      *
      * @param queryUser a {@link cool.scx.business.user.User} object.
-     * @param context   a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param context   a  object.
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)
@@ -276,7 +276,7 @@ public class UserController {
     /**
      * <p>getUserLog.</p>
      *
-     * @param context a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param context a  object.
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)

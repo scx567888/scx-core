@@ -6,7 +6,7 @@ package cool.scx.enumeration;
  * @author 司昌旭
  * @version 0.3.6
  */
-public enum HttpMethod {
+public enum RequestMethod {
     POST("POST"),
     GET("GET"),
     PUT("PUT"),
@@ -19,7 +19,7 @@ public enum HttpMethod {
 
     private final String http_method_str;
 
-    HttpMethod(String httpMethodStr) {
+    RequestMethod(String httpMethodStr) {
         this.http_method_str = httpMethodStr;
     }
 

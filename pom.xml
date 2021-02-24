@@ -7,7 +7,7 @@
     <artifactId>scx</artifactId>
     <packaging>jar</packaging>
     <name>scx</name>
-    <version>0.6.1</version>
+    <version>0.7.0</version>
     <description>
         SCX is a "web development framework";
         Goal is to provide a simple and fast development experience.
@@ -19,6 +19,28 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- 构建项目时jar包的默认启动类 在您自己的项目中请覆写此值 -->
         <scxApp.mainClass>cool.scx.ScxCoreApp</scxApp.mainClass>
+        <!-- vert.x 版本 -->
+        <vertx.version>4.0.2</vertx.version>
+        <!-- freemarker 版本 -->
+        <freemarker.version>2.3.31</freemarker.version>
+        <!-- jackson 版本 -->
+        <jackson.version>2.12.1</jackson.version>
+        <!-- spring 版本 -->
+        <spring.version>5.3.4</spring.version>
+        <!-- 不要轻易修改 mysql 驱动版本 因为 mysql 的驱动总有bug 这个版本是测试暂时没问题的 -->
+        <mysqlDriver.version>8.0.23</mysqlDriver.version>
+        <!--  hikaricp 版本 -->
+        <hikaricp.version>4.0.2</hikaricp.version>
+        <!-- jasypt 版本 -->
+        <jasypt.version>1.9.3</jasypt.version>
+        <!-- thumbnailator 版本 -->
+        <thumbnailator.version>0.4.13</thumbnailator.version>
+        <!-- slf4j 版本 -->
+        <slf4j.version>1.7.30</slf4j.version>
+        <!-- logback 版本 -->
+        <logback.version>1.2.3</logback.version>
+        <!-- testng 版本 -->
+        <testng.version>7.3.0</testng.version>
     </properties>
 
     <dependencies>
@@ -26,74 +48,94 @@
         <!-- vert.x -->
         <dependency>
             <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
             <artifactId>vertx-web</artifactId>
-            <version>4.0.2</version>
+            <version>${vertx.version}</version>
         </dependency>
 
         <!-- freemarker 用于cms 前台页面渲染工作 -->
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.31</version>
+            <version>${freemarker.version}</version>
         </dependency>
 
         <!-- Jackson -->
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.12.1</version>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- 依赖注入 -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>5.3.4</version>
+            <version>${spring.version}</version>
         </dependency>
 
         <!--  数据库 驱动 以及连接池 -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.23</version>
+            <version>${mysqlDriver.version}</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>4.0.2</version>
+            <version>${hikaricp.version}</version>
         </dependency>
 
         <!-- 轻量级的加密解密工具包 -->
         <dependency>
             <groupId>org.jasypt</groupId>
             <artifactId>jasypt</artifactId>
-            <version>1.9.3</version>
+            <version>${jasypt.version}</version>
         </dependency>
 
         <!-- 操作 特定格式文件的工具包 -->
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-            <version>0.4.13</version>
+            <version>${thumbnailator.version}</version>
         </dependency>
 
         <!-- 日志包 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.30</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>${logback.version}</version>
         </dependency>
 
         <!-- 测试 -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.3.0</version>
+            <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -121,7 +163,7 @@
     <scm>
         <connection>scm:git:https://github.com/scx567888/scx.git</connection>
         <developerConnection>scm:git:https://github.com/scx567888/scx.git</developerConnection>
-        <url>https://github.com/scx567888/scx</url>
+        <url>${url}</url>
     </scm>
 
     <!-- mvn deploy 发布的路径 -->
@@ -157,9 +199,9 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <encoding>UTF-8</encoding>
-                    <charset>UTF-8</charset>
-                    <docencoding>UTF-8</docencoding>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <charset>${project.build.sourceEncoding}</charset>
+                    <docencoding>${project.build.sourceEncoding}</docencoding>
                 </configuration>
                 <executions>
                     <execution>

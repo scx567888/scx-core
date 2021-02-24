@@ -11,6 +11,7 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
+import io.vertx.ext.web.Route;
 
 /**
  * <p>ScxVertxServer class.</p>
@@ -18,7 +19,7 @@ import io.vertx.core.net.JksOptions;
  * @author 司昌旭
  * @version 0.5.8
  */
-public final class ScxVertxServer extends AbstractVerticle {
+public final class ScxServer extends AbstractVerticle {
 
     /**
      * Constant <code>eventBus</code>
@@ -33,7 +34,7 @@ public final class ScxVertxServer extends AbstractVerticle {
      * <p>init.</p>
      */
     public static void init() {
-        Vertx.vertx().deployVerticle(new ScxVertxServer());
+        Vertx.vertx().deployVerticle(new ScxServer());
     }
 
     /**
@@ -72,6 +73,9 @@ public final class ScxVertxServer extends AbstractVerticle {
         server = vertx.createHttpServer(httpServerOptions);
         eventBus = vertx.eventBus();
         var router = ScxRouterFactory.getRouter(vertx);
+        for (Route route : router.getRoutes()) {
+            System.out.println(route.methods() + " " + route.getPath());
+        }
         server.requestHandler(router).listen(http -> {
             if (http.succeeded()) {
                 startPromise.complete();

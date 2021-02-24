@@ -1,7 +1,7 @@
 package cool.scx.boot;
 
 import cool.scx.ScxCoreApp;
-import cool.scx.server.ScxVertxServer;
+import cool.scx.server.ScxServer;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -45,7 +45,7 @@ public final class ScxApp {
         ScxCmsConfig.init();
         ScxContext.init();
         ScxListener.init();
-        ScxVertxServer.init();
+        ScxServer.init();
         ScxGui.init();
         ScxLicense.init();
     }
