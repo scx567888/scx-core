@@ -33,7 +33,6 @@ public final class ObjectUtils {
 
     static {
         var timeModule = new JavaTimeModule();
-
         timeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(ScxConfig.dateTimeFormatter));
         timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(ScxConfig.dateTimeFormatter));
         objectMapper.registerModule(timeModule);
@@ -51,7 +50,7 @@ public final class ObjectUtils {
         try {
             return objectMapper.writeValueAsString(o);
         } catch (Exception e) {
-            return null;
+            return "";
         }
     }
 
