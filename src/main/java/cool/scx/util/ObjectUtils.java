@@ -54,6 +54,14 @@ public final class ObjectUtils {
         }
     }
 
+    public static byte[] beanToByteArray(Object o) {
+        try {
+            return objectMapper.writeValueAsBytes(o);
+        } catch (Exception e) {
+            return new byte[0];
+        }
+    }
+
     /**
      * <p>JsonToTree.</p>
      *

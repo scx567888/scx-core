@@ -3,10 +3,7 @@ package cool.scx.boot;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.enumeration.Color;
-import cool.scx.util.CryptoUtils;
-import cool.scx.util.NetUtils;
-import cool.scx.util.PackageUtils;
-import cool.scx.util.StringUtils;
+import cool.scx.util.*;
 
 import java.io.File;
 import java.time.format.DateTimeFormatter;
@@ -145,6 +142,11 @@ public final class ScxConfig {
      */
     public static final String certificatePassword;
 
+    /**
+     * request body 大小限制
+     */
+    public static final long bodyLimit;
+
 
     static {
         StringUtils.println("ScxConfig v" + coreVersion + " 初始化中...", Color.BRIGHT_BLUE);
@@ -174,6 +176,11 @@ public final class ScxConfig {
                 s -> StringUtils.println("✔ 文件上传目录                           \t -->\t " + s, Color.GREEN),
                 f -> StringUtils.println("✘ 未检测到 scx.file-path             \t -->\t 已采用默认值 : " + f, Color.RED),
                 c -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
+
+        bodyLimit = getConfigValue("scx.body-limit", 10000L,
+                s -> StringUtils.println("✔ 请求体大小限制                          \t -->\t " + FileUtils.longToDisplaySize(s), Color.GREEN),
+                f -> StringUtils.println("✘ 未检测到 scx.body-limit             \t -->\t 已采用默认值 : " + FileUtils.longToDisplaySize(f), Color.RED),
+                c -> FileUtils.displaySizeToLong(c.asText()), FileUtils::displaySizeToLong);
 
         confusionLoginError = getConfigValue("scx.confusion-login-error", false,
                 s -> StringUtils.println("✔ 是否混淆登录错误                       \t -->\t " + (s ? "是" : "否"), Color.GREEN),

@@ -25,6 +25,7 @@
     "login-error-lock-times": 3,
     "login-error-lock-second": 60,
     "file-path": "absPath:C:/Users/scx56/Documents/scxFiles/",
+    "body-limit": "16384KB",
     "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
     "real-delete": false,
     "show-log": true,

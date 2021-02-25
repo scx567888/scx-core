@@ -7,7 +7,6 @@ import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.server.handler.ScxMappingHandler;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.vo.Image;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpMethod;
@@ -15,6 +14,7 @@ import io.vertx.core.http.impl.CookieImpl;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
+import io.vertx.ext.web.handler.FaviconHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public final class ScxRouterFactory {
      */
     public static Router getRouter(Vertx vertx) {
         var router = Router.router(vertx);
-        registerFaviconIcoHandler(router);
+        registerFaviconHandler(router, vertx);
         registerCookieHandler(router);
         registerCorsHandler(router);
         registerBodyHandler(router);
@@ -52,9 +52,8 @@ public final class ScxRouterFactory {
      *
      * @param router
      */
-    private static void registerFaviconIcoHandler(Router router) {
-        Image image = new Image(ScxConfig.cmsFaviconIcoPath);
-        router.route(HttpMethod.GET, "/favicon.ico").handler(image::sendToClient);
+    private static void registerFaviconHandler(Router router, Vertx vertx) {
+        router.route().handler(FaviconHandler.create(vertx, ScxConfig.cmsFaviconIcoPath.getPath()));
     }
 
     /**
@@ -90,8 +89,10 @@ public final class ScxRouterFactory {
      */
 
     private static void registerBodyHandler(Router router) {
-        router.post().handler(BodyHandler.create(true));
-        router.put().handler(BodyHandler.create(true));
+        router.route()
+                .method(HttpMethod.POST)
+                .method(HttpMethod.PUT)
+                .handler(BodyHandler.create(false).setBodyLimit(ScxConfig.bodyLimit));
     }
 
     /**

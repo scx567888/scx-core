@@ -7,7 +7,9 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.DecimalFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * 文件 操作类
@@ -51,6 +53,8 @@ public class FileUtils {
      * 其他文件类型
      */
     public final static List<FileType> OTHER_FILE_TYPE_LIST;
+    public final static HashMap<String, Long> DISPLAY_SIZE_MAP = new HashMap<>();
+    public final static Pattern DISPLAY_SIZE_PATTERN = Pattern.compile("^([+\\-]?\\d+)([a-zA-Z]{0,2})$");
 
     //文件全上传完了 将临时文件 重命名 移动至 上传文件夹并 删除临时文件
 
@@ -60,6 +64,11 @@ public class FileUtils {
         ALL_FILE_TYPE_LIST = new ArrayList<>();
         ALL_FILE_TYPE_LIST.addAll(IMAGE_FILE_TYPE_LIST);
         ALL_FILE_TYPE_LIST.addAll(OTHER_FILE_TYPE_LIST);
+        DISPLAY_SIZE_MAP.put("B", 1L);
+        DISPLAY_SIZE_MAP.put("KB", 1024L);
+        DISPLAY_SIZE_MAP.put("MB", 1048576L);
+        DISPLAY_SIZE_MAP.put("GB", 1073741824L);
+        DISPLAY_SIZE_MAP.put("TB", 1099511627776L);
     }
 
     /**
@@ -407,4 +416,27 @@ public class FileUtils {
         return getFileTypeBySuffix(file, IMAGE_FILE_TYPE_LIST);
     }
 
+    /**
+     * 将 long 类型的文件大小 转换为人类可以看懂的形式
+     *
+     * @param size
+     * @return
+     */
+    public static String longToDisplaySize(long size) {
+        if (size <= 0) return "0";
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    public static long displaySizeToLong(String str) {
+        var matcher = DISPLAY_SIZE_PATTERN.matcher(str);
+        if (!matcher.matches()) {
+            throw new RuntimeException(str + " : 无法转换为 long");
+        }
+        var group = matcher.group(2);
+        long amount = Long.parseLong(matcher.group(1));
+        var s = StringUtils.isNotEmpty(group) ? DISPLAY_SIZE_MAP.get(group) : DISPLAY_SIZE_MAP.get("B");
+        return Math.multiplyExact(amount, s);
+    }
 }
