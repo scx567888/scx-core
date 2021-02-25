@@ -35,6 +35,9 @@ import java.util.stream.Stream;
 public class ScxMappingHandler implements Handler<RoutingContext> {
 
 
+    /**
+     * Constant <code>LOGIN_AND_PERMS_HANDLER</code>
+     */
     public final static LoginAndPermsHandler LOGIN_AND_PERMS_HANDLER;
 
     static {
@@ -88,6 +91,9 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         this.permStr = clazz.getSimpleName() + ":" + method.getName();
     }
 
+    /**
+     * <p>init.</p>
+     */
     public static void init() {
 
     }
