@@ -125,6 +125,7 @@ public class PackageUtils {
      * <p>scanPackageByJar.</p>
      *
      * @param jarFileUrl a {@link java.net.URL} object.
+     * @return a {@link java.util.List} object.
      * @throws java.io.IOException if any.
      */
     public static List<Class<?>> getClassListByJar(URL jarFileUrl) throws IOException {

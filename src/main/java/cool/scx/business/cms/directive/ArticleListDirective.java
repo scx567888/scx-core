@@ -17,18 +17,14 @@ public class ArticleListDirective implements BaseTemplateDirective {
     ArticleService articleService = new ArticleService();
 
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Object getParams(Map params) {
         return articleService.listAll();
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getVariable() {
         return "article_list";

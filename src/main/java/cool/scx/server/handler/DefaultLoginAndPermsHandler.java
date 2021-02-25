@@ -10,17 +10,13 @@ import io.vertx.ext.web.RoutingContext;
  * @version $Id: $Id
  */
 public class DefaultLoginAndPermsHandler implements LoginAndPermsHandler {
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void noLogin(RoutingContext context) {
         Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void noPerms(RoutingContext context) {
         Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
