@@ -34,7 +34,7 @@ public final class ScxPlugins {
                 return !f;
             }).forEach(file -> {
                         try {
-                            PackageUtils.scanPackageByJar(clazz -> {
+                            PackageUtils.scanPackage(clazz -> {
                                 pluginsClassList.add(clazz);
                                 return ScanPackageVisitResult.CONTINUE;
                             }, file.toURI().toURL());

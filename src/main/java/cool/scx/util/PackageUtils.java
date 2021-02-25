@@ -14,7 +14,10 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.function.Function;
 import java.util.jar.JarFile;
 
@@ -44,18 +47,25 @@ public class PackageUtils {
      * @param classOrJarPaths a {@link java.net.URL} object.
      */
     public static void scanPackage(Function<Class<?>, ScanPackageVisitResult> fun, URL... classOrJarPaths) {
+        var classList = new HashSet<Class<?>>();
         if (classOrJarPaths.length == 0) {
             classOrJarPaths = Arrays.stream(ScxApp.getClassSources()).map(PackageUtils::getClassSourceRealPath).toArray(URL[]::new);
         }
-        for (URL c : classOrJarPaths) {
+        for (var c : classOrJarPaths) {
             try {
                 if (c.toString().endsWith(".jar")) {
-                    scanPackageByJar(fun, c);
+                    classList.addAll(getClassListByJar(c));
                 } else {
-                    scanPackageByFile(fun, c);
+                    classList.addAll(getClassListByFile(c));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+        for (var clazz : classList) {
+            var s = fun.apply(clazz);
+            if (s == ScanPackageVisitResult.TERMINATE) {
+                break;
             }
         }
     }
@@ -70,7 +80,8 @@ public class PackageUtils {
         return source.getProtectionDomain().getCodeSource().getLocation();
     }
 
-    private static void scanPackageByFile(Function<Class<?>, ScanPackageVisitResult> fun, URL url) throws URISyntaxException, IOException {
+    private static List<Class<?>> getClassListByFile(URL url) throws URISyntaxException, IOException {
+        var classList = new ArrayList<Class<?>>();
         var rootFilePath = Path.of(url.toURI());
         Files.walkFileTree(rootFilePath, new FileVisitor<>() {
             @Override
@@ -83,10 +94,7 @@ public class PackageUtils {
                 var classRealPath = rootFilePath.relativize(path).toString();
                 if (classRealPath.endsWith(".class")) {
                     var className = classRealPath.replace(".class", "").replaceAll("\\\\", ".").replaceAll("/", ".");
-                    ScanPackageVisitResult apply = fun.apply(getClassByName(className));
-                    if (apply == ScanPackageVisitResult.TERMINATE) {
-                        return FileVisitResult.TERMINATE;
-                    }
+                    classList.add(getClassByName(className));
                 }
                 return FileVisitResult.CONTINUE;
             }
@@ -101,7 +109,7 @@ public class PackageUtils {
                 return FileVisitResult.CONTINUE;
             }
         });
-
+        return classList;
     }
 
     private static Class<?> getClassByName(String className) {
@@ -116,11 +124,11 @@ public class PackageUtils {
     /**
      * <p>scanPackageByJar.</p>
      *
-     * @param fun        a {@link java.util.function.Consumer} object.
      * @param jarFileUrl a {@link java.net.URL} object.
      * @throws java.io.IOException if any.
      */
-    public static void scanPackageByJar(Function<Class<?>, ScanPackageVisitResult> fun, URL jarFileUrl) throws IOException {
+    public static List<Class<?>> getClassListByJar(URL jarFileUrl) throws IOException {
+        var classList = new ArrayList<Class<?>>();
         var entries = new JarFile(jarFileUrl.getFile()).entries();
         var jarClassLoader = new URLClassLoader(new URL[]{jarFileUrl});//获得类加载器
         while (entries.hasMoreElements()) {
@@ -128,12 +136,10 @@ public class PackageUtils {
             String jarName = jarEntry.getRealName();
             if (!jarEntry.isDirectory() && jarName.endsWith(".class")) {
                 var className = jarName.replace(".class", "").replaceAll("/", ".");
-                ScanPackageVisitResult apply = fun.apply(getClassByName(className, jarClassLoader));
-                if (apply == ScanPackageVisitResult.TERMINATE) {
-                    break;
-                }
+                classList.add(getClassByName(className, jarClassLoader));
             }
         }
+        return classList;
     }
 
     private static Class<?> getClassByName(String className, ClassLoader classLoader) {
