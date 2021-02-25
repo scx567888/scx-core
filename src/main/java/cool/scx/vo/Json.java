@@ -143,11 +143,18 @@ public final class Json implements BaseVo {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendToClient(RoutingContext context) {
         var response = context.response();
         response.putHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8");
         response.end(Buffer.buffer(ObjectUtils.beanToByteArray(jsonMap)));
+    }
+
+    @Override
+    public String toString() {
+        return ObjectUtils.beanToJson(jsonMap);
     }
 }

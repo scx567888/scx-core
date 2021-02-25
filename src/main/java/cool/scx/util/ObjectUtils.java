@@ -37,6 +37,7 @@ public final class ObjectUtils {
         timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(ScxConfig.dateTimeFormatter));
         objectMapper.registerModule(timeModule);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         objectMapper.getSerializerProvider().setNullKeySerializer(new NullKeySerializer());
     }
 
@@ -64,6 +65,7 @@ public final class ObjectUtils {
         try {
             return objectMapper.writeValueAsBytes(o);
         } catch (Exception e) {
+            e.printStackTrace();
             return new byte[0];
         }
     }
@@ -95,6 +97,14 @@ public final class ObjectUtils {
             return objectMapper.readValue(json, clazz);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    public static Map<String, Object> jsonToMap(String json) {
+        try {
+            return objectMapper.readValue(json, mapType);
+        } catch (Exception e) {
+            return new HashMap<>();
         }
     }
 

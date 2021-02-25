@@ -140,6 +140,7 @@ public final class ScxContext {
     public static void logoutUserByCookie(RoutingContext ctx) {
         var token = ctx.getCookie(ScxConfig.cookieKey).getValue();
         scxSession.removeIf(i -> i.token.equals(token));
+        StringUtils.printlnAutoColor("当前总登录用户数量 : " + scxSession.size() + " 个");
     }
 
     /**
@@ -156,6 +157,7 @@ public final class ScxContext {
             sessionItem.username = username;
             sessionItem.token = token;
         }
+        StringUtils.printlnAutoColor("当前总登录用户数量 : " + scxSession.size() + " 个");
     }
 
     /**

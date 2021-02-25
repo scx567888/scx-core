@@ -36,8 +36,8 @@ public interface BaseWebSocketController {
     /**
      * <p>onMessage.</p>
      *
-     * @param textData a {@link java.lang.String} object.
-     * @param h a {@link io.vertx.core.http.WebSocketFrame} object.
+     * @param textData  a {@link java.lang.String} object.
+     * @param h         a {@link io.vertx.core.http.WebSocketFrame} object.
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
      */
     void onMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket);
@@ -46,8 +46,8 @@ public interface BaseWebSocketController {
      * <p>onBinaryMessage.</p>
      *
      * @param binaryData a {@link io.vertx.core.buffer.Buffer} object.
-     * @param h a {@link io.vertx.core.http.WebSocketFrame} object.
-     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @param h          a {@link io.vertx.core.http.WebSocketFrame} object.
+     * @param webSocket  a {@link io.vertx.core.http.ServerWebSocket} object.
      */
     void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket);
 }

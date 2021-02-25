@@ -1,50 +1,23 @@
 package cool.scx.business.notice;
 
-import cool.scx.annotation.websocket.ScxWebSocketController;
-import cool.scx.base.websocket.BaseWebSocketController;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.ServerWebSocket;
-import io.vertx.core.http.WebSocketFrame;
+import cool.scx.annotation.http.ScxController;
+import cool.scx.annotation.http.ScxMapping;
+import cool.scx.enumeration.RequestMethod;
+import cool.scx.vo.Json;
+
+import java.util.stream.Collectors;
+
 
 /**
- * <p>NoticeController class.</p>
- *
- * @author 司昌旭
- * @version 0.3.6
+ * 通知公告 增删改查 controller
  */
-@ScxWebSocketController("/scx")
-public class NoticeController implements BaseWebSocketController {
+@ScxController
+public class NoticeController {
 
-
-    /** {@inheritDoc} */
-    @Override
-    public void onOpen(ServerWebSocket webSocket) {
-        System.out.println(webSocket);
-        System.out.println("fnvksjfnksdjfnvksfnvksdjfvnkn");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onClose(ServerWebSocket webSocket) {
-        System.out.println(webSocket);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onError(String[] args) {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket) {
-        System.out.println(textData);
-        webSocket.writeTextMessage("司昌旭");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) {
-//        System.out.println(binaryData);
+    @ScxMapping(method = RequestMethod.POST)
+    public Json getAllOnlineUser() {
+        var s = NoticeWebSocketController.WEB_SOCKET_SESSIONS.stream().filter(u ->
+                u.user != null).collect(Collectors.toList());
+        return Json.ok().data("onlineUserList", s);
     }
 }

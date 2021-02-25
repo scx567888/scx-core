@@ -37,7 +37,9 @@ public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
         });
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(ServerWebSocket webSocket) {
         var handler = SCX_WEB_SOCKET_CONTROLLER_HANDLERS.get(webSocket.path());
