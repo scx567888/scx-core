@@ -235,13 +235,13 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                 continue;
             }
             //------这里针对没有注解的参数进行赋值猜测---------------
-            //从 body 里进行猜测 先尝试将整体转换为 参数
-            finalHandlerParams[i] = getParamFromBody(jsonStr, formAttributes, "", parameters[i]);
+            //  从 body 里进行猜测 先尝试 根据参数名称进行转换
+            finalHandlerParams[i] = getParamFromBody(jsonStr, formAttributes, parameters[i].getName(), parameters[i]);
             if (finalHandlerParams[i] != null) {
                 continue;
             }
-            //再尝试 根据 参数名称进行转换
-            finalHandlerParams[i] = getParamFromBody(jsonStr, formAttributes, parameters[i].getName(), parameters[i]);
+            // 再尝试将整体转换为 参数
+            finalHandlerParams[i] = getParamFromBody(jsonStr, formAttributes, "", parameters[i]);
             if (finalHandlerParams[i] != null) {
                 continue;
             }

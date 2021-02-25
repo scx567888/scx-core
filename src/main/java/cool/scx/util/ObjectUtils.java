@@ -1,15 +1,15 @@
 package cool.scx.util;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import cool.scx.base.BaseModel;
 import cool.scx.boot.ScxConfig;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
@@ -38,6 +38,7 @@ public final class ObjectUtils {
         timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(ScxConfig.dateTimeFormatter));
         objectMapper.registerModule(timeModule);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.getSerializerProvider().setNullKeySerializer(new NullKeySerializer());
     }
 
     /**
@@ -240,4 +241,10 @@ public final class ObjectUtils {
         }
     }
 
+    private static class NullKeySerializer extends JsonSerializer<Object> {
+        @Override
+        public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+            jsonGenerator.writeFieldName("");
+        }
+    }
 }
