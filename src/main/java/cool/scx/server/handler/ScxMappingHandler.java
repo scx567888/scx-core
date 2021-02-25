@@ -1,12 +1,15 @@
-package cool.scx.server;
+package cool.scx.server.handler;
 
 import cool.scx.annotation.*;
 import cool.scx.base.BaseVo;
 import cool.scx.boot.ScxContext;
 import cool.scx.business.user.User;
 import cool.scx.enumeration.CheckLoginType;
+import cool.scx.enumeration.Color;
+import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.ObjectUtils;
+import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
 import io.vertx.core.Handler;
@@ -30,6 +33,33 @@ import java.util.stream.Stream;
  * @version 0.3.6
  */
 public class ScxMappingHandler implements Handler<RoutingContext> {
+
+
+    public final static LoginAndPermsHandler LOGIN_AND_PERMS_HANDLER;
+
+    static {
+        var t = new LoginAndPermsHandler[1];
+        new DefaultLoginAndPermsHandler();
+        PackageUtils.scanPackageIncludePlugins(clazz -> {
+            if (!clazz.isInterface() && LoginAndPermsHandler.class.isAssignableFrom(clazz)) {
+                try {
+                    var myLoginAndPermsHandler = (LoginAndPermsHandler) clazz.getDeclaredConstructor().newInstance();
+                    if (clazz == DefaultLoginAndPermsHandler.class) {
+                        StringUtils.println("已加载默认的 LoginAndPermsHandler  [" + clazz.getName() + "]", Color.BLUE);
+                    } else {
+                        StringUtils.println("已加载自定义 LoginAndPermsHandler  [" + clazz.getName() + "]", Color.BLUE);
+                    }
+                    t[0] = myLoginAndPermsHandler;
+                    return ScanPackageVisitResult.TERMINATE;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return ScanPackageVisitResult.CONTINUE;
+        });
+        LOGIN_AND_PERMS_HANDLER = t[0];
+    }
+
     public final Method method;
     public final ScxMapping scxMapping;
     public final ScxController scxController;
@@ -56,6 +86,10 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         this.isRegexUrl = isRegexUrl();
         this.httpMethods = getHttpMethod();
         this.permStr = clazz.getSimpleName() + ":" + method.getName();
+    }
+
+    public static void init() {
+
     }
 
     /**
@@ -161,7 +195,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             }
             //session 中没有用户证明没有登录 返回 false
             if (currentUser == null) {
-                Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
+                LOGIN_AND_PERMS_HANDLER.noLogin(context);
                 return false;
             } else {
                 //这里就是 需要登录 并且 能够获取到当前登录用户的
@@ -178,7 +212,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                         if (permStrByUser.contains(permStr)) {
                             return true;
                         } else {
-                            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
+                            LOGIN_AND_PERMS_HANDLER.noPerms(context);
                             return false;
                         }
                     }

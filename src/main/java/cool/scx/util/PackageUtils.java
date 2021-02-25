@@ -2,6 +2,7 @@ package cool.scx.util;
 
 import cool.scx.boot.ScxApp;
 import cool.scx.boot.ScxPlugins;
+import cool.scx.enumeration.ScanPackageVisitResult;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
-import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.jar.JarFile;
 
 /**
@@ -31,8 +32,8 @@ public class PackageUtils {
      * @param fun             a {@link java.util.function.Consumer} object.
      * @param classOrJarPaths a {@link java.net.URL} object.
      */
-    public static void scanPackageIncludePlugins(Consumer<Class<?>> fun, URL... classOrJarPaths) {
-        ScxPlugins.pluginsClassList.forEach(fun);
+    public static void scanPackageIncludePlugins(Function<Class<?>, ScanPackageVisitResult> fun, URL... classOrJarPaths) {
+        ScxPlugins.pluginsClassList.forEach(fun::apply);
         scanPackage(fun, classOrJarPaths);
     }
 
@@ -42,7 +43,7 @@ public class PackageUtils {
      * @param fun             a {@link java.util.function.Consumer} object.
      * @param classOrJarPaths a {@link java.net.URL} object.
      */
-    public static void scanPackage(Consumer<Class<?>> fun, URL... classOrJarPaths) {
+    public static void scanPackage(Function<Class<?>, ScanPackageVisitResult> fun, URL... classOrJarPaths) {
         if (classOrJarPaths.length == 0) {
             classOrJarPaths = Arrays.stream(ScxApp.getClassSources()).map(PackageUtils::getClassSourceRealPath).toArray(URL[]::new);
         }
@@ -69,7 +70,7 @@ public class PackageUtils {
         return source.getProtectionDomain().getCodeSource().getLocation();
     }
 
-    private static void scanPackageByFile(Consumer<Class<?>> fun, URL url) throws URISyntaxException, IOException {
+    private static void scanPackageByFile(Function<Class<?>, ScanPackageVisitResult> fun, URL url) throws URISyntaxException, IOException {
         var rootFilePath = Path.of(url.toURI());
         Files.walkFileTree(rootFilePath, new FileVisitor<>() {
             @Override
@@ -82,7 +83,10 @@ public class PackageUtils {
                 var classRealPath = rootFilePath.relativize(path).toString();
                 if (classRealPath.endsWith(".class")) {
                     var className = classRealPath.replace(".class", "").replaceAll("\\\\", ".").replaceAll("/", ".");
-                    fun.accept(getClassByName(className));
+                    ScanPackageVisitResult apply = fun.apply(getClassByName(className));
+                    if (apply == ScanPackageVisitResult.TERMINATE) {
+                        return FileVisitResult.TERMINATE;
+                    }
                 }
                 return FileVisitResult.CONTINUE;
             }
@@ -116,7 +120,7 @@ public class PackageUtils {
      * @param jarFileUrl a {@link java.net.URL} object.
      * @throws java.io.IOException if any.
      */
-    public static void scanPackageByJar(Consumer<Class<?>> fun, URL jarFileUrl) throws IOException {
+    public static void scanPackageByJar(Function<Class<?>, ScanPackageVisitResult> fun, URL jarFileUrl) throws IOException {
         var entries = new JarFile(jarFileUrl.getFile()).entries();
         var jarClassLoader = new URLClassLoader(new URL[]{jarFileUrl});//获得类加载器
         while (entries.hasMoreElements()) {
@@ -124,7 +128,10 @@ public class PackageUtils {
             String jarName = jarEntry.getRealName();
             if (!jarEntry.isDirectory() && jarName.endsWith(".class")) {
                 var className = jarName.replace(".class", "").replaceAll("/", ".");
-                fun.accept(getClassByName(className, jarClassLoader));
+                ScanPackageVisitResult apply = fun.apply(getClassByName(className, jarClassLoader));
+                if (apply == ScanPackageVisitResult.TERMINATE) {
+                    break;
+                }
             }
         }
     }

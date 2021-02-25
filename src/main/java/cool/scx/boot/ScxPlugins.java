@@ -1,6 +1,7 @@
 package cool.scx.boot;
 
 import cool.scx.enumeration.Color;
+import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 
@@ -33,7 +34,10 @@ public final class ScxPlugins {
                 return !f;
             }).forEach(file -> {
                         try {
-                            PackageUtils.scanPackageByJar(clazz -> pluginsClassList.add(clazz), file.toURI().toURL());
+                            PackageUtils.scanPackageByJar(clazz -> {
+                                pluginsClassList.add(clazz);
+                                return ScanPackageVisitResult.CONTINUE;
+                            }, file.toURI().toURL());
                             StringUtils.println("找到插件 名称 [" + file.getName() + "] 已加载!!!", Color.YELLOW);
                         } catch (Exception e) {
                             StringUtils.println("找到插件 名称 [" + file.getName() + "] 已损坏!!!", Color.RED);

@@ -8,6 +8,7 @@ import cool.scx.base.SQLRunner;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.enumeration.Color;
+import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.ext.web.RoutingContext;
@@ -57,6 +58,7 @@ public final class ScxContext {
             if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class) || clazz.isAnnotationPresent(ScxModel.class)) {
                 scxBeanClassNameMapping.put(clazz.getSimpleName().toLowerCase(), clazz);
             }
+            return ScanPackageVisitResult.CONTINUE;
         });
     }
 

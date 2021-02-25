@@ -3,6 +3,8 @@ package cool.scx.server;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.boot.ScxConfig;
+import cool.scx.enumeration.ScanPackageVisitResult;
+import cool.scx.server.handler.ScxMappingHandler;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Image;
@@ -116,6 +118,7 @@ public final class ScxRouterFactory {
                     }
                 }
             }
+            return ScanPackageVisitResult.CONTINUE;
         });
         b.addAll(a);
         b.forEach(c -> {

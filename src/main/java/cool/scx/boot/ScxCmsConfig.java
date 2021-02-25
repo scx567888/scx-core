@@ -2,6 +2,7 @@ package cool.scx.boot;
 
 import cool.scx.base.BaseTemplateDirective;
 import cool.scx.enumeration.Color;
+import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import freemarker.template.Configuration;
@@ -48,6 +49,7 @@ public final class ScxCmsConfig {
                     e.printStackTrace();
                 }
             }
+            return ScanPackageVisitResult.CONTINUE;
         });
         return configuration;
     }
