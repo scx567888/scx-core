@@ -103,7 +103,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * <p>getTableInfo.</p>
      *
      * @param clazz a {@link java.lang.Class} object.
-     * @return a {@link TableInfo} object.
+     * @return a {@link cool.scx.base.dao.TableInfo} object.
      */
     public static TableInfo getTableInfo(Class<?> clazz) {
         var tempTable = tableCache.get(clazz.getName());
@@ -208,7 +208,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>list.</p>
      *
-     * @param param      a {@link Param} object.
+     * @param param      a {@link cool.scx.base.service.Param} object.
      * @param ignoreLike a boolean.
      * @return a {@link java.util.List} object.
      */
@@ -226,7 +226,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>count.</p>
      *
-     * @param param      a {@link Param} object.
+     * @param param      a {@link cool.scx.base.service.Param} object.
      * @param ignoreLike a boolean.
      * @return a {@link java.lang.Integer} object.
      */
@@ -242,9 +242,9 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>update.</p>
      *
-     * @param param       a {@link Param} object.
+     * @param param       a {@link cool.scx.base.service.Param} object.
      * @param includeNull a boolean.
-     * @return a {@link UpdateResult} object.
+     * @return a {@link cool.scx.base.dao.UpdateResult} object.
      */
     public UpdateResult update(Param<Entity> param, boolean includeNull) {
         var beanMap = ObjectUtils.beanToMap(param.queryObject);
@@ -269,7 +269,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>delete.</p>
      *
-     * @param param a {@link Param} object.
+     * @param param a {@link cool.scx.base.service.Param} object.
      * @return a {@link java.lang.Integer} object.
      */
     public Integer delete(Param<Entity> param) {

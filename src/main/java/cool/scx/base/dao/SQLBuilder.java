@@ -40,7 +40,7 @@ public final class SQLBuilder {
     /**
      * <p>Insert.</p>
      *
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public static SQLBuilder Insert() {
         return new SQLBuilder(SQLType.INSERT);
@@ -49,7 +49,7 @@ public final class SQLBuilder {
     /**
      * <p>Update.</p>
      *
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public static SQLBuilder Update() {
         return new SQLBuilder(SQLType.UPDATE);
@@ -58,7 +58,7 @@ public final class SQLBuilder {
     /**
      * <p>Select.</p>
      *
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public static SQLBuilder Select() {
         return new SQLBuilder(SQLType.SELECT);
@@ -67,7 +67,7 @@ public final class SQLBuilder {
     /**
      * <p>Delete.</p>
      *
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public static SQLBuilder Delete() {
         return new SQLBuilder(SQLType.DELETE);
@@ -77,7 +77,7 @@ public final class SQLBuilder {
      * <p>Insert.</p>
      *
      * @param _tableName a {@link java.lang.String} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public static SQLBuilder Insert(String _tableName) {
         return new SQLBuilder(SQLType.INSERT).Table(_tableName);
@@ -87,7 +87,7 @@ public final class SQLBuilder {
      * <p>Update.</p>
      *
      * @param _tableName a {@link java.lang.String} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public static SQLBuilder Update(String _tableName) {
         return new SQLBuilder(SQLType.UPDATE).Table(_tableName);
@@ -97,7 +97,7 @@ public final class SQLBuilder {
      * <p>Select.</p>
      *
      * @param _tableName a {@link java.lang.String} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public static SQLBuilder Select(String _tableName) {
         return new SQLBuilder(SQLType.SELECT).Table(_tableName);
@@ -107,7 +107,7 @@ public final class SQLBuilder {
      * <p>Delete.</p>
      *
      * @param _tableName a {@link java.lang.String} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public static SQLBuilder Delete(String _tableName) {
         return new SQLBuilder(SQLType.DELETE).Table(_tableName);
@@ -117,7 +117,7 @@ public final class SQLBuilder {
      * <p>Table.</p>
      *
      * @param tableName a {@link java.lang.String} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder Table(String tableName) {
         _tableName = tableName;
@@ -128,7 +128,7 @@ public final class SQLBuilder {
      * <p>UpdateColumns.</p>
      *
      * @param fields an array of {@link java.lang.reflect.Field} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder UpdateColumns(Field[] fields) {
         _updateColumns = Stream.of(fields).map(field -> StringUtils.camel2Underscore(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
@@ -139,7 +139,7 @@ public final class SQLBuilder {
      * <p>Columns.</p>
      *
      * @param fields an array of {@link java.lang.reflect.Field} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder Columns(Field[] fields) {
         _columns = Stream.of(fields).map(o -> StringUtils.camel2Underscore(o.getName())).toArray(String[]::new);
@@ -150,7 +150,7 @@ public final class SQLBuilder {
      * <p>Columns.</p>
      *
      * @param columns an array of {@link java.lang.String} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder Columns(String[] columns) {
         _columns = columns;
@@ -161,7 +161,7 @@ public final class SQLBuilder {
      * <p>Values.</p>
      *
      * @param fields an array of {@link java.lang.reflect.Field} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder Values(Field[] fields) {
         _values = new String[1][fields.length];
@@ -173,7 +173,7 @@ public final class SQLBuilder {
      * <p>Values.</p>
      *
      * @param values an array of {@link java.lang.String} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder Values(String[][] values) {
         _values = values;
@@ -184,7 +184,7 @@ public final class SQLBuilder {
      * <p>Where.</p>
      *
      * @param whereColumns an array of {@link java.lang.String} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder Where(String[] whereColumns) {
         _whereColumns = whereColumns;
@@ -195,7 +195,7 @@ public final class SQLBuilder {
      * <p>GroupBy.</p>
      *
      * @param groupBy a {@link java.util.Set} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder GroupBy(Set<String> groupBy) {
         _groupBySet = groupBy;
@@ -206,7 +206,7 @@ public final class SQLBuilder {
      * <p>OrderBy.</p>
      *
      * @param orderBys a {@link java.util.Map} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder OrderBy(Map<String, SortType> orderBys) {
         _orderByMap = orderBys;
@@ -218,7 +218,7 @@ public final class SQLBuilder {
      *
      * @param page  a {@link java.lang.Integer} object.
      * @param limit a {@link java.lang.Integer} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder Pagination(Integer page, Integer limit) {
         _page = page;
@@ -230,7 +230,7 @@ public final class SQLBuilder {
      * <p>Pagination.</p>
      *
      * @param limit a {@link java.lang.Integer} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder Pagination(Integer limit) {
         _page = 1;
@@ -242,7 +242,7 @@ public final class SQLBuilder {
      * <p>WhereSql.</p>
      *
      * @param whereSql a {@link java.lang.String} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder WhereSql(String whereSql) {
         _whereSql = whereSql;
@@ -314,7 +314,7 @@ public final class SQLBuilder {
      * <p>SelectColumns.</p>
      *
      * @param selectColumns an array of {@link java.lang.String} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.base.dao.SQLBuilder} object.
      */
     public SQLBuilder SelectColumns(String[] selectColumns) {
         _selectColumns = selectColumns;

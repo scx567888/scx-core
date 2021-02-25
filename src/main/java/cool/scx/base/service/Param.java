@@ -38,7 +38,7 @@ public final class Param<Entity> {
      *
      * @param orderByColumn a {@link java.lang.String} object.
      * @param sortType      a {@link cool.scx.enumeration.SortType} object.
-     * @return a {@link Param} object.
+     * @return a {@link cool.scx.base.service.Param} object.
      */
     public Param<Entity> addOrderBy(String orderByColumn, SortType sortType) {
         if (checkStringInFields(orderByColumn)) {
@@ -53,7 +53,7 @@ public final class Param<Entity> {
      * <p>addGroupBy.</p>
      *
      * @param groupByColumn a {@link java.lang.String} object.
-     * @return a {@link Param} object.
+     * @return a {@link cool.scx.base.service.Param} object.
      */
     public Param<Entity> addGroupBy(String groupByColumn) {
         if (checkStringInFields(groupByColumn)) {
@@ -85,7 +85,7 @@ public final class Param<Entity> {
      * <p>setPagination.</p>
      *
      * @param limit a {@link java.lang.Integer} object.
-     * @return a {@link Param} object.
+     * @return a {@link cool.scx.base.service.Param} object.
      */
     public Param<Entity> setPagination(Integer limit) {
         if (limit >= 0) {

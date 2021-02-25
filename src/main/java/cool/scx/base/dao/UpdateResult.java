@@ -2,6 +2,12 @@ package cool.scx.base.dao;
 
 import java.util.List;
 
+/**
+ * <p>UpdateResult class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class UpdateResult {
     public final Integer affectedLength;
     public final List<Long> generatedKeys;

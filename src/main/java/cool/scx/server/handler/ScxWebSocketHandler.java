@@ -14,11 +14,17 @@ import java.util.Map;
 
 /**
  * 这个 handler 会获取所有的 websocket 请求并进行转发
+ *
+ * @author scx56
+ * @version $Id: $Id
  */
 public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
 
     private final Map<String, BaseWebSocketController> SCX_WEB_SOCKET_CONTROLLER_HANDLERS = new HashMap<>();
 
+    /**
+     * <p>Constructor for ScxWebSocketHandler.</p>
+     */
     public ScxWebSocketHandler() {
         PackageUtils.scanPackage(c -> {
             if (c.isAnnotationPresent(ScxWebSocketController.class) && !c.isInterface() && BaseWebSocketController.class.isAssignableFrom(c)) {
@@ -31,6 +37,7 @@ public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(ServerWebSocket webSocket) {
         var handler = SCX_WEB_SOCKET_CONTROLLER_HANDLERS.get(webSocket.path());

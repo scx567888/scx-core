@@ -13,9 +13,7 @@ import io.vertx.ext.web.RoutingContext;
  */
 public class Binary implements BaseVo {
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void sendToClient(RoutingContext context) throws Exception {
 
