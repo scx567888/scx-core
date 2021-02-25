@@ -202,7 +202,11 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             }
             //session 中没有用户证明没有登录 返回 false
             if (currentUser == null) {
-                LOGIN_AND_PERMS_HANDLER.noLogin(context);
+                if (scxMapping.checkedLogin() == CheckLoginType.Header) {
+                    LOGIN_AND_PERMS_HANDLER.noLoginByHeader(context);
+                } else if (scxMapping.checkedLogin() == CheckLoginType.Cookie) {
+                    LOGIN_AND_PERMS_HANDLER.noLoginByCookie(context);
+                }
                 return false;
             } else {
                 //这里就是 需要登录 并且 能够获取到当前登录用户的
@@ -219,7 +223,11 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                         if (permStrByUser.contains(permStr)) {
                             return true;
                         } else {
-                            LOGIN_AND_PERMS_HANDLER.noPerms(context);
+                            if (scxMapping.checkedLogin() == CheckLoginType.Header) {
+                                LOGIN_AND_PERMS_HANDLER.noPermsByHeader(context);
+                            } else if (scxMapping.checkedLogin() == CheckLoginType.Cookie) {
+                                LOGIN_AND_PERMS_HANDLER.noPermsByCookie(context);
+                            }
                             return false;
                         }
                     }
