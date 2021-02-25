@@ -59,6 +59,7 @@ public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
                 handler.onBinaryMessage(binaryData, h, webSocket);
             }
         });
+        webSocket.exceptionHandler(event -> handler.onError(event, webSocket));
         webSocket.closeHandler(h -> handler.onClose(webSocket));
     }
 

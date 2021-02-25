@@ -24,11 +24,10 @@ import java.util.List;
 public class NoticeWebSocketController implements BaseWebSocketController {
 
     //这里存储所有处于连接状态的
+    /** Constant <code>WEB_SOCKET_SESSIONS</code> */
     public final static List<WebSocketSession> WEB_SOCKET_SESSIONS = new ArrayList<>();
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void onOpen(ServerWebSocket webSocket) {
         var binaryHandlerID = webSocket.binaryHandlerID();
@@ -45,6 +44,8 @@ public class NoticeWebSocketController implements BaseWebSocketController {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * 客户端终止连接
      */
     @Override
@@ -54,17 +55,9 @@ public class NoticeWebSocketController implements BaseWebSocketController {
         System.out.println(webSocket + "关闭了");
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onError(String[] args) {
 
-    }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void onMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket) {
         var binaryHandlerID = webSocket.binaryHandlerID();
@@ -99,12 +92,16 @@ public class NoticeWebSocketController implements BaseWebSocketController {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) {
 //        System.out.println(binaryData);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onError(Throwable event, ServerWebSocket webSocket) {
+        event.printStackTrace();
     }
 
     public static class WebSocketSession {

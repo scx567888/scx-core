@@ -153,6 +153,9 @@ public final class Json implements BaseVo {
         response.end(Buffer.buffer(ObjectUtils.beanToByteArray(jsonMap)));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return ObjectUtils.beanToJson(jsonMap);

@@ -27,13 +27,6 @@ public interface BaseWebSocketController {
     void onClose(ServerWebSocket webSocket);
 
     /**
-     * <p>onError.</p>
-     *
-     * @param args an array of {@link java.lang.String} objects.
-     */
-    void onError(String[] args);
-
-    /**
      * <p>onMessage.</p>
      *
      * @param textData  a {@link java.lang.String} object.
@@ -50,4 +43,12 @@ public interface BaseWebSocketController {
      * @param webSocket  a {@link io.vertx.core.http.ServerWebSocket} object.
      */
     void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket);
+
+    /**
+     * <p>onError.</p>
+     *
+     * @param event     a {@link java.lang.Throwable} object.
+     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     */
+    void onError(Throwable event, ServerWebSocket webSocket);
 }

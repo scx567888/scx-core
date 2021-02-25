@@ -100,6 +100,12 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * <p>jsonToMap.</p>
+     *
+     * @param json a {@link java.lang.String} object.
+     * @return a {@link java.util.Map} object.
+     */
     public static Map<String, Object> jsonToMap(String json) {
         try {
             return objectMapper.readValue(json, mapType);
