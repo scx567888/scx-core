@@ -1,25 +1,26 @@
-package cool.scx.annotation;
+package cool.scx.annotation.http;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * <p>PathParam class.</p>
+ * 从 query 获取参数
  *
  * @author 司昌旭
  * @version 0.5.0
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PathParam {
+public @interface QueryParam {
     String value() default "";
 
     /**
-     * 聚合参数
+     * 将 查询参数聚合
      *
-     * @return 将 path 聚合为一个对象
+     * @return q
      */
     boolean polymerize() default false;
 }

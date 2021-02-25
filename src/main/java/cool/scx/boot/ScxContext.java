@@ -1,10 +1,10 @@
 package cool.scx.boot;
 
-import cool.scx.annotation.ScxController;
-import cool.scx.annotation.ScxModel;
-import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseDao;
-import cool.scx.base.SQLRunner;
+import cool.scx.annotation.dao.ScxModel;
+import cool.scx.annotation.http.ScxController;
+import cool.scx.annotation.service.ScxService;
+import cool.scx.base.dao.BaseDao;
+import cool.scx.base.dao.SQLRunner;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.enumeration.Color;

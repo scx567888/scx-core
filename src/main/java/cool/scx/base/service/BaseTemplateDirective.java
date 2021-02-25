@@ -1,4 +1,4 @@
-package cool.scx.base;
+package cool.scx.base.service;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeansWrapperBuilder;

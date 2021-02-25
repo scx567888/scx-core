@@ -1,4 +1,4 @@
-package cool.scx.annotation;
+package cool.scx.annotation.http;
 
 import org.springframework.stereotype.Component;
 
@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>ScxService class.</p>
+ * <p>ScxController class.</p>
  *
  * @author 司昌旭
  * @version 0.3.6
@@ -16,5 +16,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Component
-public @interface ScxService {
+public @interface ScxController {
+    String value() default "";
 }

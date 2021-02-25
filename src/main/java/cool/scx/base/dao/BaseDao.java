@@ -1,6 +1,7 @@
-package cool.scx.base;
+package cool.scx.base.dao;
 
-import cool.scx.annotation.Column;
+import cool.scx.annotation.dao.Column;
+import cool.scx.base.service.Param;
 import cool.scx.boot.ScxConfig;
 import cool.scx.enumeration.Color;
 import cool.scx.util.ObjectUtils;
@@ -102,7 +103,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * <p>getTableInfo.</p>
      *
      * @param clazz a {@link java.lang.Class} object.
-     * @return a {@link cool.scx.base.TableInfo} object.
+     * @return a {@link TableInfo} object.
      */
     public static TableInfo getTableInfo(Class<?> clazz) {
         var tempTable = tableCache.get(clazz.getName());
@@ -207,7 +208,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>list.</p>
      *
-     * @param param      a {@link cool.scx.base.Param} object.
+     * @param param      a {@link Param} object.
      * @param ignoreLike a boolean.
      * @return a {@link java.util.List} object.
      */
@@ -225,7 +226,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>count.</p>
      *
-     * @param param      a {@link cool.scx.base.Param} object.
+     * @param param      a {@link Param} object.
      * @param ignoreLike a boolean.
      * @return a {@link java.lang.Integer} object.
      */
@@ -241,9 +242,9 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>update.</p>
      *
-     * @param param       a {@link cool.scx.base.Param} object.
+     * @param param       a {@link Param} object.
      * @param includeNull a boolean.
-     * @return a {@link cool.scx.base.UpdateResult} object.
+     * @return a {@link UpdateResult} object.
      */
     public UpdateResult update(Param<Entity> param, boolean includeNull) {
         var beanMap = ObjectUtils.beanToMap(param.queryObject);
@@ -268,7 +269,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>delete.</p>
      *
-     * @param param a {@link cool.scx.base.Param} object.
+     * @param param a {@link Param} object.
      * @return a {@link java.lang.Integer} object.
      */
     public Integer delete(Param<Entity> param) {

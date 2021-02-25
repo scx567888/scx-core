@@ -1,4 +1,4 @@
-package cool.scx.annotation;
+package cool.scx.annotation.dao;
 
 import org.springframework.stereotype.Component;
 

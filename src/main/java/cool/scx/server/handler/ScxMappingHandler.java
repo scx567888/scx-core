@@ -1,7 +1,7 @@
 package cool.scx.server.handler;
 
-import cool.scx.annotation.*;
-import cool.scx.base.BaseVo;
+import cool.scx.annotation.http.*;
+import cool.scx.base.http.BaseVo;
 import cool.scx.boot.ScxContext;
 import cool.scx.business.user.User;
 import cool.scx.enumeration.CheckLoginType;
@@ -19,7 +19,6 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -99,15 +98,6 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
 
     }
 
-    /**
-     * 清理分隔符错误的路径如 清理前 : a/b//c -- 清理后 : /a/b/c
-     *
-     * @param url 需要清理的 url 集合
-     * @return 清理后的结果
-     */
-    private static String clearHttpUrl(String... url) {
-        return Arrays.stream(String.join("/", url).split("/")).filter(s -> !"".equals(s)).collect(Collectors.joining("/", "/", ""));
-    }
 
     /**
      * 根据 controller 获取 api 的 名称
@@ -238,8 +228,8 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
 
     private String getUrl() {
         return scxMapping.useMethodNameAsUrl() && "".equals(scxMapping.value()) ?
-                clearHttpUrl("api", getApiNameByControllerName(clazz), method.getName())
-                : clearHttpUrl(scxController.value(), scxMapping.value());
+                StringUtils.clearHttpUrl("api", getApiNameByControllerName(clazz), method.getName())
+                : StringUtils.clearHttpUrl(scxController.value(), scxMapping.value());
     }
 
     private boolean isRegexUrl() {

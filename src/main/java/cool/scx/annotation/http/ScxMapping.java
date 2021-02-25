@@ -1,4 +1,4 @@
-package cool.scx.annotation;
+package cool.scx.annotation.http;
 
 import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.RequestMethod;

@@ -1,4 +1,4 @@
-package cool.scx.base;
+package cool.scx.base.http;
 
 import io.vertx.ext.web.RoutingContext;
 

@@ -1,6 +1,6 @@
 package cool.scx.vo;
 
-import cool.scx.base.BaseVo;
+import cool.scx.base.http.BaseVo;
 import cool.scx.util.FileUtils;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;

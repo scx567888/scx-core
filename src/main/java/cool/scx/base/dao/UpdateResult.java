@@ -1,8 +1,8 @@
-package cool.scx.base;
+package cool.scx.base.dao;
 
 import java.util.List;
 
-class UpdateResult {
+public class UpdateResult {
     public final Integer affectedLength;
     public final List<Long> generatedKeys;
 

@@ -1,9 +1,12 @@
-package cool.scx.base;
+package cool.scx.base.http;
 
-import cool.scx.annotation.PathParam;
-import cool.scx.annotation.QueryParam;
-import cool.scx.annotation.ScxController;
-import cool.scx.annotation.ScxMapping;
+import cool.scx.annotation.http.PathParam;
+import cool.scx.annotation.http.QueryParam;
+import cool.scx.annotation.http.ScxController;
+import cool.scx.annotation.http.ScxMapping;
+import cool.scx.base.dao.BaseModel;
+import cool.scx.base.service.BaseService;
+import cool.scx.base.service.Param;
 import cool.scx.boot.ScxConfig;
 import cool.scx.boot.ScxContext;
 import cool.scx.business.system.ScxLogService;

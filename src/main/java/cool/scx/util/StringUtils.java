@@ -3,9 +3,11 @@ package cool.scx.util;
 
 import cool.scx.enumeration.Color;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * String工具类
@@ -126,6 +128,17 @@ public class StringUtils {
         }
         System.out.println("\u001B[" + printColor.get(nextPrintColor).toString() + "m" + str + "\u001B[0m");
         nextPrintColor = nextPrintColor + 1;
+    }
+
+
+    /**
+     * 清理分隔符错误的路径如 清理前 : a/b//c -- 清理后 : /a/b/c
+     *
+     * @param url 需要清理的 url 集合
+     * @return 清理后的结果
+     */
+    public static String clearHttpUrl(String... url) {
+        return Arrays.stream(String.join("/", url).split("/")).filter(s -> !"".equals(s)).collect(Collectors.joining("/", "/", ""));
     }
 
 

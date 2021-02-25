@@ -1,8 +1,8 @@
 package cool.scx.business.cms;
 
 
-import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseService;
+import cool.scx.annotation.service.ScxService;
+import cool.scx.base.service.BaseService;
 
 /**
  * <p>ColumnService class.</p>

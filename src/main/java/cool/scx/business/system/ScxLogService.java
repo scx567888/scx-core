@@ -1,9 +1,9 @@
 package cool.scx.business.system;
 
-import cool.scx.annotation.ScxMapping;
-import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseService;
-import cool.scx.base.Param;
+import cool.scx.annotation.http.ScxMapping;
+import cool.scx.annotation.service.ScxService;
+import cool.scx.base.service.BaseService;
+import cool.scx.base.service.Param;
 import cool.scx.boot.ScxConfig;
 import cool.scx.boot.ScxContext;
 import cool.scx.enumeration.RequestMethod;

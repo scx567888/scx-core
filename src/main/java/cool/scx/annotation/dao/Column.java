@@ -1,4 +1,4 @@
-package cool.scx.annotation;
+package cool.scx.annotation.dao;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

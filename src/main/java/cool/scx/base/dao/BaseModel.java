@@ -1,6 +1,6 @@
-package cool.scx.base;
+package cool.scx.base.dao;
 
-import cool.scx.annotation.Column;
+import cool.scx.annotation.dao.Column;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

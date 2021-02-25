@@ -1,8 +1,8 @@
 package cool.scx.business.dept;
 
-import cool.scx.annotation.ScxController;
-import cool.scx.annotation.ScxMapping;
-import cool.scx.base.Param;
+import cool.scx.annotation.http.ScxController;
+import cool.scx.annotation.http.ScxMapping;
+import cool.scx.base.service.Param;
 import cool.scx.enumeration.SortType;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;

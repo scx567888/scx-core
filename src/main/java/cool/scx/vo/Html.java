@@ -1,6 +1,6 @@
 package cool.scx.vo;
 
-import cool.scx.base.BaseVo;
+import cool.scx.base.http.BaseVo;
 import cool.scx.boot.ScxCmsConfig;
 import cool.scx.boot.ScxConfig;
 import cool.scx.util.ObjectUtils;

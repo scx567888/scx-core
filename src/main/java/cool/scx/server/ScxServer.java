@@ -2,6 +2,7 @@ package cool.scx.server;
 
 import cool.scx.boot.ScxConfig;
 import cool.scx.enumeration.Color;
+import cool.scx.server.handler.ScxWebSocketHandler;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.core.AbstractVerticle;
@@ -72,18 +73,21 @@ public final class ScxServer extends AbstractVerticle {
         server = vertx.createHttpServer(httpServerOptions);
         eventBus = vertx.eventBus();
         var router = ScxRouterFactory.getRouter(vertx);
-        server.requestHandler(router).listen(http -> {
-            if (http.succeeded()) {
-                startPromise.complete();
-                StringUtils.println("服务器启动成功...", Color.GREEN);
-                var httpOrHttps = ScxConfig.openHttps ? "https" : "http";
-                StringUtils.println("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + ScxConfig.port + "/", Color.GREEN);
-                StringUtils.println("> 本地 : " + httpOrHttps + "://localhost:" + ScxConfig.port + "/", Color.GREEN);
-            } else {
-                http.cause().printStackTrace();
-                startPromise.fail(http.cause());
-            }
-        });
+        var webSocketHandler = new ScxWebSocketHandler();
+        server.requestHandler(router)
+                .webSocketHandler(webSocketHandler)
+                .listen(http -> {
+                    if (http.succeeded()) {
+                        startPromise.complete();
+                        StringUtils.println("服务器启动成功...", Color.GREEN);
+                        var httpOrHttps = ScxConfig.openHttps ? "https" : "http";
+                        StringUtils.println("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + ScxConfig.port + "/", Color.GREEN);
+                        StringUtils.println("> 本地 : " + httpOrHttps + "://localhost:" + ScxConfig.port + "/", Color.GREEN);
+                    } else {
+                        http.cause().printStackTrace();
+                        startPromise.fail(http.cause());
+                    }
+                });
 
     }
 

@@ -1,6 +1,6 @@
 package cool.scx.business.cms;
 
-import cool.scx.base.Param;
+import cool.scx.base.service.Param;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.util.FileType;

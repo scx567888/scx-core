@@ -1,10 +1,10 @@
 package cool.scx.business.user;
 
-import cool.scx.annotation.BodyParam;
-import cool.scx.annotation.PathParam;
-import cool.scx.annotation.ScxController;
-import cool.scx.annotation.ScxMapping;
-import cool.scx.base.Param;
+import cool.scx.annotation.http.BodyParam;
+import cool.scx.annotation.http.PathParam;
+import cool.scx.annotation.http.ScxController;
+import cool.scx.annotation.http.ScxMapping;
+import cool.scx.base.service.Param;
 import cool.scx.boot.ScxConfig;
 import cool.scx.boot.ScxContext;
 import cool.scx.business.dept.Dept;

@@ -1,7 +1,7 @@
 package cool.scx.business.cms;
 
-import cool.scx.annotation.ScxController;
-import cool.scx.annotation.ScxMapping;
+import cool.scx.annotation.http.ScxController;
+import cool.scx.annotation.http.ScxMapping;
 import cool.scx.boot.ScxConfig;
 import cool.scx.enumeration.RequestMethod;
 import cool.scx.util.FileUtils;

@@ -1,8 +1,8 @@
 package cool.scx.business.cms;
 
-import cool.scx.annotation.Column;
-import cool.scx.annotation.ScxModel;
-import cool.scx.base.BaseModel;
+import cool.scx.annotation.dao.Column;
+import cool.scx.annotation.dao.ScxModel;
+import cool.scx.base.dao.BaseModel;
 
 /**
  * 文章类

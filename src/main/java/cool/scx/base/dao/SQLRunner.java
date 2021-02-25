@@ -1,4 +1,4 @@
-package cool.scx.base;
+package cool.scx.base.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.boot.ScxConfig;
@@ -156,7 +156,7 @@ public final class SQLRunner {
      *
      * @param sql   a {@link java.lang.String} object.
      * @param param a {@link java.util.Map} object.
-     * @return a {@link cool.scx.base.UpdateResult} object.
+     * @return a {@link UpdateResult} object.
      */
     public static UpdateResult update(String sql, Map<String, Object> param) {
         try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param)) {
