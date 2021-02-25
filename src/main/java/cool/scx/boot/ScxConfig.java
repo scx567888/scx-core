@@ -177,7 +177,7 @@ public final class ScxConfig {
                 f -> StringUtils.println("✘ 未检测到 scx.file-path             \t -->\t 已采用默认值 : " + f, Color.RED),
                 c -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
 
-        bodyLimit = getConfigValue("scx.body-limit", 10000L,
+        bodyLimit = getConfigValue("scx.body-limit", 16777216L,
                 s -> StringUtils.println("✔ 请求体大小限制                          \t -->\t " + FileUtils.longToDisplaySize(s), Color.GREEN),
                 f -> StringUtils.println("✘ 未检测到 scx.body-limit             \t -->\t 已采用默认值 : " + FileUtils.longToDisplaySize(f), Color.RED),
                 c -> FileUtils.displaySizeToLong(c.asText()), FileUtils::displaySizeToLong);
