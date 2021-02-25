@@ -54,6 +54,12 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * <p>beanToByteArray.</p>
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return an array of {@link byte} objects.
+     */
     public static byte[] beanToByteArray(Object o) {
         try {
             return objectMapper.writeValueAsBytes(o);

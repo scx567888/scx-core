@@ -53,7 +53,13 @@ public class FileUtils {
      * 其他文件类型
      */
     public final static List<FileType> OTHER_FILE_TYPE_LIST;
+    /**
+     * Constant <code>DISPLAY_SIZE_MAP</code>
+     */
     public final static HashMap<String, Long> DISPLAY_SIZE_MAP = new HashMap<>();
+    /**
+     * Constant <code>DISPLAY_SIZE_PATTERN</code>
+     */
     public final static Pattern DISPLAY_SIZE_PATTERN = Pattern.compile("^([+\\-]?\\d+)([a-zA-Z]{0,2})$");
 
     //文件全上传完了 将临时文件 重命名 移动至 上传文件夹并 删除临时文件
@@ -419,8 +425,8 @@ public class FileUtils {
     /**
      * 将 long 类型的文件大小 转换为人类可以看懂的形式
      *
-     * @param size
-     * @return
+     * @param size a long.
+     * @return a {@link java.lang.String} object.
      */
     public static String longToDisplaySize(long size) {
         if (size <= 0) return "0";
@@ -429,6 +435,12 @@ public class FileUtils {
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
+    /**
+     * <p>displaySizeToLong.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     * @return a long.
+     */
     public static long displaySizeToLong(String str) {
         var matcher = DISPLAY_SIZE_PATTERN.matcher(str);
         if (!matcher.matches()) {
