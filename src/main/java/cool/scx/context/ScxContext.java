@@ -43,6 +43,11 @@ public final class ScxContext {
     private static final List<OnlineItem> ONLINE_ITEMS = new ArrayList<>();
     /**
      * 存储所有 已登录 的用户信息
+     * todo 这里需要 格外存储 用户登录的 来源 比如  后端  或 cms 或 安卓 或 ios
+     * todo 还有 需要在 scxconfig中 添加 一个配置项 标识用户多端登录 处理方式
+     * todo 比如 允许用户同时登录多个 不同的 客户端(来源一致) 或者只允许用户 在同一时间登录 (无论已经在哪里登录了)
+     * todo 或者 不对登录做限制 同时允许 任意客户端(来源可以不一致) 登录任意数量的 同一用户
+     *
      */
     private static final List<LoginItem> LOGIN_ITEMS = new ArrayList<>();
     private static final Map<String, Class<?>> scxBeanClassNameMapping = new HashMap<>();
