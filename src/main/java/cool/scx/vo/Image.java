@@ -1,9 +1,10 @@
 package cool.scx.vo;
 
 import cool.scx.base.http.BaseVo;
-import cool.scx.util.FileType;
 import cool.scx.util.FileUtils;
+import cool.scx.util.MaxSizeHashMap;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
 import net.coobird.thumbnailator.Thumbnails;
 
@@ -23,9 +24,10 @@ import java.io.FileInputStream;
  */
 public class Image implements BaseVo {
 
+    private static final MaxSizeHashMap<String, Buffer> imageCache = new MaxSizeHashMap<>(100);
     private final File file;
-    private Integer width;
-    private Integer height;
+    private final Integer width;
+    private final Integer height;
 
     /**
      * <p>Constructor for Image.</p>
@@ -57,50 +59,113 @@ public class Image implements BaseVo {
     @Override
     public void sendToClient(RoutingContext context) {
         var response = context.response();
+        //设置缓存 减少服务器压力
         response.putHeader("cache-control", "public,immutable,max-age=2628000");
         response.putHeader("accept-ranges", "bytes");
-        // 图片不存在 这里抛出不存在异常
-        if (!file.exists()) {
-            response.setStatusCode(404).end("No Found");
+        boolean b = checkImageCache(response);
+        if (b) {
             return;
         }
-        //设置缓存 减少服务器压力
-        FileType imageFileType = FileUtils.getImageFileType(file);
-        try (var out = new ByteArrayOutputStream()) {
-            //就不是普通的图片 我们就返回他在操作系统中的展示图标即可
-            if (imageFileType == null) {
-                var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file)).getImage();
-                var myImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-                var g = myImage.createGraphics();
-                g.drawImage(image, 0, 0, null);
-                g.dispose();
-                ImageIO.write(myImage, "png", out);
-                response.putHeader("content-type", "image/png");
-                response.end(Buffer.buffer(out.toByteArray()));
-            } else if (height == null && width == null) {
-                // 没有宽高 直接返回图片本身
-                try (var input = new FileInputStream(file)) {
-                    byte[] byt = new byte[input.available()];
-                    int read = input.read(byt);
-                    response.putHeader("content-type", imageFileType.contentType);
-                    response.end(Buffer.buffer(byt));
-                    byt = null;
-                }
+        // 图片不存在 这里抛出不存在异常
+        if (!file.exists()) {
+            notFound(response);
+            return;
+        }
+        var imageFileType = FileUtils.getImageFileType(file);
+        if (imageFileType == null) {
+            response.putHeader("content-type", "image/png");
+            sendSystemIcon(response);
+        } else {
+            response.putHeader("content-type", imageFileType.contentType);
+            if (height == null && width == null) {
+                sendRawPicture(response);
             } else {
-                // 有宽高 对图片进行裁剪
-                var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
-                if (height == null || height > image.getHeight()) {
-                    height = image.getHeight();
-                }
-                if (width == null || width > image.getWidth()) {
-                    width = image.getWidth();
-                }
-                Thumbnails.of(file).size(width, height).keepAspectRatio(false).toOutputStream(out);
-                response.putHeader("content-type", imageFileType.contentType);
-                response.end(Buffer.buffer(out.toByteArray()));
+                sendCroppedPicture(response);
             }
+        }
+    }
+
+    /**
+     * 检查图片缓存
+     * @param response
+     * @return
+     */
+    private boolean checkImageCache(HttpServerResponse response) {
+        var str = file.getPath() + ";" + height + ";" + width;
+        var buffer = imageCache.get(str);
+        if (buffer != null) {
+            response.end(buffer);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * //就不是普通的图片 我们就返回他在操作系统中的展示图标即可
+     *
+     * @param response
+     */
+    private void sendSystemIcon(HttpServerResponse response) {
+        try (var out = new ByteArrayOutputStream()) {
+            var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file)).getImage();
+            var myImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+            var g = myImage.createGraphics();
+            g.drawImage(image, 0, 0, null);
+            g.dispose();
+            ImageIO.write(myImage, "png", out);
+            var b = Buffer.buffer(out.toByteArray());
+            imageCache.put(file.getPath() + ";" + height + ";" + width, b);
+            response.end(b);
         } catch (Exception e) {
-            response.setStatusCode(404).end("No Found");
+            notFound(response);
+        }
+    }
+
+    /**
+     * 没找到图片
+     *
+     * @param response
+     */
+    private void notFound(HttpServerResponse response) {
+        response.setStatusCode(404).end("No Found");
+    }
+
+    /**
+     * 裁剪后的图片
+     *
+     * @param response
+     */
+    private void sendCroppedPicture(HttpServerResponse response) {
+        try (var out = new ByteArrayOutputStream()) {
+            var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
+            var croppedHeight = (height == null || height > image.getHeight() || height == 0) ? image.getHeight() : height;
+            var croppedWidth = (width == null || width > image.getWidth() || width == 0) ? image.getWidth() : width;
+            Thumbnails.of(file).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
+            Buffer b = Buffer.buffer(out.toByteArray());
+            imageCache.put(file.getPath() + ";" + height + ";" + width, b);
+            response.end(b);
+        } catch (Exception e) {
+            notFound(response);
+        }
+    }
+
+    /**
+     * 发送原始图片
+     *
+     * @param response
+     */
+    private void sendRawPicture(HttpServerResponse response) {
+        // 没有宽高 直接返回图片本身
+        try (var input = new FileInputStream(file)) {
+            byte[] byt = new byte[input.available()];
+            int read = input.read(byt);
+            Buffer b = Buffer.buffer(byt);
+            imageCache.put(file.getPath() + ";" + height + ";" + width, b);
+            response.end(b);
+            byt = null;
+        } catch (Exception e) {
+            notFound(response);
         }
     }
 }
