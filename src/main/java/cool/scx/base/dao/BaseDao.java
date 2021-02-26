@@ -39,7 +39,9 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     /**
-     * @param clazz
+     * <p>fixTable.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
      * @return 是否修复
      */
     public static FixTableResult fixTable(Class<?> clazz) {

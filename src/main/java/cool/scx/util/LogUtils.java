@@ -9,10 +9,22 @@ import io.vertx.ext.web.RoutingContext;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <p>LogUtils class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class LogUtils {
 
     private static final Map<Integer, Color> printColor = new HashMap<>();
+    /**
+     * Constant <code>scxLogService</code>
+     */
     public static ScxLogService scxLogService;
+    /**
+     * Constant <code>showLog=</code>
+     */
     public static boolean showLog;
     private static int nextPrintColor = 0;
 
@@ -55,6 +67,11 @@ public class LogUtils {
         scxLogService.save(log);
     }
 
+    /**
+     * <p>recordLog.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     */
     public static void recordLog(String str) {
         recordLog(str, str, null);
     }

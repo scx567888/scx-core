@@ -78,6 +78,9 @@ public class Image implements BaseVo {
         height = _height;
     }
 
+    /**
+     * <p>cleanCache.</p>
+     */
     public static void cleanCache() {
         imageCache.clear();
     }

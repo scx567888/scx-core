@@ -64,6 +64,9 @@ public final class ScxServer extends AbstractVerticle {
         return eventBus;
     }
 
+    /**
+     * <p>startVertxServer.</p>
+     */
     public static void startVertxServer() {
         if (serverState) {
             return;
