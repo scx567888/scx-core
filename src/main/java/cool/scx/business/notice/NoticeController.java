@@ -2,6 +2,7 @@ package cool.scx.business.notice;
 
 import cool.scx.annotation.http.ScxController;
 import cool.scx.annotation.http.ScxMapping;
+import cool.scx.context.ScxContext;
 import cool.scx.enumeration.RequestMethod;
 import cool.scx.vo.Json;
 
@@ -24,8 +25,7 @@ public class NoticeController {
      */
     @ScxMapping(method = RequestMethod.POST)
     public Json getAllOnlineUser() {
-        var s = NoticeWebSocketController.WEB_SOCKET_SESSIONS.stream().filter(u ->
-                u.user != null).collect(Collectors.toList());
+        var s = ScxContext.getOnlineItemList().stream().filter(u -> u.username != null).map(u -> u.username).collect(Collectors.toList());
         return Json.ok().data("onlineUserList", s);
     }
 }

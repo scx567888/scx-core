@@ -1,6 +1,9 @@
 package cool.scx.boot;
 
 import cool.scx.ScxCoreApp;
+import cool.scx.config.ScxCmsConfig;
+import cool.scx.config.ScxConfig;
+import cool.scx.context.ScxContext;
 import cool.scx.server.ScxServer;
 import cool.scx.server.handler.ScxMappingHandler;
 

@@ -4,8 +4,8 @@ import cool.scx.annotation.http.ScxMapping;
 import cool.scx.annotation.service.ScxService;
 import cool.scx.base.service.BaseService;
 import cool.scx.base.service.Param;
-import cool.scx.boot.ScxConfig;
-import cool.scx.boot.ScxContext;
+import cool.scx.config.ScxConfig;
+import cool.scx.context.ScxContext;
 import cool.scx.enumeration.RequestMethod;
 import cool.scx.util.NetUtils;
 import io.vertx.ext.web.RoutingContext;
@@ -87,7 +87,7 @@ public class ScxLogService extends BaseService<ScxLog> {
             var log = new ScxLog();
             log.userIp = NetUtils.getIpAddr(ctx);
             try {
-                log.username = ScxContext.getCurrentUserByHeader(ctx).username;
+                log.username = ScxContext.getLoginUserByHeader(ctx).username;
                 log.type = 1;
             } catch (Exception e) {
                 log.username = "系统日志";

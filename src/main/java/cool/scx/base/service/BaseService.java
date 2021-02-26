@@ -2,8 +2,8 @@ package cool.scx.base.service;
 
 import cool.scx.base.dao.BaseDao;
 import cool.scx.base.dao.BaseModel;
-import cool.scx.boot.ScxConfig;
-import cool.scx.boot.ScxContext;
+import cool.scx.config.ScxConfig;
+import cool.scx.context.ScxContext;
 import cool.scx.enumeration.SortType;
 
 import java.lang.reflect.ParameterizedType;

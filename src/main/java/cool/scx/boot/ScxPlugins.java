@@ -1,5 +1,6 @@
 package cool.scx.boot;
 
+import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Color;
 import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.util.PackageUtils;

@@ -1,6 +1,6 @@
 package cool.scx.util;
 
-import cool.scx.boot.ScxConfig;
+import cool.scx.config.ScxConfig;
 import org.jasypt.util.text.AES256TextEncryptor;
 
 /**

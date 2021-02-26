@@ -1,6 +1,7 @@
 package cool.scx.boot;
 
 
+import cool.scx.config.ScxConfig;
 import cool.scx.server.ScxServer;
 import cool.scx.util.MPrintStream;
 

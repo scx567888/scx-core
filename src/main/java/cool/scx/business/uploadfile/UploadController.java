@@ -3,7 +3,7 @@ package cool.scx.business.uploadfile;
 import cool.scx.annotation.http.ScxController;
 import cool.scx.annotation.http.ScxMapping;
 import cool.scx.base.service.Param;
-import cool.scx.boot.ScxConfig;
+import cool.scx.config.ScxConfig;
 import cool.scx.util.FileUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;

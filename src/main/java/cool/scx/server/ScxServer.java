@@ -1,6 +1,6 @@
 package cool.scx.server;
 
-import cool.scx.boot.ScxConfig;
+import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Color;
 import cool.scx.server.handler.ScxWebSocketHandler;
 import cool.scx.util.NetUtils;

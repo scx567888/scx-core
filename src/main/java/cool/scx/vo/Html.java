@@ -1,8 +1,8 @@
 package cool.scx.vo;
 
 import cool.scx.base.http.BaseVo;
-import cool.scx.boot.ScxCmsConfig;
-import cool.scx.boot.ScxConfig;
+import cool.scx.config.ScxCmsConfig;
+import cool.scx.config.ScxConfig;
 import cool.scx.util.ObjectUtils;
 import freemarker.template.Template;
 import io.vertx.core.buffer.Buffer;

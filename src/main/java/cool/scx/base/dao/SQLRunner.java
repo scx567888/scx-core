@@ -1,7 +1,7 @@
 package cool.scx.base.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
-import cool.scx.boot.ScxConfig;
+import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Color;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;

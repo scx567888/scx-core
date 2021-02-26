@@ -1,21 +1,25 @@
-package cool.scx.boot;
+package cool.scx.context;
 
 import cool.scx.annotation.dao.ScxModel;
 import cool.scx.annotation.http.ScxController;
 import cool.scx.annotation.service.ScxService;
 import cool.scx.base.dao.BaseDao;
 import cool.scx.base.dao.SQLRunner;
+import cool.scx.boot.ScxPlugins;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
+import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Color;
 import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
+import io.vertx.core.http.ServerWebSocket;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,7 +34,14 @@ public final class ScxContext {
      * Constant <code>userService</code>
      */
     public static final UserService userService;
-    private static final ArrayList<SessionItem> scxSession = new ArrayList<>();
+    /**
+     * 存储所有在线的 连接
+     */
+    private static final List<OnlineItem> ONLINE_ITEMS = new ArrayList<>();
+    /**
+     * 存储所有 已登录 的用户信息
+     */
+    private static final List<LoginItem> LOGIN_ITEMS = new ArrayList<>();
     private static final Map<String, Class<?>> scxBeanClassNameMapping = new HashMap<>();
     private static final AnnotationConfigApplicationContext applicationContext;
 
@@ -60,28 +71,6 @@ public final class ScxContext {
             }
             return ScanPackageVisitResult.CONTINUE;
         });
-    }
-
-    /**
-     * 根据 RoutingContext 获取当前用户
-     *
-     * @param ctx RoutingContext
-     * @return 当前用户
-     */
-    public static User getCurrentUserByHeader(RoutingContext ctx) {
-        String token = ctx.request().getHeader(ScxConfig.tokenKey);
-        return getCurrentUserByToken(token);
-    }
-
-    /**
-     * <p>getCurrentUserByCookie.</p>
-     *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
-     * @return a {@link cool.scx.business.user.User} object.
-     */
-    public static User getCurrentUserByCookie(RoutingContext ctx) {
-        String token = ctx.getCookie(ScxConfig.cookieKey).getValue();
-        return getCurrentUserByToken(token);
     }
 
     /**
@@ -127,9 +116,11 @@ public final class ScxContext {
      *
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      */
-    public static void logoutUserByHeader(RoutingContext ctx) {
+    public static boolean removeLoginUserByHeader(RoutingContext ctx) {
         var token = ctx.request().getHeader(ScxConfig.tokenKey);
-        scxSession.removeIf(i -> i.token.equals(token));
+        boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
+        StringUtils.printlnAutoColor("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
+        return b;
     }
 
     /**
@@ -137,10 +128,11 @@ public final class ScxContext {
      *
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      */
-    public static void logoutUserByCookie(RoutingContext ctx) {
+    public static boolean removeLoginUserByCookie(RoutingContext ctx) {
         var token = ctx.getCookie(ScxConfig.cookieKey).getValue();
-        scxSession.removeIf(i -> i.token.equals(token));
-        StringUtils.printlnAutoColor("当前总登录用户数量 : " + scxSession.size() + " 个");
+        boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
+        StringUtils.printlnAutoColor("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
+        return b;
     }
 
     /**
@@ -149,15 +141,14 @@ public final class ScxContext {
      * @param token    a {@link java.lang.String} object.
      * @param username a {@link java.lang.String} object.
      */
-    public static void addUserToSession(String token, String username) {
-        var sessionItem = scxSession.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);
+    public static void addLoginItem(String token, String username) {
+        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);
         if (sessionItem == null) {
-            scxSession.add(new SessionItem(token, username, new ArrayList<>()));
+            LOGIN_ITEMS.add(new LoginItem(token, username));
         } else {
-            sessionItem.username = username;
             sessionItem.token = token;
         }
-        StringUtils.printlnAutoColor("当前总登录用户数量 : " + scxSession.size() + " 个");
+        StringUtils.printlnAutoColor(username + "登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
     }
 
     /**
@@ -166,8 +157,8 @@ public final class ScxContext {
      * @param token a {@link java.lang.String} object.
      * @return a {@link cool.scx.business.user.User} object.
      */
-    public static User getCurrentUserByToken(String token) {
-        var sessionItem = scxSession.stream().filter(u -> u.token.equals(token)).findAny().orElse(null);
+    public static User getLoginUserByToken(String token) {
+        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token)).findAny().orElse(null);
         if (sessionItem == null) {
             return null;
         }
@@ -175,4 +166,56 @@ public final class ScxContext {
         return userService.findByUsername(sessionItem.username);
     }
 
+    public static User getLoginUserByHeader(RoutingContext ctx) {
+        String token = ctx.request().getHeader(ScxConfig.tokenKey);
+        return getLoginUserByToken(token);
+    }
+
+    /**
+     * <p>getCurrentUserByCookie.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a {@link cool.scx.business.user.User} object.
+     */
+    public static User getLoginUserByCookie(RoutingContext ctx) {
+        String token = ctx.getCookie(ScxConfig.cookieKey).getValue();
+        return getLoginUserByToken(token);
+    }
+
+    public static void addOnlineItem(ServerWebSocket webSocket, String username) {
+        var binaryHandlerID = webSocket.binaryHandlerID();
+        //看看这个相对应的连接 是不是 已经注册到 ONLINE_ITEMS 中了 如果已经存在 就不重写注册了 而是直接更新 username
+        //有点像  HashMap 的逻辑
+        var onlineItem = ONLINE_ITEMS.stream().filter(u ->
+                u.webSocket.binaryHandlerID().equals(binaryHandlerID)).findAny().orElse(null);
+        if (onlineItem == null) {
+            //先生成一个 在线用户的对象
+            var newOnlineItem = new OnlineItem(webSocket, username);
+            ONLINE_ITEMS.add(newOnlineItem);
+        } else {
+            onlineItem.username = username;
+        }
+        StringUtils.printlnAutoColor(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size());
+    }
+
+    public static boolean removeOnlineItemByWebSocket(ServerWebSocket webSocket) {
+        return ONLINE_ITEMS.removeIf(f -> f.webSocket.binaryHandlerID().equals(webSocket.binaryHandlerID()));
+    }
+
+    public static long getOnlineUserCount() {
+        return ONLINE_ITEMS.stream().filter(u -> u.username != null).count();
+    }
+
+    public static OnlineItem getOnlineItemByWebSocket(ServerWebSocket webSocket) {
+        var binaryHandlerID = webSocket.binaryHandlerID();
+        return ONLINE_ITEMS.stream().filter(u -> u.webSocket.binaryHandlerID().equals(binaryHandlerID)).findAny().orElse(null);
+    }
+
+    public static OnlineItem getOnlineItemByUserName(String username) {
+        return ONLINE_ITEMS.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);
+    }
+
+    public static List<OnlineItem> getOnlineItemList() {
+        return ONLINE_ITEMS;
+    }
 }

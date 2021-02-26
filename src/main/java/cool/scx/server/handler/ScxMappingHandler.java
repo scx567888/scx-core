@@ -2,8 +2,8 @@ package cool.scx.server.handler;
 
 import cool.scx.annotation.http.*;
 import cool.scx.base.http.BaseVo;
-import cool.scx.boot.ScxContext;
 import cool.scx.business.user.User;
+import cool.scx.context.ScxContext;
 import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.Color;
 import cool.scx.enumeration.ScanPackageVisitResult;
@@ -186,9 +186,9 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             User currentUser = null;
             // 根据不同的验证来源 获取用户
             if (scxMapping.checkedLogin() == CheckLoginType.Header) {
-                currentUser = ScxContext.getCurrentUserByHeader(context);
+                currentUser = ScxContext.getLoginUserByHeader(context);
             } else if (scxMapping.checkedLogin() == CheckLoginType.Cookie) {
-                currentUser = ScxContext.getCurrentUserByCookie(context);
+                currentUser = ScxContext.getLoginUserByCookie(context);
             }
             //session 中没有用户证明没有登录 返回 false
             if (currentUser == null) {

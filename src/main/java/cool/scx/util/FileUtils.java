@@ -1,7 +1,7 @@
 package cool.scx.util;
 
-import cool.scx.boot.ScxConfig;
 import cool.scx.business.system.ScxLogService;
+import cool.scx.config.ScxConfig;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

@@ -2,7 +2,7 @@ package cool.scx.server.handler;
 
 import cool.scx.annotation.websocket.ScxWebSocketController;
 import cool.scx.base.websocket.BaseWebSocketController;
-import cool.scx.boot.ScxContext;
+import cool.scx.context.ScxContext;
 import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
@@ -50,13 +50,11 @@ public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
         handler.onOpen(webSocket);
         //　WebSocket 连接
         webSocket.frameHandler(h -> {
-            var textData = h.textData();
-            if (textData != null) {
-                handler.onMessage(textData, h, webSocket);
+            if (h.isText()) {
+                handler.onMessage(h.textData(), h, webSocket);
             }
-            var binaryData = h.binaryData();
-            if (binaryData != null) {
-                handler.onBinaryMessage(binaryData, h, webSocket);
+            if (h.isBinary()) {
+                handler.onBinaryMessage(h.binaryData(), h, webSocket);
             }
         });
         webSocket.exceptionHandler(event -> handler.onError(event, webSocket));

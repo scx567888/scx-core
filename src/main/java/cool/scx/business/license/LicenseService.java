@@ -2,8 +2,8 @@ package cool.scx.business.license;
 
 import cool.scx.annotation.service.ScxService;
 import cool.scx.base.service.BaseService;
-import cool.scx.boot.ScxConfig;
 import cool.scx.business.system.ScxLogService;
+import cool.scx.config.ScxConfig;
 import cool.scx.util.CryptoUtils;
 
 import java.text.SimpleDateFormat;

@@ -3,7 +3,7 @@ package cool.scx.base.dao;
 import cool.scx.annotation.dao.Column;
 import cool.scx.annotation.dao.NoColumn;
 import cool.scx.annotation.dao.ScxModel;
-import cool.scx.boot.ScxConfig;
+import cool.scx.config.ScxConfig;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;

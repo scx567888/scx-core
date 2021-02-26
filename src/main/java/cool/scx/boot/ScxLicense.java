@@ -1,6 +1,7 @@
 package cool.scx.boot;
 
 import cool.scx.business.license.LicenseService;
+import cool.scx.context.ScxContext;
 import cool.scx.util.StringUtils;
 
 /**

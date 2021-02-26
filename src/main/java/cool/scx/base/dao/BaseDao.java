@@ -2,7 +2,7 @@ package cool.scx.base.dao;
 
 import cool.scx.annotation.dao.Column;
 import cool.scx.base.service.Param;
-import cool.scx.boot.ScxConfig;
+import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Color;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;

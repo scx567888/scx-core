@@ -1,4 +1,4 @@
-package cool.scx.boot;
+package cool.scx.config;
 
 import cool.scx.base.service.BaseTemplateDirective;
 import cool.scx.enumeration.Color;

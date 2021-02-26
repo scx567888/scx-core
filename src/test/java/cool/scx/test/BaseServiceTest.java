@@ -2,9 +2,9 @@ package cool.scx.test;
 
 import cool.scx.ScxCoreApp;
 import cool.scx.boot.ScxApp;
-import cool.scx.boot.ScxContext;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
+import cool.scx.context.ScxContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

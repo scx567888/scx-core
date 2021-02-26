@@ -1,7 +1,8 @@
-package cool.scx.boot;
+package cool.scx.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cool.scx.boot.ScxApp;
 import cool.scx.enumeration.Color;
 import cool.scx.util.*;
 
