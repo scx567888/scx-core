@@ -7,7 +7,6 @@ import cool.scx.annotation.http.ScxMapping;
 import cool.scx.base.dao.BaseModel;
 import cool.scx.base.service.BaseService;
 import cool.scx.base.service.Param;
-import cool.scx.business.system.ScxLogService;
 import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
 import cool.scx.config.ScxConfig;
@@ -16,6 +15,7 @@ import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.RequestMethod;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.FileUtils;
+import cool.scx.util.LogUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.vo.Download;
@@ -36,18 +36,14 @@ import java.util.Map;
 @ScxController("api")
 public class BaseController {
 
-    private final ScxLogService scxLogService;
-
     private final UploadFileService uploadFileService;
 
     /**
      * <p>Constructor for BaseController.</p>
      *
-     * @param scxLogService     a {@link cool.scx.business.system.ScxLogService} object.
      * @param uploadFileService a {@link cool.scx.business.uploadfile.UploadFileService} object.
      */
-    public BaseController(ScxLogService scxLogService, UploadFileService uploadFileService) {
-        this.scxLogService = scxLogService;
+    public BaseController(UploadFileService uploadFileService) {
         this.uploadFileService = uploadFileService;
     }
 
@@ -233,7 +229,7 @@ public class BaseController {
      * @param ctx       a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.vo.Download} object.
      * @throws cool.scx.exception.HttpResponseException if any.
-     * @throws java.io.UnsupportedEncodingException if any.
+     * @throws java.io.UnsupportedEncodingException     if any.
      */
     @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET)
     public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {
@@ -241,7 +237,7 @@ public class BaseController {
         if (!file.exists()) {
             throw new HttpResponseException(context -> context.response().setStatusCode(404).send("要下载的文件不存在或已被删除!!!"));
         }
-        scxLogService.outAndRecordLog("ip 为 :" + NetUtils.getIpAddr(ctx) + "的用户 下载了" + fileName);
+        LogUtils.recordLog("ip 为 :" + NetUtils.getIpAddr(ctx) + "的用户 下载了" + fileName);
         //  这里让文件限速到 500 kb
         return new Download(file, file.getName(), 512000L);
     }

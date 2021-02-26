@@ -8,6 +8,7 @@ import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.Color;
 import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.exception.HttpResponseException;
+import cool.scx.util.LogUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
@@ -45,7 +46,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         PackageUtils.scanPackageIncludePlugins(clazz -> {
             if (!clazz.isInterface() && LoginAndPermsHandler.class.isAssignableFrom(clazz) && clazz != DefaultLoginAndPermsHandler.class) {
                 try {
-                    StringUtils.println("已加载自定义 LoginAndPermsHandler 处理器 -> [" + clazz.getName() + "]", Color.BLUE);
+                    LogUtils.println("已加载自定义 LoginAndPermsHandler 处理器 -> [" + clazz.getName() + "]", Color.BLUE);
                     var myLoginAndPermsHandler = (LoginAndPermsHandler) clazz.getDeclaredConstructor().newInstance();
                     t[0] = myLoginAndPermsHandler;
                     return ScanPackageVisitResult.TERMINATE;
@@ -56,7 +57,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             return ScanPackageVisitResult.CONTINUE;
         });
         if (t[0] == null) {
-            StringUtils.println("已加载默认的 LoginAndPermsHandler 处理器 -> [" + DefaultLoginAndPermsHandler.class.getName() + "]", Color.BRIGHT_YELLOW);
+            LogUtils.println("已加载默认的 LoginAndPermsHandler 处理器 -> [" + DefaultLoginAndPermsHandler.class.getName() + "]", Color.BRIGHT_YELLOW);
             t[0] = new DefaultLoginAndPermsHandler();
         }
 
@@ -209,7 +210,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                         return true;
                     } else {
                         //获取用户全部的权限字符串
-                        var permStrByUser = ScxContext.userService.getPermStrByUser(currentUser);
+                        var permStrByUser = ScxContext.USER_SERVICE.getPermStrByUser(currentUser);
                         if (permStrByUser.contains(permStr)) {
                             return true;
                         } else {
@@ -302,7 +303,9 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                 .collect(Collectors.toSet());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(RoutingContext context) {
         //检查是否登录 并且权限是否正确

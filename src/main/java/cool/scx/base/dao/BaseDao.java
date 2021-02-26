@@ -4,6 +4,8 @@ import cool.scx.annotation.dao.Column;
 import cool.scx.base.service.Param;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Color;
+import cool.scx.enumeration.FixTableResult;
+import cool.scx.util.LogUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
@@ -37,11 +39,10 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     /**
-     * <p>fixTable.</p>
-     *
-     * @param clazz a {@link java.lang.Class} object.
+     * @param clazz
+     * @return 是否修复
      */
-    public static void fixTable(Class<?> clazz) {
+    public static FixTableResult fixTable(Class<?> clazz) {
         var table = getTableInfo(clazz);
         try (var connection = SQLRunner.getConnection()) {
             //第一步 先检查表是否存在 如果不存在 创建表
@@ -58,7 +59,7 @@ public final class BaseDao<Entity extends BaseModel> {
                 var nonExistentFields = Stream.of(table.allFields).filter(field -> !stringArrayList.contains(StringUtils.camel2Underscore(field.getName()))).collect(Collectors.toList());
                 if (nonExistentFields.size() != 0) {
                     var columns = nonExistentFields.stream().map(field -> StringUtils.camel2Underscore(field.getName())).collect(Collectors.joining(" , ", " [ ", " ] "));
-                    StringUtils.println("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!", Color.BRIGHT_BLUE);
+                    LogUtils.println("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!", Color.BRIGHT_BLUE);
                     var addSql = nonExistentFields.stream().map(field -> " ADD " + getSQLColumnByField(field)).collect(Collectors.joining(",", "", ""));
                     var alertSql = "ALTER TABLE `" + table.tableName + "` " + addSql;
                     var otherSQLByField = getOtherSQLByField(nonExistentFields.toArray(Field[]::new));
@@ -68,14 +69,19 @@ public final class BaseDao<Entity extends BaseModel> {
                         alertSql += ";";
                     }
                     SQLRunner.execute(alertSql);
+                    return FixTableResult.FIX_SUCCESS;
+                } else {
+                    return FixTableResult.NO_NEED_TO_FIX;
                 }
             } else {
-                StringUtils.println("未找到表 " + table.tableName + " --> 正在自动建立 !!!", Color.BRIGHT_MAGENTA);
+                LogUtils.println("未找到表 " + table.tableName + " --> 正在自动建立 !!!", Color.BRIGHT_MAGENTA);
                 var createTableSql = "CREATE TABLE `" + table.tableName + "` ( " + Stream.of(table.allFields).map(field -> getSQLColumnByField(field) + ",").collect(Collectors.joining("", "", "")) + String.join(",", getOtherSQLByField(table.allFields)) + ") ;";
                 SQLRunner.execute(createTableSql);
+                return FixTableResult.FIX_SUCCESS;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return FixTableResult.FIX_FAIL;
         }
     }
 
@@ -181,7 +187,7 @@ public final class BaseDao<Entity extends BaseModel> {
     public List<Long> saveList(List<Entity> entityList) {
         var size = entityList.size();
         if (size > splitSize) {
-            StringUtils.println("批量插入数据量过大 , 达到" + size + "条 !!! 已按照" + splitSize + "条进行切分 !!!", Color.BRIGHT_RED);
+            LogUtils.println("批量插入数据量过大 , 达到" + size + "条 !!! 已按照" + splitSize + "条进行切分 !!!", Color.BRIGHT_RED);
             var generatedKeys = new ArrayList<Long>(splitSize);
             double number = Math.ceil(1.0 * size / splitSize);
             for (int i = 0; i < number; i++) {

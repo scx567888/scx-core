@@ -9,13 +9,13 @@ import cool.scx.business.dept.UserDeptService;
 import cool.scx.business.role.RoleService;
 import cool.scx.business.role.UserRole;
 import cool.scx.business.role.UserRoleService;
-import cool.scx.business.system.ScxLogService;
 import cool.scx.config.ScxConfig;
 import cool.scx.exception.AuthException;
 import cool.scx.exception.TooManyErrorsException;
 import cool.scx.exception.UnknownUserException;
 import cool.scx.exception.WrongPasswordException;
 import cool.scx.util.CryptoUtils;
+import cool.scx.util.LogUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.ext.web.RoutingContext;
@@ -92,7 +92,7 @@ public class UserService extends BaseService<User> {
             }
             return user;
         } else {
-            ScxLogService.outLog(ip + " : 错误登录次数过多");
+            LogUtils.recordLog(ip + " : 错误登录次数过多");
             var duration = Duration.between(now, loginError.lastErrorDate).toSeconds();
             throw new TooManyErrorsException(duration);
         }

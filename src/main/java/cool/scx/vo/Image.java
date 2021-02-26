@@ -1,7 +1,6 @@
 package cool.scx.vo;
 
 import cool.scx.base.http.BaseVo;
-import cool.scx.server.ScxServer;
 import cool.scx.util.FileUtils;
 import cool.scx.util.MaxSizeHashMap;
 import io.vertx.core.buffer.Buffer;

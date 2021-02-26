@@ -3,8 +3,8 @@ package cool.scx.config;
 import cool.scx.base.service.BaseTemplateDirective;
 import cool.scx.enumeration.Color;
 import cool.scx.enumeration.ScanPackageVisitResult;
+import cool.scx.util.LogUtils;
 import cool.scx.util.PackageUtils;
-import cool.scx.util.StringUtils;
 import freemarker.template.Configuration;
 
 /**
@@ -43,7 +43,7 @@ public final class ScxCmsConfig {
             if (!clazz.isInterface() && BaseTemplateDirective.class.isAssignableFrom(clazz)) {
                 try {
                     var myDirective = (BaseTemplateDirective) clazz.getDeclaredConstructor().newInstance();
-                    StringUtils.println("已加载自定义 Freemarker 标签 [" + myDirective.getVariable() + "] Class -> " + clazz.getName(), Color.BLUE);
+                    LogUtils.println("已加载自定义 Freemarker 标签 [" + myDirective.getVariable() + "] Class -> " + clazz.getName(), Color.BLUE);
                     configuration.setSharedVariable(myDirective.getVariable(), myDirective);
                 } catch (Exception e) {
                     e.printStackTrace();

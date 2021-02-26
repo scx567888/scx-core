@@ -5,6 +5,7 @@ import cool.scx.base.service.BaseService;
 import cool.scx.business.system.ScxLogService;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.CryptoUtils;
+import cool.scx.util.LogUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -106,7 +107,7 @@ public class LicenseService extends BaseService<License> {
             return format.parse(decrypt);
         } catch (Exception e) {
             e.printStackTrace();
-            scxLogService.outAndRecordLog("License 有误 :" + license);
+            LogUtils.recordLog("License 有误 :" + license);
         }
         return null;
     }

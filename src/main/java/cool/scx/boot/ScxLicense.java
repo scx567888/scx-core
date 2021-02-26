@@ -2,7 +2,7 @@ package cool.scx.boot;
 
 import cool.scx.business.license.LicenseService;
 import cool.scx.context.ScxContext;
-import cool.scx.util.StringUtils;
+import cool.scx.util.LogUtils;
 
 /**
  * 校验 license 的工具类
@@ -23,13 +23,13 @@ public class ScxLicense {
      * <p>init.</p>
      */
     public static void init() {
-        StringUtils.println("校验 license 中 ...");
+        LogUtils.println("校验 license 中 ...");
         var licenseRight = licenseService.passLicense();
         if (!licenseRight) {
-            StringUtils.println("license 已失效!!! 请联系服务商...");
+            LogUtils.recordLog("license 已失效!!! 请联系服务商...");
             System.exit(-1);
         } else {
-            StringUtils.println("license 通过校验 ...");
+            LogUtils.recordLog("license 通过校验 ...");
         }
     }
 }

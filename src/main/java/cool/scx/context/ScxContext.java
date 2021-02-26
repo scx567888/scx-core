@@ -6,13 +6,15 @@ import cool.scx.annotation.service.ScxService;
 import cool.scx.base.dao.BaseDao;
 import cool.scx.base.dao.SQLRunner;
 import cool.scx.boot.ScxPlugins;
+import cool.scx.business.system.ScxLogService;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Color;
+import cool.scx.enumeration.FixTableResult;
 import cool.scx.enumeration.ScanPackageVisitResult;
+import cool.scx.util.LogUtils;
 import cool.scx.util.PackageUtils;
-import cool.scx.util.StringUtils;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <p>ScxContext class.</p>
@@ -33,7 +36,7 @@ public final class ScxContext {
     /**
      * Constant <code>userService</code>
      */
-    public static final UserService userService;
+    public static final UserService USER_SERVICE;
     /**
      * 存储所有在线的 连接
      */
@@ -46,12 +49,14 @@ public final class ScxContext {
     private static final AnnotationConfigApplicationContext applicationContext;
 
     static {
-        StringUtils.println("ScxContext 初始化中...", Color.GREEN);
+        LogUtils.println("ScxContext 初始化中...", Color.GREEN);
         applicationContext = new AnnotationConfigApplicationContext(PackageUtils.getBasePackages());
         ScxPlugins.pluginsClassList.forEach(applicationContext::register);
         initScxContext();
         fixTable();
-        userService = getBean(UserService.class);
+        USER_SERVICE = getBean(UserService.class);
+        LogUtils.showLog = ScxConfig.showLog;
+        LogUtils.scxLogService = getBean(ScxLogService.class);
     }
 
     /**
@@ -88,13 +93,16 @@ public final class ScxContext {
      * <p>fixTable.</p>
      */
     public static void fixTable() {
+        var noNeedFix = new AtomicBoolean(true);
         if (SQLRunner.testConnection()) {
-            StringUtils.println("修复数据表中...", Color.MAGENTA);
+            LogUtils.println("修复数据表中...", Color.MAGENTA);
             if (ScxConfig.fixTable) {
                 scxBeanClassNameMapping.forEach((k, v) -> {
                     if (v.isAnnotationPresent(ScxModel.class)) {
                         try {
-                            BaseDao.fixTable(v);
+                            if (BaseDao.fixTable(v) != FixTableResult.NO_NEED_TO_FIX) {
+                                noNeedFix.set(false);
+                            }
                         } catch (Exception ignored) {
 
                         }
@@ -102,13 +110,16 @@ public final class ScxContext {
                 });
             }
         }
+        if (noNeedFix.get()) {
+            LogUtils.println("没有表需要修复...", Color.MAGENTA);
+        }
     }
 
     /**
      * <p>init.</p>
      */
     public static void init() {
-        StringUtils.println("ScxContext 初始化完成...", Color.GREEN);
+        LogUtils.println("ScxContext 初始化完成...", Color.GREEN);
     }
 
     /**
@@ -120,7 +131,7 @@ public final class ScxContext {
     public static boolean removeLoginUserByHeader(RoutingContext ctx) {
         var token = ctx.request().getHeader(ScxConfig.tokenKey);
         boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-        StringUtils.println("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
+        LogUtils.println("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
         return b;
     }
 
@@ -133,7 +144,7 @@ public final class ScxContext {
     public static boolean removeLoginUserByCookie(RoutingContext ctx) {
         var token = ctx.getCookie(ScxConfig.cookieKey).getValue();
         boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-        StringUtils.println("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
+        LogUtils.println("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
         return b;
     }
 
@@ -150,7 +161,7 @@ public final class ScxContext {
         } else {
             sessionItem.token = token;
         }
-        StringUtils.println(username + "登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
+        LogUtils.println(username + "登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
     }
 
     /**
@@ -165,7 +176,7 @@ public final class ScxContext {
             return null;
         }
         //每次都从数据库中获取用户 保证 权限设置的及时性 但是为了 性能 此处应该做缓存 todo
-        return userService.findByUsername(sessionItem.username);
+        return USER_SERVICE.findByUsername(sessionItem.username);
     }
 
     /**
@@ -209,7 +220,7 @@ public final class ScxContext {
         } else {
             onlineItem.username = username;
         }
-        StringUtils.println(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size());
+        LogUtils.println(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size());
     }
 
     /**

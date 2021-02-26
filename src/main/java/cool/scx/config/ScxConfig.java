@@ -150,23 +150,23 @@ public final class ScxConfig {
 
 
     static {
-        StringUtils.println("ScxConfig v" + coreVersion + " 初始化中...", Color.BRIGHT_BLUE);
+        LogUtils.println("ScxConfig 初始化中...", Color.BRIGHT_BLUE);
 
         scxConfigJsonNode = getScxJsonConfig();
 
         port = getConfigValue("scx.port", 8080,
-                s -> StringUtils.println("✔ 服务器 IP 地址                        \t -->\t " + NetUtils.getLocalAddress() + "\r\n✔ 端口号                                \t -->\t " + s, Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.port                  \t -->\t 已采用默认值 : " + f, Color.RED),
+                s -> LogUtils.println("✔ 服务器 IP 地址                        \t -->\t " + NetUtils.getLocalAddress() + "\r\n✔ 端口号                                \t -->\t " + s, Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.port                  \t -->\t 已采用默认值 : " + f, Color.RED),
                 c -> ScxConfig.checkPort(c.asInt()), a -> ScxConfig.checkPort(Integer.parseInt(a)));
 
         pluginRoot = PackageUtils.getFileByAppRoot(getConfigValue("scx.plugin.root", "/plugins/",
-                s -> StringUtils.println("✔ 插件根目录                           \t -->\t " + s, Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.plugin.root             \t -->\t 已采用默认值 : " + f, Color.RED),
+                s -> LogUtils.println("✔ 插件根目录                           \t -->\t " + s, Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.plugin.root             \t -->\t 已采用默认值 : " + f, Color.RED),
                 JsonNode::asText, a -> a));
 
         pluginDisabledList = getConfigValue("scx.plugin.disabled-list", new HashSet<>(),
-                s -> StringUtils.println("✔ 禁用插件列表                           \t -->\t " + s, Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.plugin.disabled-list     \t -->\t 已采用默认值 : " + f, Color.RED),
+                s -> LogUtils.println("✔ 禁用插件列表                           \t -->\t " + s, Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.plugin.disabled-list     \t -->\t 已采用默认值 : " + f, Color.RED),
                 c -> {
                     var tempSet = new HashSet<String>();
                     c.forEach(cc -> tempSet.add(cc.asText()));
@@ -174,82 +174,82 @@ public final class ScxConfig {
                 }, a -> new HashSet<>(Arrays.asList(a.split(","))));
 
         uploadFilePath = getConfigValue("scx.file-path", PackageUtils.getFileByAppRoot("/scxUploadFile/"),
-                s -> StringUtils.println("✔ 文件上传目录                           \t -->\t " + s, Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.file-path             \t -->\t 已采用默认值 : " + f, Color.RED),
+                s -> LogUtils.println("✔ 文件上传目录                           \t -->\t " + s, Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.file-path             \t -->\t 已采用默认值 : " + f, Color.RED),
                 c -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
 
         bodyLimit = getConfigValue("scx.body-limit", 16777216L,
-                s -> StringUtils.println("✔ 请求体大小限制                          \t -->\t " + FileUtils.longToDisplaySize(s), Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.body-limit             \t -->\t 已采用默认值 : " + FileUtils.longToDisplaySize(f), Color.RED),
+                s -> LogUtils.println("✔ 请求体大小限制                          \t -->\t " + FileUtils.longToDisplaySize(s), Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.body-limit             \t -->\t 已采用默认值 : " + FileUtils.longToDisplaySize(f), Color.RED),
                 c -> FileUtils.displaySizeToLong(c.asText()), FileUtils::displaySizeToLong);
 
         confusionLoginError = getConfigValue("scx.confusion-login-error", false,
-                s -> StringUtils.println("✔ 是否混淆登录错误                       \t -->\t " + (s ? "是" : "否"), Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.confusion-login-error \t -->\t 已采用默认值 : " + f, Color.RED),
+                s -> LogUtils.println("✔ 是否混淆登录错误                       \t -->\t " + (s ? "是" : "否"), Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.confusion-login-error \t -->\t 已采用默认值 : " + f, Color.RED),
                 JsonNode::asBoolean, Boolean::valueOf);
 
         loginErrorLockTimes = getConfigValue("scx.login-error-lock-times", 999,
-                s -> StringUtils.println("✔ 登录错误锁定次数                     \t -->\t " + s + " 次", Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.login-error-lock-times \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asInt, Integer::valueOf);
+                s -> LogUtils.println("✔ 登录错误锁定次数                     \t -->\t " + s + " 次", Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.login-error-lock-times \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asInt, Integer::valueOf);
 
         loginErrorLockSecond = getConfigValue("scx.login-error-lock-second", 10,
-                s -> StringUtils.println("✔ 登录错误锁定的时间                    \t -->\t " + s + " 秒", Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.login-error-lock-second \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asInt, Integer::valueOf);
+                s -> LogUtils.println("✔ 登录错误锁定的时间                    \t -->\t " + s + " 秒", Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.login-error-lock-second \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asInt, Integer::valueOf);
 
         showLog = getConfigValue("scx.show-log", true,
-                s -> StringUtils.println("✔ 是否将错误日志打印到控制台              \t -->\t " + (s ? "是" : "否"), Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.show-log              \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asBoolean, Boolean::valueOf);
+                s -> LogUtils.println("✔ 是否将错误日志打印到控制台              \t -->\t " + (s ? "是" : "否"), Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.show-log              \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asBoolean, Boolean::valueOf);
 
         showGui = getConfigValue("scx.show-gui", false,
-                s -> StringUtils.println("✔ 是否将显示 GUI                      \t -->\t " + (s ? "是" : "否"), Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.show-gui              \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asBoolean, Boolean::valueOf);
+                s -> LogUtils.println("✔ 是否将显示 GUI                      \t -->\t " + (s ? "是" : "否"), Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.show-gui              \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asBoolean, Boolean::valueOf);
 
         realDelete = getConfigValue("scx.real-delete", false,
-                s -> StringUtils.println("✔ 数据库删除方式为                       \t -->\t " + (s ? "物理删除" : "逻辑删除"), Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.real-delete           \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asBoolean, Boolean::valueOf);
+                s -> LogUtils.println("✔ 数据库删除方式为                       \t -->\t " + (s ? "物理删除" : "逻辑删除"), Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.real-delete           \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asBoolean, Boolean::valueOf);
 
         license = getConfigValue("scx.license", null, ScxConfig::NoCode,
-                f -> StringUtils.println("✘ 未检测到 scx.license               \t -->\t 请检查 license 是否正确", Color.RED), JsonNode::asText, (a) -> a);
+                f -> LogUtils.println("✘ 未检测到 scx.license               \t -->\t 请检查 license 是否正确", Color.RED), JsonNode::asText, (a) -> a);
 
         openHttps = getConfigValue("scx.https.is-open", true,
-                s -> StringUtils.println("✔ 是否开启 https                       \t -->\t " + (s ? "是" : "否"), Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : ", Color.RED), JsonNode::asBoolean, Boolean::valueOf);
+                s -> LogUtils.println("✔ 是否开启 https                       \t -->\t " + (s ? "是" : "否"), Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : ", Color.RED), JsonNode::asBoolean, Boolean::valueOf);
 
         certificatePath = getConfigValue("scx.https.certificate-path", PackageUtils.getFileByAppRoot("/certificate/scx_dev.jks"),
-                s -> StringUtils.println("✔ 证书路径                           \t -->\t " + s.getPath(), Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.https.certificate-path        \t -->\t 请检查证书路径是否正确", Color.RED), (c) -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
+                s -> LogUtils.println("✔ 证书路径                           \t -->\t " + s.getPath(), Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.https.certificate-path        \t -->\t 请检查证书路径是否正确", Color.RED), (c) -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
 
         certificatePassword = getConfigValue("scx.https.certificate-password", "",
                 s -> NoCode(),
-                f -> StringUtils.println("✘ 未检测到 scx.license               \t -->\t 请检查证书密码是否正确", Color.RED), c -> CryptoUtils.decryptText(c.asText()), CryptoUtils::decryptText);
+                f -> LogUtils.println("✘ 未检测到 scx.license               \t -->\t 请检查证书密码是否正确", Color.RED), c -> CryptoUtils.decryptText(c.asText()), CryptoUtils::decryptText);
 
         dateTimeFormatter = DateTimeFormatter.ofPattern(getConfigValue("scx.date-time-pattern", "yyyy-MM-dd HH:mm:ss",
-                s -> StringUtils.println("✔ 日期格式为                          \t -->\t " + s, Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.date-time-pattern        \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asText, (a) -> a));
+                s -> LogUtils.println("✔ 日期格式为                          \t -->\t " + s, Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.date-time-pattern        \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asText, (a) -> a));
 
         cmsRoot = getConfigValue("scx.cms.root", PackageUtils.getFileByAppRoot("/c/"),
-                s -> StringUtils.println("✔ Cms 根目录                         \t -->\t " + s, Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.cms.root              \t -->\t 已采用默认值 : " + f, Color.RED), (c) -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
+                s -> LogUtils.println("✔ Cms 根目录                         \t -->\t " + s, Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.cms.root              \t -->\t 已采用默认值 : " + f, Color.RED), (c) -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
 
         cmsResourceUrl = getConfigValue("scx.cms.resource-url", "/static/*",
-                s -> StringUtils.println("✔ Cms 静态资源 Url                      \t -->\t " + s, Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.cms.resource-url         \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asText, (a) -> a);
+                s -> LogUtils.println("✔ Cms 静态资源 Url                      \t -->\t " + s, Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.cms.resource-url         \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asText, (a) -> a);
 
         cmsResourceLocations = getConfigValue("scx.cms.resource-locations", PackageUtils.getFileByAppRoot("/c/static"),
-                s -> StringUtils.println("✔ Cms 静态资源目录                       \t -->\t " + s, Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.cms.resource-locations   \t -->\t 已采用默认值 : " + f, Color.RED), (c) -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
+                s -> LogUtils.println("✔ Cms 静态资源目录                       \t -->\t " + s, Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.cms.resource-locations   \t -->\t 已采用默认值 : " + f, Color.RED), (c) -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
 
         cmsResourceSuffix = getConfigValue("scx.cms.resource-suffix", ".html",
-                s -> StringUtils.println("✔ Cms 静态资源后缀                       \t -->\t " + s, Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.cms.resource-suffix   \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asText, a -> a);
+                s -> LogUtils.println("✔ Cms 静态资源后缀                       \t -->\t " + s, Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.cms.resource-suffix   \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asText, a -> a);
 
         cmsFaviconIcoPath = getConfigValue("scx.cms.favicon-ico-path", PackageUtils.getFileByAppRoot("/c/favicon.ico"),
-                s -> StringUtils.println("✔ Cms Favicon Ico 路径                  \t -->\t " + s, Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.cms.favicon-ico-path   \t -->\t 已采用默认值 : " + f, Color.RED), (c) -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
+                s -> LogUtils.println("✔ Cms Favicon Ico 路径                  \t -->\t " + s, Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.cms.favicon-ico-path   \t -->\t 已采用默认值 : " + f, Color.RED), (c) -> PackageUtils.getFileByAppRoot(c.asText()), PackageUtils::getFileByAppRoot);
 
         allowedOrigin = getConfigValue("scx.allowed-origin", "*",
-                s -> StringUtils.println("✔ 允许的请求源                           \t -->\t " + s, Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.allowed-origin           \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asText, (a) -> a);
+                s -> LogUtils.println("✔ 允许的请求源                           \t -->\t " + s, Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.allowed-origin           \t -->\t 已采用默认值 : " + f, Color.RED), JsonNode::asText, (a) -> a);
 
         dataSourceUrl = getConfigValue("scx.data-source.url");
 
@@ -258,8 +258,8 @@ public final class ScxConfig {
         dataSourcePassword = CryptoUtils.decryptText(getConfigValue("scx.data-source.password"));
 
         fixTable = getConfigValue("scx.fix-table", false,
-                s -> StringUtils.println("✔ 修复数据表                          \t -->\t " + (s ? "是" : "否"), Color.GREEN),
-                f -> StringUtils.println("✘ 未检测到 scx.fix-table               \t -->\t 已采用默认值 : " + f, Color.RED),
+                s -> LogUtils.println("✔ 修复数据表                          \t -->\t " + (s ? "是" : "否"), Color.GREEN),
+                f -> LogUtils.println("✘ 未检测到 scx.fix-table               \t -->\t 已采用默认值 : " + f, Color.RED),
                 JsonNode::asBoolean, Boolean::valueOf);
 
     }
@@ -267,7 +267,7 @@ public final class ScxConfig {
     private static int checkPort(int p) {
         while (NetUtils.isLocalePortUsing(p)) {
             p = p + 1;
-            StringUtils.println("✘ 端口号 [ " + (p - 1) + " ] 已被占用 !!!         \t -->\t 新端口号 : " + p, Color.RED);
+            LogUtils.println("✘ 端口号 [ " + (p - 1) + " ] 已被占用 !!!         \t -->\t 新端口号 : " + p, Color.RED);
         }
         return p;
     }
@@ -283,9 +283,9 @@ public final class ScxConfig {
         try {
             var scxConfigJsons = PackageUtils.getAppRoot().listFiles(file -> file.isFile() && file.getName().startsWith("scx") && file.getName().endsWith(".json"));
             rootNode = mapper.readTree(scxConfigJsons[0]);
-            StringUtils.println("✔ 已加载配置文件                       \t -->\t " + scxConfigJsons[0].getPath(), Color.GREEN);
+            LogUtils.println("✔ 已加载配置文件                       \t -->\t " + scxConfigJsons[0].getPath(), Color.GREEN);
         } catch (Exception e) {
-            StringUtils.println("✘ 配置文件已损坏!!!", Color.RED);
+            LogUtils.println("✘ 配置文件已损坏!!!", Color.RED);
         }
         return rootNode;
     }
@@ -413,7 +413,7 @@ public final class ScxConfig {
      * <p>init.</p>
      */
     public static void init() {
-        StringUtils.println("ScxConfig 初始化完成...", Color.BRIGHT_BLUE);
+        LogUtils.println("ScxConfig 初始化完成...", Color.BRIGHT_BLUE);
     }
 
 }

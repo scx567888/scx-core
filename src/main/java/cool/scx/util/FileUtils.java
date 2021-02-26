@@ -1,6 +1,5 @@
 package cool.scx.util;
 
-import cool.scx.business.system.ScxLogService;
 import cool.scx.config.ScxConfig;
 
 import java.io.*;
@@ -91,7 +90,7 @@ public class FileUtils {
         if (!tempFileParent.exists()) {
             boolean b = tempFileParent.mkdirs();
             if (!b) {
-                ScxLogService.outLog("创建目录失败!!!", true);
+                LogUtils.println("创建目录失败!!!");
             }
         }
         try {

@@ -61,7 +61,7 @@ public final class NetUtils {
     public static void text() {
         String url = "https://www.baidu.com";
         String s = sendHttpRequest(url, "GET");
-        StringUtils.println(s);
+        LogUtils.println(s);
     }
 
     /**
@@ -136,6 +136,9 @@ public final class NetUtils {
      * @return IP
      */
     public static String getIpAddr(RoutingContext context) {
+        if (context == null) {
+            return "";
+        }
         HttpServerRequest request = context.request();
         var ip = request.getHeader("X-Real-IP");
         if (StringUtils.isNotEmpty(ip) && !"unknown".equalsIgnoreCase(ip)) {

@@ -23,6 +23,7 @@ import cool.scx.exception.AuthException;
 import cool.scx.exception.TooManyErrorsException;
 import cool.scx.exception.UnknownUserException;
 import cool.scx.exception.WrongPasswordException;
+import cool.scx.util.LogUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
@@ -97,10 +98,10 @@ public class UserController {
             //密码错误次数过多
             return Json.fail("tooManyErrors").data("remainingTime", tee.remainingTime);
         } catch (AuthException ae) {
-            ScxLogService.outLog("登录出错 : " + ae.getMessage(), true);
+            LogUtils.recordLog("登录出错 : " + ae.getMessage(), "", ctx);
             return Json.fail("logonFailure");
         } catch (Exception e) {
-            ScxLogService.outLog("密码加密校验出错 : " + e.getMessage(), true);
+            LogUtils.recordLog("密码加密校验出错 : " + e.getMessage(), "", ctx);
             return Json.fail("logonFailure");
         }
     }
@@ -261,7 +262,7 @@ public class UserController {
         var currentUser = ScxContext.getLoginUserByHeader(context);
         currentUser.avatarId = queryUser.avatarId;
         var b = userService.update(currentUser) != null;
-        ScxLogService.outLog("更改了头像 用户名是 :" + currentUser.username);
+        LogUtils.recordLog("更改了头像 用户名是 :" + currentUser.username);
         return Json.ok().data("success", b);
     }
 
@@ -298,7 +299,7 @@ public class UserController {
         currentUser.password = queryUser.password;
         currentUser.salt = null;
         var b = userService.updateUserPassword(currentUser) != null;
-        scxLogService.recordLog("更新了自己的信息", "用户名是 :" + currentUser.username, context);
+        LogUtils.recordLog("更新了自己的信息", "用户名是 :" + currentUser.username, context);
         return Json.ok().data("success", b);
     }
 

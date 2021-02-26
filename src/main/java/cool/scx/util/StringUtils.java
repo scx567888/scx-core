@@ -1,11 +1,7 @@
 package cool.scx.util;
 
 
-import cool.scx.enumeration.Color;
-
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -16,16 +12,6 @@ import java.util.stream.Collectors;
  * @version 0.3.6
  */
 public class StringUtils {
-    private static final Map<Integer, Color> printColor = new HashMap<>();
-    private static int nextPrintColor = 0;
-
-    static {
-        var i = 0;
-        for (Color value : Color.values()) {
-            printColor.put(i, value);
-            i = i + 1;
-        }
-    }
 
     /**
      * <p>isNotEmpty.</p>
@@ -98,40 +84,6 @@ public class StringUtils {
     }
 
     /**
-     * <p>print.</p>
-     *
-     * @param str       a {@link java.lang.String} object.
-     * @param ansiColor a {@link cool.scx.enumeration.Color} object.
-     */
-    public static void print(String str, Color ansiColor) {
-        System.err.print("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
-    }
-
-    /**
-     * <p>println.</p>
-     *
-     * @param str       a {@link java.lang.String} object.
-     * @param ansiColor a {@link cool.scx.enumeration.Color} object.
-     */
-    public static void println(String str, Color ansiColor) {
-        System.err.println("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
-    }
-
-    /**
-     * 向控制台打印 颜色自动
-     *
-     * @param str a {@link java.lang.String} object.
-     */
-    public static void println(String str) {
-        if (nextPrintColor >= printColor.size()) {
-            nextPrintColor = 0;
-        }
-        System.err.println("\u001B[" + printColor.get(nextPrintColor).toString() + "m" + str + "\u001B[0m");
-        nextPrintColor = nextPrintColor + 1;
-    }
-
-
-    /**
      * 清理分隔符错误的路径如 清理前 : a/b//c -- 清理后 : /a/b/c
      *
      * @param url 需要清理的 url 集合
@@ -140,6 +92,5 @@ public class StringUtils {
     public static String clearHttpUrl(String... url) {
         return Arrays.stream(String.join("/", url).split("/")).filter(s -> !"".equals(s)).collect(Collectors.joining("/", "/", ""));
     }
-
 
 }

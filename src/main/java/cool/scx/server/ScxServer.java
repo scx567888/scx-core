@@ -3,8 +3,8 @@ package cool.scx.server;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Color;
 import cool.scx.server.handler.ScxWebSocketHandler;
+import cool.scx.util.LogUtils;
 import cool.scx.util.NetUtils;
-import cool.scx.util.StringUtils;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
@@ -35,7 +35,7 @@ public final class ScxServer extends AbstractVerticle {
     private static boolean serverState = false;
 
     static {
-        StringUtils.println("正在部署服务...", Color.BRIGHT_BLUE);
+        LogUtils.println("正在部署服务...", Color.BRIGHT_BLUE);
         Vertx.vertx().deployVerticle(new ScxServer());
     }
 
@@ -52,7 +52,7 @@ public final class ScxServer extends AbstractVerticle {
      * <p>init.</p>
      */
     public static void init() {
-        StringUtils.println("服务部署完毕...", Color.BRIGHT_GREEN);
+        LogUtils.println("服务部署完毕...", Color.BRIGHT_BLUE);
     }
 
     /**
@@ -70,15 +70,15 @@ public final class ScxServer extends AbstractVerticle {
         }
         server.listen(http -> {
             if (http.succeeded()) {
-                StringUtils.println("服务器启动成功...", Color.GREEN);
+                LogUtils.println("服务器启动成功...", Color.GREEN);
                 var httpOrHttps = ScxConfig.openHttps ? "https" : "http";
-                StringUtils.println("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + ScxConfig.port + "/", Color.GREEN);
-                StringUtils.println("> 本地 : " + httpOrHttps + "://localhost:" + ScxConfig.port + "/", Color.GREEN);
+                LogUtils.println("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + ScxConfig.port + "/", Color.GREEN);
+                LogUtils.println("> 本地 : " + httpOrHttps + "://localhost:" + ScxConfig.port + "/", Color.GREEN);
             } else {
                 http.cause().printStackTrace();
             }
         });
-        serverState=true;
+        serverState = true;
     }
 
     /**
@@ -86,7 +86,7 @@ public final class ScxServer extends AbstractVerticle {
      */
     public static void stopVertxServer() {
         server.close();
-        StringUtils.println("服务器已停止...", Color.BRIGHT_RED);
+        LogUtils.println("服务器已停止...", Color.BRIGHT_RED);
         serverState = false;
     }
 
@@ -98,7 +98,7 @@ public final class ScxServer extends AbstractVerticle {
     private static void initVertServer(Vertx vertx) {
         server = vertx.createHttpServer(getHttpServerOptions());
         server.requestHandler(ScxRouterFactory.getRouter(vertx)).webSocketHandler(new ScxWebSocketHandler());
-        StringUtils.println("服务器初始化完毕...", Color.GREEN);
+        LogUtils.println("服务器初始化完毕...", Color.GREEN);
     }
 
     /**
@@ -107,6 +107,7 @@ public final class ScxServer extends AbstractVerticle {
      * @return 服务器配置项
      */
     private static HttpServerOptions getHttpServerOptions() {
+        LogUtils.println("服务器配置文件初始化中...", Color.YELLOW);
         var httpServerOptions = new HttpServerOptions();
         httpServerOptions.setPort(ScxConfig.port);
         if (ScxConfig.openHttps) {
@@ -116,7 +117,7 @@ public final class ScxServer extends AbstractVerticle {
                             .setPath(ScxConfig.certificatePath.getPath())
                             .setPassword(ScxConfig.certificatePassword));
         }
-        StringUtils.println("服务器配置文件初始化完毕...", Color.YELLOW);
+        LogUtils.println("服务器配置文件初始化完毕...", Color.YELLOW);
         return httpServerOptions;
     }
 
