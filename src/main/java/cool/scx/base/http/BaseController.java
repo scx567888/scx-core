@@ -246,7 +246,6 @@ public class BaseController {
         return new Download(file, file.getName(), 512000L);
     }
 
-
     /**
      * 通用查看图片方法
      *
@@ -276,7 +275,7 @@ public class BaseController {
      */
     @ScxMapping("/showPictureById/:id")
     public Image showPictureById(@PathParam Long id, @QueryParam("w") Integer width, @QueryParam("h") Integer height) {
-        return new Image(new File(ScxConfig.uploadFilePath + "/" + uploadFileService.getById(id).filePath), width, height);
+        return new Image(ScxConfig.uploadFilePath + "/" + uploadFileService.getById(id).filePath, width, height);
     }
 
     /**

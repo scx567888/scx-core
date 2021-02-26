@@ -53,6 +53,19 @@ public class Image implements BaseVo {
         height = _height;
     }
 
+    public Image(String _filePath) {
+        file = new File(_filePath);
+        width = null;
+        height = null;
+    }
+
+    public Image(String _filePath, Integer _width, Integer _height) {
+        file = new File(_filePath);
+        width = _width;
+        height = _height;
+    }
+
+
     /**
      * {@inheritDoc}
      */

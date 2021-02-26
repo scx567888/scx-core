@@ -29,12 +29,23 @@ public final class ScxServer extends AbstractVerticle {
      * Constant <code>server</code>
      */
     public static HttpServer server;
+    /**
+     * 服务器是否在运行中
+     */
+    private static boolean serverState = false;
+
+    public static boolean getServerState() {
+        return serverState;
+    }
 
     /**
      * <p>init.</p>
      */
     public static void init() {
-        Vertx.vertx().deployVerticle(new ScxServer());
+        if (!serverState) {
+            serverState = true;
+            Vertx.vertx().deployVerticle(new ScxServer());
+        }
     }
 
     /**
@@ -51,8 +62,9 @@ public final class ScxServer extends AbstractVerticle {
      */
     public static void stopServer() {
         server.close();
+        StringUtils.println("服务器已停止...", Color.BRIGHT_RED);
+        serverState = false;
     }
-
 
     /**
      * {@inheritDoc}
@@ -88,7 +100,6 @@ public final class ScxServer extends AbstractVerticle {
                         startPromise.fail(http.cause());
                     }
                 });
-
     }
 
 }
