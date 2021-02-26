@@ -1,11 +1,11 @@
-package cool.scx.server;
+package cool.scx.server.http;
 
 import cool.scx.annotation.http.ScxController;
 import cool.scx.annotation.http.ScxMapping;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.ScanPackageVisitResult;
-import cool.scx.server.handler.BodyHandler;
-import cool.scx.server.handler.ScxMappingHandler;
+import cool.scx.server.http.handler.BodyHandler;
+import cool.scx.server.http.handler.ScxMappingHandler;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.core.Vertx;
@@ -16,6 +16,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.FaviconHandler;
 import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.impl.RouterImpl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,25 +27,23 @@ import java.util.HashSet;
  * @author 司昌旭
  * @version 0.3.6
  */
-public final class ScxRouterFactory {
+public final class ScxRequestHandler extends RouterImpl {
 
     /**
-     * <p>getRouter.</p>
+     * <p>Constructor for ScxRequestHandler.</p>
      *
      * @param vertx a {@link io.vertx.core.Vertx} object.
-     * @return a {@link io.vertx.ext.web.Router} object.
      */
-    public static Router getRouter(Vertx vertx) {
-        var router = Router.router(vertx);
-        registerFaviconHandler(router, vertx);
-        registerCookieHandler(router);
-        registerCorsHandler(router);
-        registerBodyHandler(router);
-        registerScxMappingHandler(router);
-        registerStaticHandler(router);
+    public ScxRequestHandler(Vertx vertx) {
+        super(vertx);
+        registerFaviconHandler(this, vertx);
+        registerCookieHandler(this);
+        registerCorsHandler(this);
+        registerBodyHandler(this);
+        registerScxMappingHandler(this);
+        registerStaticHandler(this);
         // 当以上所有处理器都无法匹配时 向客户端返回 404
-        router.route().handler(handle -> handle.fail(404));
-        return router;
+        this.route().handler(handle -> handle.fail(404));
     }
 
     /**

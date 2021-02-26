@@ -1,4 +1,4 @@
-package cool.scx.server.handler;
+package cool.scx.server.http.handler;
 
 import cool.scx.config.ScxConfig;
 import cool.scx.util.StringUtils;
@@ -21,6 +21,12 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * <p>BodyHandler class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class BodyHandler implements Handler<RoutingContext> {
     private static final Logger LOG = LoggerFactory.getLogger(BodyHandler.class);
     private static final int DEFAULT_INITIAL_BODY_BUFFER_SIZE = 1024;
@@ -29,12 +35,16 @@ public class BodyHandler implements Handler<RoutingContext> {
     private boolean isPreallocateBodyBuffer;
 
 
+    /**
+     * <p>Constructor for BodyHandler.</p>
+     */
     public BodyHandler() {
         this.mergeFormAttributes = true;
         this.deleteUploadedFilesOnEnd = false;
         this.isPreallocateBodyBuffer = false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void handle(RoutingContext context) {
         HttpServerRequest request = context.request();
@@ -61,16 +71,34 @@ public class BodyHandler implements Handler<RoutingContext> {
     }
 
 
+    /**
+     * <p>Setter for the field <code>mergeFormAttributes</code>.</p>
+     *
+     * @param mergeFormAttributes a boolean.
+     * @return a {@link cool.scx.server.http.handler.BodyHandler} object.
+     */
     public BodyHandler setMergeFormAttributes(boolean mergeFormAttributes) {
         this.mergeFormAttributes = mergeFormAttributes;
         return this;
     }
 
+    /**
+     * <p>Setter for the field <code>deleteUploadedFilesOnEnd</code>.</p>
+     *
+     * @param deleteUploadedFilesOnEnd a boolean.
+     * @return a {@link cool.scx.server.http.handler.BodyHandler} object.
+     */
     public BodyHandler setDeleteUploadedFilesOnEnd(boolean deleteUploadedFilesOnEnd) {
         this.deleteUploadedFilesOnEnd = deleteUploadedFilesOnEnd;
         return this;
     }
 
+    /**
+     * <p>setPreallocateBodyBuffer.</p>
+     *
+     * @param isPreallocateBodyBuffer a boolean.
+     * @return a {@link cool.scx.server.http.handler.BodyHandler} object.
+     */
     public BodyHandler setPreallocateBodyBuffer(boolean isPreallocateBodyBuffer) {
         this.isPreallocateBodyBuffer = isPreallocateBodyBuffer;
         return this;
@@ -180,7 +208,7 @@ public class BodyHandler implements Handler<RoutingContext> {
         public void handle(Buffer buff) {
             if (!this.failed) {
                 this.uploadSize += (long) buff.length();
-                if ( this.uploadSize > ScxConfig.bodyLimit) {
+                if (this.uploadSize > ScxConfig.bodyLimit) {
                     this.failed = true;
                     this.cancelAndCleanupFileUploads();
                     this.context.fail(413);

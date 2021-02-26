@@ -2,7 +2,8 @@ package cool.scx.server;
 
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Color;
-import cool.scx.server.handler.ScxWebSocketHandler;
+import cool.scx.server.http.ScxRequestHandler;
+import cool.scx.server.websocket.ScxWebSocketHandler;
 import cool.scx.util.LogUtils;
 import cool.scx.util.NetUtils;
 import io.vertx.core.AbstractVerticle;
@@ -100,7 +101,7 @@ public final class ScxServer extends AbstractVerticle {
      */
     private static void initVertServer(Vertx vertx) {
         server = vertx.createHttpServer(getHttpServerOptions());
-        server.requestHandler(ScxRouterFactory.getRouter(vertx)).webSocketHandler(new ScxWebSocketHandler());
+        server.requestHandler(new ScxRequestHandler(vertx)).webSocketHandler(new ScxWebSocketHandler());
         LogUtils.println("服务器初始化完毕...", Color.GREEN);
     }
 

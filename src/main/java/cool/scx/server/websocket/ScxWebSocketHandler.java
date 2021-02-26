@@ -1,4 +1,4 @@
-package cool.scx.server.handler;
+package cool.scx.server.websocket;
 
 import cool.scx.annotation.websocket.ScxWebSocketController;
 import cool.scx.base.websocket.BaseWebSocketController;
@@ -37,9 +37,7 @@ public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void handle(ServerWebSocket webSocket) {
         var handler = SCX_WEB_SOCKET_CONTROLLER_HANDLERS.get(webSocket.path());

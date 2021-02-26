@@ -1,4 +1,4 @@
-package cool.scx.server.handler;
+package cool.scx.server.http.handler;
 
 import cool.scx.annotation.http.*;
 import cool.scx.base.http.BaseVo;
@@ -91,14 +91,6 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         this.httpMethods = getHttpMethod();
         this.permStr = clazz.getSimpleName() + ":" + method.getName();
     }
-
-    /**
-     * <p>init.</p>
-     */
-    public static void init() {
-
-    }
-
 
     /**
      * 根据 controller 获取 api 的 名称
@@ -303,9 +295,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                 .collect(Collectors.toSet());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void handle(RoutingContext context) {
         //检查是否登录 并且权限是否正确
