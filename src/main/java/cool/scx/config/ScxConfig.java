@@ -211,7 +211,7 @@ public final class ScxConfig {
         license = getConfigValue("scx.license", null, ScxConfig::NoCode,
                 f -> LogUtils.println("✘ 未检测到 scx.license               \t -->\t 请检查 license 是否正确", Color.RED), JsonNode::asText, (a) -> a);
 
-        openHttps = getConfigValue("scx.https.is-open", true,
+        openHttps = getConfigValue("scx.https.is-open", false,
                 s -> LogUtils.println("✔ 是否开启 https                       \t -->\t " + (s ? "是" : "否"), Color.GREEN),
                 f -> LogUtils.println("✘ 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : ", Color.RED), JsonNode::asBoolean, Boolean::valueOf);
 
