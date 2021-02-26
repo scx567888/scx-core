@@ -115,6 +115,7 @@ public final class ScxContext {
      * <p>logoutUser.</p>
      *
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a boolean.
      */
     public static boolean removeLoginUserByHeader(RoutingContext ctx) {
         var token = ctx.request().getHeader(ScxConfig.tokenKey);
@@ -127,6 +128,7 @@ public final class ScxContext {
      * <p>logoutUserByCookie.</p>
      *
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a boolean.
      */
     public static boolean removeLoginUserByCookie(RoutingContext ctx) {
         var token = ctx.getCookie(ScxConfig.cookieKey).getValue();
@@ -166,6 +168,12 @@ public final class ScxContext {
         return userService.findByUsername(sessionItem.username);
     }
 
+    /**
+     * <p>getLoginUserByHeader.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
+     * @return a {@link cool.scx.business.user.User} object.
+     */
     public static User getLoginUserByHeader(RoutingContext ctx) {
         String token = ctx.request().getHeader(ScxConfig.tokenKey);
         return getLoginUserByToken(token);
@@ -182,6 +190,12 @@ public final class ScxContext {
         return getLoginUserByToken(token);
     }
 
+    /**
+     * <p>addOnlineItem.</p>
+     *
+     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @param username  a {@link java.lang.String} object.
+     */
     public static void addOnlineItem(ServerWebSocket webSocket, String username) {
         var binaryHandlerID = webSocket.binaryHandlerID();
         //看看这个相对应的连接 是不是 已经注册到 ONLINE_ITEMS 中了 如果已经存在 就不重写注册了 而是直接更新 username
@@ -198,23 +212,51 @@ public final class ScxContext {
         StringUtils.printlnAutoColor(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size());
     }
 
+    /**
+     * <p>removeOnlineItemByWebSocket.</p>
+     *
+     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @return a boolean.
+     */
     public static boolean removeOnlineItemByWebSocket(ServerWebSocket webSocket) {
         return ONLINE_ITEMS.removeIf(f -> f.webSocket.binaryHandlerID().equals(webSocket.binaryHandlerID()));
     }
 
+    /**
+     * <p>getOnlineUserCount.</p>
+     *
+     * @return a long.
+     */
     public static long getOnlineUserCount() {
         return ONLINE_ITEMS.stream().filter(u -> u.username != null).count();
     }
 
+    /**
+     * <p>getOnlineItemByWebSocket.</p>
+     *
+     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @return a {@link cool.scx.context.OnlineItem} object.
+     */
     public static OnlineItem getOnlineItemByWebSocket(ServerWebSocket webSocket) {
         var binaryHandlerID = webSocket.binaryHandlerID();
         return ONLINE_ITEMS.stream().filter(u -> u.webSocket.binaryHandlerID().equals(binaryHandlerID)).findAny().orElse(null);
     }
 
+    /**
+     * <p>getOnlineItemByUserName.</p>
+     *
+     * @param username a {@link java.lang.String} object.
+     * @return a {@link cool.scx.context.OnlineItem} object.
+     */
     public static OnlineItem getOnlineItemByUserName(String username) {
         return ONLINE_ITEMS.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);
     }
 
+    /**
+     * <p>getOnlineItemList.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public static List<OnlineItem> getOnlineItemList() {
         return ONLINE_ITEMS;
     }
