@@ -286,12 +286,14 @@ public class BaseController {
      * @return 文件保存的路径
      */
     @ScxMapping("/upload")
-    public Json upload(File file,
+    public Json upload(RoutingContext context,File file,
                        String fileName,
                        String fileSize,
                        Integer chunksNumber,
                        Integer chunk,
                        Integer type) {
+        var s=context.fileUploads();
+        System.out.println();
         //if ("".equals(fileName)) {
         //    //fileName = file.getOriginalFilename();
         //}

@@ -29,7 +29,7 @@
     "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
     "real-delete": false,
     "show-log": true,
-    "show-gui": true,
+    "show-gui": false,
     "fix-table": true,
     "date-time-pattern": "yyyy-MM-dd HH:mm:ss",
     "https": {

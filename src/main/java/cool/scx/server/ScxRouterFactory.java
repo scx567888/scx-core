@@ -4,6 +4,7 @@ import cool.scx.annotation.http.ScxController;
 import cool.scx.annotation.http.ScxMapping;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.ScanPackageVisitResult;
+import cool.scx.server.handler.BodyHandler;
 import cool.scx.server.handler.ScxMappingHandler;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
@@ -12,7 +13,6 @@ import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.impl.CookieImpl;
 import io.vertx.ext.web.Router;
-import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.FaviconHandler;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -89,10 +89,7 @@ public final class ScxRouterFactory {
      */
 
     private static void registerBodyHandler(Router router) {
-        router.route()
-                .method(HttpMethod.POST)
-                .method(HttpMethod.PUT)
-                .handler(BodyHandler.create(false).setBodyLimit(ScxConfig.bodyLimit));
+        router.route().method(HttpMethod.POST).method(HttpMethod.PUT).handler(new BodyHandler());
     }
 
     /**
