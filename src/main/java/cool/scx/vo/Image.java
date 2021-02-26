@@ -53,12 +53,24 @@ public class Image implements BaseVo {
         height = _height;
     }
 
+    /**
+     * <p>Constructor for Image.</p>
+     *
+     * @param _filePath a {@link java.lang.String} object.
+     */
     public Image(String _filePath) {
         file = new File(_filePath);
         width = null;
         height = null;
     }
 
+    /**
+     * <p>Constructor for Image.</p>
+     *
+     * @param _filePath a {@link java.lang.String} object.
+     * @param _width a {@link java.lang.Integer} object.
+     * @param _height a {@link java.lang.Integer} object.
+     */
     public Image(String _filePath, Integer _width, Integer _height) {
         file = new File(_filePath);
         width = _width;
@@ -66,9 +78,7 @@ public class Image implements BaseVo {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void sendToClient(RoutingContext context) {
         var response = context.response();

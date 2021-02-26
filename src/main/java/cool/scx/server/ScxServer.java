@@ -34,6 +34,11 @@ public final class ScxServer extends AbstractVerticle {
      */
     private static boolean serverState = false;
 
+    /**
+     * <p>Getter for the field <code>serverState</code>.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean getServerState() {
         return serverState;
     }
