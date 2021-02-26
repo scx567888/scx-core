@@ -8,14 +8,24 @@ import java.util.Map;
  *
  * @param <K>
  * @param <V>
+ * @author scx56
+ * @version $Id: $Id
  */
 public class MaxSizeHashMap<K, V> extends LinkedHashMap<K, V> {
     private final int maxSize;
 
+    /**
+     * <p>Constructor for MaxSizeHashMap.</p>
+     *
+     * @param maxSize a int.
+     */
     public MaxSizeHashMap(int maxSize) {
         this.maxSize = maxSize;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
         return size() > maxSize;
