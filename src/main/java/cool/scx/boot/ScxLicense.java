@@ -23,13 +23,13 @@ public class ScxLicense {
      * <p>init.</p>
      */
     public static void init() {
-        StringUtils.printlnAutoColor("校验 license 中 ...");
+        StringUtils.println("校验 license 中 ...");
         var licenseRight = licenseService.passLicense();
         if (!licenseRight) {
-            StringUtils.printlnAutoColor("license 已失效!!! 请联系服务商...");
+            StringUtils.println("license 已失效!!! 请联系服务商...");
             System.exit(-1);
         } else {
-            StringUtils.printlnAutoColor("license 通过校验 ...");
+            StringUtils.println("license 通过校验 ...");
         }
     }
 }

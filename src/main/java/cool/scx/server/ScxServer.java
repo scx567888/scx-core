@@ -24,15 +24,20 @@ public final class ScxServer extends AbstractVerticle {
     /**
      * Constant <code>eventBus</code>
      */
-    public static EventBus eventBus;
+    private static EventBus eventBus;
     /**
      * Constant <code>server</code>
      */
-    public static HttpServer server;
+    private static HttpServer server;
     /**
      * 服务器是否在运行中
      */
     private static boolean serverState = false;
+
+    static {
+        StringUtils.println("正在部署服务...", Color.BRIGHT_BLUE);
+        Vertx.vertx().deployVerticle(new ScxServer());
+    }
 
     /**
      * <p>Getter for the field <code>serverState</code>.</p>
@@ -47,14 +52,11 @@ public final class ScxServer extends AbstractVerticle {
      * <p>init.</p>
      */
     public static void init() {
-        if (!serverState) {
-            serverState = true;
-            Vertx.vertx().deployVerticle(new ScxServer());
-        }
+        StringUtils.println("服务部署完毕...", Color.BRIGHT_GREEN);
     }
 
     /**
-     * <p>Getter for the field <code>eventBus</code>.</p>
+     * 获取 eventbus
      *
      * @return a {@link io.vertx.core.eventbus.EventBus} object.
      */
@@ -62,22 +64,49 @@ public final class ScxServer extends AbstractVerticle {
         return eventBus;
     }
 
+    public static void startVertxServer() {
+        if (serverState) {
+            return;
+        }
+        server.listen(http -> {
+            if (http.succeeded()) {
+                StringUtils.println("服务器启动成功...", Color.GREEN);
+                var httpOrHttps = ScxConfig.openHttps ? "https" : "http";
+                StringUtils.println("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + ScxConfig.port + "/", Color.GREEN);
+                StringUtils.println("> 本地 : " + httpOrHttps + "://localhost:" + ScxConfig.port + "/", Color.GREEN);
+            } else {
+                http.cause().printStackTrace();
+            }
+        });
+        serverState=true;
+    }
+
     /**
      * <p>stopServer.</p>
      */
-    public static void stopServer() {
+    public static void stopVertxServer() {
         server.close();
         StringUtils.println("服务器已停止...", Color.BRIGHT_RED);
         serverState = false;
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
-     * 重写方法
+     * 初始化 服务器
+     *
+     * @param vertx vertx 实例
      */
-    @Override
-    public void start(Promise<Void> startPromise) {
+    private static void initVertServer(Vertx vertx) {
+        server = vertx.createHttpServer(getHttpServerOptions());
+        server.requestHandler(ScxRouterFactory.getRouter(vertx)).webSocketHandler(new ScxWebSocketHandler());
+        StringUtils.println("服务器初始化完毕...", Color.GREEN);
+    }
+
+    /**
+     * 创建 服务端配置项
+     *
+     * @return 服务器配置项
+     */
+    private static HttpServerOptions getHttpServerOptions() {
         var httpServerOptions = new HttpServerOptions();
         httpServerOptions.setPort(ScxConfig.port);
         if (ScxConfig.openHttps) {
@@ -87,24 +116,20 @@ public final class ScxServer extends AbstractVerticle {
                             .setPath(ScxConfig.certificatePath.getPath())
                             .setPassword(ScxConfig.certificatePassword));
         }
-        server = vertx.createHttpServer(httpServerOptions);
+        StringUtils.println("服务器配置文件初始化完毕...", Color.YELLOW);
+        return httpServerOptions;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * 重写方法
+     */
+    @Override
+    public void start(Promise<Void> startPromise) {
+        initVertServer(vertx);
+        startVertxServer();
         eventBus = vertx.eventBus();
-        var router = ScxRouterFactory.getRouter(vertx);
-        var webSocketHandler = new ScxWebSocketHandler();
-        server.requestHandler(router)
-                .webSocketHandler(webSocketHandler)
-                .listen(http -> {
-                    if (http.succeeded()) {
-                        startPromise.complete();
-                        StringUtils.println("服务器启动成功...", Color.GREEN);
-                        var httpOrHttps = ScxConfig.openHttps ? "https" : "http";
-                        StringUtils.println("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + ScxConfig.port + "/", Color.GREEN);
-                        StringUtils.println("> 本地 : " + httpOrHttps + "://localhost:" + ScxConfig.port + "/", Color.GREEN);
-                    } else {
-                        http.cause().printStackTrace();
-                        startPromise.fail(http.cause());
-                    }
-                });
     }
 
 }

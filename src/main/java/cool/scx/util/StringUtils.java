@@ -104,7 +104,7 @@ public class StringUtils {
      * @param ansiColor a {@link cool.scx.enumeration.Color} object.
      */
     public static void print(String str, Color ansiColor) {
-        System.out.print("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
+        System.err.print("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
     }
 
     /**
@@ -114,19 +114,19 @@ public class StringUtils {
      * @param ansiColor a {@link cool.scx.enumeration.Color} object.
      */
     public static void println(String str, Color ansiColor) {
-        System.out.println("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
+        System.err.println("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
     }
 
     /**
-     * 打印自动颜色
+     * 向控制台打印 颜色自动
      *
      * @param str a {@link java.lang.String} object.
      */
-    public static void printlnAutoColor(String str) {
+    public static void println(String str) {
         if (nextPrintColor >= printColor.size()) {
             nextPrintColor = 0;
         }
-        System.out.println("\u001B[" + printColor.get(nextPrintColor).toString() + "m" + str + "\u001B[0m");
+        System.err.println("\u001B[" + printColor.get(nextPrintColor).toString() + "m" + str + "\u001B[0m");
         nextPrintColor = nextPrintColor + 1;
     }
 

@@ -4,6 +4,7 @@ import cool.scx.annotation.websocket.ScxWebSocketController;
 import cool.scx.base.websocket.BaseWebSocketController;
 import cool.scx.context.OnlineItem;
 import cool.scx.context.ScxContext;
+import cool.scx.enumeration.Color;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
@@ -35,7 +36,7 @@ public class NoticeWebSocketController implements BaseWebSocketController {
     public void onClose(ServerWebSocket webSocket) {
         //如果客户端终止连接 将此条连接作废
         ScxContext.removeOnlineItemByWebSocket(webSocket);
-        System.out.println(webSocket + "关闭了 当前总连接数 " + ScxContext.getOnlineItemList().size());
+        StringUtils.println(webSocket + "关闭了 当前总连接数 " + ScxContext.getOnlineItemList().size(), Color.RED);
     }
 
     /** {@inheritDoc} */
@@ -55,9 +56,9 @@ public class NoticeWebSocketController implements BaseWebSocketController {
                 //理论上 sessionItem 不可能为空 但是 还是应该判断一下 这里嫌麻烦 先不写了 todo
                 var s = Json.ok().data("callBackId", callBackId).data("message", nowLoginUser).toString();
                 webSocket.writeTextMessage(s);
-                StringUtils.printlnAutoColor(nowLoginUser.username + " 通过 websocket 连接到服务器 " + binaryHandlerID);
+                StringUtils.println(nowLoginUser.username + " 通过 websocket 连接到服务器 " + binaryHandlerID);
             }
-            StringUtils.printlnAutoColor("当前总在线用户数量 : " + ScxContext.getOnlineUserCount());
+            StringUtils.println("当前总在线用户数量 : " + ScxContext.getOnlineUserCount());
         } else if ("sendMessage".equals(type.toString())) {
             //发送的用户
             var username = map.get("username").toString();

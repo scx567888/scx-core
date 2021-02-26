@@ -120,7 +120,7 @@ public final class ScxContext {
     public static boolean removeLoginUserByHeader(RoutingContext ctx) {
         var token = ctx.request().getHeader(ScxConfig.tokenKey);
         boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-        StringUtils.printlnAutoColor("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
+        StringUtils.println("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
         return b;
     }
 
@@ -133,7 +133,7 @@ public final class ScxContext {
     public static boolean removeLoginUserByCookie(RoutingContext ctx) {
         var token = ctx.getCookie(ScxConfig.cookieKey).getValue();
         boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-        StringUtils.printlnAutoColor("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
+        StringUtils.println("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
         return b;
     }
 
@@ -150,7 +150,7 @@ public final class ScxContext {
         } else {
             sessionItem.token = token;
         }
-        StringUtils.printlnAutoColor(username + "登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
+        StringUtils.println(username + "登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
     }
 
     /**
@@ -209,7 +209,7 @@ public final class ScxContext {
         } else {
             onlineItem.username = username;
         }
-        StringUtils.printlnAutoColor(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size());
+        StringUtils.println(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size());
     }
 
     /**

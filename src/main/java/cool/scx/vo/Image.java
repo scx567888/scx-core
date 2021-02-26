@@ -1,6 +1,7 @@
 package cool.scx.vo;
 
 import cool.scx.base.http.BaseVo;
+import cool.scx.server.ScxServer;
 import cool.scx.util.FileUtils;
 import cool.scx.util.MaxSizeHashMap;
 import io.vertx.core.buffer.Buffer;
@@ -28,6 +29,7 @@ public class Image implements BaseVo {
     private final File file;
     private final Integer width;
     private final Integer height;
+
 
     /**
      * <p>Constructor for Image.</p>
@@ -68,8 +70,8 @@ public class Image implements BaseVo {
      * <p>Constructor for Image.</p>
      *
      * @param _filePath a {@link java.lang.String} object.
-     * @param _width a {@link java.lang.Integer} object.
-     * @param _height a {@link java.lang.Integer} object.
+     * @param _width    a {@link java.lang.Integer} object.
+     * @param _height   a {@link java.lang.Integer} object.
      */
     public Image(String _filePath, Integer _width, Integer _height) {
         file = new File(_filePath);
@@ -77,8 +79,13 @@ public class Image implements BaseVo {
         height = _height;
     }
 
+    public static void cleanCache() {
+        imageCache.clear();
+    }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendToClient(RoutingContext context) {
         var response = context.response();

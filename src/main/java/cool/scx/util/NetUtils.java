@@ -61,7 +61,7 @@ public final class NetUtils {
     public static void text() {
         String url = "https://www.baidu.com";
         String s = sendHttpRequest(url, "GET");
-        System.out.println(s);
+        StringUtils.println(s);
     }
 
     /**

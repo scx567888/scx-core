@@ -37,6 +37,8 @@ public final class ScxGui {
      * <p>getGui.</p>
      */
     public static void getGui() {
+
+        ScxServer.getEventBus();
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -79,7 +81,7 @@ public final class ScxGui {
         });
         // 监听button的选择路径
         button.addActionListener(e -> {
-            ScxServer.stopServer();
+            ScxServer.stopVertxServer();
             if (ScxServer.getServerState()) {
                 button.setEnabled(true);
                 button1.setEnabled(false);
@@ -90,7 +92,7 @@ public final class ScxGui {
         });
         // 监听button的选择路径
         button1.addActionListener(e -> {
-            ScxServer.init();
+            ScxServer.startVertxServer();
             if (ScxServer.getServerState()) {
                 button.setEnabled(true);
                 button1.setEnabled(false);
@@ -116,8 +118,8 @@ public final class ScxGui {
         scrollPane.setViewportView(textArea);
         //这个最好放在最后，否则会出现视图问题。
         scxFrame.setVisible(true);
-        MPrintStream mPrintStream = new MPrintStream(System.out, textArea);
+        MPrintStream mPrintStream = new MPrintStream(System.err, textArea);
         System.setOut(mPrintStream);
-
+        System.setErr(mPrintStream);
     }
 }

@@ -130,7 +130,7 @@ public final class SQLRunner {
         }
         if (ScxConfig.showLog) {
             var s = preparedStatement.toString();
-            StringUtils.printlnAutoColor(ScxConfig.dateTimeFormatter.format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":")));
+            StringUtils.println(ScxConfig.dateTimeFormatter.format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":")));
         }
         return preparedStatement;
     }

@@ -8,6 +8,7 @@ import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.RequestMethod;
 import cool.scx.util.NetUtils;
+import cool.scx.util.StringUtils;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -52,7 +53,7 @@ public class ScxLogService extends BaseService<ScxLog> {
         var a = new Param<>(new ScxLog());
         a.setPagination(10);
         get(a);
-        System.out.println(name + "--" + age);
+        StringUtils.println(name + "--" + age);
     }
 
     /**

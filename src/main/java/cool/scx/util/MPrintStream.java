@@ -37,4 +37,6 @@ public class MPrintStream extends PrintStream {
         super.write(buf, off, len);
         SwingUtilities.invokeLater(() -> jTextArea.append(message + "\r"));
     }
+
+
 }
