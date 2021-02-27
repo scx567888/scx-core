@@ -20,7 +20,7 @@ public final class ScxApp {
 
     private static final Set<Class<?>> classSources = new LinkedHashSet<>();
 
-    private static String[] parameters;
+    private static String[] parameters=new String[0];
 
     /**
      * <p>run.</p>

@@ -1,5 +1,6 @@
 package cool.scx.server.http.handler;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.annotation.http.*;
 import cool.scx.base.http.BaseVo;
 import cool.scx.business.user.User;
@@ -127,20 +128,18 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         }
     }
 
-    private static Object getParamFromBody(String jsonStr, Map<String, Object> formAttributesMap, String bodyParamValue, Parameter parameter) {
+    private static Object getParamFromBody(JsonNode jsonNode, Map<String, Object> formAttributesMap, String bodyParamValue, Parameter parameter) {
         if (formAttributesMap.size() == 0) {
-            if (StringUtils.isEmpty(bodyParamValue)) {
-                return ObjectUtils.jsonToBean(jsonStr, parameter.getParameterizedType());
-            } else {
-                var jsonNode = ObjectUtils.JsonToTree(jsonStr);
+            var j = jsonNode;
+            if (StringUtils.isNotEmpty(bodyParamValue)) {
                 var split = bodyParamValue.split("\\.");
                 for (String s : split) {
-                    if (jsonNode != null) {
-                        jsonNode = jsonNode.get(s);
+                    if (j != null) {
+                        j = j.get(s);
                     }
                 }
-                return ObjectUtils.jsonNodeToBean(jsonNode, parameter.getParameterizedType());
             }
+            return ObjectUtils.jsonNodeToBean(j, parameter.getParameterizedType());
         } else {
             if (StringUtils.isEmpty(bodyParamValue)) {
                 return ObjectUtils.mapToBean(formAttributesMap, parameter.getType());
@@ -239,7 +238,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
     private Object getResult(RoutingContext ctx) throws Exception {
         var parameters = method.getParameters();
         //先从多个来源获取参数 并缓存起来
-        var jsonStr = ctx.request().method() != HttpMethod.GET ? ctx.getBodyAsString() : "";
+        var jsonNode = ObjectUtils.JsonToTree(ctx.request().method() != HttpMethod.GET ? ctx.getBodyAsString() : "");
         var formAttributes = multiMapToMap(ctx.request().formAttributes());
         var queryParams = multiMapToMap(ctx.queryParams());
         var pathParams = ctx.pathParams();
@@ -253,7 +252,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             }
             var bodyParam = parameters[i].getAnnotation(BodyParam.class);
             if (bodyParam != null) {
-                finalHandlerParams[i] = getParamFromBody(jsonStr, formAttributes, bodyParam.value(), parameters[i]);
+                finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, bodyParam.value(), parameters[i]);
                 continue;
             }
             var queryParam = parameters[i].getAnnotation(QueryParam.class);
@@ -268,12 +267,12 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             }
             //------这里针对没有注解的参数进行赋值猜测---------------
             //  从 body 里进行猜测 先尝试 根据参数名称进行转换
-            finalHandlerParams[i] = getParamFromBody(jsonStr, formAttributes, parameters[i].getName(), parameters[i]);
+            finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, parameters[i].getName(), parameters[i]);
             if (finalHandlerParams[i] != null) {
                 continue;
             }
             // 再尝试将整体转换为 参数
-            finalHandlerParams[i] = getParamFromBody(jsonStr, formAttributes, "", parameters[i]);
+            finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, "", parameters[i]);
             if (finalHandlerParams[i] != null) {
                 continue;
             }

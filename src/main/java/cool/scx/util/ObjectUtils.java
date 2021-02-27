@@ -3,6 +3,7 @@ package cool.scx.util;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
@@ -26,19 +27,27 @@ import java.util.Map;
 public final class ObjectUtils {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final TypeFactory typeFactory;
     private static final TypeReference<Map<String, Object>> mapType = new TypeReference<>() {
-    };
-    private static final TypeReference<List<Map<String, Object>>> mapListType = new TypeReference<>() {
     };
 
     static {
+        objectMapper.registerModule(getJavaTimeModule());
+        setObjectMapperConfig();
+        objectMapper.getSerializerProvider().setNullKeySerializer(new NullKeySerializer());
+        typeFactory = objectMapper.getTypeFactory();
+    }
+
+    private static JavaTimeModule getJavaTimeModule() {
         var timeModule = new JavaTimeModule();
         timeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(ScxConfig.dateTimeFormatter));
         timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(ScxConfig.dateTimeFormatter));
-        objectMapper.registerModule(timeModule);
+        return timeModule;
+    }
+
+    private static void setObjectMapperConfig() {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.getSerializerProvider().setNullKeySerializer(new NullKeySerializer());
     }
 
     /**
@@ -85,31 +94,6 @@ public final class ObjectUtils {
     }
 
     /**
-     * <p>jsonToBean.</p>
-     *
-     * @param json  a {@link java.lang.String} object.
-     * @param clazz a {@link java.lang.Class} object.
-     * @param <T>   a T object.
-     * @return a T object.
-     */
-    public static <T> T jsonToBean(String json, Class<T> clazz) {
-        try {
-            return objectMapper.readValue(json, clazz);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static <T> T jsonToBean(String json, Type type) {
-        try {
-            JavaType javaType = objectMapper.getTypeFactory().constructType(type);
-            return objectMapper.readValue(json, javaType);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
      * <p>jsonToMap.</p>
      *
      * @param json a {@link java.lang.String} object.
@@ -132,10 +116,11 @@ public final class ObjectUtils {
      * @return a T object.
      */
     public static <T> T jsonNodeToBean(JsonNode jsonNode, Type type) {
-        var reader = objectMapper.readerFor(objectMapper.getTypeFactory().constructType(type));
+        var reader = objectMapper.readerFor(typeFactory.constructType(type));
         try {
             return reader.readValue(jsonNode);
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -235,16 +220,6 @@ public final class ObjectUtils {
 
         }
         return ooo;
-    }
-
-    /**
-     * <p>beanListToMapList.</p>
-     *
-     * @param o a {@link java.lang.Object} object.
-     * @return a {@link java.util.List} object.
-     */
-    public static List<Map<String, Object>> beanListToMapList(Object o) {
-        return objectMapper.convertValue(o, mapListType);
     }
 
     /**
