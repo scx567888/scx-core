@@ -130,7 +130,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
     private static Object getParamFromBody(String jsonStr, Map<String, Object> formAttributesMap, String bodyParamValue, Parameter parameter) {
         if (formAttributesMap.size() == 0) {
             if (StringUtils.isEmpty(bodyParamValue)) {
-                return ObjectUtils.jsonToBean(jsonStr, parameter.getType());
+                return ObjectUtils.jsonToBean(jsonStr, parameter.getParameterizedType());
             } else {
                 var jsonNode = ObjectUtils.JsonToTree(jsonStr);
                 var split = bodyParamValue.split("\\.");
@@ -295,7 +295,9 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                 .collect(Collectors.toSet());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(RoutingContext context) {
         //检查是否登录 并且权限是否正确

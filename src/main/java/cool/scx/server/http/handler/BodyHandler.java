@@ -44,7 +44,9 @@ public class BodyHandler implements Handler<RoutingContext> {
         this.isPreallocateBodyBuffer = false;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(RoutingContext context) {
         HttpServerRequest request = context.request();

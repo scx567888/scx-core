@@ -1,11 +1,8 @@
 package cool.scx.business.cms;
 
-import cool.scx.annotation.http.ScxController;
-import cool.scx.annotation.http.ScxMapping;
 import cool.scx.base.service.Param;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
-import cool.scx.enumeration.RequestMethod;
 import cool.scx.util.FileType;
 import cool.scx.util.FileUtils;
 import cool.scx.vo.Html;

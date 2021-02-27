@@ -100,6 +100,15 @@ public final class ObjectUtils {
         }
     }
 
+    public static <T> T jsonToBean(String json, Type type) {
+        try {
+            JavaType javaType = objectMapper.getTypeFactory().constructType(type);
+            return objectMapper.readValue(json, javaType);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /**
      * <p>jsonToMap.</p>
      *

@@ -229,7 +229,7 @@ public class BaseController {
      * @param ctx       a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.vo.Download} object.
      * @throws cool.scx.exception.HttpResponseException if any.
-     * @throws java.io.UnsupportedEncodingException if any.
+     * @throws java.io.UnsupportedEncodingException     if any.
      */
     @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET)
     public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {
@@ -283,8 +283,8 @@ public class BaseController {
      * @param chunksNumber 当前分片数
      * @param chunk        总分片数
      * @param type         文件类型 , 分为 单个文件和分片文件
+     * @param context      a {@link io.vertx.ext.web.RoutingContext} object.
      * @return 文件保存的路径
-     * @param context a {@link io.vertx.ext.web.RoutingContext} object.
      */
     @ScxMapping("/upload")
     public Json upload(RoutingContext context, File file,
