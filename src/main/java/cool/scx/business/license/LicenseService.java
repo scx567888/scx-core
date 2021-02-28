@@ -66,7 +66,7 @@ public class LicenseService extends BaseService<License> {
             return false;
         }
         //如果当前时间 大于 license 时间 证明 license 已过期
-        var date = decryptTime(ScxConfig.license);
+        var date = decryptTime(ScxConfig.license());
         //如果密钥 不符合规则 直接 返回错误
         if (date == null) {
             myLicense.flag = false;

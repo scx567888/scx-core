@@ -55,7 +55,7 @@ class BHandler implements Handler<Buffer> {
                 uploadFiles.add(new FileUpload(upload.name(), upload.filename(), (long) tempBuffer.length(), tempBuffer));
                 if (upload.isSizeAvailable()) {
                     long size = this.uploadSize + upload.size();
-                    if (size > ScxConfig.bodyLimit) {
+                    if (size > ScxConfig.bodyLimit()) {
                         this.failed = true;
                         context.fail(413);
                         return;
@@ -92,7 +92,7 @@ class BHandler implements Handler<Buffer> {
             initialBodyBufferSize = (int) this.contentLength;
         }
 
-        initialBodyBufferSize = (int) Math.min(initialBodyBufferSize, ScxConfig.bodyLimit);
+        initialBodyBufferSize = (int) Math.min(initialBodyBufferSize, ScxConfig.bodyLimit());
 
         this.body = Buffer.buffer(initialBodyBufferSize);
     }
@@ -106,7 +106,7 @@ class BHandler implements Handler<Buffer> {
     public void handle(Buffer buff) {
         if (!this.failed) {
             this.uploadSize += buff.length();
-            if (this.uploadSize > ScxConfig.bodyLimit) {
+            if (this.uploadSize > ScxConfig.bodyLimit()) {
                 this.failed = true;
                 this.context.fail(413);
             } else if (!this.isMultipart) {

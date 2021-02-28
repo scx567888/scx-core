@@ -59,7 +59,7 @@ public class TableInfo {
     }
 
     private static String[] getSelectColumns(Field[] allFields) {
-        return Stream.of(allFields).filter(field -> ScxConfig.realDelete || !"isDeleted".equals(field.getName())).map(field -> {
+        return Stream.of(allFields).filter(field -> ScxConfig.realDelete() || !"isDeleted".equals(field.getName())).map(field -> {
             var underscore = StringUtils.camel2Underscore(field.getName());
             return underscore.contains("_") ? underscore + " AS " + field.getName() : underscore;
         }).toArray(String[]::new);

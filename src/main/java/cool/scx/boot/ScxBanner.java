@@ -45,7 +45,7 @@ public final class ScxBanner {
         LogUtils.print("████       ███▄ ", Color.BLUE);
 
         LogUtils.print(" Version ", Color.CYAN);
-        LogUtils.println(ScxConfig.coreVersion, Color.BRIGHT_CYAN);
+        LogUtils.println(ScxConfig.scxVersion(), Color.BRIGHT_CYAN);
     }
 
     /**

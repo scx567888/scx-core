@@ -41,7 +41,7 @@ public class UploadController {
         var result = true;
         UploadFile uploadFile = uploadFileService.getById(id);
         if (uploadFile != null) {
-            var b = FileUtils.deleteFileByPath(ScxConfig.uploadFilePath + uploadFile.filePath);
+            var b = FileUtils.deleteFileByPath(ScxConfig.uploadFilePath() + uploadFile.filePath);
             //当文件成功删除后在删除 数据库记录
             result = b && uploadFileService.deleteByIds(id) == 1;
         }

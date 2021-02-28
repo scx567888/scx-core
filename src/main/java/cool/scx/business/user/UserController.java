@@ -90,10 +90,10 @@ public class UserController {
             //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
             return Json.ok().data("token", token);
         } catch (UnknownUserException uue) {
-            return Json.fail(ScxConfig.confusionLoginError ? "usernameOrPasswordError" : "userNotFound");
+            return Json.fail(ScxConfig.confusionLoginError() ? "usernameOrPasswordError" : "userNotFound");
         } catch (WrongPasswordException wpe) {
             //这里和用户密码错误   可以使用相同的 提示信息 防止恶意破解
-            return Json.fail(ScxConfig.confusionLoginError ? "usernameOrPasswordError" : "passwordError");
+            return Json.fail(ScxConfig.confusionLoginError() ? "usernameOrPasswordError" : "passwordError");
         } catch (TooManyErrorsException tee) {
             //密码错误次数过多
             return Json.fail("tooManyErrors").data("remainingTime", tee.remainingTime);

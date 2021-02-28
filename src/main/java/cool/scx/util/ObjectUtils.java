@@ -40,8 +40,8 @@ public final class ObjectUtils {
 
     private static JavaTimeModule getJavaTimeModule() {
         var timeModule = new JavaTimeModule();
-        timeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(ScxConfig.dateTimeFormatter));
-        timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(ScxConfig.dateTimeFormatter));
+        timeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(ScxConfig.dateTimeFormatter()));
+        timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(ScxConfig.dateTimeFormatter()));
         return timeModule;
     }
 
@@ -120,7 +120,6 @@ public final class ObjectUtils {
         try {
             return reader.readValue(jsonNode);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

@@ -54,7 +54,9 @@ public class BaseController {
         Param<T> p = new Param<>(ObjectUtils.mapToBean(params, modelClass));
         Integer page = (Integer) params.get("page");
         Integer limit = (Integer) params.get("limit");
-        p.setPagination(page, limit);
+        if (limit != -1) {
+            p.setPagination(page, limit);
+        }
         return p;
     }
 
@@ -234,7 +236,7 @@ public class BaseController {
      */
     @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET)
     public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {
-        var file = new File(ScxConfig.uploadFilePath + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName);
+        var file = new File(ScxConfig.uploadFilePath() + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName);
         if (!file.exists()) {
             throw new HttpResponseException(context -> context.response().setStatusCode(404).send("要下载的文件不存在或已被删除!!!"));
         }
@@ -258,7 +260,7 @@ public class BaseController {
      */
     @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET)
     public Image showPicture(String year, String month, String day, String hour, String timestamp, String fileName, @QueryParam("w") Integer width, @QueryParam("h") Integer height) {
-        return new Image(new File(ScxConfig.uploadFilePath + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName), width, height);
+        return new Image(new File(ScxConfig.uploadFilePath() + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName), width, height);
     }
 
     /**
@@ -272,7 +274,7 @@ public class BaseController {
      */
     @ScxMapping("/showPictureById/:id")
     public Image showPictureById(@PathParam Long id, @QueryParam("w") Integer width, @QueryParam("h") Integer height) {
-        return new Image(ScxConfig.uploadFilePath + "/" + uploadFileService.getById(id).filePath, width, height);
+        return new Image(ScxConfig.uploadFilePath() + "/" + uploadFileService.getById(id).filePath, width, height);
     }
 
     /**
@@ -342,7 +344,7 @@ public class BaseController {
     public Json uploadValidateFile(String fileName, String fileSize, Integer type) {
         //返回文件最后上传的区块
         if (type == 0) {
-            String scxUploadPath = ScxConfig.uploadFilePath + "\\TEMP\\" + fileName + "\\" + ".scxUpload";
+            String scxUploadPath = ScxConfig.uploadFilePath() + "\\TEMP\\" + fileName + "\\" + ".scxUpload";
             try {
                 FileReader fileReader = new FileReader(scxUploadPath);
                 BufferedReader bufferedReader = new BufferedReader(fileReader);

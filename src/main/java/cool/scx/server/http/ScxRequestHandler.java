@@ -3,12 +3,12 @@ package cool.scx.server.http;
 import cool.scx.annotation.http.ScxController;
 import cool.scx.annotation.http.ScxMapping;
 import cool.scx.config.ScxConfig;
+import cool.scx.context.ScxContext;
 import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.server.http.handler.body.BodyHandler;
 import cool.scx.server.http.handler.mapping.ScxMappingHandler;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
-import io.vertx.core.Vertx;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.impl.CookieImpl;
@@ -34,9 +34,9 @@ public final class ScxRequestHandler extends RouterImpl {
      *
      * @param vertx a {@link io.vertx.core.Vertx} object.
      */
-    public ScxRequestHandler(Vertx vertx) {
-        super(vertx);
-        registerFaviconHandler(this, vertx);
+    public ScxRequestHandler() {
+        super(ScxContext.VERTX);
+        registerFaviconHandler(this);
         registerCookieHandler(this);
         registerCorsHandler(this);
         registerBodyHandler(this);
@@ -51,8 +51,8 @@ public final class ScxRequestHandler extends RouterImpl {
      *
      * @param router
      */
-    private static void registerFaviconHandler(Router router, Vertx vertx) {
-        router.route().handler(FaviconHandler.create(vertx, ScxConfig.cmsFaviconIcoPath.getPath()));
+    private static void registerFaviconHandler(Router router) {
+        router.route().handler(FaviconHandler.create(ScxContext.VERTX, ScxConfig.cmsFaviconIcoPath().getPath()));
     }
 
     /**
@@ -68,7 +68,7 @@ public final class ScxRequestHandler extends RouterImpl {
         allowedHeaders.add("Content-Type");
         allowedHeaders.add("accept");
         allowedHeaders.add("X-PINGARUNER");
-        allowedHeaders.add(ScxConfig.tokenKey);
+        allowedHeaders.add(ScxConfig.tokenKey());
 
         var allowedMethods = new HashSet<HttpMethod>();
         allowedMethods.add(HttpMethod.GET);
@@ -78,7 +78,7 @@ public final class ScxRequestHandler extends RouterImpl {
         allowedMethods.add(HttpMethod.PATCH);
         allowedMethods.add(HttpMethod.PUT);
 
-        router.route().handler(CorsHandler.create(ScxConfig.allowedOrigin).allowedHeaders(allowedHeaders).allowedMethods(allowedMethods).allowCredentials(true));
+        router.route().handler(CorsHandler.create(ScxConfig.allowedOrigin()).allowedHeaders(allowedHeaders).allowedMethods(allowedMethods).allowCredentials(true));
     }
 
     /**
@@ -131,7 +131,7 @@ public final class ScxRequestHandler extends RouterImpl {
      * @param router
      */
     private static void registerStaticHandler(Router router) {
-        router.route(ScxConfig.cmsResourceUrl).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations.getPath()));
+        router.route(ScxConfig.cmsResourceUrl()).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations().getPath()));
     }
 
     /**
@@ -141,8 +141,8 @@ public final class ScxRequestHandler extends RouterImpl {
      */
     private static void registerCookieHandler(Router router) {
         router.route().handler(c -> {
-            if (c.getCookie(ScxConfig.cookieKey) == null) {
-                Cookie cookie = new CookieImpl(ScxConfig.cookieKey, StringUtils.getUUID());
+            if (c.getCookie(ScxConfig.cookieKey()) == null) {
+                Cookie cookie = new CookieImpl(ScxConfig.cookieKey(), StringUtils.getUUID());
                 c.addCookie(cookie);
             }
             c.next();

@@ -32,9 +32,9 @@ public final class SQLRunner {
     static {
         dataSource = new HikariDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setJdbcUrl(ScxConfig.dataSourceUrl);
-        dataSource.setUsername(ScxConfig.dataSourceUsername);
-        dataSource.setPassword(ScxConfig.dataSourcePassword);
+        dataSource.setJdbcUrl(ScxConfig.dataSourceUrl());
+        dataSource.setUsername(ScxConfig.dataSourceUsername());
+        dataSource.setPassword(ScxConfig.dataSourcePassword());
     }
 
     /**
@@ -48,8 +48,8 @@ public final class SQLRunner {
             LogUtils.println("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]", Color.MAGENTA);
             return true;
         } catch (Exception e) {
-            LogUtils.println("数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl, Color.RED);
-            if (ScxConfig.showLog) {
+            LogUtils.println("数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl(), Color.RED);
+            if (ScxConfig.showLog()) {
                 e.printStackTrace();
             }
             return false;
@@ -128,9 +128,9 @@ public final class SQLRunner {
             preparedStatement.setObject(index, paramMap.get(matcher.group(2)));
             index++;
         }
-        if (ScxConfig.showLog) {
+        if (ScxConfig.showLog()) {
             var s = preparedStatement.toString();
-            LogUtils.println(ScxConfig.dateTimeFormatter.format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":")));
+            LogUtils.println(ScxConfig.dateTimeFormatter().format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":")));
         }
         return preparedStatement;
     }

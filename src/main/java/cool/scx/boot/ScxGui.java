@@ -2,6 +2,7 @@ package cool.scx.boot;
 
 
 import cool.scx.config.ScxConfig;
+import cool.scx.context.ScxContext;
 import cool.scx.server.ScxServer;
 import cool.scx.util.MPrintStream;
 import cool.scx.util.PackageUtils;
@@ -20,7 +21,7 @@ import java.net.MalformedURLException;
  */
 public final class ScxGui {
     static {
-        if (ScxConfig.showGui) {
+        if (ScxConfig.showGui()) {
             Runnable runnable = ScxGui::getGui;
             runnable.run();
         }
@@ -34,16 +35,24 @@ public final class ScxGui {
     }
 
     /**
-     * <p>getGui.</p>
+     * 初始化样式
      */
-    public static void getGui() {
-
-        ScxServer.getEventBus();
+    public static void initLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * <p>getGui.</p>
+     */
+    public static void getGui() {
+
+
+        initLookAndFeel();
+
         JFrame scxFrame = new JFrame();
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false);
@@ -75,6 +84,7 @@ public final class ScxGui {
         JButton button = new JButton("停止服务器");
         JButton button1 = new JButton("启动服务器");
         JButton button2 = new JButton("清空控制台");
+        JButton button3 = new JButton("重新加载配置文件");
 
         button2.addActionListener(e -> {
             textArea.setText("");
@@ -82,35 +92,38 @@ public final class ScxGui {
         // 监听button的选择路径
         button.addActionListener(e -> {
             ScxServer.stopVertxServer();
-            if (ScxServer.getServerState()) {
-                button.setEnabled(true);
-                button1.setEnabled(false);
-            } else {
-                button.setEnabled(false);
-                button1.setEnabled(true);
-            }
         });
         // 监听button的选择路径
         button1.addActionListener(e -> {
             ScxServer.startVertxServer();
-            if (ScxServer.getServerState()) {
-                button.setEnabled(true);
-                button1.setEnabled(false);
-            } else {
-                button.setEnabled(false);
-                button1.setEnabled(true);
-            }
         });
-        if (ScxServer.getServerState()) {
+        // 监听button的选择路径
+        button3.addActionListener(e -> {
+            ScxConfig.reloadConfig();
+        });
+
+        ScxContext.consumer("startVertxServer", c -> {
+            button.setEnabled(true);
+            button1.setEnabled(false);
+        });
+
+        ScxContext.consumer("stopVertxServer", c -> {
+            button.setEnabled(false);
+            button1.setEnabled(true);
+        });
+
+        if (ScxServer.isServerRunning()) {
             button.setEnabled(true);
             button1.setEnabled(false);
         } else {
             button.setEnabled(false);
             button1.setEnabled(true);
         }
+
         panel.add(button);
         panel.add(button1);
         panel.add(button2);
+        panel.add(button3);
         // 可滚动面板
         JScrollPane scrollPane = new JScrollPane();
         scxFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);

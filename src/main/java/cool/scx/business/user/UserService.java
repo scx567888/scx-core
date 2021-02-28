@@ -132,8 +132,8 @@ public class UserService extends BaseService<User> {
     private boolean notHaveLoginError(String ip, LoginError loginError) {
         if (LocalDateTime.now().isBefore(loginError.lastErrorDate)) {
             return false;
-        } else if (loginError.errorTimes >= ScxConfig.loginErrorLockTimes) {
-            LoginError le = new LoginError(LocalDateTime.now().plusSeconds(ScxConfig.loginErrorLockSecond), 0);
+        } else if (loginError.errorTimes >= ScxConfig.loginErrorLockTimes()) {
+            LoginError le = new LoginError(LocalDateTime.now().plusSeconds(ScxConfig.loginErrorLockSecond()), 0);
             loginErrorMap.put(ip, le);
             return false;
         }

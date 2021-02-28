@@ -15,6 +15,11 @@ import cool.scx.enumeration.FixTableResult;
 import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.util.LogUtils;
 import cool.scx.util.PackageUtils;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -37,6 +42,7 @@ public final class ScxContext {
      * Constant <code>userService</code>
      */
     public static final UserService USER_SERVICE;
+    public static final Vertx VERTX = Vertx.vertx();
     /**
      * 存储所有在线的 连接
      */
@@ -59,7 +65,7 @@ public final class ScxContext {
         initScxContext();
         fixTable();
         USER_SERVICE = getBean(UserService.class);
-        LogUtils.showLog = ScxConfig.showLog;
+        LogUtils.showLog = ScxConfig.showLog();
         LogUtils.scxLogService = getBean(ScxLogService.class);
     }
 
@@ -100,7 +106,7 @@ public final class ScxContext {
         var noNeedFix = new AtomicBoolean(true);
         if (SQLRunner.testConnection()) {
             LogUtils.println("修复数据表中...", Color.MAGENTA);
-            if (ScxConfig.fixTable) {
+            if (ScxConfig.fixTable()) {
                 scxBeanClassNameMapping.forEach((k, v) -> {
                     if (v.isAnnotationPresent(ScxModel.class)) {
                         try {
@@ -133,7 +139,7 @@ public final class ScxContext {
      * @return a boolean.
      */
     public static boolean removeLoginUserByHeader(RoutingContext ctx) {
-        var token = ctx.request().getHeader(ScxConfig.tokenKey);
+        var token = ctx.request().getHeader(ScxConfig.tokenKey());
         boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
         LogUtils.println("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
         return b;
@@ -146,7 +152,7 @@ public final class ScxContext {
      * @return a boolean.
      */
     public static boolean removeLoginUserByCookie(RoutingContext ctx) {
-        var token = ctx.getCookie(ScxConfig.cookieKey).getValue();
+        var token = ctx.getCookie(ScxConfig.cookieKey()).getValue();
         boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
         LogUtils.println("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
         return b;
@@ -190,7 +196,7 @@ public final class ScxContext {
      * @return a {@link cool.scx.business.user.User} object.
      */
     public static User getLoginUserByHeader(RoutingContext ctx) {
-        String token = ctx.request().getHeader(ScxConfig.tokenKey);
+        String token = ctx.request().getHeader(ScxConfig.tokenKey());
         return getLoginUserByToken(token);
     }
 
@@ -201,7 +207,7 @@ public final class ScxContext {
      * @return a {@link cool.scx.business.user.User} object.
      */
     public static User getLoginUserByCookie(RoutingContext ctx) {
-        String token = ctx.getCookie(ScxConfig.cookieKey).getValue();
+        String token = ctx.getCookie(ScxConfig.cookieKey()).getValue();
         return getLoginUserByToken(token);
     }
 
@@ -274,5 +280,13 @@ public final class ScxContext {
      */
     public static List<OnlineItem> getOnlineItemList() {
         return ONLINE_ITEMS;
+    }
+
+    public static <T> MessageConsumer<T> consumer(String address, Handler<Message<T>> handler) {
+        return VERTX.eventBus().consumer(address, handler);
+    }
+
+    public static EventBus publish(String address, Object message) {
+        return VERTX.eventBus().publish(address, message);
     }
 }

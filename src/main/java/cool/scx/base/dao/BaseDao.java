@@ -298,7 +298,7 @@ public final class BaseDao<Entity extends BaseModel> {
     public List<Map<String, Object>> getFieldList(String fieldName) {
         if (Arrays.stream(table.allFields).filter(field -> field.getName().equals(fieldName)).count() == 1) {
             var sql = SQLBuilder.Select(table.tableName).SelectColumns(new String[]{StringUtils.camel2Underscore(fieldName) + " As value "})
-                    .WhereSql(ScxConfig.realDelete ? "" : " is_deleted = FALSE").GroupBy(new HashSet<>() {{
+                    .WhereSql(ScxConfig.realDelete() ? "" : " is_deleted = FALSE").GroupBy(new HashSet<>() {{
                         add("value");
                     }}).GetSQL();
             return SQLRunner.query(sql, new HashMap<>());

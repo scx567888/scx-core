@@ -36,7 +36,7 @@ public final class Html implements BaseVo {
 
     private static Template getTemplateByPath(String pagePath) {
         try {
-            return ScxCmsConfig.freemarkerConfig.getTemplate(pagePath + ScxConfig.cmsResourceSuffix);
+            return ScxCmsConfig.freemarkerConfig.getTemplate(pagePath + ScxConfig.cmsResourceSuffix());
         } catch (IOException e) {
             e.printStackTrace();
             return null;

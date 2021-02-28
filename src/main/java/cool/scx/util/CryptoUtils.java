@@ -32,7 +32,7 @@ public final class CryptoUtils {
      * @return 加密后的密码
      */
     public static String encryptPassword(String password, String salt) {
-        return getEncryptor(salt + ScxConfig.AppKey).encrypt(password);
+        return getEncryptor(salt + ScxConfig.AppKey()).encrypt(password);
     }
 
     /**
@@ -43,7 +43,7 @@ public final class CryptoUtils {
      * @return 解密后的密码
      */
     public static String decryptPassword(String encryptedPassword, String salt) {
-        return getEncryptor(salt + ScxConfig.AppKey).decrypt(encryptedPassword);
+        return getEncryptor(salt + ScxConfig.AppKey()).decrypt(encryptedPassword);
     }
 
     /**
@@ -53,7 +53,7 @@ public final class CryptoUtils {
      * @return a 密文
      */
     public static String encryptText(String text) {
-        return getEncryptor(ScxConfig.AppKey).encrypt(text);
+        return getEncryptor(ScxConfig.AppKey()).encrypt(text);
     }
 
     /**
@@ -63,7 +63,7 @@ public final class CryptoUtils {
      * @return a 结果
      */
     public static String decryptText(String text) {
-        return getEncryptor(ScxConfig.AppKey).decrypt(text);
+        return getEncryptor(ScxConfig.AppKey()).decrypt(text);
     }
 
 }

@@ -71,10 +71,10 @@ public class FileUtils {
         String tempFilePath;
         if (index == -1) {
             //单文件 直接写入磁盘
-            tempFilePath = ScxConfig.uploadFilePath.getPath() + "\\" + fileName;
+            tempFilePath = ScxConfig.uploadFilePath().getPath() + "\\" + fileName;
         } else {
             //分片文件 分片写入
-            tempFilePath = ScxConfig.uploadFilePath.getPath() + "\\TEMP\\" + fileName + "\\" + fileName + ".scxTemp";
+            tempFilePath = ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileName + "\\" + fileName + ".scxTemp";
             changeUploadFileConfig(fileName, index + 1, chunkTotal);
         }
         fileAppend(tempFilePath, file.buffer.getBytes());
@@ -89,7 +89,7 @@ public class FileUtils {
      * @param chunkTotal a {@link java.lang.Integer} object.
      */
     public static void changeUploadFileConfig(String fileName, Integer nowChunk, Integer chunkTotal) {
-        var configFilePath = ScxConfig.uploadFilePath + "\\TEMP\\" + fileName + "\\" + ".scxUpload";
+        var configFilePath = ScxConfig.uploadFilePath() + "\\TEMP\\" + fileName + "\\" + ".scxUpload";
         var config = new File(configFilePath);
         var tempFileParent = config.getParentFile();
         if (!tempFileParent.exists()) {
@@ -162,12 +162,12 @@ public class FileUtils {
      * @return a boolean.
      */
     public static boolean validateFile(String fileName, String fileWritePath) {
-        var moveFrom = FileSystems.getDefault().getPath(ScxConfig.uploadFilePath.getPath() + "\\TEMP\\" + fileName + "\\" + fileName + ".scxTemp");
-        var moveto = FileSystems.getDefault().getPath(ScxConfig.uploadFilePath.getPath() + fileWritePath);
+        var moveFrom = FileSystems.getDefault().getPath(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileName + "\\" + fileName + ".scxTemp");
+        var moveto = FileSystems.getDefault().getPath(ScxConfig.uploadFilePath().getPath() + fileWritePath);
         try {
             Files.createDirectories(moveto.getParent());
             Files.move(moveFrom, moveto, StandardCopyOption.REPLACE_EXISTING);
-            Files.walk(Paths.get(ScxConfig.uploadFilePath.getPath() + "\\TEMP\\" + fileName + "\\"))
+            Files.walk(Paths.get(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileName + "\\"))
                     .sorted(Comparator.reverseOrder()).map(Path::toFile)
                     .forEach(file -> System.err.println(file.delete()));
             return true;

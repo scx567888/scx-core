@@ -33,7 +33,7 @@ public class TemplateController {
      */
     @ScxMapping(method = {RequestMethod.GET, RequestMethod.POST})
     public Json Index() throws IOException {
-        var fileList = FileUtils.getFileList(ScxConfig.cmsRoot.getPath());
+        var fileList = FileUtils.getFileList(ScxConfig.cmsRoot().getPath());
         var collect = fileList.stream().filter(fileInfo -> "Directory".equals(fileInfo.type)).collect(Collectors.toList());
         var collect1 = fileList.stream().filter(fileInfo -> "File".equals(fileInfo.type)).collect(Collectors.toList());
         collect.addAll(collect1);

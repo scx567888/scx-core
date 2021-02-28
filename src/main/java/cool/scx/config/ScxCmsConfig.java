@@ -27,9 +27,9 @@ public final class ScxCmsConfig {
         // freemarker 配置文件版本
         var configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         try {
-            configuration.setDirectoryForTemplateLoading(ScxConfig.cmsRoot);
+            configuration.setDirectoryForTemplateLoading(ScxConfig.cmsRoot());
         } catch (Exception e) {
-            System.err.println(ScxConfig.cmsRoot.getPath());
+            System.err.println(ScxConfig.cmsRoot().getPath());
             System.err.println("Cms 模板目录不存在!!! Cms 功能将不可用!!!");
         }
 
