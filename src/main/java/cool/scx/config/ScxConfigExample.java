@@ -1,14 +1,15 @@
 package cool.scx.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.enumeration.Color;
 import cool.scx.util.*;
+import io.vertx.core.json.JsonObject;
 
-import java.io.File;
+import java.io.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static cool.scx.config.ScxConfig.getConfigValue;
 
@@ -122,12 +123,19 @@ class ScxConfigExample {
     public final long bodyLimit;
 
 
-    public ScxConfigExample(JsonNode scxConfigJsonNode) {
-
+    public ScxConfigExample() {
+        var scj = ScxConfig.getScj();
+        ObjectNode objectNode= scj.deepCopy();
 
         port = getConfigValue("scx.port", 8080,
                 s -> LogUtils.println("✔ 服务器 IP 地址                        \t -->\t " + NetUtils.getLocalAddress() + "\r\n✔ 端口号                                \t -->\t " + s, Color.GREEN),
-                f -> LogUtils.println("✘ 未检测到 scx.port                  \t -->\t 已采用默认值 : " + f, Color.RED),
+                f -> {
+                     LogUtils.println("✘ 未检测到 scx.port                  \t -->\t 已采用默认值 : " + f, Color.RED);
+                    JsonObject a=new JsonObject();
+                     var map=new HashMap<String,Object>();
+                     map.put("port",f);
+                     objectNode.put("scx","").put("port",f);
+                },
                 c -> ScxConfig.checkPort(c.asInt()), a -> ScxConfig.checkPort(Integer.parseInt(a)));
 
         pluginRoot = PackageUtils.getFileByAppRoot(getConfigValue("scx.plugin.root", "/plugins/",
@@ -232,6 +240,18 @@ class ScxConfigExample {
                 s -> LogUtils.println("✔ 修复数据表                          \t -->\t " + (s ? "是" : "否"), Color.GREEN),
                 f -> LogUtils.println("✘ 未检测到 scx.fix-table               \t -->\t 已采用默认值 : " + f, Color.RED),
                 JsonNode::asBoolean, Boolean::valueOf);
+
+
+        //todo 修复破碎的 配置文件
+        OutputStream outputStream = null;
+        try {
+
+            outputStream = new FileOutputStream(new File("C:\\Users\\scx56\\Documents\\aaa\\scx.json"));
+            new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(outputStream, objectNode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

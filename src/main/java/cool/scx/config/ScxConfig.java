@@ -27,6 +27,9 @@ public final class ScxConfig {
     private static ScxConfigExample ce;
     private static JsonNode scj;
 
+    public static JsonNode getScj() {
+        return scj;
+    }
 
     public static int checkPort(int p) {
         while (NetUtils.isLocalePortUsing(p)) {
@@ -168,13 +171,13 @@ public final class ScxConfig {
     public static void init() {
         LogUtils.println("ScxConfig 初始化中...", Color.BRIGHT_BLUE);
         scj = getScxJsonConfig();
-        ce = new ScxConfigExample(scj);
+        ce = new ScxConfigExample();
         LogUtils.println("ScxConfig 初始化完成...", Color.BRIGHT_BLUE);
     }
 
     public static void reloadConfig() {
         scj = getScxJsonConfig();
-        ce = new ScxConfigExample(scj);
+        ce = new ScxConfigExample();
         LogUtils.println("ScxConfig 重新加载完成...", Color.BRIGHT_BLUE);
     }
 
