@@ -1,4 +1,4 @@
-package cool.scx.server.http.handler;
+package cool.scx.server.http.handler.mapping;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.annotation.http.*;
@@ -9,6 +9,9 @@ import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.Color;
 import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.exception.HttpResponseException;
+import cool.scx.server.http.handler.auth.DefaultLoginAndPermsHandler;
+import cool.scx.server.http.handler.auth.LoginAndPermsHandler;
+import cool.scx.server.http.handler.body.FileUpload;
 import cool.scx.util.LogUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.PackageUtils;
@@ -22,6 +25,7 @@ import io.vertx.ext.web.RoutingContext;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -236,6 +240,8 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
      * @throws java.lang.Exception if any.
      */
     private Object getResult(RoutingContext ctx) throws Exception {
+        Object uploadFilesObject = ctx.get("uploadFiles");
+        var uploadFiles = uploadFilesObject != null ? (Set<FileUpload>) uploadFilesObject : new HashSet<FileUpload>();
         var parameters = method.getParameters();
         //先从多个来源获取参数 并缓存起来
         var jsonNode = ObjectUtils.JsonToTree(ctx.request().method() != HttpMethod.GET ? ctx.getBodyAsString() : "");
@@ -248,6 +254,11 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             var nowType = parameters[i].getType();
             if (nowType == RoutingContext.class) {
                 finalHandlerParams[i] = ctx;
+                continue;
+            }
+            if (nowType == FileUpload.class) {
+                String name = parameters[i].getName();
+                finalHandlerParams[i] = uploadFiles.stream().filter(c -> name.equals(c.name)).findAny().orElse(null);
                 continue;
             }
             var bodyParam = parameters[i].getAnnotation(BodyParam.class);

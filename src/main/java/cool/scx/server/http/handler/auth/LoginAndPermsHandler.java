@@ -1,4 +1,4 @@
-package cool.scx.server.http.handler;
+package cool.scx.server.http.handler.auth;
 
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;

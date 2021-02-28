@@ -1,6 +1,7 @@
 package cool.scx.util;
 
 import cool.scx.config.ScxConfig;
+import cool.scx.server.http.handler.body.FileUpload;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -19,31 +20,12 @@ import java.util.regex.Pattern;
 public class FileUtils {
 
 
-    //public static boolean uploadFile(MultipartFile file, String fileName, Integer index, Integer chunkTotal) {
-    //    String tempFilePath;
-    //    if (index == -1) {
-    //        //单文件 直接写入磁盘
-    //        tempFilePath = ScxContext.uploadFilePath.getPath() + fileName;
-    //    } else {
-    //        //分片文件 分片写入
-    //        tempFilePath = ScxContext.uploadFilePath.getPath() + "TEMP\\" + fileName + "\\" + fileName + ".scxTemp";
-    //        changeUploadFileConfig(fileName, index + 1, chunkTotal);
-    //    }
-    //    try {
-    //        fileAppend(tempFilePath, file.getBytes());
-    //        return true;
-    //    } catch (IOException e) {
-    //        e.printStackTrace();
-    //        return false;
-    //    }
-    //}
-
-    //这个方法就是改变配置文件的
-
     /**
      * 所有文件类型
      */
     public final static List<FileType> ALL_FILE_TYPE_LIST;
+
+    //这个方法就是改变配置文件的
     /**
      * 图片文件类型
      */
@@ -61,8 +43,6 @@ public class FileUtils {
      */
     public final static Pattern DISPLAY_SIZE_PATTERN = Pattern.compile("^([+\\-]?\\d+)([a-zA-Z]{0,2})$");
 
-    //文件全上传完了 将临时文件 重命名 移动至 上传文件夹并 删除临时文件
-
     static {
         IMAGE_FILE_TYPE_LIST = getImageFileTypeList();
         OTHER_FILE_TYPE_LIST = getOtherFileType();
@@ -76,6 +56,22 @@ public class FileUtils {
         DISPLAY_SIZE_MAP.put("TB", 1099511627776L);
     }
 
+    //文件全上传完了 将临时文件 重命名 移动至 上传文件夹并 删除临时文件
+
+    public static boolean uploadFile(FileUpload file, String fileName, Integer index, Integer chunkTotal) {
+        String tempFilePath;
+        if (index == -1) {
+            //单文件 直接写入磁盘
+            tempFilePath = ScxConfig.uploadFilePath.getPath() + "\\" + fileName;
+        } else {
+            //分片文件 分片写入
+            tempFilePath = ScxConfig.uploadFilePath.getPath() + "\\TEMP\\" + fileName + "\\" + fileName + ".scxTemp";
+            changeUploadFileConfig(fileName, index + 1, chunkTotal);
+        }
+        fileAppend(tempFilePath, file.buffer.getBytes());
+        return true;
+    }
+
     /**
      * <p>changeUploadFileConfig.</p>
      *
@@ -84,7 +80,7 @@ public class FileUtils {
      * @param chunkTotal a {@link java.lang.Integer} object.
      */
     public static void changeUploadFileConfig(String fileName, Integer nowChunk, Integer chunkTotal) {
-        var configFilePath = ScxConfig.uploadFilePath + "TEMP\\" + fileName + "\\" + ".scxUpload";
+        var configFilePath = ScxConfig.uploadFilePath + "\\TEMP\\" + fileName + "\\" + ".scxUpload";
         var config = new File(configFilePath);
         var tempFileParent = config.getParentFile();
         if (!tempFileParent.exists()) {
@@ -157,12 +153,12 @@ public class FileUtils {
      * @return a boolean.
      */
     public static boolean validateFile(String fileName, String fileWritePath) {
-        var moveFrom = FileSystems.getDefault().getPath(ScxConfig.uploadFilePath.getPath() + "temp\\" + fileName + "\\" + fileName + ".scxTemp");
+        var moveFrom = FileSystems.getDefault().getPath(ScxConfig.uploadFilePath.getPath() + "\\TEMP\\" + fileName + "\\" + fileName + ".scxTemp");
         var moveto = FileSystems.getDefault().getPath(ScxConfig.uploadFilePath.getPath() + fileWritePath);
         try {
             Files.createDirectories(moveto.getParent());
             Files.move(moveFrom, moveto, StandardCopyOption.REPLACE_EXISTING);
-            Files.walk(Paths.get(ScxConfig.uploadFilePath.getPath() + "temp\\" + fileName + "\\"))
+            Files.walk(Paths.get(ScxConfig.uploadFilePath.getPath() + "\\TEMP\\" + fileName + "\\"))
                     .sorted(Comparator.reverseOrder()).map(Path::toFile)
                     .forEach(file -> System.err.println(file.delete()));
             return true;

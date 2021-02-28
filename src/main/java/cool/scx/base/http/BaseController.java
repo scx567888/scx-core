@@ -14,6 +14,7 @@ import cool.scx.context.ScxContext;
 import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.RequestMethod;
 import cool.scx.exception.HttpResponseException;
+import cool.scx.server.http.handler.body.FileUpload;
 import cool.scx.util.FileUtils;
 import cool.scx.util.LogUtils;
 import cool.scx.util.NetUtils;
@@ -287,43 +288,39 @@ public class BaseController {
      * @return 文件保存的路径
      */
     @ScxMapping("/upload")
-    public Json upload(RoutingContext context, File file,
-                       String fileName,
+    public Json upload(String fileName,
                        String fileSize,
                        Integer chunksNumber,
                        Integer chunk,
-                       Integer type) {
-        var s = context.fileUploads();
-        System.out.println();
-        //if ("".equals(fileName)) {
-        //    //fileName = file.getOriginalFilename();
-        //}
-        ////文件上传类型 0 为单文件 1 为分片文件
-        //if (type == 0) {
-        //    String fileWritePath = FileUtils.getDateStr() + '/' + fileName;
-        //    var b = FileUtils.uploadFile(file, fileWritePath, -1, -1);
-        //    if (b) {
-        //        //保存文件信息
-        //        var u = new UploadFile();
-        //        u.fileName = fileName;
-        //        u.filePath = fileWritePath;
-        //        u.uploadTime = new Date();
-        //        u.fileSize = fileSize;
-        //        u.id = uploadFileService.save(u);
-        //        return Json.ok().items(u);
-        //    } else {
-        //        return Json.fail("上传失败");
-        //    }
-        //} else {
-        //    var b = FileUtils.uploadFile(file, fileName, chunk, chunksNumber);
-        //    if (b) {
-        //        //当前分片上传成功 返回下一个请求的分片
-        //        return Json.ok().data("chunk", chunk + 1);
-        //    } else {
-        //        return Json.ok().data("chunk", -1);
-        //    }
-        //}
-        return Json.ok();
+                       Integer type, FileUpload file) {
+        if ("".equals(fileName)) {
+            fileName = file.fileName;
+        }
+        //文件上传类型 0 为单文件 1 为分片文件
+        if (type == 0) {
+            String fileWritePath = FileUtils.getDateStr() + '/' + fileName;
+            var b = FileUtils.uploadFile(file, fileWritePath, -1, -1);
+            if (b) {
+                //保存文件信息
+                var u = new UploadFile();
+                u.fileName = fileName;
+                u.filePath = fileWritePath;
+                u.uploadTime = LocalDateTime.now();
+                u.fileSize = fileSize;
+                u.id = uploadFileService.save(u).id;
+                return Json.ok().items(u);
+            } else {
+                return Json.fail("上传失败");
+            }
+        } else {
+            var b = FileUtils.uploadFile(file, fileName, chunk, chunksNumber);
+            if (b) {
+                //当前分片上传成功 返回下一个请求的分片
+                return Json.ok().data("chunk", chunk + 1);
+            } else {
+                return Json.ok().data("chunk", -1);
+            }
+        }
     }
 
 
@@ -333,17 +330,18 @@ public class BaseController {
      * @param params 文件名
      * @return 文件校验结果 true 为合并并校验成功
      */
+
+    /**
+     * @param fileName 获取文件名
+     * @param fileSize 获取文件大小
+     * @param type     获取类型 0 代表文件要进行上传操作 返回最后一次上传的区块 1代表全部上传完成 进行最后一部操作
+     * @return
+     */
     @ScxMapping("/upload/validateFile")
-    public Json uploadValidateFile(Map<String, Object> params) {
-        //获取文件名
-        String fileName = (String) params.get("fileName");
-        //获取文件大小
-        String fileSize = (String) params.get("fileSize");
-        //获取类型 0 代表文件要进行上传操作 返回最后一次上传的区块 1代表全部上传完成 进行最后一部操作
-        Integer type = (Integer) params.get("type");
+    public Json uploadValidateFile(String fileName, String fileSize, Integer type) {
         //返回文件最后上传的区块
         if (type == 0) {
-            String scxUploadPath = ScxConfig.uploadFilePath + "TEMP\\" + fileName + "\\" + ".scxUpload";
+            String scxUploadPath = ScxConfig.uploadFilePath + "\\TEMP\\" + fileName + "\\" + ".scxUpload";
             try {
                 FileReader fileReader = new FileReader(scxUploadPath);
                 BufferedReader bufferedReader = new BufferedReader(fileReader);

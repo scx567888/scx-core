@@ -1,12 +1,9 @@
 package cool.scx.business.cms;
 
 import cool.scx.annotation.http.BodyParam;
-import cool.scx.annotation.http.ScxController;
-import cool.scx.annotation.http.ScxMapping;
 import cool.scx.base.service.Param;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
-import cool.scx.enumeration.RequestMethod;
 import cool.scx.util.FileType;
 import cool.scx.util.FileUtils;
 import cool.scx.vo.Html;
@@ -14,7 +11,6 @@ import io.vertx.core.http.Cookie;
 import io.vertx.ext.web.RoutingContext;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,11 +25,6 @@ public class IndexController {
     private final UserService userService;
 
 
-//    @ScxMapping(value = "/api/:a/b",method = RequestMethod.POST)
-    public String aaa(@BodyParam("userList.userList1.userList2") User userList) {
-        return "456";
-    }
-
     /**
      * <p>Constructor for IndexController.</p>
      *
@@ -43,6 +34,10 @@ public class IndexController {
         this.userService = userService;
     }
 
+    //    @ScxMapping(value = "/api/:a/b",method = RequestMethod.POST)
+    public String aaa(@BodyParam("userList.userList1.userList2") User userList) {
+        return "456";
+    }
 
     /**
      * 跳转至首页 测试

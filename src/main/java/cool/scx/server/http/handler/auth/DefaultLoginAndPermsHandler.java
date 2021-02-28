@@ -1,4 +1,4 @@
-package cool.scx.server.http.handler;
+package cool.scx.server.http.handler.auth;
 
 /**
  * <p>DefaultLoginAndPermsHandler class.</p>
