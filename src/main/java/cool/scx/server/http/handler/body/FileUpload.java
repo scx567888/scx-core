@@ -2,6 +2,12 @@ package cool.scx.server.http.handler.body;
 
 import io.vertx.core.buffer.Buffer;
 
+/**
+ * <p>FileUpload class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class FileUpload {
 
     /**
@@ -24,6 +30,14 @@ public class FileUpload {
      */
     public Buffer buffer;
 
+    /**
+     * <p>Constructor for FileUpload.</p>
+     *
+     * @param name     a {@link java.lang.String} object.
+     * @param fileName a {@link java.lang.String} object.
+     * @param fileSize a {@link java.lang.Long} object.
+     * @param buffer   a {@link io.vertx.core.buffer.Buffer} object.
+     */
     public FileUpload(String name, String fileName, Long fileSize, Buffer buffer) {
         this.name = name;
         this.fileName = fileName;

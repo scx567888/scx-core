@@ -58,6 +58,15 @@ public class FileUtils {
 
     //文件全上传完了 将临时文件 重命名 移动至 上传文件夹并 删除临时文件
 
+    /**
+     * <p>uploadFile.</p>
+     *
+     * @param file       a {@link cool.scx.server.http.handler.body.FileUpload} object.
+     * @param fileName   a {@link java.lang.String} object.
+     * @param index      a {@link java.lang.Integer} object.
+     * @param chunkTotal a {@link java.lang.Integer} object.
+     * @return a boolean.
+     */
     public static boolean uploadFile(FileUpload file, String fileName, Integer index, Integer chunkTotal) {
         String tempFilePath;
         if (index == -1) {

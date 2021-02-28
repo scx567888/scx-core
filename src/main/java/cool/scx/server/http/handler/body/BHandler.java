@@ -22,6 +22,12 @@ class BHandler implements Handler<Buffer> {
     boolean ended;
     long uploadSize = 0L;
 
+    /**
+     * <p>Constructor for BHandler.</p>
+     *
+     * @param context       a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param contentLength a long.
+     */
     public BHandler(RoutingContext context, long contentLength) {
         this.context = context;
         this.contentLength = contentLength;
@@ -92,6 +98,11 @@ class BHandler implements Handler<Buffer> {
     }
 
 
+    /**
+     * <p>handle.</p>
+     *
+     * @param buff a {@link io.vertx.core.buffer.Buffer} object.
+     */
     public void handle(Buffer buff) {
         if (!this.failed) {
             this.uploadSize += buff.length();

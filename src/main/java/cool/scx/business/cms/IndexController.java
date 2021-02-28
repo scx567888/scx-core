@@ -35,6 +35,12 @@ public class IndexController {
     }
 
     //    @ScxMapping(value = "/api/:a/b",method = RequestMethod.POST)
+    /**
+     * <p>aaa.</p>
+     *
+     * @param userList a {@link cool.scx.business.user.User} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String aaa(@BodyParam("userList.userList1.userList2") User userList) {
         return "456";
     }

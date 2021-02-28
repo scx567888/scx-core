@@ -284,7 +284,6 @@ public class BaseController {
      * @param chunksNumber 当前分片数
      * @param chunk        总分片数
      * @param type         文件类型 , 分为 单个文件和分片文件
-     * @param context      a {@link io.vertx.ext.web.RoutingContext} object.
      * @return 文件保存的路径
      */
     @ScxMapping("/upload")
@@ -332,10 +331,12 @@ public class BaseController {
      */
 
     /**
+     * <p>uploadValidateFile.</p>
+     *
      * @param fileName 获取文件名
      * @param fileSize 获取文件大小
      * @param type     获取类型 0 代表文件要进行上传操作 返回最后一次上传的区块 1代表全部上传完成 进行最后一部操作
-     * @return
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping("/upload/validateFile")
     public Json uploadValidateFile(String fileName, String fileSize, Integer type) {
