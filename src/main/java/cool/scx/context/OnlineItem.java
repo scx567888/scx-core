@@ -3,20 +3,30 @@ package cool.scx.context;
 import io.vertx.core.http.ServerWebSocket;
 
 /**
- * <p>OnlineItem class.</p>
+ * websocket 在线对象
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 0.9.0
  */
 public class OnlineItem {
+    /**
+     * 连接
+     */
     public ServerWebSocket webSocket;
+    /**
+     * 此连接对应的用户名
+     * 当初始连接的时候 username 会为空
+     * 当登录成功时会通过websocket将认证成功的用户发送到服务的
+     * 这时才会对 username 进行赋值
+     */
     public String username;
 
     /**
-     * <p>Constructor for OnlineItem.</p>
+     * OnlineItem 初始化函数
+     * username 可以为空
      *
-     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
-     * @param username  a {@link java.lang.String} object.
+     * @param webSocket webSocket
+     * @param username  username
      */
     public OnlineItem(ServerWebSocket webSocket, String username) {
         this.webSocket = webSocket;

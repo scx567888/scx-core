@@ -8,75 +8,113 @@ import cool.scx.server.ScxServer;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
- * <p>ScxApp class.</p>
+ * 启动类
  *
  * @author 司昌旭
  * @version 0.3.6
  */
 public final class ScxApp {
 
-    private static final Set<Class<?>> classSources = new LinkedHashSet<>();
-
-    private static String[] parameters = new String[0];
+    private static ScxAppExample sae;
 
     /**
-     * <p>run.</p>
+     * 运行项目
      *
-     * @param source a {@link java.lang.Class} object.
-     * @param args   a {@link java.lang.String} object.
+     * @param source 启动的 class
+     * @param args   外部参数
      */
     public static void run(Class<?> source, String... args) {
-        run(new Class[]{source}, args);
+        sae = new ScxAppExample(args, source);
+        run();
     }
 
     /**
-     * <p>run.</p>
+     * 运行项目
      *
-     * @param source an array of {@link java.lang.Class} objects.
-     * @param args   a {@link java.lang.String} object.
+     * @param source 启动的 class
+     * @param args   外部参数
      */
     public static void run(Class<?>[] source, String... args) {
-        parameters = args;
-        classSources.add(ScxCoreApp.class);
-        classSources.addAll(Arrays.asList(source));
-        ScxBanner.init();
+        sae = new ScxAppExample(args, source);
+        run();
+    }
+
+    /**
+     * 当 sae 初始化成功时调用此方法
+     */
+    private static void run() {
+        //先打印出 banner
+        ScxBanner.show();
+        //初始化 配置文件
         ScxConfig.init();
+        //初始化插件
         ScxPlugins.init();
+        //初始化 cms 配置文件
         ScxCmsConfig.init();
+        //初始化 context
         ScxContext.init();
+        //初始化 事件监听
         ScxListener.init();
+        //初始化 服务器
         ScxServer.init();
+        //初始化 gui
         ScxGui.init();
+        //初始化 license
         ScxLicense.init();
     }
 
     /**
-     * <p>getAppClassSources.</p>
+     * 在 classSource 中寻找 程序的 主运行 class
+     * 后续会以此 以确定 程序运行的路径
+     * 并以此为标准获取 配置文件 等
      *
      * @return a {@link java.lang.Class} object.
      */
     public static Class<?> getAppClassSources() {
-        return getClassSources().length == 1 ? getClassSources()[0] : getClassSources()[1];
+        //因为 classSources 第一位永远是 ScxCoreApp 所以做此处理
+        return sae.classSources.length == 1 ? sae.classSources[0] : sae.classSources[1];
     }
 
     /**
-     * <p>Getter for the field <code>classSources</code>.</p>
+     * 获取 从外部传来的参数 (java -jar scx.jar  xxx)
      *
-     * @return an array of {@link java.lang.Class} objects.
+     * @return 外部传来的参数
      */
-    public static Class<?>[] getClassSources() {
-        return classSources.toArray(Class[]::new);
+    public static String[] parameters() {
+        return sae.parameters;
     }
 
-    /**
-     * <p>Getter for the field <code>parameters</code>.</p>
-     *
-     * @return an array of {@link java.lang.String} objects.
-     */
-    public static String[] getParameters() {
-        return parameters;
+    public static Class<?>[] classSources() {
+        return sae.classSources;
+    }
+
+    private static class ScxAppExample {
+        private final String[] parameters;
+        /**
+         * 整个 启动的class 源 用来进行注解扫描和依赖注入扫描
+         * <p>
+         * 这里我们默认 添加 scxCoreApp 用来扫描核心 业务 如 登录 文件上传等
+         * 后期可能会将 核心业务拆分成 独立的 项目
+         */
+        private final Class<?>[] classSources;
+
+        /**
+         * 初始化 classSources 和 args
+         * 主要是 去重 和 添加 默认 class Sources
+         *
+         * @param classSources 待处理的 classSources
+         */
+        public ScxAppExample(String[] parameters, Class<?>... classSources) {
+            this.parameters = parameters;
+            //利用 set 进行 过滤
+            //以保证 参数都是未重复的
+            var tempSet = new LinkedHashSet<Class<?>>();
+            tempSet.add(ScxCoreApp.class);
+            tempSet.addAll(Arrays.asList(classSources));
+            //返回处理后的数组
+            this.classSources = tempSet.toArray(Class<?>[]::new);
+        }
     }
 }

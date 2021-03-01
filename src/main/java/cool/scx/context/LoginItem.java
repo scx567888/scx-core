@@ -1,17 +1,32 @@
 package cool.scx.context;
 
-class LoginItem {
-    public String token;//唯一的
-    public String username;//唯一的
+
+/**
+ * 已登录用户对象
+ * 此对象会在 scxContext 中以类似 map 的形式存储
+ */
+public class LoginItem {
+    /**
+     * token 本质上一个是一个随机字符串
+     * 前端 通过此值获取登录用户
+     * 来源可以多种 header , cookie ,url  等
+     */
+    public String token;
 
     /**
-     * <p>Constructor for SessionItem.</p>
+     * 和 token 对应的用户名
+     * 根据具体配置情况可能唯一 (唯一性控制 是在 scxContext 中进行控制)
+     */
+    public String username;
+
+    /**
+     * 构造函数
      *
-     * @param _token    a {@link java.lang.String} object.
-     * @param _username a {@link java.lang.String} object.
+     * @param _token    _token
+     * @param _username _username
      */
     public LoginItem(String _token, String _username) {
-        token = _token;
-        username = _username;
+        this.token = _token;
+        this.username = _username;
     }
 }

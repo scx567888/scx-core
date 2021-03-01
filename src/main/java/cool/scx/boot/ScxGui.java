@@ -102,12 +102,12 @@ public final class ScxGui {
             ScxConfig.reloadConfig();
         });
 
-        ScxContext.consumer("startVertxServer", c -> {
+        ScxContext.eventBus().consumer("startVertxServer", c -> {
             button.setEnabled(true);
             button1.setEnabled(false);
         });
 
-        ScxContext.consumer("stopVertxServer", c -> {
+        ScxContext.eventBus().consumer("stopVertxServer", c -> {
             button.setEnabled(false);
             button1.setEnabled(true);
         });

@@ -37,11 +37,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version 0.3.6
  */
 public final class ScxContext {
-
     /**
-     * Constant <code>userService</code>
+     * userService 实例 主要用来 获取登录用户的 权限等信息
      */
     public static final UserService USER_SERVICE;
+
+    /**
+     * 全局 vert.x
+     */
     public static final Vertx VERTX = Vertx.vertx();
     /**
      * 存储所有在线的 连接
@@ -55,13 +58,14 @@ public final class ScxContext {
      * todo 或者 不对登录做限制 同时允许 任意客户端(来源可以不一致) 登录任意数量的 同一用户
      */
     private static final List<LoginItem> LOGIN_ITEMS = new ArrayList<>();
-    private static final Map<String, Class<?>> scxBeanClassNameMapping = new HashMap<>();
-    private static final AnnotationConfigApplicationContext applicationContext;
+    private static final Map<String, Class<?>> SCX_BEAN_CLASS_NAME_MAPPING = new HashMap<>();
+    private static final AnnotationConfigApplicationContext APPLICATION_CONTEXT;
+    private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
     static {
         LogUtils.println("ScxContext 初始化中...", Color.GREEN);
-        applicationContext = new AnnotationConfigApplicationContext(PackageUtils.getBasePackages());
-        ScxPlugins.pluginsClassList.forEach(applicationContext::register);
+        APPLICATION_CONTEXT = new AnnotationConfigApplicationContext(PackageUtils.getBasePackages());
+        ScxPlugins.pluginsClassList.forEach(APPLICATION_CONTEXT::register);
         initScxContext();
         fixTable();
         USER_SERVICE = getBean(UserService.class);
@@ -76,13 +80,13 @@ public final class ScxContext {
      * @return a {@link java.lang.Class} object.
      */
     public static Class<?> getClassByName(String str) {
-        return scxBeanClassNameMapping.get(str.toLowerCase());
+        return SCX_BEAN_CLASS_NAME_MAPPING.get(str.toLowerCase());
     }
 
     private static void initScxContext() {
         PackageUtils.scanPackageIncludePlugins(clazz -> {
             if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class) || clazz.isAnnotationPresent(ScxModel.class)) {
-                scxBeanClassNameMapping.put(clazz.getSimpleName().toLowerCase(), clazz);
+                SCX_BEAN_CLASS_NAME_MAPPING.put(clazz.getSimpleName().toLowerCase(), clazz);
             }
             return ScanPackageVisitResult.CONTINUE;
         });
@@ -96,7 +100,7 @@ public final class ScxContext {
      * @return a T object.
      */
     public static <T> T getBean(Class<T> c) {
-        return applicationContext.getBean(c);
+        return APPLICATION_CONTEXT.getBean(c);
     }
 
     /**
@@ -107,7 +111,7 @@ public final class ScxContext {
         if (SQLRunner.testConnection()) {
             LogUtils.println("修复数据表中...", Color.MAGENTA);
             if (ScxConfig.fixTable()) {
-                scxBeanClassNameMapping.forEach((k, v) -> {
+                SCX_BEAN_CLASS_NAME_MAPPING.forEach((k, v) -> {
                     if (v.isAnnotationPresent(ScxModel.class)) {
                         try {
                             if (BaseDao.fixTable(v) != FixTableResult.NO_NEED_TO_FIX) {
@@ -130,6 +134,10 @@ public final class ScxContext {
      */
     public static void init() {
         LogUtils.println("ScxContext 初始化完成...", Color.GREEN);
+    }
+
+    public static boolean removeLoginUserByHeader() {
+        return removeLoginUserByHeader(routingContext());
     }
 
     /**
@@ -264,7 +272,7 @@ public final class ScxContext {
     }
 
     /**
-     * <p>getOnlineItemByUserName.</p>
+     * 根据用户名获取所有的在线对象
      *
      * @param username a {@link java.lang.String} object.
      * @return a {@link cool.scx.context.OnlineItem} object.
@@ -274,19 +282,41 @@ public final class ScxContext {
     }
 
     /**
-     * <p>getOnlineItemList.</p>
+     * 获取当前所有在线的连接对象
      *
-     * @return a {@link java.util.List} object.
+     * @return 当前所有在线的连接对象
      */
     public static List<OnlineItem> getOnlineItemList() {
         return ONLINE_ITEMS;
     }
 
-    public static <T> MessageConsumer<T> consumer(String address, Handler<Message<T>> handler) {
-        return VERTX.eventBus().consumer(address, handler);
+    /**
+     * 获取全局的事件总线
+     *
+     * @return 全局的事件总线
+     */
+    public static EventBus eventBus() {
+        return VERTX.eventBus();
     }
 
-    public static EventBus publish(String address, Object message) {
-        return VERTX.eventBus().publish(address, message);
+    /**
+     * 获取当前线程的 RoutingContext (只限在 scx mapping 注解的方法及其调用链上)
+     *
+     * @return 当前线程的 RoutingContext
+     */
+    public static RoutingContext routingContext() {
+        return ROUTING_CONTEXT_THREAD_LOCAL.get();
     }
+
+    /**
+     * 设置当前线程的 routingContext
+     * 此方法正常之给 scxMappingHandler 调用
+     * 若无特殊需求 不必调用此方法
+     *
+     * @param routingContext 要设置的 routingContext
+     */
+    public static void routingContext(RoutingContext routingContext) {
+        ROUTING_CONTEXT_THREAD_LOCAL.set(routingContext);
+    }
+
 }

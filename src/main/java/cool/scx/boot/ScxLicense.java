@@ -2,6 +2,7 @@ package cool.scx.boot;
 
 import cool.scx.business.license.LicenseService;
 import cool.scx.context.ScxContext;
+import cool.scx.server.ScxServer;
 import cool.scx.util.LogUtils;
 
 /**
@@ -26,6 +27,7 @@ public class ScxLicense {
         LogUtils.println("校验 license 中 ...");
         var licenseRight = licenseService.passLicense();
         if (!licenseRight) {
+            ScxServer.stopVertxServer();
             LogUtils.recordLog("license 已失效!!! 请联系服务商...");
             System.exit(0);
         } else {

@@ -6,6 +6,7 @@ import cool.scx.annotation.http.ScxMapping;
 import cool.scx.base.service.Param;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
+import cool.scx.context.ScxContext;
 import cool.scx.enumeration.RequestMethod;
 import cool.scx.util.FileType;
 import cool.scx.util.FileUtils;
@@ -56,7 +57,9 @@ public class IndexController {
      * @return 页面
      */
     @ScxMapping(value = "/", method = RequestMethod.GET)
-    public Html Index(RoutingContext routingContext) {
+    public Html Index() {
+        var routingContext= ScxContext.routingContext();
+        System.out.println();
 
         Map<String, Cookie> stringCookieMap = routingContext.cookieMap();
         FileType fileTypeByHead = FileUtils.getFileTypeByHead(new File("C:\\Users\\scx56\\Desktop\\1"));

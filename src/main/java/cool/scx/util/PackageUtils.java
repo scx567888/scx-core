@@ -49,7 +49,7 @@ public class PackageUtils {
     public static void scanPackage(Function<Class<?>, ScanPackageVisitResult> fun, URL... classOrJarPaths) {
         var classList = new HashSet<Class<?>>();
         if (classOrJarPaths.length == 0) {
-            classOrJarPaths = Arrays.stream(ScxApp.getClassSources()).map(PackageUtils::getClassSourceRealPath).toArray(URL[]::new);
+            classOrJarPaths = Arrays.stream(ScxApp.classSources()).map(PackageUtils::getClassSourceRealPath).toArray(URL[]::new);
         }
         for (var c : classOrJarPaths) {
             try {
@@ -181,7 +181,7 @@ public class PackageUtils {
      * @return an array of {@link java.lang.String} objects.
      */
     public static String[] getBasePackages() {
-        return Arrays.stream(ScxApp.getClassSources()).map(Class::getPackageName).toArray(String[]::new);
+        return Arrays.stream(ScxApp.classSources()).map(Class::getPackageName).toArray(String[]::new);
     }
 
 }

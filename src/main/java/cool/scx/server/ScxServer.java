@@ -57,7 +57,7 @@ public final class ScxServer {
                 var httpOrHttps = ScxConfig.openHttps() ? "https" : "http";
                 LogUtils.println("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + ScxConfig.port() + "/", Color.GREEN);
                 LogUtils.println("> 本地 : " + httpOrHttps + "://localhost:" + ScxConfig.port() + "/", Color.GREEN);
-                ScxContext.publish("startVertxServer", "");
+                ScxContext.eventBus().publish("startVertxServer", "");
                 serverRunning = true;
             } else {
                 http.cause().printStackTrace();
@@ -71,7 +71,7 @@ public final class ScxServer {
     public static void stopVertxServer() {
         server.close(c -> {
             if (c.succeeded()) {
-                ScxContext.publish("stopVertxServer", "");
+                ScxContext.eventBus().publish("stopVertxServer", "");
                 serverRunning = false;
             }
         });
