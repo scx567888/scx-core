@@ -52,6 +52,7 @@ public class IndexController {
     /**
      * 跳转至首页 测试
      *
+     * @param user a {@link cool.scx.business.user.User} object.
      * @return 页面
      */
     @ScxMapping(value = "/", method = RequestMethod.POST)

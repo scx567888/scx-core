@@ -217,6 +217,9 @@ public final class ScxConfig {
         LogUtils.println("ScxConfig 初始化完成...", Color.BRIGHT_BLUE);
     }
 
+    /**
+     * <p>reloadConfig.</p>
+     */
     public static void reloadConfig() {
         LogUtils.println("ScxConfig 重新加载中...", Color.BRIGHT_BLUE);
         loadConfig();
@@ -460,7 +463,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String scxVersion() {
-        return "0.9.7";
+        return "0.9.8";
     }
 
     /**
