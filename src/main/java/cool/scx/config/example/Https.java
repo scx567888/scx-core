@@ -46,8 +46,7 @@ public class Https {
                     LogUtils.println("✘ 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : " + f, Color.RED);
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
-        if (this.isOpen) {
-            this.certificatePath = getConfigValue("scx.https.certificate-path", "/certificate/scx_dev.jks",
+            this.certificatePath = getConfigValue("scx.https.certificate-path", "",
                     s -> LogUtils.println("✔ 证书路径                           \t -->\t " + PackageUtils.getFileByAppRoot(s), Color.GREEN),
                     f -> {
                         needFixConfig.set(true);
@@ -62,6 +61,8 @@ public class Https {
                         needFixConfig.set(true);
                         LogUtils.println("✘ 未检测到 scx.https.certificate-password     \t -->\t 请检查证书密码是否正确", Color.RED);
                     }, JsonNode::asText, a -> a);
+
+        if (this.isOpen) {
             var tempCertificatePasswordValue = "";
             try {
                 tempCertificatePasswordValue = CryptoUtils.decryptText(this.certificatePassword);
@@ -69,11 +70,8 @@ public class Https {
                 LogUtils.println("✘ 解密 scx.https.certificate-password  出错        \t -->\t 请检查证书密码是否正确", Color.RED);
             }
             this.certificatePasswordValue = tempCertificatePasswordValue;
-        } else {
-            this.certificatePath = "";
-            this.certificatePathValue = null;
-            this.certificatePassword = "";
-            this.certificatePasswordValue = null;
+        }else{
+            this.certificatePasswordValue="";
         }
 
     }
