@@ -42,15 +42,16 @@ public final class ScxApp {
     }
 
     /**
-     * 当 sae 初始化成功时调用此方法
+     * 当 scx 初始化成功时调用此方法
      */
     private static void run() {
+        //此处每个初始化方法都依赖上一个的初始化方法 所以顺序不要打乱
         //先打印出 banner
         ScxBanner.show();
         //初始化 配置文件
         ScxConfig.initConfig();
         //初始化插件
-        ScxPlugins.init();
+        ScxPlugins.initPlugins();
         //初始化 cms 配置文件
         ScxCmsConfig.init();
         //初始化 context

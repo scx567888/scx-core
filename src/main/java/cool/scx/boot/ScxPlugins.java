@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * todo 插件加载需要重构
  * <p>ScxPlugins class.</p>
  *
  * @author 司昌旭
@@ -23,7 +24,28 @@ public final class ScxPlugins {
      */
     public static List<Class<?>> pluginsClassList = new ArrayList<>();
 
-    static {
+    /**
+     * <p>reloadPlugins.</p>
+     */
+    public static void reloadPlugins() {
+        LogUtils.println("ScxPlugins 重新加载中...", Color.YELLOW);
+        loadPlugins();
+        LogUtils.println("ScxPlugins 重新加载完成...", Color.YELLOW);
+    }
+
+    /**
+     * <p>initPlugins.</p>
+     */
+    public static void initPlugins() {
+        LogUtils.println("ScxPlugins 初始化中...", Color.YELLOW);
+        loadPlugins();
+        LogUtils.println("ScxPlugins 初始化完成...", Color.YELLOW);
+    }
+
+    /**
+     * <p>init.</p>
+     */
+    private static void loadPlugins() {
         LogUtils.println("ScxPlugins 初始化中...", Color.YELLOW);
         var pluginsRoot = ScxConfig.pluginRoot();
         if (pluginsRoot.exists()) {
@@ -46,12 +68,5 @@ public final class ScxPlugins {
                     }
             );
         }
-    }
-
-    /**
-     * <p>init.</p>
-     */
-    public static void init() {
-        LogUtils.println("ScxPlugins 初始化完成...", Color.YELLOW);
     }
 }
