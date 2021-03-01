@@ -6,7 +6,7 @@
     "confusion-login-error": false,
     "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
     "show-log": true,
-    "show-gui": true,
+    "show-gui": false,
     "real-delete": false,
     "login-error-lock-times": 3,
     "login-error-lock-second": 60,

@@ -90,17 +90,14 @@ public final class ScxGui {
             textArea.setText("");
         });
         // 监听button的选择路径
-        button.addActionListener(e -> {
-            ScxServer.stopVertxServer();
-        });
+        button.addActionListener(e -> ScxServer.stopServer());
         // 监听button的选择路径
-        button1.addActionListener(e -> {
-            ScxServer.startVertxServer();
-        });
+        button1.addActionListener(e ->{
+
+            ScxServer.startServer();
+        } );
         // 监听button的选择路径
-        button3.addActionListener(e -> {
-            ScxConfig.reloadConfig();
-        });
+        button3.addActionListener(e -> ScxConfig.reloadConfig());
 
         ScxContext.eventBus().consumer("startVertxServer", c -> {
             button.setEnabled(true);

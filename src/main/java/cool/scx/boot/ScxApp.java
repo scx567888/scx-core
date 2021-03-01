@@ -59,7 +59,9 @@ public final class ScxApp {
         //初始化 事件监听
         ScxListener.init();
         //初始化 服务器
-        ScxServer.init();
+        ScxServer.initServer();
+        //启动服务器
+        ScxServer.startServer();
         //初始化 gui
         ScxGui.init();
         //初始化 license

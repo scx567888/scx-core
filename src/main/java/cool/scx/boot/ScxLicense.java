@@ -27,7 +27,7 @@ public class ScxLicense {
         LogUtils.println("校验 license 中 ...");
         var licenseRight = licenseService.passLicense();
         if (!licenseRight) {
-            ScxServer.stopVertxServer();
+            ScxServer.stopServer();
             LogUtils.recordLog("license 已失效!!! 请联系服务商...");
             System.exit(0);
         } else {

@@ -22,37 +22,53 @@ public final class ScxServer {
     /**
      * 后台服务器
      */
-    private final static HttpServer server;
+    private static HttpServer server;
 
     /**
      * 服务器是否在运行中
      */
     private static boolean serverRunning = false;
 
-    static {
-        LogUtils.println("正在部署服务...", Color.BRIGHT_BLUE);
-        server = ScxContext.VERTX.createHttpServer(getHttpServerOptions());
-        initVertServer();
-        startVertxServer();
+    /**
+     * 初始化 服务器
+     */
+    public static void initServer() {
+        LogUtils.println("正在初始化服务器...", Color.BRIGHT_YELLOW);
+        loadServer();
+        LogUtils.println("服务器初始化完毕...", Color.BRIGHT_YELLOW);
     }
 
+    private static void loadServer() {
+        //先获取 handler 此处每次都重新获取是因为 handler 所扫描的类 是可以根据 scxConfig 进行配置的 所以不能为 final
+        ScxRequestHandler requestHandler = new ScxRequestHandler();
+        ScxWebSocketHandler webSocketHandler = new ScxWebSocketHandler();
+        //创建服务器端配置文件
+        var httpServerOptions = new HttpServerOptions();
+        if (ScxConfig.openHttps()) {
+            httpServerOptions.setSsl(true)
+                    .setKeyStoreOptions(new JksOptions()
+                            .setPath(ScxConfig.certPath().getPath())
+                            .setPassword(ScxConfig.certPassword()));
+        }
+        server = ScxContext.VERTX.createHttpServer(httpServerOptions);
+        server.requestHandler(requestHandler).webSocketHandler(webSocketHandler);
+    }
 
-    /**
-     * <p>init.</p>
-     */
-    public static void init() {
-        LogUtils.println("服务部署完毕...", Color.BRIGHT_BLUE);
+    public static void reloadServer() {
+        LogUtils.println("正在重新加载服务器...", Color.BRIGHT_BLUE);
+        loadServer();
+        LogUtils.println("正在重新加载服务器完毕...", Color.GREEN);
     }
 
     /**
      * <p>startVertxServer.</p>
      */
-    public static void startVertxServer() {
+    public static void startServer() {
         if (serverRunning) {
             return;
         }
         var port = checkPort(ScxConfig.port());
-        server.listen(http -> {
+        server.listen(port, http -> {
             if (http.succeeded()) {
                 LogUtils.println("服务器启动成功...", Color.GREEN);
                 var httpOrHttps = ScxConfig.openHttps() ? "https" : "http";
@@ -61,7 +77,8 @@ public final class ScxServer {
                 ScxContext.eventBus().publish("startVertxServer", "");
                 serverRunning = true;
             } else {
-                http.cause().printStackTrace();
+                Throwable cause = http.cause();
+                cause.printStackTrace();
             }
         });
     }
@@ -69,7 +86,7 @@ public final class ScxServer {
     /**
      * <p>stopServer.</p>
      */
-    public static void stopVertxServer() {
+    public static void stopServer() {
         server.close(c -> {
             if (c.succeeded()) {
                 ScxContext.eventBus().publish("stopVertxServer", "");
@@ -78,37 +95,6 @@ public final class ScxServer {
         });
         LogUtils.println("服务器已停止...", Color.BRIGHT_RED);
     }
-
-    /**
-     * 初始化 服务器
-     */
-    private static void initVertServer() {
-        var requestHandler = new ScxRequestHandler();
-        var webSocketHandler = new ScxWebSocketHandler();
-        server.requestHandler(requestHandler).webSocketHandler(webSocketHandler);
-        LogUtils.println("服务器初始化完毕...", Color.GREEN);
-    }
-
-    /**
-     * 创建 服务端配置项
-     *
-     * @return 服务器配置项
-     */
-    private static HttpServerOptions getHttpServerOptions() {
-        LogUtils.println("服务器配置文件初始化中...", Color.YELLOW);
-        var httpServerOptions = new HttpServerOptions();
-        httpServerOptions.setPort(ScxConfig.port());
-        if (ScxConfig.openHttps()) {
-            httpServerOptions
-                    .setSsl(true)
-                    .setKeyStoreOptions(new JksOptions()
-                            .setPath(ScxConfig.certPath().getPath())
-                            .setPassword(ScxConfig.certPassword()));
-        }
-        LogUtils.println("服务器配置文件初始化完毕...", Color.YELLOW);
-        return httpServerOptions;
-    }
-
 
     /**
      * <p>isServerRunning.</p>
