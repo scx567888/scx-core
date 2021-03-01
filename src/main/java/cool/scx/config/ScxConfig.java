@@ -6,7 +6,6 @@ import cool.scx.boot.ScxApp;
 import cool.scx.config.example.Scx;
 import cool.scx.enumeration.Color;
 import cool.scx.util.LogUtils;
-import cool.scx.util.NetUtils;
 import cool.scx.util.NoCode;
 import cool.scx.util.PackageUtils;
 
@@ -25,57 +24,78 @@ import java.util.function.Function;
  */
 public final class ScxConfig {
 
-    private static Scx ce;
-    private static JsonNode scj;
-    private static File jsonPath;
+    /**
+     * 当前 默认配置文件的实例
+     * 注意!!! 如果未执行 init 或 loadConfig 方法 nowScxExample 可能为空
+     */
+    private static Scx nowScxExample;
 
     /**
-     * <p>Getter for the field <code>scj</code>.</p>
-     *
-     * @return a {@link com.fasterxml.jackson.databind.JsonNode} object.
+     * 当前 默认配置文件的JsonNode
+     * 注意!!! 如果未执行 init 或 loadConfig 方法 nowScxConfigJsonNode 可能为空
      */
-    public static JsonNode getScj() {
-        return scj;
-    }
-
-    /**
-     * <p>checkPort.</p>
-     *
-     * @param p a int.
-     * @return a int.
-     */
-    public static int checkPort(int p) {
-        while (NetUtils.isLocalePortUsing(p)) {
-            p = p + 1;
-            LogUtils.println("✘ 端口号 [ " + (p - 1) + " ] 已被占用 !!!         \t -->\t 新端口号 : " + p, Color.RED);
-        }
-        return p;
-    }
+    private static JsonNode nowScxConfigJsonNode;
 
     /**
      * <p>getScxJsonConfig.</p>
      *
      * @return a {@link com.fasterxml.jackson.databind.JsonNode} object.
      */
-    public static JsonNode getScxJsonConfig() {
+    private static JsonNode getJson(File configFile) {
         JsonNode rootNode = null;
         var mapper = new ObjectMapper();
         try {
-            var scxConfigJsons = PackageUtils.getAppRoot().listFiles(file -> file.isFile() && file.getName().startsWith("scx") && file.getName().endsWith(".json"));
-            jsonPath = scxConfigJsons[0];
-            rootNode = mapper.readTree(jsonPath);
-            LogUtils.println("✔ 已加载配置文件                       \t -->\t " + jsonPath.getPath(), Color.GREEN);
+            rootNode = mapper.readTree(configFile);
+            LogUtils.println("✔ 已加载配置文件                       \t -->\t " + configFile.getPath(), Color.GREEN);
         } catch (Exception e) {
-            jsonPath = new File(PackageUtils.getAppRoot(), "scx-default.json");
-            LogUtils.println("✘ 配置文件已损坏或丢失!!!", Color.RED);
+            LogUtils.println("✘ 配置文件已损坏!!!", Color.RED);
         }
         return rootNode;
     }
 
     /**
-     * <p>getConfigValue.</p>
+     * 获取 config 文件
+     * 如果没有则返回一个默认的 文件
      *
-     * @param keyPath a {@link java.lang.String} object.
+     * @return 配置文件
+     */
+    private static File getConfigFile() {
+        //获取所有 已 scx 开头 .json 结尾的文件
+        //这里假设这些就是 配置文件
+        var scxConfigJsons = PackageUtils.getAppRoot().listFiles(file -> file.isFile() && file.getName().startsWith("scx") && file.getName().endsWith(".json"));
+        //数量不为空 就返回第一个
+        if (scxConfigJsons != null && scxConfigJsons.length > 0) {
+            return scxConfigJsons[0];
+        } else {
+            LogUtils.println("✘ 配置文件已丢失!!! 已使用默认配置文件 scx-default.json", Color.RED);
+            return getDefaultConfigFile();
+        }
+    }
+
+    private static File getDefaultConfigFile() {
+        return new File(PackageUtils.getAppRoot(), "scx-default.json");
+    }
+
+    /**
+     * 根据文件名获取配置文件
+     *
+     * @param configName 要获取的配置文件的名称
+     * @return 配置文件的文件
+     */
+    public static File getConfigFile(String configName) {
+        var configFile = new File(PackageUtils.getAppRoot(), configName);
+        if (configFile.isFile() && configFile.exists()) {
+            return configFile;
+        } else {
+            throw new RuntimeException("配置文件 " + configName + " 不存在 !!!");
+        }
+    }
+
+    /**
+     * 从默认配置文件获取配置值 并自动判断类型
+     * 没有找到配置文件会返回 null
+     *
+     * @param keyPath keyPath
      * @param <T>     a T object.
      * @return a T object.
      */
@@ -84,10 +104,11 @@ public final class ScxConfig {
     }
 
     /**
-     * <p>getConfigValue.</p>
+     * 从默认配置文件获取配置值 并自动判断类型
+     * 没有找到配置文件会返回 默认值
      *
-     * @param keyPath    a {@link java.lang.String} object.
-     * @param defaultVal a T object.
+     * @param keyPath    keyPath
+     * @param defaultVal 默认值
      * @param <T>        a T object.
      * @return a T object.
      */
@@ -105,31 +126,33 @@ public final class ScxConfig {
     }
 
     /**
-     * <p>getConfigValue.</p>
+     * 从默认配置文件获取配置值 并自动判断类型
+     * 没有找到配置文件会返回 默认值
      *
-     * @param keyPath       a {@link java.lang.String} object.
-     * @param defaultVal    a T object.
-     * @param successFun    a {@link java.util.function.Consumer} object.
-     * @param failFun       a {@link java.util.function.Consumer} object.
-     * @param convertFun    a {@link java.util.function.Function} object.
-     * @param convertArgFun a {@link java.util.function.Function} object.
+     * @param keyPath       keyPath
+     * @param defaultVal    默认值
+     * @param successFun    获取成功的回调
+     * @param failFun       获取失败的回调
+     * @param convertFun    jsonNode 转换的方法 因为获取到的是 jsonNode 类型所以需要手动进行转换
+     * @param convertArgFun 外部参数转换的方法
      * @param <T>           a T object.
      * @return a T object.
      */
     public static <T> T getConfigValue(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun, Function<JsonNode, T> convertFun, Function<String, T> convertArgFun) {
-        return getConfigValue(keyPath, defaultVal, successFun, failFun, convertFun, convertArgFun, scj);
+        return getConfigValue(keyPath, defaultVal, successFun, failFun, convertFun, convertArgFun, nowScxConfigJsonNode);
     }
 
     /**
-     * <p>getConfigValue.</p>
+     * 从指定的配置文件获取配置值 并自动判断类型
+     * 没有找到配置文件会返回 默认值
      *
-     * @param keyPath       a {@link java.lang.String} object.
-     * @param defaultVal    a T object.
-     * @param successFun    a {@link java.util.function.Consumer} object.
-     * @param failFun       a {@link java.util.function.Consumer} object.
-     * @param convertFun    a {@link java.util.function.Function} object.
-     * @param convertArgFun a {@link java.util.function.Function} object.
-     * @param jsonNodeVal   a {@link com.fasterxml.jackson.databind.JsonNode} object.
+     * @param keyPath       keyPath
+     * @param defaultVal    默认值
+     * @param successFun    获取成功的回调
+     * @param failFun       获取失败的回调
+     * @param convertFun    jsonNode 转换的方法 因为获取到的是 jsonNode 类型所以需要手动进行转换
+     * @param convertArgFun 外部参数转换的方法
+     * @param jsonNodeVal   指定的配置文件
      * @param <T>           a T object.
      * @return a T object.
      */
@@ -163,6 +186,12 @@ public final class ScxConfig {
         }
     }
 
+    /**
+     * 根据 jsonNode 的类型自动判断 并获取值
+     *
+     * @param jsonNode jsonNode
+     * @return 值
+     */
     private static Object getValueByJsonNode(JsonNode jsonNode) {
         if (jsonNode.isInt()) {
             return jsonNode.asInt();
@@ -179,24 +208,34 @@ public final class ScxConfig {
         return jsonNode.asText();
     }
 
-
     /**
      * <p>init.</p>
      */
-    public static void init() {
+    public static void initConfig() {
         LogUtils.println("ScxConfig 初始化中...", Color.BRIGHT_BLUE);
-        scj = getScxJsonConfig();
-        ce = new Scx(jsonPath, scj);
+        loadConfig();
         LogUtils.println("ScxConfig 初始化完成...", Color.BRIGHT_BLUE);
     }
 
-    /**
-     * <p>reloadConfig.</p>
-     */
     public static void reloadConfig() {
-        scj = getScxJsonConfig();
-        ce = new Scx(jsonPath, scj);
+        LogUtils.println("ScxConfig 重新加载中...", Color.BRIGHT_BLUE);
+        loadConfig();
         LogUtils.println("ScxConfig 重新加载完成...", Color.BRIGHT_BLUE);
+    }
+
+    /**
+     * 加载 配置文件
+     */
+    private static void loadConfig() {
+        var configFile = getConfigFile();
+        var json = getJson(configFile);
+        //说明没有读取到 正确的 json 文件
+        if (json == null) {
+            configFile = getDefaultConfigFile();
+        } else {
+            nowScxConfigJsonNode = json;
+        }
+        nowScxExample = new Scx(configFile, nowScxConfigJsonNode);
     }
 
     /**
@@ -223,7 +262,7 @@ public final class ScxConfig {
      * @return a boolean.
      */
     public static boolean openHttps() {
-        return ce.https.isOpen;
+        return nowScxExample.https.isOpen;
     }
 
     /**
@@ -232,7 +271,7 @@ public final class ScxConfig {
      * @return a int.
      */
     public static int port() {
-        return ce.port;
+        return nowScxExample.port;
     }
 
     /**
@@ -241,7 +280,7 @@ public final class ScxConfig {
      * @return a {@link java.io.File} object.
      */
     public static File certPath() {
-        return ce.https.certPathValue;
+        return nowScxExample.https.certPathValue;
     }
 
     /**
@@ -250,7 +289,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String certPassword() {
-        return ce.https.certificatePasswordValue;
+        return nowScxExample.https.certificatePasswordValue;
     }
 
     /**
@@ -259,7 +298,7 @@ public final class ScxConfig {
      * @return a boolean.
      */
     public static boolean showLog() {
-        return ce.showLog;
+        return nowScxExample.showLog;
     }
 
     /**
@@ -268,7 +307,7 @@ public final class ScxConfig {
      * @return a boolean.
      */
     public static boolean fixTable() {
-        return ce.fixTable;
+        return nowScxExample.fixTable;
     }
 
     /**
@@ -277,7 +316,7 @@ public final class ScxConfig {
      * @return a boolean.
      */
     public static boolean realDelete() {
-        return ce.realDelete;
+        return nowScxExample.realDelete;
     }
 
     /**
@@ -286,7 +325,7 @@ public final class ScxConfig {
      * @return a int.
      */
     public static int loginErrorLockTimes() {
-        return ce.loginErrorLockTimes;
+        return nowScxExample.loginErrorLockTimes;
     }
 
     /**
@@ -295,7 +334,7 @@ public final class ScxConfig {
      * @return a long.
      */
     public static long loginErrorLockSecond() {
-        return ce.loginErrorLockSecond;
+        return nowScxExample.loginErrorLockSecond;
     }
 
     /**
@@ -304,7 +343,7 @@ public final class ScxConfig {
      * @return a {@link java.io.File} object.
      */
     public static File cmsRoot() {
-        return ce.cms.rootValue;
+        return nowScxExample.cms.rootValue;
     }
 
     /**
@@ -313,7 +352,7 @@ public final class ScxConfig {
      * @return a {@link java.io.File} object.
      */
     public static File pluginRoot() {
-        return ce.plugin.rootValue;
+        return nowScxExample.plugin.rootValue;
     }
 
     /**
@@ -322,7 +361,7 @@ public final class ScxConfig {
      * @return a {@link java.util.Set} object.
      */
     public static Set<String> pluginDisabledList() {
-        return ce.plugin.disabledList;
+        return nowScxExample.plugin.disabledList;
     }
 
     /**
@@ -331,7 +370,7 @@ public final class ScxConfig {
      * @return a long.
      */
     public static long bodyLimit() {
-        return ce.bodyLimitValue;
+        return nowScxExample.bodyLimitValue;
     }
 
     /**
@@ -340,7 +379,7 @@ public final class ScxConfig {
      * @return a {@link java.io.File} object.
      */
     public static File cmsFaviconIcoPath() {
-        return ce.cms.faviconIcoPathValue;
+        return nowScxExample.cms.faviconIcoPathValue;
     }
 
     /**
@@ -349,7 +388,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String allowedOrigin() {
-        return ce.allowedOrigin;
+        return nowScxExample.allowedOrigin;
     }
 
     /**
@@ -358,7 +397,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String cmsResourceUrl() {
-        return ce.cms.resourceHttpUrl;
+        return nowScxExample.cms.resourceHttpUrl;
     }
 
     /**
@@ -367,7 +406,7 @@ public final class ScxConfig {
      * @return a {@link java.io.File} object.
      */
     public static File cmsResourceLocations() {
-        return ce.cms.resourceLocationsValue;
+        return nowScxExample.cms.resourceLocationsValue;
     }
 
     /**
@@ -376,7 +415,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String dataSourceUrl() {
-        return ce.dataSource.url;
+        return nowScxExample.dataSource.url;
     }
 
     /**
@@ -385,7 +424,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String dataSourceUsername() {
-        return ce.dataSource.username;
+        return nowScxExample.dataSource.username;
     }
 
     /**
@@ -394,7 +433,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String dataSourcePassword() {
-        return ce.dataSource.passwordValue;
+        return nowScxExample.dataSource.passwordValue;
     }
 
     /**
@@ -403,7 +442,7 @@ public final class ScxConfig {
      * @return a {@link java.time.format.DateTimeFormatter} object.
      */
     public static DateTimeFormatter dateTimeFormatter() {
-        return ce.dateTimeFormatter;
+        return nowScxExample.dateTimeFormatter;
     }
 
     /**
@@ -412,7 +451,7 @@ public final class ScxConfig {
      * @return a {@link java.io.File} object.
      */
     public static File uploadFilePath() {
-        return ce.uploadFilePathValue;
+        return nowScxExample.uploadFilePathValue;
     }
 
     /**
@@ -430,7 +469,7 @@ public final class ScxConfig {
      * @return a boolean.
      */
     public static boolean showGui() {
-        return ce.showGui;
+        return nowScxExample.showGui;
     }
 
     /**
@@ -439,7 +478,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String license() {
-        return ce.license;
+        return nowScxExample.license;
     }
 
     /**
@@ -448,7 +487,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String cmsTemplateSuffix() {
-        return ce.cms.templateSuffix;
+        return nowScxExample.cms.templateSuffix;
     }
 
     /**
@@ -457,7 +496,7 @@ public final class ScxConfig {
      * @return a boolean.
      */
     public static boolean confusionLoginError() {
-        return ce.confusionLoginError;
+        return nowScxExample.confusionLoginError;
     }
 
     /**

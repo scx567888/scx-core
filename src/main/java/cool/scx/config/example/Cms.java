@@ -68,6 +68,7 @@ public class Cms {
                     needFixConfig.set(true);
                     LogUtils.println("✘ 未检测到 scx.cms.root              \t -->\t 已采用默认值 : " + PackageUtils.getFileByAppRoot(f), Color.RED);
                 }, JsonNode::asText, a -> a);
+
         this.rootValue = PackageUtils.getFileByAppRoot(root);
 
         this.resourceHttpUrl = getConfigValue("scx.cms.resource-http-url", "/static/*",

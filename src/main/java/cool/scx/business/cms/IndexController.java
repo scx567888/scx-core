@@ -1,7 +1,6 @@
 package cool.scx.business.cms;
 
 import cool.scx.annotation.http.BodyParam;
-import cool.scx.annotation.http.ScxController;
 import cool.scx.annotation.http.ScxMapping;
 import cool.scx.base.service.Param;
 import cool.scx.business.user.User;

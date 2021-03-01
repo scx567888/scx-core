@@ -51,12 +51,13 @@ public final class ScxServer {
         if (serverRunning) {
             return;
         }
+        var port = checkPort(ScxConfig.port());
         server.listen(http -> {
             if (http.succeeded()) {
                 LogUtils.println("服务器启动成功...", Color.GREEN);
                 var httpOrHttps = ScxConfig.openHttps() ? "https" : "http";
-                LogUtils.println("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + ScxConfig.port() + "/", Color.GREEN);
-                LogUtils.println("> 本地 : " + httpOrHttps + "://localhost:" + ScxConfig.port() + "/", Color.GREEN);
+                LogUtils.println("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/", Color.GREEN);
+                LogUtils.println("> 本地 : " + httpOrHttps + "://localhost:" + port + "/", Color.GREEN);
                 ScxContext.eventBus().publish("startVertxServer", "");
                 serverRunning = true;
             } else {
@@ -80,8 +81,6 @@ public final class ScxServer {
 
     /**
      * 初始化 服务器
-     *
-     * @param vertx vertx 实例
      */
     private static void initVertServer() {
         var requestHandler = new ScxRequestHandler();
@@ -118,5 +117,20 @@ public final class ScxServer {
      */
     public static boolean isServerRunning() {
         return serverRunning;
+    }
+
+    /**
+     * 检查端口号是否可以使用
+     * 当端口号不可以使用时会 将端口号进行累加 1 直到端口号可以使用
+     *
+     * @param p 需要检查的端口号
+     * @return 可以使用的端口号
+     */
+    private static int checkPort(int p) {
+        while (NetUtils.isLocalePortUsing(p)) {
+            p = p + 1;
+            LogUtils.println("✘ 端口号 [ " + (p - 1) + " ] 已被占用 !!!         \t -->\t 新端口号 : " + p, Color.RED);
+        }
+        return p;
     }
 }

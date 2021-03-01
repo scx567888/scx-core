@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Color;
 import cool.scx.util.*;
 
@@ -102,18 +101,19 @@ public class Scx {
     /**
      * 在获取各个值时 如果发生错误就 修复 配置文件
      *
-     * @param configPath  a {@link java.io.File} object.
-     * @param oldJsonNode a {@link com.fasterxml.jackson.databind.JsonNode} object.
+     * @param configPath  配置文件的路径 当配置文件损坏时会根据此路径修复配置文件
+     * @param oldJsonNode 读取到的旧配置文件 如果 配置文件损坏会根据旧配置文件 保留其旧配置项
      */
     public Scx(File configPath, JsonNode oldJsonNode) {
-        AtomicBoolean needFixConfig = new AtomicBoolean(false);
+        //是否需要修复配置文件
+        var needFixConfig = new AtomicBoolean(false);
 
         port = getConfigValue("scx.port", 8080,
                 s -> LogUtils.println("✔ 服务器 IP 地址                        \t -->\t " + NetUtils.getLocalAddress() + "\r\n✔ 端口号                                \t -->\t " + s, Color.GREEN),
                 f -> {
                     needFixConfig.set(true);
                     LogUtils.println("✘ 未检测到 scx.port                  \t -->\t 已采用默认值 : " + f, Color.RED);
-                }, c -> ScxConfig.checkPort(c.asInt()), a -> ScxConfig.checkPort(Integer.parseInt(a)));
+                }, JsonNode::asInt, Integer::parseInt);
 
         cms = new Cms(needFixConfig);
 
@@ -214,13 +214,15 @@ public class Scx {
                 },
                 JsonNode::asBoolean, Boolean::valueOf);
 
+        //如果需要修复配置文件
         if (needFixConfig.get()) {
             try (var outputStream = new FileOutputStream(configPath)) {
                 //为了保证原来配置文件中的数据不被覆盖 这里采用深拷贝 并合并对象的方式
                 var objectMapper = new ObjectMapper().setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE);
-                var config = new HashMap<String, Scx>();
-                config.put("scx", this);
-                objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputStream, objectMapper.updateValue(oldJsonNode.deepCopy(), config));
+                var newConfig = new HashMap<String, Scx>();
+                newConfig.put("scx", this);
+                //合并新的和旧的配置文件 并写入到 配置文件的路径中
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputStream, objectMapper.updateValue(oldJsonNode.deepCopy(), newConfig));
                 LogUtils.println("✔ 因配置文件损坏,已自动修复配置文件           \t -->\t " + configPath, Color.BRIGHT_GREEN);
             } catch (IOException e) {
                 e.printStackTrace();

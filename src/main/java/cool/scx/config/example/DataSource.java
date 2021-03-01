@@ -56,7 +56,6 @@ public class DataSource {
                     LogUtils.println("✘ 未检测到 scx.data-source.username     \t -->\t 已采用默认值 : " + f, Color.RED);
                 },
                 JsonNode::asText, a -> a);
-        ;
 
         this.password = getConfigValue("scx.data-source.password", "",
                 s -> LogUtils.println("✔ 数据库连接密码                          \t -->\t " + s, Color.GREEN),
@@ -65,6 +64,7 @@ public class DataSource {
                     LogUtils.println("✘ 未检测到 scx.data-source.password     \t -->\t 请检查数据库密码是否正确", Color.RED);
                 },
                 JsonNode::asText, a -> a);
+
         if (!"".equals(password)) {
             var tempPasswordValue = "";
             try {

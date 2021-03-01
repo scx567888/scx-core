@@ -48,7 +48,7 @@ public final class ScxApp {
         //先打印出 banner
         ScxBanner.show();
         //初始化 配置文件
-        ScxConfig.init();
+        ScxConfig.initConfig();
         //初始化插件
         ScxPlugins.init();
         //初始化 cms 配置文件

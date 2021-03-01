@@ -45,9 +45,10 @@ public class Plugin {
                     needFixConfig.set(true);
                     LogUtils.println("✘ 未检测到 scx.plugin.root             \t -->\t 已采用默认值 : " + f, Color.RED);
                 }, JsonNode::asText, a -> a);
+
         this.rootValue = PackageUtils.getFileByAppRoot(root);
 
-        this.disabledList = getConfigValue("scx.plugin.disabled-list", new HashSet<String>(),
+        this.disabledList = getConfigValue("scx.plugin.disabled-list", new HashSet<>(),
                 s -> LogUtils.println("✔ 禁用插件列表                           \t -->\t " + s, Color.GREEN),
                 f -> {
                     needFixConfig.set(true);
