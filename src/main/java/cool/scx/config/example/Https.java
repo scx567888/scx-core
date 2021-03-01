@@ -13,6 +13,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cool.scx.config.ScxConfig.getConfigValue;
 
+/**
+ * <p>Https class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class Https {
     /**
      * 是否开启 https
@@ -37,6 +43,11 @@ public class Https {
     @JsonIgnore
     public final String certificatePasswordValue;
 
+    /**
+     * <p>Constructor for Https.</p>
+     *
+     * @param needFixConfig a {@link java.util.concurrent.atomic.AtomicBoolean} object.
+     */
     public Https(AtomicBoolean needFixConfig) {
 
         this.isOpen = getConfigValue("scx.https.is-open", false,

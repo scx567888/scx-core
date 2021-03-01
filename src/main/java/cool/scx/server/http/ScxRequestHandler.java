@@ -31,8 +31,6 @@ public final class ScxRequestHandler extends RouterImpl {
 
     /**
      * <p>Constructor for ScxRequestHandler.</p>
-     *
-     * @param vertx a {@link io.vertx.core.Vertx} object.
      */
     public ScxRequestHandler() {
         super(ScxContext.VERTX);

@@ -111,6 +111,11 @@ public final class ScxServer {
     }
 
 
+    /**
+     * <p>isServerRunning.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean isServerRunning() {
         return serverRunning;
     }

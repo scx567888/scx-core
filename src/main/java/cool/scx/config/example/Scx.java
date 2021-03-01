@@ -11,13 +11,18 @@ import cool.scx.util.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cool.scx.config.ScxConfig.getConfigValue;
 
+/**
+ * <p>Scx class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class Scx {
     /**
      * 端口号
@@ -96,6 +101,9 @@ public class Scx {
 
     /**
      * 在获取各个值时 如果发生错误就 修复 配置文件
+     *
+     * @param configPath  a {@link java.io.File} object.
+     * @param oldJsonNode a {@link com.fasterxml.jackson.databind.JsonNode} object.
      */
     public Scx(File configPath, JsonNode oldJsonNode) {
         AtomicBoolean needFixConfig = new AtomicBoolean(false);
@@ -207,7 +215,7 @@ public class Scx {
                 JsonNode::asBoolean, Boolean::valueOf);
 
         if (needFixConfig.get()) {
-            try (var outputStream=new FileOutputStream(configPath)) {
+            try (var outputStream = new FileOutputStream(configPath)) {
                 //为了保证原来配置文件中的数据不被覆盖 这里采用深拷贝 并合并对象的方式
                 var objectMapper = new ObjectMapper().setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE);
                 var config = new HashMap<String, Scx>();

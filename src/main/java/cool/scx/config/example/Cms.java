@@ -11,6 +11,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cool.scx.config.ScxConfig.getConfigValue;
 
+/**
+ * <p>Cms class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class Cms {
     /**
      * cms 根目录 字符串值
@@ -49,6 +55,11 @@ public class Cms {
     @JsonIgnore
     public final File faviconIcoPathValue;
 
+    /**
+     * <p>Constructor for Cms.</p>
+     *
+     * @param needFixConfig a {@link java.util.concurrent.atomic.AtomicBoolean} object.
+     */
     public Cms(AtomicBoolean needFixConfig) {
 
         this.root = getConfigValue("scx.cms.root", "/c/",

@@ -86,6 +86,11 @@ public final class ScxApp {
         return sae.parameters;
     }
 
+    /**
+     * <p>classSources.</p>
+     *
+     * @return an array of {@link java.lang.Class} objects.
+     */
     public static Class<?>[] classSources() {
         return sae.classSources;
     }

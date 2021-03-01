@@ -29,10 +29,21 @@ public final class ScxConfig {
     private static JsonNode scj;
     private static File jsonPath;
 
+    /**
+     * <p>Getter for the field <code>scj</code>.</p>
+     *
+     * @return a {@link com.fasterxml.jackson.databind.JsonNode} object.
+     */
     public static JsonNode getScj() {
         return scj;
     }
 
+    /**
+     * <p>checkPort.</p>
+     *
+     * @param p a int.
+     * @return a int.
+     */
     public static int checkPort(int p) {
         while (NetUtils.isLocalePortUsing(p)) {
             p = p + 1;
@@ -51,11 +62,11 @@ public final class ScxConfig {
         var mapper = new ObjectMapper();
         try {
             var scxConfigJsons = PackageUtils.getAppRoot().listFiles(file -> file.isFile() && file.getName().startsWith("scx") && file.getName().endsWith(".json"));
-            jsonPath=scxConfigJsons[0];
+            jsonPath = scxConfigJsons[0];
             rootNode = mapper.readTree(jsonPath);
             LogUtils.println("✔ 已加载配置文件                       \t -->\t " + jsonPath.getPath(), Color.GREEN);
         } catch (Exception e) {
-            jsonPath=new File(PackageUtils.getAppRoot(),"scx-default.json");
+            jsonPath = new File(PackageUtils.getAppRoot(), "scx-default.json");
             LogUtils.println("✘ 配置文件已损坏或丢失!!!", Color.RED);
         }
         return rootNode;
@@ -175,132 +186,285 @@ public final class ScxConfig {
     public static void init() {
         LogUtils.println("ScxConfig 初始化中...", Color.BRIGHT_BLUE);
         scj = getScxJsonConfig();
-        ce = new Scx(jsonPath,scj);
+        ce = new Scx(jsonPath, scj);
         LogUtils.println("ScxConfig 初始化完成...", Color.BRIGHT_BLUE);
     }
 
+    /**
+     * <p>reloadConfig.</p>
+     */
     public static void reloadConfig() {
         scj = getScxJsonConfig();
-        ce = new Scx(jsonPath,scj);
+        ce = new Scx(jsonPath, scj);
         LogUtils.println("ScxConfig 重新加载完成...", Color.BRIGHT_BLUE);
     }
 
+    /**
+     * <p>cookieKey.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String cookieKey() {
         return "S-Cookie";
     }
 
+    /**
+     * <p>tokenKey.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String tokenKey() {
         return "S-Token";
     }
 
+    /**
+     * <p>openHttps.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean openHttps() {
         return ce.https.isOpen;
     }
 
+    /**
+     * <p>port.</p>
+     *
+     * @return a int.
+     */
     public static int port() {
         return ce.port;
     }
 
+    /**
+     * <p>certPath.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public static File certPath() {
         return ce.https.certPathValue;
     }
 
+    /**
+     * <p>certPassword.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String certPassword() {
         return ce.https.certificatePasswordValue;
     }
 
+    /**
+     * <p>showLog.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean showLog() {
         return ce.showLog;
     }
 
+    /**
+     * <p>fixTable.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean fixTable() {
         return ce.fixTable;
     }
 
+    /**
+     * <p>realDelete.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean realDelete() {
         return ce.realDelete;
     }
 
+    /**
+     * <p>loginErrorLockTimes.</p>
+     *
+     * @return a int.
+     */
     public static int loginErrorLockTimes() {
         return ce.loginErrorLockTimes;
     }
 
+    /**
+     * <p>loginErrorLockSecond.</p>
+     *
+     * @return a long.
+     */
     public static long loginErrorLockSecond() {
         return ce.loginErrorLockSecond;
     }
 
+    /**
+     * <p>cmsRoot.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public static File cmsRoot() {
         return ce.cms.rootValue;
     }
 
+    /**
+     * <p>pluginRoot.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public static File pluginRoot() {
         return ce.plugin.rootValue;
     }
 
+    /**
+     * <p>pluginDisabledList.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public static Set<String> pluginDisabledList() {
         return ce.plugin.disabledList;
     }
 
+    /**
+     * <p>bodyLimit.</p>
+     *
+     * @return a long.
+     */
     public static long bodyLimit() {
         return ce.bodyLimitValue;
     }
 
+    /**
+     * <p>cmsFaviconIcoPath.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public static File cmsFaviconIcoPath() {
         return ce.cms.faviconIcoPathValue;
     }
 
+    /**
+     * <p>allowedOrigin.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String allowedOrigin() {
         return ce.allowedOrigin;
     }
 
+    /**
+     * <p>cmsResourceUrl.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String cmsResourceUrl() {
         return ce.cms.resourceHttpUrl;
     }
 
+    /**
+     * <p>cmsResourceLocations.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public static File cmsResourceLocations() {
         return ce.cms.resourceLocationsValue;
     }
 
+    /**
+     * <p>dataSourceUrl.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String dataSourceUrl() {
         return ce.dataSource.url;
     }
 
+    /**
+     * <p>dataSourceUsername.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String dataSourceUsername() {
         return ce.dataSource.username;
     }
 
+    /**
+     * <p>dataSourcePassword.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String dataSourcePassword() {
         return ce.dataSource.passwordValue;
     }
 
+    /**
+     * <p>dateTimeFormatter.</p>
+     *
+     * @return a {@link java.time.format.DateTimeFormatter} object.
+     */
     public static DateTimeFormatter dateTimeFormatter() {
         return ce.dateTimeFormatter;
     }
 
+    /**
+     * <p>uploadFilePath.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public static File uploadFilePath() {
         return ce.uploadFilePathValue;
     }
 
+    /**
+     * <p>scxVersion.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String scxVersion() {
         return "0.9.7";
     }
 
+    /**
+     * <p>showGui.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean showGui() {
         return ce.showGui;
     }
 
+    /**
+     * <p>license.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String license() {
         return ce.license;
     }
 
-    public static String cmsResourceSuffix() {
-        return ce.cms.resourceHttpUrl;
+    /**
+     * <p>cmsResourceSuffix.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public static String cmsTemplateSuffix() {
+        return ce.cms.templateSuffix;
     }
 
+    /**
+     * <p>confusionLoginError.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean confusionLoginError() {
         return ce.confusionLoginError;
     }
 
+    /**
+     * <p>AppKey.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String AppKey() {
         return "H8QS91GcuNGP9735";
     }

@@ -53,12 +53,11 @@ public class IndexController {
     /**
      * 跳转至首页 测试
      *
-     * @param routingContext a {@link io.vertx.ext.web.RoutingContext} object.
      * @return 页面
      */
-    @ScxMapping(value = "/", method = RequestMethod.GET)
-    public Html Index() {
-        var routingContext= ScxContext.routingContext();
+    @ScxMapping(value = "/", method = RequestMethod.POST)
+    public Html Index(User user) {
+        var routingContext = ScxContext.routingContext();
         System.out.println();
 
         Map<String, Cookie> stringCookieMap = routingContext.cookieMap();

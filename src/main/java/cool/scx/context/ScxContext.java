@@ -15,11 +15,8 @@ import cool.scx.enumeration.FixTableResult;
 import cool.scx.enumeration.ScanPackageVisitResult;
 import cool.scx.util.LogUtils;
 import cool.scx.util.PackageUtils;
-import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -136,6 +133,11 @@ public final class ScxContext {
         LogUtils.println("ScxContext 初始化完成...", Color.GREEN);
     }
 
+    /**
+     * <p>removeLoginUserByHeader.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean removeLoginUserByHeader() {
         return removeLoginUserByHeader(routingContext());
     }

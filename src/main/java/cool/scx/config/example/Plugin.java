@@ -14,6 +14,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cool.scx.config.ScxConfig.getConfigValue;
 
+/**
+ * <p>Plugin class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class Plugin {
     /**
      * 插件根目录
@@ -27,6 +33,11 @@ public class Plugin {
      */
     public final Set<String> disabledList;
 
+    /**
+     * <p>Constructor for Plugin.</p>
+     *
+     * @param needFixConfig a {@link java.util.concurrent.atomic.AtomicBoolean} object.
+     */
     public Plugin(AtomicBoolean needFixConfig) {
         this.root = getConfigValue("scx.plugin.root", "/plugins/",
                 s -> LogUtils.println("✔ 插件根目录                           \t -->\t " + PackageUtils.getFileByAppRoot(s), Color.GREEN),

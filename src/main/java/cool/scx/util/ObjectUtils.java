@@ -1,8 +1,11 @@
 package cool.scx.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -36,6 +39,24 @@ public final class ObjectUtils {
         setObjectMapperConfig();
         objectMapper.getSerializerProvider().setNullKeySerializer(new NullKeySerializer());
         typeFactory = objectMapper.getTypeFactory();
+        setNullOnError();
+    }
+
+    /**
+     * todo 此处会对前台发送的不合法数据进行置空处理 若影响到业务开发 请注释掉此段代码
+     * 例子
+     * json   {"username": "test","password": [1,2,3,4,5,6,7,8,8,9]}
+     * class  public class User  { public String username; public String password; }
+     * 有此代码 ->  username=test;  password=null;
+     * 无此代码 ->   com.fasterxml.jackson.databind.exc.MismatchedInputException
+     */
+    public static void setNullOnError() {
+        objectMapper.addHandler(new DeserializationProblemHandler() {
+            @Override
+            public Object handleUnexpectedToken(DeserializationContext ctxt, JavaType targetType, JsonToken t, JsonParser p, String failureMsg) throws IOException {
+                return null;
+            }
+        });
     }
 
     private static JavaTimeModule getJavaTimeModule() {

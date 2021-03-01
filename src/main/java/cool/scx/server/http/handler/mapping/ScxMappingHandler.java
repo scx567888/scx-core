@@ -240,8 +240,10 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
      * @throws java.lang.Exception if any.
      */
     private Object getResult(RoutingContext ctx) throws Exception {
-        Object uploadFilesObject = ctx.get("uploadFiles");
-        var uploadFiles = uploadFilesObject != null ? (Set<FileUpload>) uploadFilesObject : new HashSet<FileUpload>();
+        Set<FileUpload> uploadFiles = ctx.get("uploadFiles");
+        if (uploadFiles == null) {
+            uploadFiles = new HashSet<>();
+        }
         var parameters = method.getParameters();
         //先从多个来源获取参数 并缓存起来
         var jsonNode = ObjectUtils.JsonToTree(ctx.request().method() != HttpMethod.GET ? ctx.getBodyAsString() : "");

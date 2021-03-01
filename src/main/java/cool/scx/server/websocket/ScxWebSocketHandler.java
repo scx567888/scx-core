@@ -24,8 +24,6 @@ public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
 
     /**
      * <p>Constructor for ScxWebSocketHandler.</p>
-     *
-     * @param vertx a {@link io.vertx.core.Vertx} object.
      */
     public ScxWebSocketHandler() {
         PackageUtils.scanPackage(c -> {

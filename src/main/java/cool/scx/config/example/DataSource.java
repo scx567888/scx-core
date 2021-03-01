@@ -10,6 +10,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cool.scx.config.ScxConfig.getConfigValue;
 
+/**
+ * <p>DataSource class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class DataSource {
     /**
      * 数据源 url
@@ -29,6 +35,11 @@ public class DataSource {
     @JsonIgnore
     public final String passwordValue;
 
+    /**
+     * <p>Constructor for DataSource.</p>
+     *
+     * @param needFixConfig a {@link java.util.concurrent.atomic.AtomicBoolean} object.
+     */
     public DataSource(AtomicBoolean needFixConfig) {
         this.url = getConfigValue("scx.data-source.url", "jdbc:mysql://127.0.0.1:3306/scx",
                 s -> LogUtils.println("✔ 数据库 JDBC Url                       \t -->\t " + s, Color.GREEN),

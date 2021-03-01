@@ -4,6 +4,9 @@ package cool.scx.context;
 /**
  * 已登录用户对象
  * 此对象会在 scxContext 中以类似 map 的形式存储
+ *
+ * @author scx56
+ * @version $Id: $Id
  */
 public class LoginItem {
     /**
