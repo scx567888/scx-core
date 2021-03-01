@@ -282,7 +282,7 @@ public final class ScxConfig {
     }
 
     public static String scxVersion() {
-        return "0.9.6";
+        return "0.9.7";
     }
 
     public static boolean showGui() {
