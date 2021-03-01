@@ -40,7 +40,7 @@
         <!-- logback 版本 -->
         <logback.version>1.2.3</logback.version>
         <!-- testng 版本 -->
-        <testng.version>7.3.0</testng.version>
+        <testng.version>7.4.0</testng.version>
     </properties>
 
     <dependencies>
