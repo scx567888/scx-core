@@ -175,13 +175,13 @@ public final class ScxConfig {
     public static void init() {
         LogUtils.println("ScxConfig 初始化中...", Color.BRIGHT_BLUE);
         scj = getScxJsonConfig();
-        ce = new Scx(jsonPath);
+        ce = new Scx(jsonPath,scj);
         LogUtils.println("ScxConfig 初始化完成...", Color.BRIGHT_BLUE);
     }
 
     public static void reloadConfig() {
         scj = getScxJsonConfig();
-        ce = new Scx(jsonPath);
+        ce = new Scx(jsonPath,scj);
         LogUtils.println("ScxConfig 重新加载完成...", Color.BRIGHT_BLUE);
     }
 
@@ -201,12 +201,12 @@ public final class ScxConfig {
         return ce.port;
     }
 
-    public static File certificatePath() {
-        return ce.https.certificatePathValue;
+    public static File certPath() {
+        return ce.https.certPathValue;
     }
 
-    public static String certificatePassword() {
-        return ce.https.certificatePassword;
+    public static String certPassword() {
+        return ce.https.certificatePasswordValue;
     }
 
     public static boolean showLog() {

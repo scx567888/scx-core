@@ -21,16 +21,16 @@ public class Https {
     /**
      * ssh 证书路径 字符串值
      */
-    public final String certificatePath;
+    public final String certPath;
     /**
      * ssh 证书路径 真实值
      */
     @JsonIgnore
-    public final File certificatePathValue;
+    public final File certPathValue;
     /**
      * ssh 证书密码 字符串值
      */
-    public final String certificatePassword;
+    public final String certPassword;
     /**
      * ssh 证书密码 真实值 (解密后)
      */
@@ -46,32 +46,32 @@ public class Https {
                     LogUtils.println("✘ 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : " + f, Color.RED);
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
-            this.certificatePath = getConfigValue("scx.https.certificate-path", "",
-                    s -> LogUtils.println("✔ 证书路径                           \t -->\t " + PackageUtils.getFileByAppRoot(s), Color.GREEN),
-                    f -> {
-                        needFixConfig.set(true);
-                        LogUtils.println("✘ 未检测到 scx.https.certificate-path   \t -->\t 请检查证书路径是否正确", Color.RED);
-                    }, JsonNode::asText, a -> a);
+        this.certPath = getConfigValue("scx.https.cert-path", "",
+                s -> LogUtils.println("✔ 证书路径                           \t -->\t " + PackageUtils.getFileByAppRoot(s), Color.GREEN),
+                f -> {
+                    needFixConfig.set(true);
+                    LogUtils.println("✘ 未检测到 scx.https.cert-path       \t -->\t 请检查证书路径是否正确", Color.RED);
+                }, JsonNode::asText, a -> a);
 
-            this.certificatePathValue = PackageUtils.getFileByAppRoot(certificatePath);
+        this.certPathValue = PackageUtils.getFileByAppRoot(certPath);
 
-            this.certificatePassword = getConfigValue("scx.https.certificate-password", "",
-                    NoCode::NoCode,
-                    f -> {
-                        needFixConfig.set(true);
-                        LogUtils.println("✘ 未检测到 scx.https.certificate-password     \t -->\t 请检查证书密码是否正确", Color.RED);
-                    }, JsonNode::asText, a -> a);
+        this.certPassword = getConfigValue("scx.https.cert-password", "",
+                NoCode::NoCode,
+                f -> {
+                    needFixConfig.set(true);
+                    LogUtils.println("✘ 未检测到 scx.https.cert-password      \t -->\t 请检查证书密码是否正确", Color.RED);
+                }, JsonNode::asText, a -> a);
 
         if (this.isOpen) {
             var tempCertificatePasswordValue = "";
             try {
-                tempCertificatePasswordValue = CryptoUtils.decryptText(this.certificatePassword);
+                tempCertificatePasswordValue = CryptoUtils.decryptText(this.certPassword);
             } catch (Exception e) {
                 LogUtils.println("✘ 解密 scx.https.certificate-password  出错        \t -->\t 请检查证书密码是否正确", Color.RED);
             }
             this.certificatePasswordValue = tempCertificatePasswordValue;
-        }else{
-            this.certificatePasswordValue="";
+        } else {
+            this.certificatePasswordValue = "";
         }
 
     }

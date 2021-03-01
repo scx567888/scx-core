@@ -103,8 +103,8 @@ public final class ScxServer {
             httpServerOptions
                     .setSsl(true)
                     .setKeyStoreOptions(new JksOptions()
-                            .setPath(ScxConfig.certificatePath().getPath())
-                            .setPassword(ScxConfig.certificatePassword()));
+                            .setPath(ScxConfig.certPath().getPath())
+                            .setPassword(ScxConfig.certPassword()));
         }
         LogUtils.println("服务器配置文件初始化完毕...", Color.YELLOW);
         return httpServerOptions;
