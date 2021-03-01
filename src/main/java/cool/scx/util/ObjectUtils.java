@@ -47,8 +47,8 @@ public final class ObjectUtils {
      * 例子
      * json   {"username": "test","password": [1,2,3,4,5,6,7,8,8,9]}
      * class  public class User  { public String username; public String password; }
-     * 有此代码 ->  username=test;  password=null;
-     * 无此代码 ->   com.fasterxml.jackson.databind.exc.MismatchedInputException
+     * 有此代码 -- username=test;  password=null;
+     * 无此代码 --   com.fasterxml.jackson.databind.exc.MismatchedInputException
      */
     public static void setNullOnError() {
         objectMapper.addHandler(new DeserializationProblemHandler() {
