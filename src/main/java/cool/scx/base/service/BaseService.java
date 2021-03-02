@@ -232,7 +232,7 @@ public abstract class BaseService<Entity extends BaseModel> {
         var ids = baseDao.update(param, false);
         var defaultParam = new Param<>(ScxContext.getBean(entityClass));
         defaultParam.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
-        defaultParam.setPagination(1).whereSql = "id = " + ids.generatedKeys.get(0);
+        defaultParam.setPagination(1).whereSql = "id = " + entity.id;
         var list = baseDao.list(defaultParam, false);
         return list.size() > 0 ? list.get(0) : null;
     }

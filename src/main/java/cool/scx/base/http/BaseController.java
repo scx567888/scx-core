@@ -1,9 +1,6 @@
 package cool.scx.base.http;
 
-import cool.scx.annotation.http.PathParam;
-import cool.scx.annotation.http.QueryParam;
-import cool.scx.annotation.http.ScxController;
-import cool.scx.annotation.http.ScxMapping;
+import cool.scx.annotation.http.*;
 import cool.scx.base.dao.BaseModel;
 import cool.scx.base.service.BaseService;
 import cool.scx.base.service.Param;
@@ -48,16 +45,46 @@ public class BaseController {
         this.uploadFileService = uploadFileService;
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T extends BaseModel> Param<T> getParam(String modelName, Map<String, Object> params) {
-        var modelClass = (Class<T>) ScxContext.getClassByName(modelName);
-        Param<T> p = new Param<>(ObjectUtils.mapToBean(params, modelClass));
-        Integer page = (Integer) params.get("page");
-        Integer limit = (Integer) params.get("limit");
-        if (limit != -1) {
-            p.setPagination(page, limit);
-        }
-        return p;
+
+    private static <T extends BaseModel> Param<T> getParam(String modelName) {
+
+//        Integer page = null;
+//        Integer limit = null;
+//        Map<String, Object> orderBy = null;
+//        Map<String, Object> queryObject = null;
+//        System.out.println();
+
+//        try {
+//            queryObject = (Map<String, Object>) params.get("queryObject");
+//            p = new Param<>(ObjectUtils.mapToBean(queryObject, modelClass));
+//        } catch (Exception ignored) {
+//
+//        }
+////        System.out.println();
+//        try {
+//            page = (Integer) params.get("page");
+//            p.setPagination()
+//        } catch (Exception ignored) {
+//
+//        }
+//        try {
+//            limit = (Integer) params.get("limit");
+//        } catch (Exception ignored) {
+//
+//        }
+//        try {
+//            orderBy = (Map<String, Object>) params.get("orderBy");
+//            orderBy.get
+//        } catch (Exception ignored) {
+//
+//        }
+//
+//
+//        if (limit != -1) {
+//            p.setPagination(page, limit);
+//        }
+
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -68,6 +95,17 @@ public class BaseController {
         } catch (Exception e) {
             throw new HttpResponseException(ctx -> Json.fail(modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends BaseModel> Param<T> getParam(String modelName, Integer limit, Integer page, Map<String, Object> orderBy, Map<String, Object> queryObject) {
+        var modelClass = (Class<T>) ScxContext.getClassByName(modelName);
+        Param<T> p = new Param<>(ObjectUtils.mapToBean(queryObject, modelClass));
+        if (orderBy!=null&&orderBy.size()==2){
+            var orderByColumn=(String)orderBy.get("orderByColumn");
+            var sortType=(String)orderBy.get("sortType");
+        }
+        return null;
     }
 
     //
@@ -81,16 +119,24 @@ public class BaseController {
      * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/list", method = {RequestMethod.GET, RequestMethod.POST}, checkedLogin = CheckLoginType.Header)
-    public Json list(String modelName, Map<String, Object> params) throws HttpResponseException {
-        if (params == null) {
-            return Json.fail("查询参数不能为空");
-        }
+    public Json list(String modelName,
+                     @BodyParam("limit") Integer limit,
+                     @BodyParam("page") Integer page,
+                     @BodyParam("orderBy") Map<String, Object> orderBy,
+                     @BodyParam("queryObject") Map<String, Object> queryObject
+    ) throws HttpResponseException {
+        System.out.println();
+//        if (params == null) {
+//            return Json.fail("查询参数不能为空");
+//        }
         var baseService = getBaseService(modelName);
-        var param = getParam(modelName, params);
-        var list = baseService.list(param);
-        var count = baseService.count(param);
-        return Json.ok().tables(list, count);
+        var param = getParam(modelName, limit, page, orderBy, queryObject);
+//        var list = baseService.list(param);
+//        var count = baseService.count(param);
+//        return Json.ok().tables(list, count);
+        return Json.ok();
     }
+
 
     /**
      * <p>info.</p>
@@ -213,7 +259,9 @@ public class BaseController {
     public Json checkUnique(String modelName, Map<String, Object> params) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, params);
-        param.whereSql = "id != " + param.queryObject.id;
+        if (param.queryObject.id != null) {
+            param.whereSql = "id != " + param.queryObject.id;
+        }
         param.queryObject.id = null;
         var b = baseService.count(param) == 0;
         return Json.ok().data("isUnique", b);
