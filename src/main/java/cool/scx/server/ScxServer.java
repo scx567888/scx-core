@@ -54,6 +54,9 @@ public final class ScxServer {
         server.requestHandler(requestHandler).webSocketHandler(webSocketHandler);
     }
 
+    /**
+     * <p>reloadServer.</p>
+     */
     public static void reloadServer() {
         LogUtils.println("正在重新加载服务器...", Color.BRIGHT_BLUE);
         loadServer();

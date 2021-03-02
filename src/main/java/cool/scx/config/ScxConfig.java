@@ -1,10 +1,12 @@
 package cool.scx.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.boot.ScxApp;
 import cool.scx.config.example.Scx;
 import cool.scx.enumeration.Color;
+import cool.scx.exception.ConfigFileMissingException;
 import cool.scx.util.LogUtils;
 import cool.scx.util.NoCode;
 import cool.scx.util.PackageUtils;
@@ -36,45 +38,6 @@ public final class ScxConfig {
      */
     private static JsonNode nowScxConfigJsonNode;
 
-    /**
-     * <p>getScxJsonConfig.</p>
-     *
-     * @return a {@link com.fasterxml.jackson.databind.JsonNode} object.
-     */
-    private static JsonNode getJson(File configFile) {
-        JsonNode rootNode = null;
-        var mapper = new ObjectMapper();
-        try {
-            rootNode = mapper.readTree(configFile);
-            LogUtils.println("✔ 已加载配置文件                       \t -->\t " + configFile.getPath(), Color.GREEN);
-        } catch (Exception e) {
-            LogUtils.println("✘ 配置文件已损坏!!!", Color.RED);
-        }
-        return rootNode;
-    }
-
-    /**
-     * 获取 config 文件
-     * 如果没有则返回一个默认的 文件
-     *
-     * @return 配置文件
-     */
-    private static File getConfigFile() {
-        //获取所有 已 scx 开头 .json 结尾的文件
-        //这里假设这些就是 配置文件
-        var scxConfigJsons = PackageUtils.getAppRoot().listFiles(file -> file.isFile() && file.getName().startsWith("scx") && file.getName().endsWith(".json"));
-        //数量不为空 就返回第一个
-        if (scxConfigJsons != null && scxConfigJsons.length > 0) {
-            return scxConfigJsons[0];
-        } else {
-            LogUtils.println("✘ 配置文件已丢失!!! 已使用默认配置文件 scx-default.json", Color.RED);
-            return getDefaultConfigFile();
-        }
-    }
-
-    private static File getDefaultConfigFile() {
-        return new File(PackageUtils.getAppRoot(), "scx-default.json");
-    }
 
     /**
      * 根据文件名获取配置文件
@@ -230,15 +193,32 @@ public final class ScxConfig {
      * 加载 配置文件
      */
     private static void loadConfig() {
-        var configFile = getConfigFile();
-        var json = getJson(configFile);
-        //说明没有读取到 正确的 json 文件
-        if (json == null) {
-            configFile = getDefaultConfigFile();
-        } else {
-            nowScxConfigJsonNode = json;
+        File configFile;
+        var mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.nullNode();
+        try {
+            //获取所有 已 scx 开头 .json 结尾的文件
+            //这里假设这些就是 配置文件
+            var scxConfigJsons = PackageUtils.getAppRoot().listFiles(file -> file.isFile() && file.getName().startsWith("scx") && file.getName().endsWith(".json"));
+            //数量不为空 就返回第一个
+            if (scxConfigJsons != null && scxConfigJsons.length > 0) {
+                configFile = scxConfigJsons[0];
+            } else {
+                throw new ConfigFileMissingException();
+            }
+            rootNode = mapper.readTree(configFile);
+            LogUtils.println("✔ 已加载配置文件                       \t -->\t " + configFile.getPath(), Color.GREEN);
+        } catch (Exception e) {
+            configFile = new File(PackageUtils.getAppRoot(), "scx-default.json");
+            if (e instanceof JsonProcessingException) {
+                LogUtils.println("✘ 配置文件已损坏!!! 已生成正确的配置文件 scx-default.json", Color.RED);
+            } else if (e instanceof ConfigFileMissingException) {
+                LogUtils.println("✘ 配置文件已丢失!!! 已使用默认配置文件 scx-default.json", Color.RED);
+            }
         }
-        nowScxExample = new Scx(configFile, nowScxConfigJsonNode);
+        //说明没有读取到 正确的 json 文件
+        nowScxConfigJsonNode = rootNode;
+        nowScxExample = Scx.from(configFile, nowScxConfigJsonNode);
     }
 
     /**
@@ -463,7 +443,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String scxVersion() {
-        return "0.9.9";
+        return "0.9.10";
     }
 
     /**

@@ -92,10 +92,10 @@ public final class ScxGui {
         // 监听button的选择路径
         button.addActionListener(e -> ScxServer.stopServer());
         // 监听button的选择路径
-        button1.addActionListener(e ->{
+        button1.addActionListener(e -> {
 
             ScxServer.startServer();
-        } );
+        });
         // 监听button的选择路径
         button3.addActionListener(e -> ScxConfig.reloadConfig());
 

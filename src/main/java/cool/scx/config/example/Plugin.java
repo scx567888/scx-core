@@ -24,31 +24,33 @@ public class Plugin {
     /**
      * 插件根目录
      */
-    public final String root;
+    public String root;
 
     @JsonIgnore
-    public final File rootValue;
+    public File rootValue;
     /**
      * 关闭的插件名称列表
      */
-    public final Set<String> disabledList;
+    public Set<String> disabledList;
 
     /**
      * <p>Constructor for Plugin.</p>
      *
      * @param needFixConfig a {@link java.util.concurrent.atomic.AtomicBoolean} object.
+     * @return a {@link cool.scx.config.example.Plugin} object.
      */
-    public Plugin(AtomicBoolean needFixConfig) {
-        this.root = getConfigValue("scx.plugin.root", "/plugins/",
+    public static Plugin from(AtomicBoolean needFixConfig) {
+        var plugin = new Plugin();
+        plugin.root = getConfigValue("scx.plugin.root", "/plugins/",
                 s -> LogUtils.println("✔ 插件根目录                           \t -->\t " + PackageUtils.getFileByAppRoot(s), Color.GREEN),
                 f -> {
                     needFixConfig.set(true);
                     LogUtils.println("✘ 未检测到 scx.plugin.root             \t -->\t 已采用默认值 : " + f, Color.RED);
                 }, JsonNode::asText, a -> a);
 
-        this.rootValue = PackageUtils.getFileByAppRoot(root);
+        plugin.rootValue = PackageUtils.getFileByAppRoot(plugin.root);
 
-        this.disabledList = getConfigValue("scx.plugin.disabled-list", new HashSet<>(),
+        plugin.disabledList = getConfigValue("scx.plugin.disabled-list", new HashSet<>(),
                 s -> LogUtils.println("✔ 禁用插件列表                           \t -->\t " + s, Color.GREEN),
                 f -> {
                     needFixConfig.set(true);
@@ -59,5 +61,6 @@ public class Plugin {
                     c.forEach(cc -> tempSet.add(cc.asText()));
                     return tempSet;
                 }, a -> new HashSet<>(Arrays.asList(a.split(","))));
+        return plugin;
     }
 }

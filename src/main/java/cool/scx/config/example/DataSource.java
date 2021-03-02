@@ -20,28 +20,30 @@ public class DataSource {
     /**
      * 数据源 url
      */
-    public final String url;
+    public String url;
     /**
      * 数据源 用户名
      */
-    public final String username;
+    public String username;
     /**
      * 数据源密码 字符串值
      */
-    public final String password;
+    public String password;
     /**
      * 数据源密码 真实值(解密后)
      */
     @JsonIgnore
-    public final String passwordValue;
+    public String passwordValue;
 
     /**
      * <p>Constructor for DataSource.</p>
      *
      * @param needFixConfig a {@link java.util.concurrent.atomic.AtomicBoolean} object.
+     * @return a {@link cool.scx.config.example.DataSource} object.
      */
-    public DataSource(AtomicBoolean needFixConfig) {
-        this.url = getConfigValue("scx.data-source.url", "jdbc:mysql://127.0.0.1:3306/scx",
+    public static DataSource from(AtomicBoolean needFixConfig) {
+        var dataSource = new DataSource();
+        dataSource.url = getConfigValue("scx.data-source.url", "jdbc:mysql://127.0.0.1:3306/scx",
                 s -> LogUtils.println("✔ 数据库 JDBC Url                       \t -->\t " + s, Color.GREEN),
                 f -> {
                     needFixConfig.set(true);
@@ -49,7 +51,7 @@ public class DataSource {
                 },
                 JsonNode::asText, a -> a);
 
-        this.username = getConfigValue("scx.data-source.username", "root",
+        dataSource.username = getConfigValue("scx.data-source.username", "root",
                 s -> LogUtils.println("✔ 数据库连接用户                          \t -->\t " + s, Color.GREEN),
                 f -> {
                     needFixConfig.set(true);
@@ -57,7 +59,7 @@ public class DataSource {
                 },
                 JsonNode::asText, a -> a);
 
-        this.password = getConfigValue("scx.data-source.password", "",
+        dataSource.password = getConfigValue("scx.data-source.password", "",
                 s -> LogUtils.println("✔ 数据库连接密码                          \t -->\t " + s, Color.GREEN),
                 f -> {
                     needFixConfig.set(true);
@@ -65,16 +67,17 @@ public class DataSource {
                 },
                 JsonNode::asText, a -> a);
 
-        if (!"".equals(password)) {
+        if (!"".equals(dataSource.password)) {
             var tempPasswordValue = "";
             try {
-                tempPasswordValue = CryptoUtils.decryptText(password);
+                tempPasswordValue = CryptoUtils.decryptText(dataSource.password);
             } catch (Exception e) {
                 LogUtils.println("✘ 解密 scx.data-source.password 出错  \t -->\t 请检查数据库密码是否正确", Color.RED);
             }
-            this.passwordValue = tempPasswordValue;
+            dataSource.passwordValue = tempPasswordValue;
         } else {
-            this.passwordValue = "";
+            dataSource.passwordValue = "";
         }
+        return dataSource;
     }
 }
