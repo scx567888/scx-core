@@ -64,7 +64,6 @@ public class UserService extends BaseService<User> {
      *
      * @param username a {@link java.lang.String} object.
      * @param password a {@link java.lang.String} object.
-     * @param ctx      a  object.
      * @return a {@link cool.scx.business.user.User} object.
      * @throws cool.scx.exception.AuthException if any.
      */

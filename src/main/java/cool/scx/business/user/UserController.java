@@ -74,7 +74,6 @@ public class UserController {
      *
      * @param username 用户 包含用户名和密码
      * @param password 密码
-     * @param ctx      上下文
      * @return json
      */
     @ScxMapping(checkedLogin = CheckLoginType.None)
@@ -254,7 +253,6 @@ public class UserController {
      * <p>avatarUpdate.</p>
      *
      * @param queryUser a {@link cool.scx.business.user.User} object.
-     * @param context   a  object.
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)
@@ -287,7 +285,6 @@ public class UserController {
      * 用户自己更新的信息
      *
      * @param params  用户信息
-     * @param context 上下问
      * @return 通知
      */
     @ScxMapping(useMethodNameAsUrl = true)

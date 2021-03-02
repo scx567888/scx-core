@@ -119,7 +119,12 @@ public class BaseController {
     /**
      * <p>list.</p>
      *
-     * @param modelName a {@link java.lang.String} object.
+     * @param modelName     a {@link java.lang.String} object.
+     * @param limit         a {@link java.lang.Integer} object.
+     * @param page          a {@link java.lang.Integer} object.
+     * @param orderByColumn a {@link java.lang.String} object.
+     * @param sortType      a {@link java.lang.String} object.
+     * @param queryObject   a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      * @throws cool.scx.exception.HttpResponseException if any.
      */

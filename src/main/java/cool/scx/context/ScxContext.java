@@ -202,7 +202,6 @@ public final class ScxContext {
     /**
      * <p>getLoginUserByHeader.</p>
      *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.business.user.User} object.
      */
     public static User getLoginUserByHeader() {
@@ -213,7 +212,6 @@ public final class ScxContext {
     /**
      * <p>getCurrentUserByCookie.</p>
      *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.business.user.User} object.
      */
     public static User getLoginUserByCookie() {

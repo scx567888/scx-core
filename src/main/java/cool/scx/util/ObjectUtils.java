@@ -60,6 +60,8 @@ public final class ObjectUtils {
      * class  public class User  { public String username; public String password; }
      * 有此代码 -- username=test;  password=null;
      * 无此代码 --   com.fasterxml.jackson.databind.exc.MismatchedInputException
+     *
+     * @param o a {@link com.fasterxml.jackson.databind.ObjectMapper} object.
      */
     public static void setNullOnError(ObjectMapper o) {
         o.addHandler(new DeserializationProblemHandler() {
@@ -172,6 +174,14 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * <p>mapToBeanUnUseAnnotations.</p>
+     *
+     * @param map   a {@link java.util.Map} object.
+     * @param clazz a {@link java.lang.Class} object.
+     * @param <T>   a T object.
+     * @return a T object.
+     */
     public static <T> T mapToBeanUnUseAnnotations(Map<String, ?> map, Class<T> clazz) {
         try {
             return unUseAnnotationsObjectMapper.convertValue(map, clazz);
@@ -180,6 +190,14 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * <p>mapToBeanNotNull.</p>
+     *
+     * @param map   a {@link java.util.Map} object.
+     * @param clazz a {@link java.lang.Class} object.
+     * @param <T>   a T object.
+     * @return a T object.
+     */
     public static <T> T mapToBeanNotNull(Map<String, ?> map, Class<T> clazz) {
         T t = null;
         try {

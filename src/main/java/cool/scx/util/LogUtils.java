@@ -46,7 +46,6 @@ public class LogUtils {
      *
      * @param title   日志标题
      * @param content 日志内容
-     * @param ctx     object.
      */
     public static void recordLog(String title, String content) {
         if (showLog) {
