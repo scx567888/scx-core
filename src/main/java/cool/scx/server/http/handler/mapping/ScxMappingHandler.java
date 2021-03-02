@@ -171,7 +171,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
      * 同时验证登录和权限
      *
      * @param context 上下文对象
-     * @return 验证结果 true 为 允许继续向下进行处理 false 表示截至继续允许
+     * @return 验证结果 true 为 允许继续向下进行处理 false 表示截至继续运行
      */
     private boolean checkedLoginAndPerms(RoutingContext context) {
         //如果 不检查登录 对应的也没有必要检查 权限 所以直接返回 true
