@@ -4,7 +4,6 @@ import cool.scx.business.system.ScxLog;
 import cool.scx.business.system.ScxLogService;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Color;
-import io.vertx.ext.web.RoutingContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,14 +48,14 @@ public class LogUtils {
      * @param content 日志内容
      * @param ctx     object.
      */
-    public static void recordLog(String title, String content, RoutingContext ctx) {
+    public static void recordLog(String title, String content) {
         if (showLog) {
             println(title);
         }
         var log = new ScxLog();
-        log.userIp = NetUtils.getIpAddr(ctx);
+        log.userIp = NetUtils.getIpAddr();
         try {
-            log.username = ScxContext.getLoginUserByHeader(ctx).username;
+            log.username = ScxContext.getLoginUserByHeader().username;
             log.type = 1;
         } catch (Exception e) {
             log.username = "系统日志";
@@ -73,7 +72,7 @@ public class LogUtils {
      * @param str a {@link java.lang.String} object.
      */
     public static void recordLog(String str) {
-        recordLog(str, str, null);
+        recordLog(str, str);
     }
 
     /**

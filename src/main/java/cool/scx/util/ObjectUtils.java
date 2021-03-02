@@ -29,17 +29,28 @@ import java.util.Map;
  */
 public final class ObjectUtils {
 
+    //普通的object mapper
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    //忽略注解 的 mapper
+    private static final ObjectMapper unUseAnnotationsObjectMapper = new ObjectMapper();
     private static final TypeFactory typeFactory;
     private static final TypeReference<Map<String, Object>> mapType = new TypeReference<>() {
     };
 
     static {
+        //初始化正常的 objectMap
         objectMapper.registerModule(getJavaTimeModule());
-        setObjectMapperConfig();
+        setObjectMapperConfig(objectMapper);
         objectMapper.getSerializerProvider().setNullKeySerializer(new NullKeySerializer());
         typeFactory = objectMapper.getTypeFactory();
-        setNullOnError();
+        setNullOnError(objectMapper);
+
+        //初始化 忽略注解 的 mapper
+        unUseAnnotationsObjectMapper.registerModule(getJavaTimeModule());
+        setObjectMapperConfig(unUseAnnotationsObjectMapper);
+        unUseAnnotationsObjectMapper.getSerializerProvider().setNullKeySerializer(new NullKeySerializer());
+        setNullOnError(unUseAnnotationsObjectMapper);
+        unUseAnnotationsObjectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
     }
 
     /**
@@ -50,8 +61,8 @@ public final class ObjectUtils {
      * 有此代码 -- username=test;  password=null;
      * 无此代码 --   com.fasterxml.jackson.databind.exc.MismatchedInputException
      */
-    public static void setNullOnError() {
-        objectMapper.addHandler(new DeserializationProblemHandler() {
+    public static void setNullOnError(ObjectMapper o) {
+        o.addHandler(new DeserializationProblemHandler() {
             @Override
             public Object handleUnexpectedToken(DeserializationContext ctxt, JavaType targetType, JsonToken t, JsonParser p, String failureMsg) throws IOException {
                 return null;
@@ -66,9 +77,9 @@ public final class ObjectUtils {
         return timeModule;
     }
 
-    private static void setObjectMapperConfig() {
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    private static void setObjectMapperConfig(ObjectMapper o) {
+        o.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        o.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     }
 
     /**
@@ -159,7 +170,32 @@ public final class ObjectUtils {
         } catch (Exception e) {
             return null;
         }
+    }
 
+    public static <T> T mapToBeanUnUseAnnotations(Map<String, ?> map, Class<T> clazz) {
+        try {
+            return unUseAnnotationsObjectMapper.convertValue(map, clazz);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static <T> T mapToBeanNotNull(Map<String, ?> map, Class<T> clazz) {
+        T t = null;
+        try {
+            t = objectMapper.convertValue(map, clazz);
+
+        } catch (Exception ignored) {
+
+        }
+        if (t == null) {
+            try {
+                t = clazz.getDeclaredConstructor().newInstance();
+            } catch (Exception ignored) {
+
+            }
+        }
+        return t;
     }
 
 

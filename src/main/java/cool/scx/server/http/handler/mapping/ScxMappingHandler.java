@@ -182,9 +182,9 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             User currentUser = null;
             // 根据不同的验证来源 获取用户
             if (scxMapping.checkedLogin() == CheckLoginType.Header) {
-                currentUser = ScxContext.getLoginUserByHeader(context);
+                currentUser = ScxContext.getLoginUserByHeader();
             } else if (scxMapping.checkedLogin() == CheckLoginType.Cookie) {
-                currentUser = ScxContext.getLoginUserByCookie(context);
+                currentUser = ScxContext.getLoginUserByCookie();
             }
             //session 中没有用户证明没有登录 返回 false
             if (currentUser == null) {

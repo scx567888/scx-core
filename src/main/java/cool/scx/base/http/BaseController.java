@@ -10,6 +10,7 @@ import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.RequestMethod;
+import cool.scx.enumeration.SortType;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.server.http.handler.body.FileUpload;
 import cool.scx.util.FileUtils;
@@ -98,23 +99,27 @@ public class BaseController {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends BaseModel> Param<T> getParam(String modelName, Integer limit, Integer page, Map<String, Object> orderBy, Map<String, Object> queryObject) {
+    private <T extends BaseModel> Param<T> getParam(String modelName, Integer limit, Integer page, String orderByColumn, String sortType, Map<String, Object> queryObject) {
         var modelClass = (Class<T>) ScxContext.getClassByName(modelName);
-        Param<T> p = new Param<>(ObjectUtils.mapToBean(queryObject, modelClass));
-        if (orderBy!=null&&orderBy.size()==2){
-            var orderByColumn=(String)orderBy.get("orderByColumn");
-            var sortType=(String)orderBy.get("sortType");
+        var p = new Param<>(ObjectUtils.mapToBeanNotNull(queryObject, modelClass));
+        if (limit != null && limit != -1) {
+            p.setPagination(page, limit);
         }
-        return null;
+        if (orderByColumn != null) {
+            if (sortType == null || "desc".equals(sortType)) {
+                p.addOrderBy(orderByColumn, SortType.DESC);
+            } else {
+                p.addOrderBy(orderByColumn, SortType.ASC);
+            }
+        }
+        return p;
     }
 
-    //
 
     /**
      * <p>list.</p>
      *
      * @param modelName a {@link java.lang.String} object.
-     * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      * @throws cool.scx.exception.HttpResponseException if any.
      */
@@ -122,19 +127,15 @@ public class BaseController {
     public Json list(String modelName,
                      @BodyParam("limit") Integer limit,
                      @BodyParam("page") Integer page,
-                     @BodyParam("orderBy") Map<String, Object> orderBy,
+                     @BodyParam("orderBy.orderByColumn") String orderByColumn,
+                     @BodyParam("orderBy.sortType") String sortType,
                      @BodyParam("queryObject") Map<String, Object> queryObject
     ) throws HttpResponseException {
-        System.out.println();
-//        if (params == null) {
-//            return Json.fail("查询参数不能为空");
-//        }
         var baseService = getBaseService(modelName);
-        var param = getParam(modelName, limit, page, orderBy, queryObject);
-//        var list = baseService.list(param);
-//        var count = baseService.count(param);
-//        return Json.ok().tables(list, count);
-        return Json.ok();
+        var param = getParam(modelName, limit, page, orderByColumn, sortType, queryObject);
+        var list = baseService.list(param);
+        var count = baseService.count(param);
+        return Json.ok().tables(list, count);
     }
 
 
@@ -258,7 +259,7 @@ public class BaseController {
     @ScxMapping(value = ":modelName/checkUnique", method = RequestMethod.POST)
     public Json checkUnique(String modelName, Map<String, Object> params) throws HttpResponseException {
         var baseService = getBaseService(modelName);
-        var param = getParam(modelName, params);
+        var param = getParam(modelName, null, null, null, null, params);
         if (param.queryObject.id != null) {
             param.whereSql = "id != " + param.queryObject.id;
         }
@@ -288,7 +289,7 @@ public class BaseController {
         if (!file.exists()) {
             throw new HttpResponseException(context -> context.response().setStatusCode(404).send("要下载的文件不存在或已被删除!!!"));
         }
-        LogUtils.recordLog("ip 为 :" + NetUtils.getIpAddr(ctx) + "的用户 下载了" + fileName);
+        LogUtils.recordLog("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + fileName);
         //  这里让文件限速到 500 kb
         return new Download(file, file.getName(), 512000L);
     }

@@ -95,7 +95,7 @@ public final class SQLRunner {
      * @return a {@link java.util.List} object.
      */
     public static <T> List<T> query(String sql, Map<String, Object> param, Class<T> clazz) {
-        return query(sql, param, c -> ObjectUtils.mapToBean(c, clazz));
+        return query(sql, param, c -> ObjectUtils.mapToBeanUnUseAnnotations(c, clazz));
     }
 
     /**

@@ -205,8 +205,8 @@ public final class ScxContext {
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.business.user.User} object.
      */
-    public static User getLoginUserByHeader(RoutingContext ctx) {
-        String token = ctx.request().getHeader(ScxConfig.tokenKey());
+    public static User getLoginUserByHeader() {
+        String token = routingContext().request().getHeader(ScxConfig.tokenKey());
         return getLoginUserByToken(token);
     }
 
@@ -216,8 +216,8 @@ public final class ScxContext {
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.business.user.User} object.
      */
-    public static User getLoginUserByCookie(RoutingContext ctx) {
-        String token = ctx.getCookie(ScxConfig.cookieKey()).getValue();
+    public static User getLoginUserByCookie() {
+        String token = routingContext().getCookie(ScxConfig.cookieKey()).getValue();
         return getLoginUserByToken(token);
     }
 

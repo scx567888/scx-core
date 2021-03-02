@@ -78,13 +78,13 @@ public class UserController {
      * @return json
      */
     @ScxMapping(checkedLogin = CheckLoginType.None)
-    public Json login(@BodyParam("username") String username, @BodyParam("password") String password, RoutingContext ctx) {
+    public Json login(@BodyParam("username") String username, @BodyParam("password") String password) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
         }
         try {
             //登录
-            var loginUser = userService.login(username, password, ctx);
+            var loginUser = userService.login(username, password);
             var token = StringUtils.getUUID();
             ScxContext.addLoginItem(token, loginUser.username);
             //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
@@ -98,10 +98,10 @@ public class UserController {
             //密码错误次数过多
             return Json.fail("tooManyErrors").data("remainingTime", tee.remainingTime);
         } catch (AuthException ae) {
-            LogUtils.recordLog("登录出错 : " + ae.getMessage(), "", ctx);
+            LogUtils.recordLog("登录出错 : " + ae.getMessage(), "");
             return Json.fail("logonFailure");
         } catch (Exception e) {
-            LogUtils.recordLog("密码加密校验出错 : " + e.getMessage(), "", ctx);
+            LogUtils.recordLog("密码加密校验出错 : " + e.getMessage(), "");
             return Json.fail("logonFailure");
         }
     }
@@ -213,7 +213,7 @@ public class UserController {
      * @param params a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(useMethodNameAsUrl = true)
+    @ScxMapping(useMethodNameAsUrl = false, method = RequestMethod.PUT)
     public Json updateUser(Map<String, Object> params) {
         var user = ObjectUtils.mapToBean(params, User.class);
         Objects.requireNonNull(user).username = null;
@@ -258,8 +258,8 @@ public class UserController {
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)
-    public Json avatarUpdate(User queryUser, RoutingContext context) {
-        var currentUser = ScxContext.getLoginUserByHeader(context);
+    public Json avatarUpdate(User queryUser) {
+        var currentUser = ScxContext.getLoginUserByHeader();
         currentUser.avatarId = queryUser.avatarId;
         var b = userService.update(currentUser) != null;
         LogUtils.recordLog("更改了头像 用户名是 :" + currentUser.username);
@@ -274,7 +274,7 @@ public class UserController {
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json getUserLog(RoutingContext context) {
-        var currentUser = ScxContext.getLoginUserByHeader(context);
+        var currentUser = ScxContext.getLoginUserByHeader();
         var scxLog = new Param<>(new ScxLog());
         scxLog.queryObject.username = currentUser.username;
         scxLog.queryObject.type = 1;
@@ -291,15 +291,15 @@ public class UserController {
      * @return 通知
      */
     @ScxMapping(useMethodNameAsUrl = true)
-    public Json infoUpdate(Map<String, Object> params, RoutingContext context) {
+    public Json infoUpdate(Map<String, Object> params) {
         var queryUser = ObjectUtils.mapToBean(params, User.class);
-        var currentUser = ScxContext.getLoginUserByHeader(context);
+        var currentUser = ScxContext.getLoginUserByHeader();
         currentUser.nickName = queryUser.nickName;
         currentUser.phone = queryUser.phone;
         currentUser.password = queryUser.password;
         currentUser.salt = null;
         var b = userService.updateUserPassword(currentUser) != null;
-        LogUtils.recordLog("更新了自己的信息", "用户名是 :" + currentUser.username, context);
+        LogUtils.recordLog("更新了自己的信息", "用户名是 :" + currentUser.username);
         return Json.ok().data("success", b);
     }
 

@@ -2,7 +2,7 @@
   "scx": {
     "port": 8080,
     "allowed-origin": "*",
-    "upload-file-path": "/scxUploadFile/",
+    "upload-file-path": "absPath:C:\\Users\\scx56\\Documents\\scxFiles",
     "confusion-login-error": false,
     "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
     "show-log": true,

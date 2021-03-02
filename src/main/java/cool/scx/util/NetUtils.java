@@ -1,7 +1,7 @@
 package cool.scx.util;
 
+import cool.scx.context.ScxContext;
 import io.vertx.core.http.HttpServerRequest;
-import io.vertx.ext.web.RoutingContext;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -135,7 +135,8 @@ public final class NetUtils {
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
      * @return IP
      */
-    public static String getIpAddr(RoutingContext context) {
+    public static String getIpAddr() {
+        var context = ScxContext.routingContext();
         if (context == null) {
             return "";
         }

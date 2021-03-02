@@ -1,5 +1,6 @@
 package cool.scx.business.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.annotation.dao.Column;
 import cool.scx.annotation.dao.NoColumn;
 import cool.scx.annotation.dao.ScxModel;
@@ -26,12 +27,14 @@ public class User extends BaseModel {
      * 已加密的登录密码
      */
     @Column(notNull = true)
+    @JsonIgnore
     public String password;
 
     /**
      * 随机加密盐值
      */
     @Column(notNull = true)
+    @JsonIgnore
     public String salt;
 
     /**
@@ -65,23 +68,27 @@ public class User extends BaseModel {
      * 64 游客
      */
     @Column(notNull = true, defaultValue = "8")
+    @JsonIgnore
     public Byte level;
 
     /**
      * 最后一次登录时间
      */
+    @JsonIgnore
     public LocalDateTime lastLoginDate;
 
     /**
      * dept id 集合
      */
     @NoColumn
+    @JsonIgnore
     public String deptIds;
 
     /**
      * role id 集合
      */
     @NoColumn
+    @JsonIgnore
     public String roleIds;
 
 }
