@@ -29,7 +29,7 @@ public final class Ansi {
      * 向控制台打印指定的颜色
      *
      * @param o         a {@link java.lang.Object} object.
-     * @param ansiColor a {@link cool.scx.util.Ansi.AnsiColor} object.
+     * @param ansiColor a {@link cool.scx.enumeration.AnsiColor} object.
      */
     public static void print(Object o, AnsiColor ansiColor) {
         System.err.print("\u001B[" + ansiColor.code + "m" + o.toString() + "\u001B[0m");
