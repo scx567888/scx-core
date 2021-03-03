@@ -176,7 +176,7 @@ public final class ScxContext {
         } else {
             sessionItem.token = token;
         }
-        Ansi.ANSI.print(username + "登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+        Ansi.ANSI.print(username + " 登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
     }
 
     /**
@@ -233,7 +233,7 @@ public final class ScxContext {
         } else {
             onlineItem.username = username;
         }
-        Ansi.ANSI.print(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size()).ln();
+        Ansi.ANSI.brightBlue(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size()).ln();
     }
 
     /**

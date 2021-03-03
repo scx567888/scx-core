@@ -37,7 +37,7 @@ public class NoticeWebSocketController implements BaseWebSocketController {
     public void onClose(ServerWebSocket webSocket) {
         //如果客户端终止连接 将此条连接作废
         ScxContext.removeOnlineItemByWebSocket(webSocket);
-        Ansi.ANSI.red(webSocket + "关闭了 当前总连接数 " + ScxContext.getOnlineItemList().size()).ln();
+        Ansi.ANSI.brightRed(webSocket.binaryHandlerID() + " 关闭了!!! 当前总连接数 : " + ScxContext.getOnlineItemList().size()).ln();
     }
 
     /**
@@ -59,9 +59,9 @@ public class NoticeWebSocketController implements BaseWebSocketController {
                 //理论上 sessionItem 不可能为空 但是 还是应该判断一下 这里嫌麻烦 先不写了 todo
                 var s = Json.ok().data("callBackId", callBackId).data("message", nowLoginUser).toString();
                 webSocket.writeTextMessage(s);
-                Ansi.ANSI.print(nowLoginUser.username + " 通过 websocket 连接到服务器 " + binaryHandlerID).ln();
+                Ansi.ANSI.brightGreen(binaryHandlerID + " 登录了!!! 登录的用户名 : " + nowLoginUser.username).ln();
             }
-            Ansi.ANSI.print("当前总在线用户数量 : " + ScxContext.getOnlineUserCount()).ln();
+            Ansi.ANSI.brightYellow("当前总在线用户数量 : " + ScxContext.getOnlineUserCount()).ln();
         } else if ("sendMessage".equals(type.toString())) {
             //发送的用户
             var username = map.get("username").toString();
