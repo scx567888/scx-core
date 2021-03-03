@@ -1,7 +1,7 @@
 package cool.scx.business.system;
 
-import cool.scx.service.BaseService;
-import cool.scx.service.annotation.ScxService;
+import cool.scx.annotation.ScxService;
+import cool.scx.base.BaseService;
 
 /**
  * <p>ScxLogService class.</p>

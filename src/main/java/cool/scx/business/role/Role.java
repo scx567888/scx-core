@@ -1,8 +1,8 @@
 package cool.scx.business.role;
 
-import cool.scx.dao.BaseModel;
-import cool.scx.dao.annotation.Column;
-import cool.scx.dao.annotation.ScxModel;
+import cool.scx.annotation.Column;
+import cool.scx.annotation.ScxModel;
+import cool.scx.base.BaseModel;
 
 /**
  * 角色

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.util.Ansi;
 import cool.scx.util.CryptoUtils;
-import cool.scx.util.NoCode;
 import cool.scx.util.PackageUtils;
+import cool.scx.util.Tidy;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -67,7 +67,7 @@ public class Https {
         https.certPathValue = PackageUtils.getFileByAppRoot(https.certPath);
 
         https.certPassword = getConfigValue("scx.https.cert-password", "",
-                NoCode::NoCode,
+                Tidy::NoCode,
                 f -> {
                     needFixConfig.set(true);
                     Ansi.ANSI.red("✘ 未检测到 scx.https.cert-password      \t -->\t 请检查证书密码是否正确").ln();

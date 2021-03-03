@@ -1,7 +1,7 @@
 package cool.scx.business.system;
 
-import cool.scx.dao.BaseModel;
-import cool.scx.dao.annotation.ScxModel;
+import cool.scx.annotation.ScxModel;
+import cool.scx.base.BaseModel;
 
 /**
  * 日志记录表

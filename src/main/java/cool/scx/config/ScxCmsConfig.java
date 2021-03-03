@@ -1,8 +1,8 @@
 package cool.scx.config;
 
+import cool.scx.base.BaseTemplateDirective;
 import cool.scx.util.Ansi;
 import cool.scx.util.PackageUtils;
-import cool.scx.web.base.BaseTemplateDirective;
 import freemarker.template.Configuration;
 
 /**

@@ -1,10 +1,10 @@
 package cool.scx.business.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import cool.scx.dao.BaseModel;
-import cool.scx.dao.annotation.Column;
-import cool.scx.dao.annotation.NoColumn;
-import cool.scx.dao.annotation.ScxModel;
+import cool.scx.annotation.Column;
+import cool.scx.annotation.NoColumn;
+import cool.scx.annotation.ScxModel;
+import cool.scx.base.BaseModel;
 
 import java.time.LocalDateTime;
 

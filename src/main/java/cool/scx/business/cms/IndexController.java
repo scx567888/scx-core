@@ -1,15 +1,16 @@
 package cool.scx.business.cms;
 
+import cool.scx.annotation.FromBody;
+import cool.scx.annotation.ScxController;
+import cool.scx.annotation.ScxMapping;
+import cool.scx.bo.Param;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.context.ScxContext;
-import cool.scx.service.Param;
-import cool.scx.util.FileType;
-import cool.scx.util.FileUtils;
-import cool.scx.web.annotation.BodyParam;
-import cool.scx.web.annotation.ScxMapping;
+import cool.scx.util.file.FileType;
+import cool.scx.util.file.FileUtils;
+import cool.scx.vo.Html;
 import cool.scx.web.type.RequestMethod;
-import cool.scx.web.vo.Html;
 import io.vertx.core.http.Cookie;
 import io.vertx.ext.web.RoutingContext;
 
@@ -22,7 +23,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-//@ScxController
+@ScxController
 public class IndexController {
 
     private final UserService userService;
@@ -45,7 +46,7 @@ public class IndexController {
      * @param userList a {@link cool.scx.business.user.User} object.
      * @return a {@link java.lang.String} object.
      */
-    public String aaa(@BodyParam("userList.userList1.userList2") User userList) {
+    public String aaa(@FromBody("userList.userList1.userList2") User userList) {
         return "456";
     }
 
@@ -55,10 +56,9 @@ public class IndexController {
      * @param user a {@link cool.scx.business.user.User} object.
      * @return 页面
      */
-    @ScxMapping(value = "/", method = RequestMethod.POST)
+    @ScxMapping(value = "/", method = RequestMethod.GET)
     public Html Index(User user) {
         var routingContext = ScxContext.routingContext();
-        System.out.println();
 
         Map<String, Cookie> stringCookieMap = routingContext.cookieMap();
         FileType fileTypeByHead = FileUtils.getFileTypeByHead(new File("C:\\Users\\scx56\\Desktop\\1"));
@@ -74,7 +74,7 @@ public class IndexController {
      * <p>Index1.</p>
      *
      * @param routingContext a {@link io.vertx.ext.web.RoutingContext} object.
-     * @return a {@link cool.scx.web.vo.Html} object.
+     * @return a {@link cool.scx.vo.Html} object.
      */
     @ScxMapping(value = "/1", method = RequestMethod.GET)
     public Html Index1(RoutingContext routingContext) {

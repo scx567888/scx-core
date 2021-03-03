@@ -1,11 +1,11 @@
 package cool.scx.business.dept;
 
-import cool.scx.dao.type.SortType;
-import cool.scx.service.Param;
+import cool.scx.annotation.ScxController;
+import cool.scx.annotation.ScxMapping;
+import cool.scx.bo.Param;
+import cool.scx.bo.SortType;
 import cool.scx.util.StringUtils;
-import cool.scx.web.annotation.ScxController;
-import cool.scx.web.annotation.ScxMapping;
-import cool.scx.web.vo.Json;
+import cool.scx.vo.Json;
 
 import java.util.Objects;
 
@@ -33,7 +33,7 @@ public class DeptController {
      * <p>saveDept.</p>
      *
      * @param bean a {@link cool.scx.business.dept.Dept} object.
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json saveDept(Dept bean) {
@@ -57,7 +57,7 @@ public class DeptController {
     /**
      * <p>listDept.</p>
      *
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     public Json listDept() {
         var p = new Param<>(new Dept());
@@ -71,7 +71,7 @@ public class DeptController {
      * <p>updateDept.</p>
      *
      * @param bean a {@link cool.scx.business.dept.Dept} object.
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     public Json updateDept(Dept bean) {
         Dept parentBean = null;
@@ -100,7 +100,7 @@ public class DeptController {
      * <p>delete.</p>
      *
      * @param id a {@link java.lang.Long} object.
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     public Json delete(Long id) {
         if (StringUtils.isNotEmpty(id)) {

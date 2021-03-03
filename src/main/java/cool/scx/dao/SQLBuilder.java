@@ -1,7 +1,6 @@
 package cool.scx.dao;
 
-import cool.scx.dao.type.SQLType;
-import cool.scx.dao.type.SortType;
+import cool.scx.bo.SortType;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;

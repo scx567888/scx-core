@@ -1,6 +1,7 @@
 package cool.scx.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
+import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
@@ -154,7 +155,7 @@ public final class SQLRunner {
      *
      * @param sql   a {@link java.lang.String} object.
      * @param param a {@link java.util.Map} object.
-     * @return a {@link cool.scx.dao.UpdateResult} object.
+     * @return a {@link UpdateResult} object.
      */
     public static UpdateResult update(String sql, Map<String, Object> param) {
         try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param)) {

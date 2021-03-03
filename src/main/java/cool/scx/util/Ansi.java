@@ -1,7 +1,9 @@
 package cool.scx.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * <p>Ansi class.</p>
@@ -15,32 +17,24 @@ public final class Ansi {
      * Constant <code>ANSI</code>
      */
     public static final Ansi ANSI = new Ansi();
-    private static final Map<Integer, AnsiColor> printColor = new HashMap<>();
-    private static int nextPrintColor = 0;
-
-    static {
-        var i = 0;
-        for (AnsiColor value : AnsiColor.values()) {
-            printColor.put(i, value);
-            i = i + 1;
-        }
-    }
+    private static final List<AnsiColor> ansiColorList = new LinkedList<>(Arrays.asList(AnsiColor.values()));
+    private static Iterator<AnsiColor> nowColor = ansiColorList.iterator();
 
     private Ansi() {
     }
 
     /**
-     * <p>print.</p>
+     * 向控制台打印指定的颜色
      *
      * @param o         a {@link java.lang.Object} object.
      * @param ansiColor a {@link cool.scx.util.Ansi.AnsiColor} object.
      */
     public static void print(Object o, AnsiColor ansiColor) {
-        System.err.print("\u001B[" + ansiColor.toString() + "m" + o.toString() + "\u001B[0m");
+        System.err.print("\u001B[" + ansiColor.code + "m" + o.toString() + "\u001B[0m");
     }
 
     /**
-     * <p>red.</p>
+     * 红色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -51,7 +45,7 @@ public final class Ansi {
     }
 
     /**
-     * <p>green.</p>
+     * 绿色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -62,7 +56,7 @@ public final class Ansi {
     }
 
     /**
-     * <p>brightCyan.</p>
+     * 亮青色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -73,7 +67,7 @@ public final class Ansi {
     }
 
     /**
-     * <p>blue.</p>
+     * 蓝色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -85,7 +79,7 @@ public final class Ansi {
 
 
     /**
-     * <p>cyan.</p>
+     * 青色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -96,7 +90,7 @@ public final class Ansi {
     }
 
     /**
-     * <p>brightBlue.</p>
+     * 亮蓝色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -107,7 +101,7 @@ public final class Ansi {
     }
 
     /**
-     * <p>brightMagenta.</p>
+     * 亮紫色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -119,7 +113,7 @@ public final class Ansi {
 
 
     /**
-     * <p>brightRed.</p>
+     * 亮红色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -130,7 +124,7 @@ public final class Ansi {
     }
 
     /**
-     * <p>brightGreen.</p>
+     * 亮绿色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -141,7 +135,7 @@ public final class Ansi {
     }
 
     /**
-     * <p>brightYellow.</p>
+     * 亮黄色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -152,7 +146,7 @@ public final class Ansi {
     }
 
     /**
-     * <p>yellow.</p>
+     * 黄色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -163,7 +157,7 @@ public final class Ansi {
     }
 
     /**
-     * <p>magenta.</p>
+     * 紫色
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link cool.scx.util.Ansi} object.
@@ -174,7 +168,7 @@ public final class Ansi {
     }
 
     /**
-     * <p>ln.</p>
+     * 换行
      */
     public void ln() {
         System.err.println();
@@ -187,48 +181,37 @@ public final class Ansi {
      * @return a {@link cool.scx.util.Ansi} object.
      */
     public Ansi print(Object o) {
-        if (nextPrintColor >= printColor.size()) {
-            nextPrintColor = 0;
+        if (!nowColor.hasNext()) {
+            nowColor = ansiColorList.iterator();
         }
-        print(o, printColor.get(nextPrintColor));
-        nextPrintColor = nextPrintColor + 1;
+        print(o, nowColor.next());
         return this;
     }
 
     private enum AnsiColor {
 
-        BRIGHT_RED("91"),
-        DEFAULT("39"),
-        RED("31"),
-        YELLOW("33"),
-        BRIGHT_YELLOW("93"),
-        BRIGHT_GREEN("92"),
-        GREEN("32"),
-        CYAN("36"),
-        BLUE("34"),
-        BRIGHT_BLUE("94"),
-        BRIGHT_CYAN("96"),
-        MAGENTA("35"),
-        BRIGHT_MAGENTA("95"),
-        BLACK("30"),
-        BRIGHT_BLACK("90"),
-        WHITE("37"),
-        BRIGHT_WHITE("97");
+        BRIGHT_RED(91),
+        DEFAULT(39),
+        RED(31),
+        YELLOW(33),
+        BRIGHT_YELLOW(93),
+        BRIGHT_GREEN(92),
+        GREEN(32),
+        CYAN(36),
+        BLUE(34),
+        BRIGHT_BLUE(94),
+        BRIGHT_CYAN(96),
+        MAGENTA(35),
+        BRIGHT_MAGENTA(95),
+        BLACK(30),
+        BRIGHT_BLACK(90),
+        WHITE(37),
+        BRIGHT_WHITE(97);
 
-        private final String code;
+        private final int code;
 
-        AnsiColor(String code) {
+        AnsiColor(int code) {
             this.code = code;
-        }
-
-        /**
-         * {@inheritDoc}
-         * <p>
-         * 重写方法
-         */
-        @Override
-        public String toString() {
-            return this.code;
         }
 
     }

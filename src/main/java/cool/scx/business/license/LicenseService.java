@@ -1,9 +1,9 @@
 package cool.scx.business.license;
 
+import cool.scx.annotation.ScxService;
+import cool.scx.base.BaseService;
 import cool.scx.business.system.ScxLogService;
 import cool.scx.config.ScxConfig;
-import cool.scx.service.BaseService;
-import cool.scx.service.annotation.ScxService;
 import cool.scx.util.CryptoUtils;
 import cool.scx.util.LogUtils;
 

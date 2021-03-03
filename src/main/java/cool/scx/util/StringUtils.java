@@ -16,7 +16,7 @@ public class StringUtils {
     /**
      * 校验字符串是否不为空
      *
-     * @param str a {@link java.lang.Object} object.
+     * @param str 待检查的字符串
      * @return a boolean.
      */
     public static boolean isNotEmpty(Object str) {

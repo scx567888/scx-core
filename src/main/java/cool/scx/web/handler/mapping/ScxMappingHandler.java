@@ -1,20 +1,20 @@
 package cool.scx.web.handler.mapping;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import cool.scx.annotation.*;
+import cool.scx.base.BaseVo;
 import cool.scx.business.user.User;
 import cool.scx.context.ScxContext;
+import cool.scx.exception.HttpResponseException;
 import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.web.annotation.*;
-import cool.scx.web.base.BaseVo;
-import cool.scx.web.exception.HttpResponseException;
+import cool.scx.vo.Json;
 import cool.scx.web.handler.auth.DefaultLoginAndPermsHandler;
 import cool.scx.web.handler.auth.LoginAndPermsHandler;
 import cool.scx.web.handler.body.FileUpload;
 import cool.scx.web.type.CheckLoginType;
-import cool.scx.web.vo.Json;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpMethod;
@@ -262,19 +262,19 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                 finalHandlerParams[i] = uploadFiles.stream().filter(c -> name.equals(c.name)).findAny().orElse(null);
                 continue;
             }
-            var bodyParam = parameters[i].getAnnotation(BodyParam.class);
+            var bodyParam = parameters[i].getAnnotation(FromBody.class);
             if (bodyParam != null) {
                 finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, bodyParam.value(), parameters[i]);
                 continue;
             }
-            var queryParam = parameters[i].getAnnotation(QueryParam.class);
+            var queryParam = parameters[i].getAnnotation(FormQuery.class);
             if (queryParam != null) {
-                finalHandlerParams[i] = getParamFromQuery(queryParams, queryParam.value(), queryParam.polymerize(), parameters[i]);
+                finalHandlerParams[i] = getParamFromQuery(queryParams, queryParam.value(), queryParam.merge(), parameters[i]);
                 continue;
             }
-            var pathParam = parameters[i].getAnnotation(PathParam.class);
+            var pathParam = parameters[i].getAnnotation(FromPath.class);
             if (pathParam != null) {
-                finalHandlerParams[i] = getParamFromPath(pathParams, pathParam.value(), pathParam.polymerize(), parameters[i]);
+                finalHandlerParams[i] = getParamFromPath(pathParams, pathParam.value(), pathParam.merge(), parameters[i]);
                 continue;
             }
             //------这里针对没有注解的参数进行赋值猜测---------------

@@ -1,10 +1,9 @@
 package cool.scx.business.dept;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import cool.scx.dao.BaseModel;
-import cool.scx.dao.annotation.Column;
-import cool.scx.dao.annotation.NoColumn;
-import cool.scx.dao.annotation.ScxModel;
+import cool.scx.annotation.Column;
+import cool.scx.annotation.ScxModel;
+import cool.scx.base.BaseModel;
 
 /**
  * 部门
@@ -24,7 +23,6 @@ public class Dept extends BaseModel {
     @JsonIgnore
     public Integer modelOrder;//排序
 
-    @NoColumn
     public Long parentId = 0L;//父id 用作构建树形结构
 
     public String parentStr;//父字符串

@@ -1,8 +1,8 @@
 package cool.scx.business.cms.directive;
 
 
+import cool.scx.base.BaseTemplateDirective;
 import cool.scx.business.cms.ColumnService;
-import cool.scx.web.base.BaseTemplateDirective;
 
 import java.util.Map;
 

@@ -1,10 +1,10 @@
 package cool.scx.web.handler;
 
+import cool.scx.annotation.ScxWebSocketController;
+import cool.scx.base.BaseWebSocketController;
 import cool.scx.context.ScxContext;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.web.annotation.ScxWebSocketController;
-import cool.scx.web.base.BaseWebSocketController;
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
 

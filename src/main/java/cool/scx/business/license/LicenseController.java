@@ -1,7 +1,7 @@
 package cool.scx.business.license;
 
-import cool.scx.web.annotation.ScxController;
-import cool.scx.web.annotation.ScxMapping;
+import cool.scx.annotation.ScxController;
+import cool.scx.annotation.ScxMapping;
 import cool.scx.web.type.RequestMethod;
 
 /**

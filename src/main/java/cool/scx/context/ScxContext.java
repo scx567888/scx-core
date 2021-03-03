@@ -1,17 +1,17 @@
 package cool.scx.context;
 
-import cool.scx.boot.ScxPlugins;
+import cool.scx.annotation.ScxController;
+import cool.scx.annotation.ScxModel;
+import cool.scx.annotation.ScxService;
+import cool.scx.base.BaseDao;
+import cool.scx.bo.FixTableResult;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.config.ScxConfig;
-import cool.scx.dao.BaseDao;
 import cool.scx.dao.SQLRunner;
-import cool.scx.dao.annotation.ScxModel;
-import cool.scx.dao.type.FixTableResult;
-import cool.scx.service.annotation.ScxService;
+import cool.scx.plugin.ScxPlugins;
 import cool.scx.util.Ansi;
 import cool.scx.util.PackageUtils;
-import cool.scx.web.annotation.ScxController;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.ServerWebSocket;
@@ -259,7 +259,7 @@ public final class ScxContext {
      * <p>getOnlineItemByWebSocket.</p>
      *
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
-     * @return a {@link cool.scx.context.OnlineItem} object.
+     * @return a {@link OnlineItem} object.
      */
     public static OnlineItem getOnlineItemByWebSocket(ServerWebSocket webSocket) {
         var binaryHandlerID = webSocket.binaryHandlerID();
@@ -270,7 +270,7 @@ public final class ScxContext {
      * 根据用户名获取所有的在线对象
      *
      * @param username a {@link java.lang.String} object.
-     * @return a {@link cool.scx.context.OnlineItem} object.
+     * @return a {@link OnlineItem} object.
      */
     public static OnlineItem getOnlineItemByUserName(String username) {
         return ONLINE_ITEMS.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);

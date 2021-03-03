@@ -1,5 +1,11 @@
 package cool.scx.business.user;
 
+import cool.scx.annotation.FromBody;
+import cool.scx.annotation.FromPath;
+import cool.scx.annotation.ScxController;
+import cool.scx.annotation.ScxMapping;
+import cool.scx.bo.Param;
+import cool.scx.bo.SortType;
 import cool.scx.business.dept.Dept;
 import cool.scx.business.dept.DeptService;
 import cool.scx.business.dept.UserDept;
@@ -9,24 +15,18 @@ import cool.scx.business.role.UserRole;
 import cool.scx.business.role.UserRoleService;
 import cool.scx.business.system.ScxLog;
 import cool.scx.business.system.ScxLogService;
-import cool.scx.business.user.exception.AuthException;
-import cool.scx.business.user.exception.TooManyErrorsException;
-import cool.scx.business.user.exception.UnknownUserException;
-import cool.scx.business.user.exception.WrongPasswordException;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.dao.type.SortType;
-import cool.scx.service.Param;
+import cool.scx.exception.AuthException;
+import cool.scx.exception.TooManyErrorsException;
+import cool.scx.exception.UnknownUserException;
+import cool.scx.exception.WrongPasswordException;
 import cool.scx.util.LogUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.web.annotation.BodyParam;
-import cool.scx.web.annotation.PathParam;
-import cool.scx.web.annotation.ScxController;
-import cool.scx.web.annotation.ScxMapping;
+import cool.scx.vo.Json;
 import cool.scx.web.type.CheckLoginType;
 import cool.scx.web.type.RequestMethod;
-import cool.scx.web.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.*;
@@ -77,7 +77,7 @@ public class UserController {
      * @return json
      */
     @ScxMapping(checkedLogin = CheckLoginType.None)
-    public Json login(@BodyParam("username") String username, @BodyParam("password") String password) {
+    public Json login(@FromBody("username") String username, @FromBody("password") String password) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
         }
@@ -109,11 +109,11 @@ public class UserController {
      * <p>info.</p>
      *
      * @param token a  object.
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
 
     @ScxMapping(value = "info/:token", method = RequestMethod.GET)
-    public Json info(@PathParam String token) {
+    public Json info(@FromPath String token) {
         var user = ScxContext.getLoginUserByToken(token);
         //从session取出用户信息
         if (user == null) {
@@ -150,7 +150,7 @@ public class UserController {
      * <p>register.</p>
      *
      * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping
     public Json register(Map<String, Object> params) {
@@ -177,7 +177,7 @@ public class UserController {
      * <p>getUserById.</p>
      *
      * @param id a {@link java.lang.Long} object.
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":id", method = RequestMethod.GET)
     public Json getUserById(Long id) {
@@ -195,7 +195,7 @@ public class UserController {
      * <p>addUser.</p>
      *
      * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping
     public Json addUser(Map<String, Object> params) {
@@ -210,7 +210,7 @@ public class UserController {
      * <p>updateUser.</p>
      *
      * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = false, method = RequestMethod.PUT)
     public Json updateUser(Map<String, Object> params) {
@@ -253,7 +253,7 @@ public class UserController {
      * <p>avatarUpdate.</p>
      *
      * @param queryUser a {@link cool.scx.business.user.User} object.
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json avatarUpdate(User queryUser) {
@@ -268,7 +268,7 @@ public class UserController {
      * <p>getUserLog.</p>
      *
      * @param context a  object.
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json getUserLog(RoutingContext context) {
@@ -316,7 +316,7 @@ public class UserController {
      * <p>listUser.</p>
      *
      * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json listUser(Map<String, Object> params) {
@@ -362,7 +362,7 @@ public class UserController {
     /**
      * <p>listSubUser.</p>
      *
-     * @return a {@link cool.scx.web.vo.Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json listSubUser() {

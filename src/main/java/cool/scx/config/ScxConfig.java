@@ -3,16 +3,18 @@ package cool.scx.config;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cool.scx.boot.ScxApp;
+import cool.scx.ScxCoreApp;
 import cool.scx.config.example.Scx;
-import cool.scx.config.exception.ConfigFileMissingException;
+import cool.scx.exception.ConfigFileMissingException;
 import cool.scx.util.Ansi;
-import cool.scx.util.NoCode;
 import cool.scx.util.PackageUtils;
+import cool.scx.util.Tidy;
 
 import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -36,6 +38,8 @@ public final class ScxConfig {
      * 注意!!! 如果未执行 init 或 loadConfig 方法 nowScxConfigJsonNode 可能为空
      */
     private static JsonNode nowScxConfigJsonNode;
+    private static Class<?>[] classSources;
+    private static String[] parameters;
 
 
     /**
@@ -76,7 +80,7 @@ public final class ScxConfig {
      */
     @SuppressWarnings("unchecked")
     public static <T> T getConfigValue(String keyPath, T defaultVal) {
-        return (T) getConfigValue(keyPath, defaultVal, NoCode::NoCode, NoCode::NoCode, c -> {
+        return (T) getConfigValue(keyPath, defaultVal, Tidy::NoCode, Tidy::NoCode, c -> {
             if (c.isArray()) {
                 var tempList = new ArrayList<Object>();
                 c.forEach(cc -> tempList.add(getValueByJsonNode(cc)));
@@ -119,7 +123,7 @@ public final class ScxConfig {
      * @return a T object.
      */
     public static <T> T getConfigValue(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun, Function<JsonNode, T> convertFun, Function<String, T> convertArgFun, JsonNode jsonNodeVal) {
-        for (String parameter : ScxApp.parameters()) {
+        for (String parameter : parameters) {
             if (parameter.startsWith("--" + keyPath + "=")) {
                 String[] split = parameter.split("=");
                 if (split.length == 2) {
@@ -173,10 +177,23 @@ public final class ScxConfig {
     /**
      * <p>init.</p>
      */
-    public static void initConfig() {
+    public static void initConfig(Class<?>[] _classSources, String[] _args) {
         Ansi.ANSI.brightBlue("ScxConfig 初始化中...").ln();
+        classSources = filterClassSource(_classSources);
+        parameters = _args;
         loadConfig();
         Ansi.ANSI.brightBlue("ScxConfig 初始化完成...").ln();
+    }
+
+
+    private static Class<?>[] filterClassSource(Class<?>[] args) {
+        //利用 set 进行 过滤
+        //以保证 参数都是未重复的
+        var tempSet = new LinkedHashSet<Class<?>>();
+        tempSet.add(ScxCoreApp.class);
+        tempSet.addAll(Arrays.asList(args));
+        //返回处理后的数组
+        return tempSet.toArray(Class<?>[]::new);
     }
 
     /**
@@ -488,5 +505,35 @@ public final class ScxConfig {
      */
     public static String AppKey() {
         return "H8QS91GcuNGP9735";
+    }
+
+    /**
+     * 在 classSource 中寻找 程序的 主运行 class
+     * 后续会以此 以确定 程序运行的路径
+     * 并以此为标准获取 配置文件 等
+     *
+     * @return a {@link java.lang.Class} object.
+     */
+    public static Class<?> getAppClassSources() {
+        //因为 classSources 第一位永远是 ScxCoreApp 所以做此处理
+        return classSources.length == 1 ? classSources[0] : classSources[1];
+    }
+
+    /**
+     * 获取 从外部传来的参数 (java -jar scx.jar  xxx)
+     *
+     * @return 外部传来的参数
+     */
+    public static String[] parameters() {
+        return parameters;
+    }
+
+    /**
+     * <p>classSources.</p>
+     *
+     * @return an array of {@link java.lang.Class} objects.
+     */
+    public static Class<?>[] classSources() {
+        return classSources;
     }
 }

@@ -1,6 +1,6 @@
 package cool.scx.web.handler.auth;
 
-import cool.scx.web.vo.Json;
+import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
 /**

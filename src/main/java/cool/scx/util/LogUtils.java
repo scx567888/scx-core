@@ -6,7 +6,7 @@ import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 
 /**
- * <p>LogUtils class.</p>
+ * 日志工具类
  *
  * @author scx56
  * @version $Id: $Id
@@ -14,7 +14,7 @@ import cool.scx.context.ScxContext;
 public class LogUtils {
 
     /**
-     * Constant <code>scxLogService</code>
+     * scxLogService
      */
     public static final ScxLogService scxLogService = new ScxLogService();
 
@@ -43,7 +43,7 @@ public class LogUtils {
     }
 
     /**
-     * <p>recordLog.</p>
+     * 记录日志
      *
      * @param str a {@link java.lang.String} object.
      */

@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import cool.scx.util.*;
+import cool.scx.util.Ansi;
+import cool.scx.util.NetUtils;
+import cool.scx.util.PackageUtils;
+import cool.scx.util.Tidy;
+import cool.scx.util.file.FileUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -180,7 +184,7 @@ public class Scx {
                     Ansi.ANSI.red("✘ 未检测到 scx.real-delete           \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
-        scx.license = getConfigValue("scx.license", "", NoCode::NoCode,
+        scx.license = getConfigValue("scx.license", "", Tidy::NoCode,
                 f -> {
                     needFixConfig.set(true);
                     Ansi.ANSI.red("✘ 未检测到 scx.license               \t -->\t 请检查 license 是否正确").ln();
