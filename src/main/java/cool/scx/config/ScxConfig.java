@@ -176,6 +176,9 @@ public final class ScxConfig {
 
     /**
      * <p>init.</p>
+     *
+     * @param _classSources an array of {@link java.lang.Class} objects.
+     * @param _args         an array of {@link java.lang.String} objects.
      */
     public static void initConfig(Class<?>[] _classSources, String[] _args) {
         Ansi.ANSI.brightBlue("ScxConfig 初始化中...").ln();

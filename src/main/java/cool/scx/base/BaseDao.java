@@ -114,7 +114,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * <p>getTableInfo.</p>
      *
      * @param clazz a {@link java.lang.Class} object.
-     * @return a {@link TableInfo} object.
+     * @return a {@link cool.scx.bo.TableInfo} object.
      */
     public static TableInfo getTableInfo(Class<?> clazz) {
         var tempTable = tableCache.get(clazz.getName());
@@ -255,7 +255,7 @@ public final class BaseDao<Entity extends BaseModel> {
      *
      * @param param       参数对象
      * @param includeNull a boolean.
-     * @return a {@link UpdateResult} object.
+     * @return a {@link cool.scx.bo.UpdateResult} object.
      */
     public UpdateResult update(Param<Entity> param, boolean includeNull) {
         var beanMap = ObjectUtils.beanToMap(param.queryObject);

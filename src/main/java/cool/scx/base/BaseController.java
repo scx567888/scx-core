@@ -124,7 +124,7 @@ public class BaseController {
      * @param sortType      a {@link java.lang.String} object.
      * @param queryObject   a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws HttpResponseException if any.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/list", method = {Method.GET, Method.POST}, checkedLogin = CheckLoginType.Header)
     public Json list(String modelName,
@@ -148,7 +148,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param id        a {@link java.lang.Long} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws HttpResponseException if any.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/:id", method = Method.GET)
     public Json info(String modelName, Long id) throws HttpResponseException {
@@ -163,7 +163,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param entityMap a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws HttpResponseException if any.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName", method = Method.POST)
     public Json save(String modelName, Map<String, Object> entityMap) throws HttpResponseException {
@@ -211,7 +211,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws HttpResponseException if any.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/batchDelete", method = Method.DELETE)
     public Json batchDelete(String modelName, Map<String, Object> params) throws HttpResponseException {
@@ -227,7 +227,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param id        a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws HttpResponseException if any.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/revokeDelete/:id", method = Method.GET)
     public Json revokeDelete(String modelName, Integer id) throws HttpResponseException {
@@ -242,7 +242,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param fieldName a {@link java.lang.String} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws HttpResponseException if any.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", method = Method.POST)
     public Json getAutoComplete(String modelName, String fieldName) throws HttpResponseException {
@@ -257,7 +257,7 @@ public class BaseController {
      * @param modelName a {@link java.lang.String} object.
      * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws HttpResponseException if any.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/checkUnique", method = Method.POST)
     public Json checkUnique(String modelName, Map<String, Object> params) throws HttpResponseException {
@@ -283,8 +283,8 @@ public class BaseController {
      * @param fileName  要下载的文件名
      * @param ctx       a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.vo.Download} object.
-     * @throws HttpResponseException                if any.
-     * @throws java.io.UnsupportedEncodingException if any.
+     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws java.io.UnsupportedEncodingException     if any.
      */
     @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = Method.GET)
     public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {

@@ -1,5 +1,11 @@
 package cool.scx.enumeration;
 
+/**
+ * <p>AnsiColor class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public enum AnsiColor {
 
     BRIGHT_RED(91),
