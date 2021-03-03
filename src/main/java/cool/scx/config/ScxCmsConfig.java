@@ -1,10 +1,9 @@
 package cool.scx.config;
 
-import cool.scx.base.service.BaseTemplateDirective;
-import cool.scx.enumeration.Color;
-import cool.scx.enumeration.ScanPackageVisitResult;
-import cool.scx.util.LogUtils;
 import cool.scx.util.PackageUtils;
+import cool.scx.util.log.Color;
+import cool.scx.util.log.LogUtils;
+import cool.scx.web.base.BaseTemplateDirective;
 import freemarker.template.Configuration;
 
 /**
@@ -49,7 +48,7 @@ public final class ScxCmsConfig {
                     e.printStackTrace();
                 }
             }
-            return ScanPackageVisitResult.CONTINUE;
+            return true;
         });
         return configuration;
     }

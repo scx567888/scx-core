@@ -1,9 +1,9 @@
 package cool.scx.business.dept;
 
-import cool.scx.annotation.service.ScxService;
-import cool.scx.base.service.BaseService;
-import cool.scx.base.service.Param;
 import cool.scx.business.user.User;
+import cool.scx.service.BaseService;
+import cool.scx.service.Param;
+import cool.scx.service.annotation.ScxService;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;

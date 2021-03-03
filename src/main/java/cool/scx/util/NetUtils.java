@@ -1,6 +1,7 @@
 package cool.scx.util;
 
 import cool.scx.context.ScxContext;
+import cool.scx.util.log.LogUtils;
 import io.vertx.core.http.HttpServerRequest;
 
 import java.io.BufferedReader;

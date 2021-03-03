@@ -1,12 +1,12 @@
 package cool.scx.business.uploadfile;
 
-import cool.scx.annotation.http.ScxController;
-import cool.scx.annotation.http.ScxMapping;
-import cool.scx.base.service.Param;
+import cool.scx.web.annotation.ScxController;
+import cool.scx.web.annotation.ScxMapping;
+import cool.scx.service.Param;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.FileUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.vo.Json;
+import cool.scx.web.vo.Json;
 
 import java.util.Map;
 
@@ -34,7 +34,7 @@ public class UploadController {
      * <p>deleteFile.</p>
      *
      * @param id a {@link java.lang.Long} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link cool.scx.web.vo.Json} object.
      */
     @ScxMapping
     public Json deleteFile(Long id) {
@@ -52,7 +52,7 @@ public class UploadController {
      * <p>listFile.</p>
      *
      * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link cool.scx.web.vo.Json} object.
      */
     @ScxMapping()
     public Json listFile(Map<String, Object> params) {

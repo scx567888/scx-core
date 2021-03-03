@@ -1,11 +1,11 @@
 package cool.scx.business.cms;
 
-import cool.scx.annotation.http.ScxController;
-import cool.scx.annotation.http.ScxMapping;
+import cool.scx.web.annotation.ScxController;
+import cool.scx.web.annotation.ScxMapping;
 import cool.scx.config.ScxConfig;
-import cool.scx.enumeration.RequestMethod;
+import cool.scx.web.type.RequestMethod;
 import cool.scx.util.FileUtils;
-import cool.scx.vo.Json;
+import cool.scx.web.vo.Json;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class TemplateController {
     /**
      * <p>Index.</p>
      *
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link cool.scx.web.vo.Json} object.
      * @throws java.io.IOException if any.
      */
     @ScxMapping(method = {RequestMethod.GET, RequestMethod.POST})
@@ -45,7 +45,7 @@ public class TemplateController {
      * <p>getFileContent.</p>
      *
      * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link cool.scx.web.vo.Json} object.
      */
     @ScxMapping("getFileContent")
     public Json getFileContent(Map<String, String> params) {
@@ -62,7 +62,7 @@ public class TemplateController {
      * <p>setFileContent.</p>
      *
      * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link cool.scx.web.vo.Json} object.
      */
     @ScxMapping("setFileContent")
     public Json setFileContent(Map<String, String> params) {
@@ -78,7 +78,7 @@ public class TemplateController {
      * <p>delete.</p>
      *
      * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link cool.scx.web.vo.Json} object.
      * @throws java.io.IOException if any.
      */
     @ScxMapping("file/delete")
@@ -94,7 +94,7 @@ public class TemplateController {
      *
      * @param file     a {@link java.io.File} object.
      * @param filePath a {@link java.lang.String} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link cool.scx.web.vo.Json} object.
      * @throws java.io.IOException if any.
      */
     @ScxMapping(value = "upload", unCheckedPerms = true)
@@ -108,7 +108,7 @@ public class TemplateController {
      * <p>rename.</p>
      *
      * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link cool.scx.web.vo.Json} object.
      * @throws java.io.IOException if any.
      */
     @ScxMapping("file/rename")

@@ -2,9 +2,9 @@ package cool.scx.config.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.enumeration.Color;
+import cool.scx.util.log.Color;
 import cool.scx.util.CryptoUtils;
-import cool.scx.util.LogUtils;
+import cool.scx.util.log.LogUtils;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

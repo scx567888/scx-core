@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import cool.scx.enumeration.Color;
+import cool.scx.util.log.Color;
 import cool.scx.util.*;
+import cool.scx.util.log.LogUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;

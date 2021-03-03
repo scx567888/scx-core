@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import cool.scx.base.dao.BaseModel;
+import cool.scx.dao.BaseModel;
 import cool.scx.config.ScxConfig;
 
 import java.io.IOException;

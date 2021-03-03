@@ -1,10 +1,10 @@
 package cool.scx.business.role;
 
-import cool.scx.annotation.http.ScxController;
-import cool.scx.annotation.http.ScxMapping;
-import cool.scx.base.service.Param;
-import cool.scx.enumeration.SortType;
-import cool.scx.vo.Json;
+import cool.scx.web.annotation.ScxController;
+import cool.scx.web.annotation.ScxMapping;
+import cool.scx.service.Param;
+import cool.scx.dao.type.SortType;
+import cool.scx.web.vo.Json;
 
 /**
  * <p>RoleController class.</p>
@@ -29,7 +29,7 @@ public class RoleController {
     /**
      * <p>listRole.</p>
      *
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link cool.scx.web.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json listRole() {
@@ -42,7 +42,7 @@ public class RoleController {
      * <p>updateRole.</p>
      *
      * @param bean a {@link cool.scx.business.role.Role} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link cool.scx.web.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json updateRole(Role bean) {
@@ -57,7 +57,7 @@ public class RoleController {
      * <p>saveRole.</p>
      *
      * @param bean a {@link cool.scx.business.role.Role} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link cool.scx.web.vo.Json} object.
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json saveRole(Role bean) {

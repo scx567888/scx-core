@@ -1,9 +1,8 @@
 package cool.scx.boot;
 
 import cool.scx.config.ScxConfig;
-import cool.scx.enumeration.Color;
-import cool.scx.enumeration.ScanPackageVisitResult;
-import cool.scx.util.LogUtils;
+import cool.scx.util.log.Color;
+import cool.scx.util.log.LogUtils;
 import cool.scx.util.PackageUtils;
 
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public final class ScxPlugins {
                         try {
                             PackageUtils.scanPackage(clazz -> {
                                 pluginsClassList.add(clazz);
-                                return ScanPackageVisitResult.CONTINUE;
+                                return true;
                             }, file.toURI().toURL());
                             LogUtils.println("找到插件 名称 [" + file.getName() + "] 已加载!!!", Color.YELLOW);
                         } catch (Exception e) {

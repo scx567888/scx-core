@@ -1,19 +1,18 @@
 package cool.scx.context;
 
-import cool.scx.annotation.dao.ScxModel;
-import cool.scx.annotation.http.ScxController;
-import cool.scx.annotation.service.ScxService;
-import cool.scx.base.dao.BaseDao;
-import cool.scx.base.dao.SQLRunner;
+import cool.scx.dao.annotation.ScxModel;
+import cool.scx.web.annotation.ScxController;
+import cool.scx.service.annotation.ScxService;
+import cool.scx.dao.BaseDao;
+import cool.scx.dao.SQLRunner;
 import cool.scx.boot.ScxPlugins;
 import cool.scx.business.system.ScxLogService;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.config.ScxConfig;
-import cool.scx.enumeration.Color;
-import cool.scx.enumeration.FixTableResult;
-import cool.scx.enumeration.ScanPackageVisitResult;
-import cool.scx.util.LogUtils;
+import cool.scx.util.log.Color;
+import cool.scx.dao.type.FixTableResult;
+import cool.scx.util.log.LogUtils;
 import cool.scx.util.PackageUtils;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -85,7 +84,7 @@ public final class ScxContext {
             if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class) || clazz.isAnnotationPresent(ScxModel.class)) {
                 SCX_BEAN_CLASS_NAME_MAPPING.put(clazz.getSimpleName().toLowerCase(), clazz);
             }
-            return ScanPackageVisitResult.CONTINUE;
+            return true;
         });
     }
 

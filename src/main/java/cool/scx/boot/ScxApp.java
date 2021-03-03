@@ -4,7 +4,7 @@ import cool.scx.ScxCoreApp;
 import cool.scx.config.ScxCmsConfig;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.server.ScxServer;
+import cool.scx.web.ScxServer;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;

@@ -1,8 +1,8 @@
 package cool.scx.business.license;
 
-import cool.scx.annotation.http.ScxController;
-import cool.scx.annotation.http.ScxMapping;
-import cool.scx.enumeration.RequestMethod;
+import cool.scx.web.annotation.ScxController;
+import cool.scx.web.annotation.ScxMapping;
+import cool.scx.web.type.RequestMethod;
 
 /**
  * <p>LicenseController class.</p>

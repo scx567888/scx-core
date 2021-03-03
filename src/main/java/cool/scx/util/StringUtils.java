@@ -14,20 +14,14 @@ import java.util.stream.Collectors;
 public class StringUtils {
 
     /**
-     * <p>isNotEmpty.</p>
-     *
-     * @param str a {@link java.lang.Object} object.
-     * @return a boolean.
+     * 校验字符串是否不为空
      */
     public static boolean isNotEmpty(Object str) {
         return !isEmpty(str);
     }
 
     /**
-     * <p>isEmpty.</p>
-     *
-     * @param object a {@link java.lang.Object} object.
-     * @return a boolean.
+     * 校验字符串是否为空
      */
     public static boolean isEmpty(Object object) {
         if (object == null) {
@@ -75,9 +69,7 @@ public class StringUtils {
     }
 
     /**
-     * <p>getUUID.</p>
-     *
-     * @return a {@link java.lang.String} object.
+     * 获取UUID
      */
     public static String getUUID() {
         return UUID.randomUUID().toString();

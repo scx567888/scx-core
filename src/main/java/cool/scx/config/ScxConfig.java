@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.boot.ScxApp;
 import cool.scx.config.example.Scx;
-import cool.scx.enumeration.Color;
-import cool.scx.exception.ConfigFileMissingException;
-import cool.scx.util.LogUtils;
+import cool.scx.config.exception.ConfigFileMissingException;
+import cool.scx.util.log.Color;
+import cool.scx.util.log.LogUtils;
 import cool.scx.util.NoCode;
 import cool.scx.util.PackageUtils;
 

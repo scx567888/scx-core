@@ -1,15 +1,15 @@
 package cool.scx.business.cms;
 
-import cool.scx.annotation.http.BodyParam;
-import cool.scx.annotation.http.ScxMapping;
-import cool.scx.base.service.Param;
+import cool.scx.web.annotation.BodyParam;
+import cool.scx.web.annotation.ScxMapping;
+import cool.scx.service.Param;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.context.ScxContext;
-import cool.scx.enumeration.RequestMethod;
+import cool.scx.web.type.RequestMethod;
 import cool.scx.util.FileType;
 import cool.scx.util.FileUtils;
-import cool.scx.vo.Html;
+import cool.scx.web.vo.Html;
 import io.vertx.core.http.Cookie;
 import io.vertx.ext.web.RoutingContext;
 
@@ -74,7 +74,7 @@ public class IndexController {
      * <p>Index1.</p>
      *
      * @param routingContext a {@link io.vertx.ext.web.RoutingContext} object.
-     * @return a {@link cool.scx.vo.Html} object.
+     * @return a {@link cool.scx.web.vo.Html} object.
      */
     @ScxMapping(value = "/1", method = RequestMethod.GET)
     public Html Index1(RoutingContext routingContext) {

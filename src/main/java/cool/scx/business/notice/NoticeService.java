@@ -1,7 +1,7 @@
 package cool.scx.business.notice;
 
-import cool.scx.annotation.service.ScxService;
-import cool.scx.base.service.BaseService;
+import cool.scx.service.annotation.ScxService;
+import cool.scx.service.BaseService;
 
 import java.util.List;
 import java.util.stream.Collectors;

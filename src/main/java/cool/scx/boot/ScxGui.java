@@ -3,7 +3,7 @@ package cool.scx.boot;
 
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.server.ScxServer;
+import cool.scx.web.ScxServer;
 import cool.scx.util.MPrintStream;
 import cool.scx.util.PackageUtils;
 

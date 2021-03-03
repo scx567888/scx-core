@@ -2,7 +2,6 @@ package cool.scx.util;
 
 import cool.scx.boot.ScxApp;
 import cool.scx.boot.ScxPlugins;
-import cool.scx.enumeration.ScanPackageVisitResult;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +34,7 @@ public class PackageUtils {
      * @param fun             a {@link java.util.function.Consumer} object.
      * @param classOrJarPaths a {@link java.net.URL} object.
      */
-    public static void scanPackageIncludePlugins(Function<Class<?>, ScanPackageVisitResult> fun, URL... classOrJarPaths) {
+    public static void scanPackageIncludePlugins(Function<Class<?>, Boolean> fun, URL... classOrJarPaths) {
         ScxPlugins.pluginsClassList.forEach(fun::apply);
         scanPackage(fun, classOrJarPaths);
     }
@@ -46,7 +45,7 @@ public class PackageUtils {
      * @param fun             a {@link java.util.function.Consumer} object.
      * @param classOrJarPaths a {@link java.net.URL} object.
      */
-    public static void scanPackage(Function<Class<?>, ScanPackageVisitResult> fun, URL... classOrJarPaths) {
+    public static void scanPackage(Function<Class<?>, Boolean> fun, URL... classOrJarPaths) {
         var classList = new HashSet<Class<?>>();
         if (classOrJarPaths.length == 0) {
             classOrJarPaths = Arrays.stream(ScxApp.classSources()).map(PackageUtils::getClassSourceRealPath).toArray(URL[]::new);
@@ -64,7 +63,7 @@ public class PackageUtils {
         }
         for (var clazz : classList) {
             var s = fun.apply(clazz);
-            if (s == ScanPackageVisitResult.TERMINATE) {
+            if (!s) {
                 break;
             }
         }

@@ -1,7 +1,7 @@
 package cool.scx.business.dept;
 
-import cool.scx.annotation.service.ScxService;
-import cool.scx.base.service.BaseService;
+import cool.scx.service.BaseService;
+import cool.scx.service.annotation.ScxService;
 
 /**
  * <p>UserDeptService class.</p>

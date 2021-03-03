@@ -1,7 +1,7 @@
 package cool.scx.business.uploadfile;
 
-import cool.scx.annotation.dao.ScxModel;
-import cool.scx.base.dao.BaseModel;
+import cool.scx.dao.annotation.ScxModel;
+import cool.scx.dao.BaseModel;
 
 import java.time.LocalDateTime;
 

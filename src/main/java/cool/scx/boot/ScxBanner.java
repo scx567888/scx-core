@@ -1,7 +1,7 @@
 package cool.scx.boot;
 
 import cool.scx.config.ScxConfig;
-import cool.scx.enumeration.Color;
+import cool.scx.util.log.Color;
 
 /**
  * scxBanner
@@ -55,7 +55,7 @@ public final class ScxBanner {
      * 输出日志 不换行
      *
      * @param str       a {@link java.lang.String} object.
-     * @param ansiColor a {@link cool.scx.enumeration.Color} object.
+     * @param ansiColor a {@link Color} object.
      */
     private static void print(String str, Color ansiColor) {
         System.err.print("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");
@@ -65,7 +65,7 @@ public final class ScxBanner {
      * 输出日志
      *
      * @param str       a {@link java.lang.String} object.
-     * @param ansiColor a {@link cool.scx.enumeration.Color} object.
+     * @param ansiColor a {@link Color} object.
      */
     private static void println(String str, Color ansiColor) {
         System.err.println("\u001B[" + ansiColor.toString() + "m" + str + "\u001B[0m");

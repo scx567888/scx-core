@@ -1,7 +1,8 @@
 package cool.scx.util;
 
 import cool.scx.config.ScxConfig;
-import cool.scx.server.http.handler.body.FileUpload;
+import cool.scx.util.log.LogUtils;
+import cool.scx.web.handler.body.FileUpload;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -61,7 +62,7 @@ public class FileUtils {
     /**
      * <p>uploadFile.</p>
      *
-     * @param file       a {@link cool.scx.server.http.handler.body.FileUpload} object.
+     * @param file       a {@link cool.scx.web.handler.body.FileUpload} object.
      * @param fileName   a {@link java.lang.String} object.
      * @param index      a {@link java.lang.Integer} object.
      * @param chunkTotal a {@link java.lang.Integer} object.

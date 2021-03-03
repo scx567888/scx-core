@@ -1,7 +1,7 @@
 package cool.scx.business.license;
 
-import cool.scx.annotation.dao.ScxModel;
-import cool.scx.base.dao.BaseModel;
+import cool.scx.dao.annotation.ScxModel;
+import cool.scx.dao.BaseModel;
 
 /**
  * 项目 license

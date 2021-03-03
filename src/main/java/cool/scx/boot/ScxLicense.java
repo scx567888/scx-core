@@ -2,8 +2,8 @@ package cool.scx.boot;
 
 import cool.scx.business.license.LicenseService;
 import cool.scx.context.ScxContext;
-import cool.scx.server.ScxServer;
-import cool.scx.util.LogUtils;
+import cool.scx.web.ScxServer;
+import cool.scx.util.log.LogUtils;
 
 /**
  * 校验 license 的工具类
