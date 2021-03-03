@@ -2,8 +2,7 @@ package cool.scx.config.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.util.log.Color;
-import cool.scx.util.log.LogUtils;
+import cool.scx.util.Ansi;
 import cool.scx.util.PackageUtils;
 
 import java.io.File;
@@ -42,19 +41,19 @@ public class Plugin {
     public static Plugin from(AtomicBoolean needFixConfig) {
         var plugin = new Plugin();
         plugin.root = getConfigValue("scx.plugin.root", "/plugins/",
-                s -> LogUtils.println("✔ 插件根目录                           \t -->\t " + PackageUtils.getFileByAppRoot(s), Color.GREEN),
+                s -> Ansi.ANSI.green("✔ 插件根目录                           \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    LogUtils.println("✘ 未检测到 scx.plugin.root             \t -->\t 已采用默认值 : " + f, Color.RED);
+                    Ansi.ANSI.red("✘ 未检测到 scx.plugin.root             \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asText, a -> a);
 
         plugin.rootValue = PackageUtils.getFileByAppRoot(plugin.root);
 
         plugin.disabledList = getConfigValue("scx.plugin.disabled-list", new HashSet<>(),
-                s -> LogUtils.println("✔ 禁用插件列表                           \t -->\t " + s, Color.GREEN),
+                s -> Ansi.ANSI.green("✔ 禁用插件列表                           \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    LogUtils.println("✘ 未检测到 scx.plugin.disabled-list     \t -->\t 已采用默认值 : " + f, Color.RED);
+                    Ansi.ANSI.red("✘ 未检测到 scx.plugin.disabled-list     \t -->\t 已采用默认值 : " + f).ln();
                 },
                 c -> {
                     var tempSet = new HashSet<String>();

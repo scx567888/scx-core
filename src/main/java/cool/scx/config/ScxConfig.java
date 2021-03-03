@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.boot.ScxApp;
 import cool.scx.config.example.Scx;
 import cool.scx.config.exception.ConfigFileMissingException;
-import cool.scx.util.log.Color;
-import cool.scx.util.log.LogUtils;
+import cool.scx.util.Ansi;
 import cool.scx.util.NoCode;
 import cool.scx.util.PackageUtils;
 
@@ -175,18 +174,18 @@ public final class ScxConfig {
      * <p>init.</p>
      */
     public static void initConfig() {
-        LogUtils.println("ScxConfig 初始化中...", Color.BRIGHT_BLUE);
+        Ansi.ANSI.brightBlue("ScxConfig 初始化中...").ln();
         loadConfig();
-        LogUtils.println("ScxConfig 初始化完成...", Color.BRIGHT_BLUE);
+        Ansi.ANSI.brightBlue("ScxConfig 初始化完成...").ln();
     }
 
     /**
      * <p>reloadConfig.</p>
      */
     public static void reloadConfig() {
-        LogUtils.println("ScxConfig 重新加载中...", Color.BRIGHT_BLUE);
+        Ansi.ANSI.brightBlue("ScxConfig 重新加载中...").ln();
         loadConfig();
-        LogUtils.println("ScxConfig 重新加载完成...", Color.BRIGHT_BLUE);
+        Ansi.ANSI.brightBlue("ScxConfig 重新加载完成...").ln();
     }
 
     /**
@@ -207,13 +206,13 @@ public final class ScxConfig {
                 throw new ConfigFileMissingException();
             }
             rootNode = mapper.readTree(configFile);
-            LogUtils.println("✔ 已加载配置文件                       \t -->\t " + configFile.getPath(), Color.GREEN);
+            Ansi.ANSI.green("✔ 已加载配置文件                       \t -->\t " + configFile.getPath()).ln();
         } catch (Exception e) {
             configFile = new File(PackageUtils.getAppRoot(), "scx-default.json");
             if (e instanceof JsonProcessingException) {
-                LogUtils.println("✘ 配置文件已损坏!!! 已生成正确的配置文件 scx-default.json", Color.RED);
+                Ansi.ANSI.red("✘ 配置文件已损坏!!! 已生成正确的配置文件 scx-default.json").ln();
             } else if (e instanceof ConfigFileMissingException) {
-                LogUtils.println("✘ 配置文件已丢失!!! 已使用默认配置文件 scx-default.json", Color.RED);
+                Ansi.ANSI.red("✘ 配置文件已丢失!!! 已使用默认配置文件 scx-default.json").ln();
             }
         }
         //说明没有读取到 正确的 json 文件

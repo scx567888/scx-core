@@ -1,10 +1,10 @@
 package cool.scx.business.dept;
 
+import cool.scx.dao.type.SortType;
+import cool.scx.service.Param;
+import cool.scx.util.StringUtils;
 import cool.scx.web.annotation.ScxController;
 import cool.scx.web.annotation.ScxMapping;
-import cool.scx.service.Param;
-import cool.scx.dao.type.SortType;
-import cool.scx.util.StringUtils;
 import cool.scx.web.vo.Json;
 
 import java.util.Objects;

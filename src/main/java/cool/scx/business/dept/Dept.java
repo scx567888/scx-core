@@ -1,10 +1,10 @@
 package cool.scx.business.dept;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import cool.scx.dao.BaseModel;
 import cool.scx.dao.annotation.Column;
 import cool.scx.dao.annotation.NoColumn;
 import cool.scx.dao.annotation.ScxModel;
-import cool.scx.dao.BaseModel;
 
 /**
  * 部门

@@ -1,8 +1,8 @@
 package cool.scx.business.notice;
 
+import cool.scx.context.ScxContext;
 import cool.scx.web.annotation.ScxController;
 import cool.scx.web.annotation.ScxMapping;
-import cool.scx.context.ScxContext;
 import cool.scx.web.type.RequestMethod;
 import cool.scx.web.vo.Json;
 

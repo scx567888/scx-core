@@ -1,11 +1,10 @@
 package cool.scx.dao;
 
-import cool.scx.dao.annotation.Column;
-import cool.scx.service.Param;
 import cool.scx.config.ScxConfig;
-import cool.scx.util.log.Color;
+import cool.scx.dao.annotation.Column;
 import cool.scx.dao.type.FixTableResult;
-import cool.scx.util.log.LogUtils;
+import cool.scx.service.Param;
+import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
@@ -61,7 +60,7 @@ public final class BaseDao<Entity extends BaseModel> {
                 var nonExistentFields = Stream.of(table.allFields).filter(field -> !stringArrayList.contains(StringUtils.camel2Underscore(field.getName()))).collect(Collectors.toList());
                 if (nonExistentFields.size() != 0) {
                     var columns = nonExistentFields.stream().map(field -> StringUtils.camel2Underscore(field.getName())).collect(Collectors.joining(" , ", " [ ", " ] "));
-                    LogUtils.println("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!", Color.BRIGHT_BLUE);
+                    Ansi.ANSI.brightBlue("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!").ln();
                     var addSql = nonExistentFields.stream().map(field -> " ADD " + getSQLColumnByField(field)).collect(Collectors.joining(",", "", ""));
                     var alertSql = "ALTER TABLE `" + table.tableName + "` " + addSql;
                     var otherSQLByField = getOtherSQLByField(nonExistentFields.toArray(Field[]::new));
@@ -76,7 +75,7 @@ public final class BaseDao<Entity extends BaseModel> {
                     return FixTableResult.NO_NEED_TO_FIX;
                 }
             } else {
-                LogUtils.println("未找到表 " + table.tableName + " --> 正在自动建立 !!!", Color.BRIGHT_MAGENTA);
+                Ansi.ANSI.brightMagenta("未找到表 " + table.tableName + " --> 正在自动建立 !!!").ln();
                 var createTableSql = "CREATE TABLE `" + table.tableName + "` ( " + Stream.of(table.allFields).map(field -> getSQLColumnByField(field) + ",").collect(Collectors.joining("", "", "")) + String.join(",", getOtherSQLByField(table.allFields)) + ") ;";
                 SQLRunner.execute(createTableSql);
                 return FixTableResult.FIX_SUCCESS;
@@ -111,7 +110,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * <p>getTableInfo.</p>
      *
      * @param clazz a {@link java.lang.Class} object.
-     * @return a {@link TableInfo} object.
+     * @return a {@link cool.scx.dao.TableInfo} object.
      */
     public static TableInfo getTableInfo(Class<?> clazz) {
         var tempTable = tableCache.get(clazz.getName());
@@ -189,7 +188,7 @@ public final class BaseDao<Entity extends BaseModel> {
     public List<Long> saveList(List<Entity> entityList) {
         var size = entityList.size();
         if (size > splitSize) {
-            LogUtils.println("批量插入数据量过大 , 达到" + size + "条 !!! 已按照" + splitSize + "条进行切分 !!!", Color.BRIGHT_RED);
+            Ansi.ANSI.brightRed("批量插入数据量过大 , 达到" + size + "条 !!! 已按照" + splitSize + "条进行切分 !!!").ln();
             var generatedKeys = new ArrayList<Long>(splitSize);
             double number = Math.ceil(1.0 * size / splitSize);
             for (int i = 0; i < number; i++) {
@@ -252,7 +251,7 @@ public final class BaseDao<Entity extends BaseModel> {
      *
      * @param param       a {@link cool.scx.base.service.Param} object.
      * @param includeNull a boolean.
-     * @return a {@link UpdateResult} object.
+     * @return a {@link cool.scx.dao.UpdateResult} object.
      */
     public UpdateResult update(Param<Entity> param, boolean includeNull) {
         var beanMap = ObjectUtils.beanToMap(param.queryObject);

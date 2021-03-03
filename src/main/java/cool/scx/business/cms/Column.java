@@ -1,8 +1,8 @@
 package cool.scx.business.cms;
 
 
-import cool.scx.dao.annotation.ScxModel;
 import cool.scx.dao.BaseModel;
+import cool.scx.dao.annotation.ScxModel;
 
 //栏目
 

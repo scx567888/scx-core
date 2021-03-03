@@ -1,9 +1,9 @@
 package cool.scx.business.role;
 
-import cool.scx.service.annotation.ScxService;
+import cool.scx.business.user.User;
 import cool.scx.service.BaseService;
 import cool.scx.service.Param;
-import cool.scx.business.user.User;
+import cool.scx.service.annotation.ScxService;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;

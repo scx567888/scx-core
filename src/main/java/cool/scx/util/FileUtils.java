@@ -1,7 +1,6 @@
 package cool.scx.util;
 
 import cool.scx.config.ScxConfig;
-import cool.scx.util.log.LogUtils;
 import cool.scx.web.handler.body.FileUpload;
 
 import java.io.*;
@@ -96,7 +95,7 @@ public class FileUtils {
         if (!tempFileParent.exists()) {
             boolean b = tempFileParent.mkdirs();
             if (!b) {
-                LogUtils.println("创建目录失败!!!");
+                Ansi.ANSI.print("创建目录失败!!!").ln();
             }
         }
         try {

@@ -1,7 +1,6 @@
 package cool.scx.util;
 
 import cool.scx.context.ScxContext;
-import cool.scx.util.log.LogUtils;
 import io.vertx.core.http.HttpServerRequest;
 
 import java.io.BufferedReader;
@@ -62,7 +61,7 @@ public final class NetUtils {
     public static void text() {
         String url = "https://www.baidu.com";
         String s = sendHttpRequest(url, "GET");
-        LogUtils.println(s);
+        Ansi.ANSI.print(s).ln();
     }
 
     /**

@@ -1,20 +1,19 @@
 package cool.scx.web.handler.mapping;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.web.base.BaseVo;
 import cool.scx.business.user.User;
 import cool.scx.context.ScxContext;
-import cool.scx.web.type.CheckLoginType;
-import cool.scx.util.log.Color;
-import cool.scx.web.exception.HttpResponseException;
-import cool.scx.web.annotation.*;
-import cool.scx.web.handler.auth.DefaultLoginAndPermsHandler;
-import cool.scx.web.handler.auth.LoginAndPermsHandler;
-import cool.scx.web.handler.body.FileUpload;
-import cool.scx.util.log.LogUtils;
+import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
+import cool.scx.web.annotation.*;
+import cool.scx.web.base.BaseVo;
+import cool.scx.web.exception.HttpResponseException;
+import cool.scx.web.handler.auth.DefaultLoginAndPermsHandler;
+import cool.scx.web.handler.auth.LoginAndPermsHandler;
+import cool.scx.web.handler.body.FileUpload;
+import cool.scx.web.type.CheckLoginType;
 import cool.scx.web.vo.Json;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
@@ -44,24 +43,13 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
      */
     public final static LoginAndPermsHandler LOGIN_AND_PERMS_HANDLER;
 
-
-    public final Method method;
-    public final ScxMapping scxMapping;
-    public final ScxController scxController;
-    public final Object example;
-    public final boolean isRegexUrl;
-    public final Class<?> clazz;
-    public final String url;
-    public final Set<HttpMethod> httpMethods;
-    public final String permStr;
-
     static {
         var t = new LoginAndPermsHandler[1];
         new DefaultLoginAndPermsHandler();
         PackageUtils.scanPackageIncludePlugins(clazz -> {
             if (!clazz.isInterface() && LoginAndPermsHandler.class.isAssignableFrom(clazz) && clazz != DefaultLoginAndPermsHandler.class) {
                 try {
-                    LogUtils.println("已加载自定义 LoginAndPermsHandler 处理器 -> [" + clazz.getName() + "]", Color.BLUE);
+                    Ansi.ANSI.blue("已加载自定义 LoginAndPermsHandler 处理器 -> [" + clazz.getName() + "]").ln();
                     var myLoginAndPermsHandler = (LoginAndPermsHandler) clazz.getDeclaredConstructor().newInstance();
                     t[0] = myLoginAndPermsHandler;
                     return false;
@@ -72,12 +60,22 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             return true;
         });
         if (t[0] == null) {
-            LogUtils.println("已加载默认的 LoginAndPermsHandler 处理器 -> [" + DefaultLoginAndPermsHandler.class.getName() + "]", Color.BRIGHT_YELLOW);
+            Ansi.ANSI.brightYellow("已加载默认的 LoginAndPermsHandler 处理器 -> [" + DefaultLoginAndPermsHandler.class.getName() + "]").ln();
             t[0] = new DefaultLoginAndPermsHandler();
         }
 
         LOGIN_AND_PERMS_HANDLER = t[0];
     }
+
+    public final Method method;
+    public final ScxMapping scxMapping;
+    public final ScxController scxController;
+    public final Object example;
+    public final boolean isRegexUrl;
+    public final Class<?> clazz;
+    public final String url;
+    public final Set<HttpMethod> httpMethods;
+    public final String permStr;
 
 
     /**

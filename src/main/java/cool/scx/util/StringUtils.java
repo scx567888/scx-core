@@ -15,6 +15,9 @@ public class StringUtils {
 
     /**
      * 校验字符串是否不为空
+     *
+     * @param str a {@link java.lang.Object} object.
+     * @return a boolean.
      */
     public static boolean isNotEmpty(Object str) {
         return !isEmpty(str);
@@ -22,6 +25,9 @@ public class StringUtils {
 
     /**
      * 校验字符串是否为空
+     *
+     * @param object a {@link java.lang.Object} object.
+     * @return a boolean.
      */
     public static boolean isEmpty(Object object) {
         if (object == null) {
@@ -70,6 +76,8 @@ public class StringUtils {
 
     /**
      * 获取UUID
+     *
+     * @return a {@link java.lang.String} object.
      */
     public static String getUUID() {
         return UUID.randomUUID().toString();

@@ -2,8 +2,7 @@ package cool.scx.web;
 
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.util.log.Color;
-import cool.scx.util.log.LogUtils;
+import cool.scx.util.Ansi;
 import cool.scx.util.NetUtils;
 import cool.scx.web.handler.ScxRequestHandler;
 import cool.scx.web.handler.ScxWebSocketHandler;
@@ -33,9 +32,9 @@ public final class ScxServer {
      * 初始化 服务器
      */
     public static void initServer() {
-        LogUtils.println("正在初始化服务器...", Color.BRIGHT_YELLOW);
+        Ansi.ANSI.brightYellow("正在初始化服务器...").ln();
         loadServer();
-        LogUtils.println("服务器初始化完毕...", Color.BRIGHT_YELLOW);
+        Ansi.ANSI.brightYellow("服务器初始化完毕...").ln();
     }
 
     private static void loadServer() {
@@ -58,9 +57,9 @@ public final class ScxServer {
      * <p>reloadServer.</p>
      */
     public static void reloadServer() {
-        LogUtils.println("正在重新加载服务器...", Color.BRIGHT_BLUE);
+        Ansi.ANSI.brightBlue("正在重新加载服务器...").ln();
         loadServer();
-        LogUtils.println("正在重新加载服务器完毕...", Color.GREEN);
+        Ansi.ANSI.green("正在重新加载服务器完毕...").ln();
     }
 
     /**
@@ -73,10 +72,10 @@ public final class ScxServer {
         var port = checkPort(ScxConfig.port());
         server.listen(port, http -> {
             if (http.succeeded()) {
-                LogUtils.println("服务器启动成功...", Color.GREEN);
+                Ansi.ANSI.green("服务器启动成功...").ln();
                 var httpOrHttps = ScxConfig.openHttps() ? "https" : "http";
-                LogUtils.println("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/", Color.GREEN);
-                LogUtils.println("> 本地 : " + httpOrHttps + "://localhost:" + port + "/", Color.GREEN);
+                Ansi.ANSI.green("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/").ln();
+                Ansi.ANSI.green("> 本地 : " + httpOrHttps + "://localhost:" + port + "/").ln();
                 ScxContext.eventBus().publish("startVertxServer", "");
                 serverRunning = true;
             } else {
@@ -96,7 +95,7 @@ public final class ScxServer {
                 serverRunning = false;
             }
         });
-        LogUtils.println("服务器已停止...", Color.BRIGHT_RED);
+        Ansi.ANSI.brightRed("服务器已停止...").ln();
     }
 
     /**
@@ -118,7 +117,7 @@ public final class ScxServer {
     private static int checkPort(int p) {
         while (NetUtils.isLocalePortUsing(p)) {
             p = p + 1;
-            LogUtils.println("✘ 端口号 [ " + (p - 1) + " ] 已被占用 !!!         \t -->\t 新端口号 : " + p, Color.RED);
+            Ansi.ANSI.red("✘ 端口号 [ " + (p - 1) + " ] 已被占用 !!!         \t -->\t 新端口号 : " + p).ln();
         }
         return p;
     }

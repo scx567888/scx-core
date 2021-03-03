@@ -2,8 +2,9 @@ package cool.scx.boot;
 
 import cool.scx.business.license.LicenseService;
 import cool.scx.context.ScxContext;
+import cool.scx.util.Ansi;
+import cool.scx.util.LogUtils;
 import cool.scx.web.ScxServer;
-import cool.scx.util.log.LogUtils;
 
 /**
  * 校验 license 的工具类
@@ -24,7 +25,7 @@ public class ScxLicense {
      * <p>init.</p>
      */
     public static void init() {
-        LogUtils.println("校验 license 中 ...");
+        Ansi.ANSI.brightCyan("校验 license 中 ...").ln();
         var licenseRight = licenseService.passLicense();
         if (!licenseRight) {
             ScxServer.stopServer();

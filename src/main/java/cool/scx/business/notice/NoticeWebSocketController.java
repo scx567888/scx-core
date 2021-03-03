@@ -1,12 +1,11 @@
 package cool.scx.business.notice;
 
-import cool.scx.web.annotation.ScxWebSocketController;
-import cool.scx.web.base.BaseWebSocketController;
 import cool.scx.context.OnlineItem;
 import cool.scx.context.ScxContext;
-import cool.scx.util.log.Color;
-import cool.scx.util.log.LogUtils;
+import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
+import cool.scx.web.annotation.ScxWebSocketController;
+import cool.scx.web.base.BaseWebSocketController;
 import cool.scx.web.vo.Json;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.ServerWebSocket;
@@ -21,7 +20,9 @@ import io.vertx.core.http.WebSocketFrame;
 @ScxWebSocketController("/notice")
 public class NoticeWebSocketController implements BaseWebSocketController {
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onOpen(ServerWebSocket webSocket) {
         ScxContext.addOnlineItem(webSocket, null);
@@ -36,10 +37,12 @@ public class NoticeWebSocketController implements BaseWebSocketController {
     public void onClose(ServerWebSocket webSocket) {
         //如果客户端终止连接 将此条连接作废
         ScxContext.removeOnlineItemByWebSocket(webSocket);
-        LogUtils.println(webSocket + "关闭了 当前总连接数 " + ScxContext.getOnlineItemList().size(), Color.RED);
+        Ansi.ANSI.red(webSocket + "关闭了 当前总连接数 " + ScxContext.getOnlineItemList().size()).ln();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket) {
         var binaryHandlerID = webSocket.binaryHandlerID();
@@ -56,9 +59,9 @@ public class NoticeWebSocketController implements BaseWebSocketController {
                 //理论上 sessionItem 不可能为空 但是 还是应该判断一下 这里嫌麻烦 先不写了 todo
                 var s = Json.ok().data("callBackId", callBackId).data("message", nowLoginUser).toString();
                 webSocket.writeTextMessage(s);
-                LogUtils.println(nowLoginUser.username + " 通过 websocket 连接到服务器 " + binaryHandlerID);
+                Ansi.ANSI.print(nowLoginUser.username + " 通过 websocket 连接到服务器 " + binaryHandlerID).ln();
             }
-            LogUtils.println("当前总在线用户数量 : " + ScxContext.getOnlineUserCount());
+            Ansi.ANSI.print("当前总在线用户数量 : " + ScxContext.getOnlineUserCount()).ln();
         } else if ("sendMessage".equals(type.toString())) {
             //发送的用户
             var username = map.get("username").toString();
@@ -78,13 +81,17 @@ public class NoticeWebSocketController implements BaseWebSocketController {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) {
 //        System.out.println(binaryData);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onError(Throwable event, ServerWebSocket webSocket) {
         event.printStackTrace();

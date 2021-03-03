@@ -1,22 +1,22 @@
 package cool.scx.web.base;
 
-import cool.scx.dao.BaseModel;
-import cool.scx.service.BaseService;
-import cool.scx.service.Param;
 import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.web.type.CheckLoginType;
-import cool.scx.web.type.RequestMethod;
+import cool.scx.dao.BaseModel;
 import cool.scx.dao.type.SortType;
-import cool.scx.web.exception.HttpResponseException;
-import cool.scx.web.annotation.*;
-import cool.scx.web.handler.body.FileUpload;
+import cool.scx.service.BaseService;
+import cool.scx.service.Param;
 import cool.scx.util.FileUtils;
-import cool.scx.util.log.LogUtils;
+import cool.scx.util.LogUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
+import cool.scx.web.annotation.*;
+import cool.scx.web.exception.HttpResponseException;
+import cool.scx.web.handler.body.FileUpload;
+import cool.scx.web.type.CheckLoginType;
+import cool.scx.web.type.RequestMethod;
 import cool.scx.web.vo.Download;
 import cool.scx.web.vo.Image;
 import cool.scx.web.vo.Json;
@@ -286,7 +286,7 @@ public class BaseController {
      * @param ctx       a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.web.vo.Download} object.
      * @throws cool.scx.web.exception.HttpResponseException if any.
-     * @throws java.io.UnsupportedEncodingException     if any.
+     * @throws java.io.UnsupportedEncodingException         if any.
      */
     @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET)
     public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {

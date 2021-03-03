@@ -2,9 +2,8 @@ package cool.scx.config.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.util.log.Color;
+import cool.scx.util.Ansi;
 import cool.scx.util.CryptoUtils;
-import cool.scx.util.log.LogUtils;
 import cool.scx.util.NoCode;
 import cool.scx.util.PackageUtils;
 
@@ -52,17 +51,17 @@ public class Https {
     public static Https from(AtomicBoolean needFixConfig) {
         var https = new Https();
         https.isOpen = getConfigValue("scx.https.is-open", false,
-                s -> LogUtils.println("✔ 是否开启 https                       \t -->\t " + (s ? "是" : "否"), Color.GREEN),
+                s -> Ansi.ANSI.green("✔ 是否开启 https                       \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    LogUtils.println("✘ 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : " + f, Color.RED);
+                    Ansi.ANSI.red("✘ 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
         https.certPath = getConfigValue("scx.https.cert-path", "",
-                s -> LogUtils.println("✔ 证书路径                           \t -->\t " + PackageUtils.getFileByAppRoot(s), Color.GREEN),
+                s -> Ansi.ANSI.green("✔ 证书路径                           \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    LogUtils.println("✘ 未检测到 scx.https.cert-path       \t -->\t 请检查证书路径是否正确", Color.RED);
+                    Ansi.ANSI.red("✘ 未检测到 scx.https.cert-path       \t -->\t 请检查证书路径是否正确").ln();
                 }, JsonNode::asText, a -> a);
 
         https.certPathValue = PackageUtils.getFileByAppRoot(https.certPath);
@@ -71,7 +70,7 @@ public class Https {
                 NoCode::NoCode,
                 f -> {
                     needFixConfig.set(true);
-                    LogUtils.println("✘ 未检测到 scx.https.cert-password      \t -->\t 请检查证书密码是否正确", Color.RED);
+                    Ansi.ANSI.red("✘ 未检测到 scx.https.cert-password      \t -->\t 请检查证书密码是否正确").ln();
                 }, JsonNode::asText, a -> a);
 
         if (https.isOpen) {
@@ -79,7 +78,7 @@ public class Https {
             try {
                 tempCertificatePasswordValue = CryptoUtils.decryptText(https.certPassword);
             } catch (Exception e) {
-                LogUtils.println("✘ 解密 scx.https.certificate-password  出错        \t -->\t 请检查证书密码是否正确", Color.RED);
+                Ansi.ANSI.red("✘ 解密 scx.https.certificate-password  出错        \t -->\t 请检查证书密码是否正确").ln();
             }
             https.certificatePasswordValue = tempCertificatePasswordValue;
         } else {

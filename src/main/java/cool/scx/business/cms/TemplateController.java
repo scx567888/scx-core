@@ -1,10 +1,10 @@
 package cool.scx.business.cms;
 
+import cool.scx.config.ScxConfig;
+import cool.scx.util.FileUtils;
 import cool.scx.web.annotation.ScxController;
 import cool.scx.web.annotation.ScxMapping;
-import cool.scx.config.ScxConfig;
 import cool.scx.web.type.RequestMethod;
-import cool.scx.util.FileUtils;
 import cool.scx.web.vo.Json;
 
 import java.io.File;

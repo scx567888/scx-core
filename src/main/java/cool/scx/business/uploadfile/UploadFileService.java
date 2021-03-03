@@ -1,7 +1,7 @@
 package cool.scx.business.uploadfile;
 
-import cool.scx.service.annotation.ScxService;
 import cool.scx.service.BaseService;
+import cool.scx.service.annotation.ScxService;
 
 /**
  * <p>UploadFileService class.</p>

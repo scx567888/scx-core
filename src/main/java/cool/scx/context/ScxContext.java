@@ -1,19 +1,17 @@
 package cool.scx.context;
 
-import cool.scx.dao.annotation.ScxModel;
-import cool.scx.web.annotation.ScxController;
-import cool.scx.service.annotation.ScxService;
-import cool.scx.dao.BaseDao;
-import cool.scx.dao.SQLRunner;
 import cool.scx.boot.ScxPlugins;
-import cool.scx.business.system.ScxLogService;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.config.ScxConfig;
-import cool.scx.util.log.Color;
+import cool.scx.dao.BaseDao;
+import cool.scx.dao.SQLRunner;
+import cool.scx.dao.annotation.ScxModel;
 import cool.scx.dao.type.FixTableResult;
-import cool.scx.util.log.LogUtils;
+import cool.scx.service.annotation.ScxService;
+import cool.scx.util.Ansi;
 import cool.scx.util.PackageUtils;
+import cool.scx.web.annotation.ScxController;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.ServerWebSocket;
@@ -59,14 +57,12 @@ public final class ScxContext {
     private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
     static {
-        LogUtils.println("ScxContext 初始化中...", Color.GREEN);
+        Ansi.ANSI.magenta("ScxContext 初始化中...").ln();
         APPLICATION_CONTEXT = new AnnotationConfigApplicationContext(PackageUtils.getBasePackages());
         ScxPlugins.pluginsClassList.forEach(APPLICATION_CONTEXT::register);
         initScxContext();
         fixTable();
         USER_SERVICE = getBean(UserService.class);
-        LogUtils.showLog = ScxConfig.showLog();
-        LogUtils.scxLogService = getBean(ScxLogService.class);
     }
 
     /**
@@ -105,7 +101,7 @@ public final class ScxContext {
     public static void fixTable() {
         var noNeedFix = new AtomicBoolean(true);
         if (SQLRunner.testConnection()) {
-            LogUtils.println("修复数据表中...", Color.MAGENTA);
+            Ansi.ANSI.magenta("修复数据表中...").ln();
             if (ScxConfig.fixTable()) {
                 SCX_BEAN_CLASS_NAME_MAPPING.forEach((k, v) -> {
                     if (v.isAnnotationPresent(ScxModel.class)) {
@@ -121,7 +117,7 @@ public final class ScxContext {
             }
         }
         if (noNeedFix.get()) {
-            LogUtils.println("没有表需要修复...", Color.MAGENTA);
+            Ansi.ANSI.magenta("没有表需要修复...").ln();
         }
     }
 
@@ -129,7 +125,7 @@ public final class ScxContext {
      * <p>init.</p>
      */
     public static void init() {
-        LogUtils.println("ScxContext 初始化完成...", Color.GREEN);
+        Ansi.ANSI.magenta("ScxContext 初始化完成...").ln();
     }
 
     /**
@@ -150,7 +146,7 @@ public final class ScxContext {
     public static boolean removeLoginUserByHeader(RoutingContext ctx) {
         var token = ctx.request().getHeader(ScxConfig.tokenKey());
         boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-        LogUtils.println("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
+        Ansi.ANSI.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
         return b;
     }
 
@@ -163,7 +159,7 @@ public final class ScxContext {
     public static boolean removeLoginUserByCookie(RoutingContext ctx) {
         var token = ctx.getCookie(ScxConfig.cookieKey()).getValue();
         boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-        LogUtils.println("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
+        Ansi.ANSI.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
         return b;
     }
 
@@ -180,7 +176,7 @@ public final class ScxContext {
         } else {
             sessionItem.token = token;
         }
-        LogUtils.println(username + "登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个");
+        Ansi.ANSI.print(username + "登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
     }
 
     /**
@@ -237,7 +233,7 @@ public final class ScxContext {
         } else {
             onlineItem.username = username;
         }
-        LogUtils.println(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size());
+        Ansi.ANSI.print(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size()).ln();
     }
 
     /**

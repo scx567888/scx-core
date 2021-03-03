@@ -1,11 +1,11 @@
 package cool.scx.business.license;
 
-import cool.scx.service.annotation.ScxService;
-import cool.scx.service.BaseService;
 import cool.scx.business.system.ScxLogService;
 import cool.scx.config.ScxConfig;
+import cool.scx.service.BaseService;
+import cool.scx.service.annotation.ScxService;
 import cool.scx.util.CryptoUtils;
-import cool.scx.util.log.LogUtils;
+import cool.scx.util.LogUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

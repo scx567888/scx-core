@@ -1,7 +1,7 @@
 package cool.scx.business.role;
 
-import cool.scx.service.annotation.ScxService;
 import cool.scx.service.BaseService;
+import cool.scx.service.annotation.ScxService;
 
 /**
  * <p>UserRoleService class.</p>

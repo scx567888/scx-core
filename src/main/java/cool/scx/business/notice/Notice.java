@@ -1,7 +1,7 @@
 package cool.scx.business.notice;
 
-import cool.scx.dao.annotation.ScxModel;
 import cool.scx.dao.BaseModel;
+import cool.scx.dao.annotation.ScxModel;
 
 /**
  * <p>Notice class.</p>

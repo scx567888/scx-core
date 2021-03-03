@@ -2,8 +2,7 @@ package cool.scx.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.config.ScxConfig;
-import cool.scx.util.log.Color;
-import cool.scx.util.log.LogUtils;
+import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 
 import java.sql.Connection;
@@ -45,10 +44,10 @@ public final class SQLRunner {
     public static boolean testConnection() {
         try (var conn = getConnection()) {
             var dm = conn.getMetaData();
-            LogUtils.println("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]", Color.MAGENTA);
+            Ansi.ANSI.magenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").ln();
             return true;
         } catch (Exception e) {
-            LogUtils.println("数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl(), Color.RED);
+            Ansi.ANSI.red("数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl()).ln();
             if (ScxConfig.showLog()) {
                 e.printStackTrace();
             }
@@ -130,7 +129,7 @@ public final class SQLRunner {
         }
         if (ScxConfig.showLog()) {
             var s = preparedStatement.toString();
-            LogUtils.println(ScxConfig.dateTimeFormatter().format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":")));
+            Ansi.ANSI.print(ScxConfig.dateTimeFormatter().format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":"))).ln();
         }
         return preparedStatement;
     }
@@ -156,7 +155,7 @@ public final class SQLRunner {
      *
      * @param sql   a {@link java.lang.String} object.
      * @param param a {@link java.util.Map} object.
-     * @return a {@link UpdateResult} object.
+     * @return a {@link cool.scx.dao.UpdateResult} object.
      */
     public static UpdateResult update(String sql, Map<String, Object> param) {
         try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param)) {

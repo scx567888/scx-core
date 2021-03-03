@@ -1,11 +1,11 @@
 package cool.scx.business.uploadfile;
 
-import cool.scx.web.annotation.ScxController;
-import cool.scx.web.annotation.ScxMapping;
-import cool.scx.service.Param;
 import cool.scx.config.ScxConfig;
+import cool.scx.service.Param;
 import cool.scx.util.FileUtils;
 import cool.scx.util.StringUtils;
+import cool.scx.web.annotation.ScxController;
+import cool.scx.web.annotation.ScxMapping;
 import cool.scx.web.vo.Json;
 
 import java.util.Map;

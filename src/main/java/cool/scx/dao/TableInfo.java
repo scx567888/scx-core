@@ -1,9 +1,9 @@
 package cool.scx.dao;
 
+import cool.scx.config.ScxConfig;
 import cool.scx.dao.annotation.Column;
 import cool.scx.dao.annotation.NoColumn;
 import cool.scx.dao.annotation.ScxModel;
-import cool.scx.config.ScxConfig;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
