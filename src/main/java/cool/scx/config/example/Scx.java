@@ -110,7 +110,7 @@ public class Scx {
         var scx = new Scx();
 
         scx.port = getConfigValue("scx.port", 8080,
-                s -> Ansi.ANSI.green("✔ 服务器 IP 地址                        \t -->\t " + NetUtils.getLocalAddress() + "\r\n✔ 端口号                                \t -->\t " + s).ln(),
+                s -> Ansi.ANSI.green("✔ 服务器 IP 地址                       \t -->\t " + NetUtils.getLocalAddress() + "\r\n✔ 端口号                               \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.ANSI.red("✘ 未检测到 scx.port                  \t -->\t 已采用默认值 : " + f).ln();
@@ -121,7 +121,7 @@ public class Scx {
         scx.plugin = Plugin.from(needFixConfig);
 
         scx.uploadFilePath = getConfigValue("scx.upload-file-path", "/scxUploadFile/",
-                s -> Ansi.ANSI.green("✔ 文件上传目录                           \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
+                s -> Ansi.ANSI.green("✔ 文件上传目录                         \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.ANSI.red("✘ 未检测到 scx.upload-file-path        \t -->\t 已采用默认值 : " + f).ln();
@@ -130,7 +130,7 @@ public class Scx {
         scx.uploadFilePathValue = PackageUtils.getFileByAppRoot(scx.uploadFilePath);
 
         scx.bodyLimit = getConfigValue("scx.body-limit", "16384KB",
-                s -> Ansi.ANSI.green("✔ 请求体大小限制                          \t -->\t " + FileUtils.longToDisplaySize(FileUtils.displaySizeToLong(s))).ln(),
+                s -> Ansi.ANSI.green("✔ 请求体大小限制                       \t -->\t " + FileUtils.longToDisplaySize(FileUtils.displaySizeToLong(s))).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.ANSI.red("✘ 未检测到 scx.body-limit             \t -->\t 已采用默认值 : " + FileUtils.longToDisplaySize(FileUtils.displaySizeToLong(f))).ln();
@@ -139,7 +139,7 @@ public class Scx {
         scx.bodyLimitValue = FileUtils.displaySizeToLong(scx.bodyLimit);
 
         scx.confusionLoginError = getConfigValue("scx.confusion-login-error", false,
-                s -> Ansi.ANSI.green("✔ 是否混淆登录错误                       \t -->\t " + (s ? "是" : "否")).ln(),
+                s -> Ansi.ANSI.green("✔ 是否混淆登录错误                     \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.ANSI.red("✘ 未检测到 scx.confusion-login-error \t -->\t 已采用默认值 : " + f).ln();
@@ -160,7 +160,7 @@ public class Scx {
                 }, JsonNode::asInt, Integer::valueOf);
 
         scx.showLog = getConfigValue("scx.show-log", true,
-                s -> Ansi.ANSI.green("✔ 是否将错误日志打印到控制台              \t -->\t " + (s ? "是" : "否")).ln(),
+                s -> Ansi.ANSI.green("✔ 是否将错误日志打印到控制台             \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.ANSI.red("✘ 未检测到 scx.show-log              \t -->\t 已采用默认值 : " + f).ln();
@@ -174,7 +174,7 @@ public class Scx {
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
         scx.realDelete = getConfigValue("scx.real-delete", false,
-                s -> Ansi.ANSI.green("✔ 数据库删除方式为                       \t -->\t " + (s ? "物理删除" : "逻辑删除")).ln(),
+                s -> Ansi.ANSI.green("✔ 数据库删除方式为                     \t -->\t " + (s ? "物理删除" : "逻辑删除")).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.ANSI.red("✘ 未检测到 scx.real-delete           \t -->\t 已采用默认值 : " + f).ln();
@@ -199,7 +199,7 @@ public class Scx {
 
 
         scx.allowedOrigin = getConfigValue("scx.allowed-origin", "*",
-                s -> Ansi.ANSI.green("✔ 允许的请求源                           \t -->\t " + s).ln(),
+                s -> Ansi.ANSI.green("✔ 允许的请求源                         \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.ANSI.red("✘ 未检测到 scx.allowed-origin           \t -->\t 已采用默认值 : " + f).ln();

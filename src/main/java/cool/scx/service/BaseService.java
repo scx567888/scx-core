@@ -208,7 +208,7 @@ public abstract class BaseService<Entity extends BaseModel> {
     /**
      * <p>update.</p>
      *
-     * @param param a {@link cool.scx.base.service.Param} object.
+     * @param param a {@link cool.scx.service.Param} object.
      * @return a {@link java.util.List} object.
      */
     public List<Entity> update(Param<Entity> param) {
@@ -297,7 +297,7 @@ public abstract class BaseService<Entity extends BaseModel> {
     /**
      * <p>getWithLike.</p>
      *
-     * @param param a {@link cool.scx.base.service.Param} object.
+     * @param param a {@link cool.scx.service.Param} object.
      * @return a Entity object.
      */
     public Entity getWithLike(Param<Entity> param) {
@@ -321,7 +321,7 @@ public abstract class BaseService<Entity extends BaseModel> {
     /**
      * <p>countWithLike.</p>
      *
-     * @param param a {@link cool.scx.base.service.Param} object.
+     * @param param a {@link cool.scx.service.Param} object.
      * @return a {@link java.lang.Integer} object.
      */
     public Integer countWithLike(Param<Entity> param) {
@@ -357,7 +357,7 @@ public abstract class BaseService<Entity extends BaseModel> {
     /**
      * <p>listWithLike.</p>
      *
-     * @param param a {@link cool.scx.base.service.Param} object.
+     * @param param a {@link cool.scx.service.Param} object.
      * @return a {@link java.util.List} object.
      */
     public List<Entity> listWithLike(Param<Entity> param) {

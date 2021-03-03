@@ -6,8 +6,8 @@ import java.util.Map;
 /**
  * 固定大小的 map 超出指定大小 会将先前的元素移除  一般用来做缓存
  *
- * @param <K>
- * @param <V>
+ * @param <K> key
+ * @param <V> value
  * @author scx56
  * @version $Id: $Id
  */

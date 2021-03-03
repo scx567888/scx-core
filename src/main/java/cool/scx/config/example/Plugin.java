@@ -50,7 +50,7 @@ public class Plugin {
         plugin.rootValue = PackageUtils.getFileByAppRoot(plugin.root);
 
         plugin.disabledList = getConfigValue("scx.plugin.disabled-list", new HashSet<>(),
-                s -> Ansi.ANSI.green("✔ 禁用插件列表                           \t -->\t " + s).ln(),
+                s -> Ansi.ANSI.green("✔ 禁用插件列表                         \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.ANSI.red("✘ 未检测到 scx.plugin.disabled-list     \t -->\t 已采用默认值 : " + f).ln();

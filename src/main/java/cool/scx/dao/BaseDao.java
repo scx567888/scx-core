@@ -215,7 +215,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>list.</p>
      *
-     * @param param      a {@link cool.scx.base.service.Param} object.
+     * @param param      参数对象.
      * @param ignoreLike a boolean.
      * @return a {@link java.util.List} object.
      */
@@ -233,7 +233,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>count.</p>
      *
-     * @param param      a {@link cool.scx.base.service.Param} object.
+     * @param param      参数对象
      * @param ignoreLike a boolean.
      * @return a {@link java.lang.Integer} object.
      */
@@ -249,7 +249,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>update.</p>
      *
-     * @param param       a {@link cool.scx.base.service.Param} object.
+     * @param param       参数对象
      * @param includeNull a boolean.
      * @return a {@link cool.scx.dao.UpdateResult} object.
      */
@@ -276,7 +276,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * <p>delete.</p>
      *
-     * @param param a {@link cool.scx.base.service.Param} object.
+     * @param param a 参数对象
      * @return a {@link java.lang.Integer} object.
      */
     public Integer delete(Param<Entity> param) {
