@@ -1,9 +1,9 @@
 package cool.scx.base;
 
 import cool.scx.bo.Param;
-import cool.scx.bo.SortType;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
+import cool.scx.enumeration.SortType;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;

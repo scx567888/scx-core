@@ -1,20 +1,18 @@
-package cool.scx.web.handler.mapping;
+package cool.scx.web.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.annotation.*;
 import cool.scx.base.BaseVo;
+import cool.scx.bo.FileUpload;
 import cool.scx.business.user.User;
 import cool.scx.context.ScxContext;
+import cool.scx.enumeration.CheckLoginType;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.Ansi;
-import cool.scx.util.ObjectUtils;
+import cool.scx.util.object.ObjectUtils;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
-import cool.scx.web.handler.auth.DefaultLoginAndPermsHandler;
-import cool.scx.web.handler.auth.LoginAndPermsHandler;
-import cool.scx.web.handler.body.FileUpload;
-import cool.scx.web.type.CheckLoginType;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpMethod;

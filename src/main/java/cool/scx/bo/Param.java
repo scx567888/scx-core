@@ -1,5 +1,7 @@
 package cool.scx.bo;
 
+import cool.scx.enumeration.SortType;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;

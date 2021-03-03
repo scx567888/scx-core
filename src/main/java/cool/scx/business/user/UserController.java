@@ -5,7 +5,6 @@ import cool.scx.annotation.FromPath;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.Param;
-import cool.scx.bo.SortType;
 import cool.scx.business.dept.Dept;
 import cool.scx.business.dept.DeptService;
 import cool.scx.business.dept.UserDept;
@@ -17,16 +16,17 @@ import cool.scx.business.system.ScxLog;
 import cool.scx.business.system.ScxLogService;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
+import cool.scx.enumeration.CheckLoginType;
+import cool.scx.enumeration.Method;
+import cool.scx.enumeration.SortType;
 import cool.scx.exception.AuthException;
 import cool.scx.exception.TooManyErrorsException;
 import cool.scx.exception.UnknownUserException;
 import cool.scx.exception.WrongPasswordException;
 import cool.scx.util.LogUtils;
-import cool.scx.util.ObjectUtils;
+import cool.scx.util.object.ObjectUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
-import cool.scx.web.type.CheckLoginType;
-import cool.scx.web.type.RequestMethod;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.*;
@@ -112,7 +112,7 @@ public class UserController {
      * @return a {@link cool.scx.vo.Json} object.
      */
 
-    @ScxMapping(value = "info/:token", method = RequestMethod.GET)
+    @ScxMapping(value = "info/:token", method = Method.GET)
     public Json info(@FromPath String token) {
         var user = ScxContext.getLoginUserByToken(token);
         //从session取出用户信息
@@ -179,7 +179,7 @@ public class UserController {
      * @param id a {@link java.lang.Long} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = ":id", method = RequestMethod.GET)
+    @ScxMapping(value = ":id", method = Method.GET)
     public Json getUserById(Long id) {
         if (StringUtils.isNotEmpty(id)) {
             var user = userService.getById(id);
@@ -212,7 +212,7 @@ public class UserController {
      * @param params a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(useMethodNameAsUrl = false, method = RequestMethod.PUT)
+    @ScxMapping(useMethodNameAsUrl = false, method = Method.PUT)
     public Json updateUser(Map<String, Object> params) {
         var user = ObjectUtils.mapToBean(params, User.class);
         Objects.requireNonNull(user).username = null;

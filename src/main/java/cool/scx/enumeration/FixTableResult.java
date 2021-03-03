@@ -1,4 +1,4 @@
-package cool.scx.bo;
+package cool.scx.enumeration;
 
 /**
  * <p>FixTableResult class.</p>

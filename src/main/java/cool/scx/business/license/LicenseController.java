@@ -2,7 +2,7 @@ package cool.scx.business.license;
 
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
-import cool.scx.web.type.RequestMethod;
+import cool.scx.enumeration.Method;
 
 /**
  * <p>LicenseController class.</p>
@@ -30,7 +30,7 @@ public class LicenseController {
      * @return 密钥生成页面
      */
 
-    @ScxMapping(value = "index", method = RequestMethod.GET)
+    @ScxMapping(value = "index", method = Method.GET)
     public String goLicense() {
         return getHtml("");
     }

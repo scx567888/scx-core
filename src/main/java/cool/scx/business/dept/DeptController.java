@@ -3,7 +3,7 @@ package cool.scx.business.dept;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.Param;
-import cool.scx.bo.SortType;
+import cool.scx.enumeration.SortType;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
 

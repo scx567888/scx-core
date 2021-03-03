@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
-import cool.scx.util.ObjectUtils;
+import cool.scx.util.object.ObjectUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

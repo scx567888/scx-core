@@ -3,7 +3,7 @@ package cool.scx.vo;
 import cool.scx.base.BaseVo;
 import cool.scx.config.ScxCmsConfig;
 import cool.scx.config.ScxConfig;
-import cool.scx.util.ObjectUtils;
+import cool.scx.util.object.ObjectUtils;
 import freemarker.template.Template;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.RoutingContext;

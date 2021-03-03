@@ -12,7 +12,7 @@ public class UpdateResult {
     public final Integer affectedLength;
     public final List<Long> generatedKeys;
 
-    UpdateResult(Integer affectedLength, List<Long> generatedKeys) {
+    public UpdateResult(Integer affectedLength, List<Long> generatedKeys) {
         this.affectedLength = affectedLength;
         this.generatedKeys = generatedKeys;
     }

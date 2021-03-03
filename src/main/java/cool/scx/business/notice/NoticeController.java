@@ -3,8 +3,8 @@ package cool.scx.business.notice;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.context.ScxContext;
+import cool.scx.enumeration.Method;
 import cool.scx.vo.Json;
-import cool.scx.web.type.RequestMethod;
 
 import java.util.stream.Collectors;
 
@@ -23,7 +23,7 @@ public class NoticeController {
      *
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(method = RequestMethod.POST)
+    @ScxMapping(method = Method.POST)
     public Json getAllOnlineUser() {
         var s = ScxContext.getOnlineItemList().stream().filter(u -> u.username != null).map(u -> u.username).collect(Collectors.toList());
         return Json.ok().data("onlineUserList", s);

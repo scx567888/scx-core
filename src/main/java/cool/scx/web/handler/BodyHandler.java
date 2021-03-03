@@ -1,4 +1,4 @@
-package cool.scx.web.handler.body;
+package cool.scx.web.handler;
 
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpHeaders;

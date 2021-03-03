@@ -1,4 +1,4 @@
-package cool.scx.util;
+package cool.scx.util.object;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -328,10 +328,5 @@ public final class ObjectUtils {
         }
     }
 
-    private static class NullKeySerializer extends JsonSerializer<Object> {
-        @Override
-        public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-            jsonGenerator.writeFieldName("");
-        }
-    }
+
 }

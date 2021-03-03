@@ -1,6 +1,7 @@
 package cool.scx.dao;
 
-import cool.scx.bo.SortType;
+import cool.scx.enumeration.SQLType;
+import cool.scx.enumeration.SortType;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -319,6 +320,8 @@ public final class SQLBuilder {
         _selectColumns = selectColumns;
         return this;
     }
+
+
 
 
 }

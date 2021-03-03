@@ -7,10 +7,10 @@ import cool.scx.bo.Param;
 import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.context.ScxContext;
+import cool.scx.enumeration.Method;
 import cool.scx.util.file.FileType;
 import cool.scx.util.file.FileUtils;
 import cool.scx.vo.Html;
-import cool.scx.web.type.RequestMethod;
 import io.vertx.core.http.Cookie;
 import io.vertx.ext.web.RoutingContext;
 
@@ -56,7 +56,7 @@ public class IndexController {
      * @param user a {@link cool.scx.business.user.User} object.
      * @return 页面
      */
-    @ScxMapping(value = "/", method = RequestMethod.GET)
+    @ScxMapping(value = "/", method = Method.GET)
     public Html Index(User user) {
         var routingContext = ScxContext.routingContext();
 
@@ -76,7 +76,7 @@ public class IndexController {
      * @param routingContext a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.vo.Html} object.
      */
-    @ScxMapping(value = "/1", method = RequestMethod.GET)
+    @ScxMapping(value = "/1", method = Method.GET)
     public Html Index1(RoutingContext routingContext) {
         Map<String, Cookie> stringCookieMap = routingContext.cookieMap();
         FileType fileTypeByHead = FileUtils.getFileTypeByHead(new File("C:\\Users\\scx56\\Desktop\\1"));

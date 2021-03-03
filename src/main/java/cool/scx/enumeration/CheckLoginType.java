@@ -1,4 +1,4 @@
-package cool.scx.web.type;
+package cool.scx.enumeration;
 
 /**
  * <p>CheckLoginType class.</p>

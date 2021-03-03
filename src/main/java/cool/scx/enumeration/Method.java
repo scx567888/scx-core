@@ -1,4 +1,4 @@
-package cool.scx.web.type;
+package cool.scx.enumeration;
 
 /**
  * <p>HttpMethod class.</p>
@@ -6,7 +6,7 @@ package cool.scx.web.type;
  * @author 司昌旭
  * @version 0.3.6
  */
-public enum RequestMethod {
+public enum Method {
     POST("POST"),
     GET("GET"),
     PUT("PUT"),
@@ -19,7 +19,7 @@ public enum RequestMethod {
 
     private final String http_method_str;
 
-    RequestMethod(String httpMethodStr) {
+    Method(String httpMethodStr) {
         this.http_method_str = httpMethodStr;
     }
 

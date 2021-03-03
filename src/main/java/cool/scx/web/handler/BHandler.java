@@ -1,5 +1,6 @@
-package cool.scx.web.handler.body;
+package cool.scx.web.handler;
 
+import cool.scx.bo.FileUpload;
 import cool.scx.config.ScxConfig;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.http.HttpHeaderValues;

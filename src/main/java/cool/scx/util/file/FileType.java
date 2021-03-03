@@ -1,4 +1,4 @@
-package cool.scx.util;
+package cool.scx.util.file;
 
 /**
  * <p>FileType class.</p>

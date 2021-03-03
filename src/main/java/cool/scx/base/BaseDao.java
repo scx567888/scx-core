@@ -1,15 +1,15 @@
 package cool.scx.base;
 
 import cool.scx.annotation.Column;
-import cool.scx.bo.FixTableResult;
 import cool.scx.bo.Param;
 import cool.scx.bo.TableInfo;
 import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
 import cool.scx.dao.SQLBuilder;
 import cool.scx.dao.SQLRunner;
+import cool.scx.enumeration.FixTableResult;
 import cool.scx.util.Ansi;
-import cool.scx.util.ObjectUtils;
+import cool.scx.util.object.ObjectUtils;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;

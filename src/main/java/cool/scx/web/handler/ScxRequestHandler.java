@@ -6,8 +6,6 @@ import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.web.handler.body.BodyHandler;
-import cool.scx.web.handler.mapping.ScxMappingHandler;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.impl.CookieImpl;

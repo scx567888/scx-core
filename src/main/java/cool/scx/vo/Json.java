@@ -2,7 +2,7 @@ package cool.scx.vo;
 
 
 import cool.scx.base.BaseVo;
-import cool.scx.util.ObjectUtils;
+import cool.scx.util.object.ObjectUtils;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.ext.web.RoutingContext;

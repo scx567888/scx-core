@@ -1,4 +1,4 @@
-package cool.scx.web.handler.body;
+package cool.scx.bo;
 
 import io.vertx.core.buffer.Buffer;
 

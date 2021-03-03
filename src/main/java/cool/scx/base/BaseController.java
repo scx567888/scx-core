@@ -1,23 +1,23 @@
 package cool.scx.base;
 
 import cool.scx.annotation.*;
+import cool.scx.bo.FileUpload;
 import cool.scx.bo.Param;
-import cool.scx.bo.SortType;
 import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
+import cool.scx.enumeration.CheckLoginType;
+import cool.scx.enumeration.Method;
+import cool.scx.enumeration.SortType;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.LogUtils;
 import cool.scx.util.NetUtils;
-import cool.scx.util.ObjectUtils;
+import cool.scx.util.object.ObjectUtils;
 import cool.scx.util.file.FileUtils;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
 import cool.scx.vo.Json;
-import cool.scx.web.handler.body.FileUpload;
-import cool.scx.web.type.CheckLoginType;
-import cool.scx.web.type.RequestMethod;
 import io.vertx.ext.web.RoutingContext;
 
 import java.io.*;
@@ -126,7 +126,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws HttpResponseException if any.
      */
-    @ScxMapping(value = ":modelName/list", method = {RequestMethod.GET, RequestMethod.POST}, checkedLogin = CheckLoginType.Header)
+    @ScxMapping(value = ":modelName/list", method = {Method.GET, Method.POST}, checkedLogin = CheckLoginType.Header)
     public Json list(String modelName,
                      @FromBody("limit") Integer limit,
                      @FromBody("page") Integer page,
@@ -150,7 +150,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws HttpResponseException if any.
      */
-    @ScxMapping(value = ":modelName/:id", method = RequestMethod.GET)
+    @ScxMapping(value = ":modelName/:id", method = Method.GET)
     public Json info(String modelName, Long id) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var list = baseService.getById(id);
@@ -165,7 +165,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws HttpResponseException if any.
      */
-    @ScxMapping(value = ":modelName", method = RequestMethod.POST)
+    @ScxMapping(value = ":modelName", method = Method.POST)
     public Json save(String modelName, Map<String, Object> entityMap) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
@@ -182,7 +182,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws java.lang.Exception if any.
      */
-    @ScxMapping(value = ":modelName", method = RequestMethod.PUT)
+    @ScxMapping(value = ":modelName", method = Method.PUT)
     public Json update(String modelName, Map<String, Object> entityMap) throws Exception {
         var baseService = getBaseService(modelName);
         var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
@@ -198,7 +198,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws java.lang.Exception if any.
      */
-    @ScxMapping(value = ":modelName/:id", method = RequestMethod.DELETE)
+    @ScxMapping(value = ":modelName/:id", method = Method.DELETE)
     public Json delete(String modelName, Integer id) throws Exception {
         var baseService = getBaseService(modelName);
         var deleteByIds = baseService.deleteByIds(Long.valueOf(id));
@@ -213,7 +213,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws HttpResponseException if any.
      */
-    @ScxMapping(value = ":modelName/batchDelete", method = RequestMethod.DELETE)
+    @ScxMapping(value = ":modelName/batchDelete", method = Method.DELETE)
     public Json batchDelete(String modelName, Map<String, Object> params) throws HttpResponseException {
         var deleteIds = (Long[]) params.get("deleteIds");
         var baseService = getBaseService(modelName);
@@ -229,7 +229,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws HttpResponseException if any.
      */
-    @ScxMapping(value = ":modelName/revokeDelete/:id", method = RequestMethod.GET)
+    @ScxMapping(value = ":modelName/revokeDelete/:id", method = Method.GET)
     public Json revokeDelete(String modelName, Integer id) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var revokeDeleteCount = baseService.revokeDeleteByIds(Long.valueOf(id));
@@ -244,7 +244,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws HttpResponseException if any.
      */
-    @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", method = RequestMethod.POST)
+    @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", method = Method.POST)
     public Json getAutoComplete(String modelName, String fieldName) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var fieldList = baseService.getFieldList(fieldName);
@@ -259,7 +259,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws HttpResponseException if any.
      */
-    @ScxMapping(value = ":modelName/checkUnique", method = RequestMethod.POST)
+    @ScxMapping(value = ":modelName/checkUnique", method = Method.POST)
     public Json checkUnique(String modelName, Map<String, Object> params) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, null, null, null, null, params);
@@ -286,7 +286,7 @@ public class BaseController {
      * @throws HttpResponseException                if any.
      * @throws java.io.UnsupportedEncodingException if any.
      */
-    @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET)
+    @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = Method.GET)
     public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {
         var file = new File(ScxConfig.uploadFilePath() + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName);
         if (!file.exists()) {
@@ -310,7 +310,7 @@ public class BaseController {
      * @param height    a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Binary} object.
      */
-    @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", method = RequestMethod.GET)
+    @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", method = Method.GET)
     public Image showPicture(String year, String month, String day, String hour, String timestamp, String fileName, @FormQuery("w") Integer width, @FormQuery("h") Integer height) {
         return new Image(new File(ScxConfig.uploadFilePath() + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName), width, height);
     }

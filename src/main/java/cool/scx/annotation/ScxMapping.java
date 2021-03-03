@@ -1,7 +1,7 @@
 package cool.scx.annotation;
 
-import cool.scx.web.type.CheckLoginType;
-import cool.scx.web.type.RequestMethod;
+import cool.scx.enumeration.CheckLoginType;
+import cool.scx.enumeration.Method;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,5 +25,5 @@ public @interface ScxMapping {
 
     boolean useMethodNameAsUrl() default true;
 
-    RequestMethod[] method() default {RequestMethod.GET, RequestMethod.POST};
+    Method[] method() default {Method.GET, Method.POST};
 }
