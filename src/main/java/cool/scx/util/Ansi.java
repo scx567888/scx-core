@@ -2,10 +2,7 @@ package cool.scx.util;
 
 import cool.scx.enumeration.AnsiColor;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>Ansi class.</p>
@@ -19,8 +16,16 @@ public final class Ansi {
      * Constant <code>ANSI</code>
      */
     public static final Ansi ANSI = new Ansi();
-    private static final List<AnsiColor> ansiColorList = new LinkedList<>(Arrays.asList(AnsiColor.values()));
-    private static Iterator<AnsiColor> nowColor = ansiColorList.iterator();
+    private static final Map<Integer, AnsiColor> printColor = new HashMap<>();
+    private static int nextPrintColor = 0;
+
+    static {
+        var i = 0;
+        for (AnsiColor value : AnsiColor.values()) {
+            printColor.put(i, value);
+            i = i + 1;
+        }
+    }
 
     private Ansi() {
     }
@@ -183,10 +188,11 @@ public final class Ansi {
      * @return a {@link cool.scx.util.Ansi} object.
      */
     public Ansi print(Object o) {
-        if (!nowColor.hasNext()) {
-            nowColor = ansiColorList.iterator();
+        if (nextPrintColor >= printColor.size()) {
+            nextPrintColor = 0;
         }
-        print(o, nowColor.next());
+        print(o, printColor.get(nextPrintColor));
+        nextPrintColor = nextPrintColor + 1;
         return this;
     }
 

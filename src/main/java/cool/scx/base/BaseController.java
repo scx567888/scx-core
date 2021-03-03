@@ -7,7 +7,6 @@ import cool.scx.business.uploadfile.UploadFile;
 import cool.scx.business.uploadfile.UploadFileService;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.Method;
 import cool.scx.enumeration.SortType;
 import cool.scx.exception.HttpResponseException;
@@ -45,47 +44,6 @@ public class BaseController {
     }
 
 
-    private static <T extends BaseModel> Param<T> getParam(String modelName) {
-
-//        Integer page = null;
-//        Integer limit = null;
-//        Map<String, Object> orderBy = null;
-//        Map<String, Object> queryObject = null;
-//        System.out.println();
-
-//        try {
-//            queryObject = (Map<String, Object>) params.get("queryObject");
-//            p = new Param<>(ObjectUtils.mapToBean(queryObject, modelClass));
-//        } catch (Exception ignored) {
-//
-//        }
-////        System.out.println();
-//        try {
-//            page = (Integer) params.get("page");
-//            p.setPagination()
-//        } catch (Exception ignored) {
-//
-//        }
-//        try {
-//            limit = (Integer) params.get("limit");
-//        } catch (Exception ignored) {
-//
-//        }
-//        try {
-//            orderBy = (Map<String, Object>) params.get("orderBy");
-//            orderBy.get
-//        } catch (Exception ignored) {
-//
-//        }
-//
-//
-//        if (limit != -1) {
-//            p.setPagination(page, limit);
-//        }
-
-        return null;
-    }
-
     @SuppressWarnings("unchecked")
     private static <T extends BaseModel> BaseService<T> getBaseService(String modelName) throws HttpResponseException {
         try {
@@ -102,6 +60,8 @@ public class BaseController {
         var p = new Param<>(ObjectUtils.mapToBeanNotNull(queryObject, modelClass));
         if (limit != null && limit != -1) {
             p.setPagination(page, limit);
+        } else {
+            p.setPagination(1, 10);
         }
         if (orderByColumn != null) {
             if (sortType == null || "desc".equals(sortType)) {
@@ -126,7 +86,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws cool.scx.exception.HttpResponseException if any.
      */
-    @ScxMapping(value = ":modelName/list", method = {Method.GET, Method.POST}, checkedLogin = CheckLoginType.Header)
+    @ScxMapping(value = ":modelName/list", method = {Method.GET, Method.POST})
     public Json list(String modelName,
                      @FromBody("limit") Integer limit,
                      @FromBody("page") Integer page,

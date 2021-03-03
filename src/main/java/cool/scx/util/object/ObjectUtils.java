@@ -201,7 +201,6 @@ public final class ObjectUtils {
         T t = null;
         try {
             t = objectMapper.convertValue(map, clazz);
-
         } catch (Exception ignored) {
 
         }

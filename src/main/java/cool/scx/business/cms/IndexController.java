@@ -23,7 +23,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-//@ScxController
+@ScxController
 public class IndexController {
 
     private final UserService userService;
