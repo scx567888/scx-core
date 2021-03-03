@@ -378,16 +378,9 @@ public class BaseController {
         }
     }
 
-
     /**
      * 校验文件  和 获取分割文件上传最后一次的分块
-     *
-     * @param params 文件名
-     * @return 文件校验结果 true 为合并并校验成功
-     */
-
-    /**
-     * <p>uploadValidateFile.</p>
+     * 文件校验结果 true 为合并并校验成功
      *
      * @param fileName 获取文件名
      * @param fileSize 获取文件大小

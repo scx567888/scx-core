@@ -7,7 +7,6 @@ import cool.scx.util.ObjectUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,9 +58,9 @@ public final class SQLRunner {
      * <p>getConnection.</p>
      *
      * @return a Connection object.
-     * @throws java.sql.SQLException if any.
+     * @throws java.lang.Exception if any.
      */
-    public static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws Exception {
         return dataSource.getConnection();
     }
 
@@ -116,9 +115,9 @@ public final class SQLRunner {
      * @param sql      未处理的sql 语句
      * @param paramMap 参数 map
      * @return PreparedStatement
-     * @throws java.sql.SQLException if any.
+     * @throws java.lang.Exception if any.
      */
-    public static PreparedStatement getPreparedStatement(Connection con, String sql, Map<String, Object> paramMap) throws SQLException {
+    public static PreparedStatement getPreparedStatement(Connection con, String sql, Map<String, Object> paramMap) throws Exception {
         var matcher = pattern.matcher(sql);
         var result = pattern.matcher(sql).replaceAll("?");
         var preparedStatement = con.prepareStatement(result, Statement.RETURN_GENERATED_KEYS);
