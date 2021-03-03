@@ -24,8 +24,8 @@ import cool.scx.exception.TooManyErrorsException;
 import cool.scx.exception.UnknownUserException;
 import cool.scx.exception.WrongPasswordException;
 import cool.scx.util.LogUtils;
-import cool.scx.util.object.ObjectUtils;
 import cool.scx.util.StringUtils;
+import cool.scx.util.object.ObjectUtils;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
