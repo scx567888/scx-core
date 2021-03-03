@@ -13,9 +13,8 @@
 <h2>${age!}</h2>
 
 [#list userList as user]
-用户名：${user.username}
-密 码：${user.password}
-年 龄: ${user.salt}
+用户名：${user.username!}
+昵称：${user.nickName!}
 [/#list]
 
 <img src="static/images/test.png">
