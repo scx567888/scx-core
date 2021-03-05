@@ -293,7 +293,6 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             }
             //从路径进行猜测
             finalHandlerParams[i] = getParamFromPath(pathParams, parameters[i].getName(), false, parameters[i]);
-            //---------------------
         }
         return method.invoke(example, finalHandlerParams);
     }

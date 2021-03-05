@@ -180,7 +180,7 @@ public class UserController {
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = ":id", method = Method.GET)
-    public Json getUserById(Long id) {
+    public Json getUserById(@FromPath Long id) {
         if (StringUtils.isNotEmpty(id)) {
             var user = userService.getById(id);
             if (user != null) {
