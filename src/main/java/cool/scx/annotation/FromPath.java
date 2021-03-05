@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>PathParam class.</p>
+ * FromPath
+ * 获取 路径参数
  *
  * @author 司昌旭
  * @version 0.5.0
@@ -14,6 +15,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FromPath {
+
+    /**
+     * 路径参数名称 默认为空
+     * 为空的情况下会将参数名称作为 路径参数名称
+     *
+     * @return 名称
+     */
     String value() default "";
 
     /**

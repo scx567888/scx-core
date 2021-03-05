@@ -72,14 +72,14 @@ public @interface Column {
      *
      * @return u
      */
-    boolean noInsert() default false;
+    boolean excludeOnInsert() default false;
 
     /**
      * 更新时是否过滤掉此字段 如 id
      *
      * @return u
      */
-    boolean noUpdate() default false;
+    boolean excludeOnUpdate() default false;
 
     /**
      * 此字段是否为自增 仅用于 创建或修复表时

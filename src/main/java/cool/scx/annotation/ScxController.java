@@ -8,7 +8,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>ScxController class.</p>
+ * ScxController
+ * http 映射
  *
  * @author 司昌旭
  * @version 0.3.6
@@ -17,5 +18,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Component
 public @interface ScxController {
+    /**
+     * 路径
+     * 当和 scxMapping 配合使用时 会将
+     * 此路径作为父路径 和 scxMapping 的子路径进行拼接
+     *
+     * @return 路径
+     */
     String value() default "";
 }

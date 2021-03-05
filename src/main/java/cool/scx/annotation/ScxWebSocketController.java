@@ -8,10 +8,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>ScxWebSocketController class.</p>
+ * ScxWebSocketController
+ * websocket 映射
+ * 设置此注解的方法 必须同时 继承 BaseWebSocketController
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 0.5.0
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

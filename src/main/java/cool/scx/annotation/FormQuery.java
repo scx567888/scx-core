@@ -14,6 +14,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FormQuery {
+
+    /**
+     * 查询参数名称 默认为空
+     * 为空的情况下会将方法参数名称作为 查询参数名称
+     *
+     * @return 名称
+     */
     String value() default "";
 
     /**

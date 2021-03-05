@@ -8,7 +8,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>ScxService class.</p>
+ * ScxService
+ * service 层映射
+ * 设置此注解的方法 必须同时 继承 BaseService
  *
  * @author 司昌旭
  * @version 0.3.6
