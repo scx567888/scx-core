@@ -18,6 +18,11 @@ public class ColumnListDirective extends BaseTemplateDirective {
 
     private final ColumnService columnService;
 
+    /**
+     * <p>Constructor for ColumnListDirective.</p>
+     *
+     * @param columnService a {@link cool.scx.business.cms.ColumnService} object.
+     */
     public ColumnListDirective(ColumnService columnService) {
         this.columnService = columnService;
     }
@@ -32,11 +37,17 @@ public class ColumnListDirective extends BaseTemplateDirective {
         return columnService.listAll();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String directiveName() {
         return "column_list_tag";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String variableName() {
         return "column_list";

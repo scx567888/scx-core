@@ -11,6 +11,9 @@ import java.lang.annotation.Target;
  * 自定义 模板指令
  * 使用此注解时 必须同时继承
  * BaseTemplateDirective
+ *
+ * @author scx56
+ * @version $Id: $Id
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

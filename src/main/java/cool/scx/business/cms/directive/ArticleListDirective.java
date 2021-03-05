@@ -19,6 +19,11 @@ public class ArticleListDirective extends BaseTemplateDirective {
 
     private final ArticleService articleService;
 
+    /**
+     * <p>Constructor for ArticleListDirective.</p>
+     *
+     * @param articleService a {@link cool.scx.business.cms.ArticleService} object.
+     */
     public ArticleListDirective(ArticleService articleService) {
         this.articleService = articleService;
     }
@@ -31,11 +36,17 @@ public class ArticleListDirective extends BaseTemplateDirective {
         return articleService.listAll();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String directiveName() {
         return "article_list_tag";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String variableName() {
         return "article_list";
