@@ -84,7 +84,7 @@ public final class ScxContext {
                     SCX_BEAN_CLASS_NAME_MAPPING.put(clazz.getSimpleName().toLowerCase(), clazz);
                 } else {
                     SCX_BEAN_CLASS_NAME_MAPPING.put(clazz.getName(), clazz);
-                    Ansi.OUT.brightRed("检测到重复名称的 class [" + aClass.getName() + "," + clazz.getName() + "] , 可能会导致 baseController 调用时意义不明确 !!! 建议修改 !!!").ln();
+                    Ansi.OUT.brightRed("检测到重复名称的 class ").brightYellow("[" + aClass.getName() + "] ").blue("[" + clazz.getName() + "]").brightRed(" 可能会导致 baseController 调用时意义不明确 !!! 建议修改 !!!").ln();
                 }
             }
             return true;
