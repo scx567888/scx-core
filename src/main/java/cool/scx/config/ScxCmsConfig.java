@@ -27,7 +27,8 @@ public final class ScxCmsConfig {
     private static Configuration initFreemarkerConfig() {
         // freemarker 配置文件版本
         var configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
-        configuration.setObjectWrapper(new BaseObjectWrapper(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS));
+        //todo 此处需要处理
+        //configuration.setObjectWrapper(new BaseObjectWrapper(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS));
         try {
             configuration.setDirectoryForTemplateLoading(ScxConfig.cmsRoot());
         } catch (Exception e) {

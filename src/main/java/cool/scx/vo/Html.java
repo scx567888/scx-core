@@ -3,6 +3,7 @@ package cool.scx.vo;
 import cool.scx.base.BaseVo;
 import cool.scx.config.ScxCmsConfig;
 import cool.scx.config.ScxConfig;
+import cool.scx.util.object.ObjectUtils;
 import freemarker.template.Template;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.RoutingContext;
@@ -50,7 +51,7 @@ public final class Html implements BaseVo {
      * @return a {@link cool.scx.vo.Html} object.
      */
     public Html add(String key, Object value) {
-        dataMap.put(key, value);
+        dataMap.put(key, ObjectUtils.objectToMapDeep(value));
         return this;
     }
 
