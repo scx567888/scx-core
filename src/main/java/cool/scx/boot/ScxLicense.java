@@ -25,7 +25,7 @@ public class ScxLicense {
      * <p>init.</p>
      */
     public static void init() {
-        Ansi.ANSI.brightCyan("校验 license 中 ...").ln();
+        Ansi.OUT.brightCyan("校验 license 中 ...").ln();
         var licenseRight = licenseService.passLicense();
         if (!licenseRight) {
             ScxServer.stopServer();

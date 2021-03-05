@@ -47,7 +47,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         PackageUtils.scanPackageIncludePlugins(clazz -> {
             if (!clazz.isInterface() && LoginAndPermsHandler.class.isAssignableFrom(clazz) && clazz != DefaultLoginAndPermsHandler.class) {
                 try {
-                    Ansi.ANSI.blue("已加载自定义 LoginAndPermsHandler 处理器 -> [" + clazz.getName() + "]").ln();
+                    Ansi.OUT.blue("已加载自定义 LoginAndPermsHandler 处理器 -> [" + clazz.getName() + "]").ln();
                     var myLoginAndPermsHandler = (LoginAndPermsHandler) clazz.getDeclaredConstructor().newInstance();
                     t[0] = myLoginAndPermsHandler;
                     return false;
@@ -58,7 +58,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             return true;
         });
         if (t[0] == null) {
-            Ansi.ANSI.brightYellow("已加载默认的 LoginAndPermsHandler 处理器 -> [" + DefaultLoginAndPermsHandler.class.getName() + "]").ln();
+            Ansi.OUT.brightYellow("已加载默认的 LoginAndPermsHandler 处理器 -> [" + DefaultLoginAndPermsHandler.class.getName() + "]").ln();
             t[0] = new DefaultLoginAndPermsHandler();
         }
 

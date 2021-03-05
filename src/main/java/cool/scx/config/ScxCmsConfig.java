@@ -1,6 +1,9 @@
 package cool.scx.config;
 
+import cool.scx.annotation.ScxTemplateDirective;
+import cool.scx.base.BaseObjectWrapper;
 import cool.scx.base.BaseTemplateDirective;
+import cool.scx.context.ScxContext;
 import cool.scx.util.Ansi;
 import cool.scx.util.PackageUtils;
 import freemarker.template.Configuration;
@@ -24,6 +27,7 @@ public final class ScxCmsConfig {
     private static Configuration initFreemarkerConfig() {
         // freemarker 配置文件版本
         var configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
+        configuration.setObjectWrapper(new BaseObjectWrapper(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS));
         try {
             configuration.setDirectoryForTemplateLoading(ScxConfig.cmsRoot());
         } catch (Exception e) {
@@ -38,11 +42,11 @@ public final class ScxCmsConfig {
         //自定义的指令就在这里添加
 
         PackageUtils.scanPackageIncludePlugins(clazz -> {
-            if (!clazz.isInterface() && BaseTemplateDirective.class.isAssignableFrom(clazz)) {
+            if (clazz.isAnnotationPresent(ScxTemplateDirective.class) && BaseTemplateDirective.class.isAssignableFrom(clazz)) {
                 try {
-                    var myDirective = (BaseTemplateDirective) clazz.getDeclaredConstructor().newInstance();
-                    Ansi.ANSI.blue("已加载自定义 Freemarker 标签 [" + myDirective.getVariable() + "] Class -> " + clazz.getName()).ln();
-                    configuration.setSharedVariable(myDirective.getVariable(), myDirective);
+                    var myDirective = (BaseTemplateDirective) ScxContext.getBean(clazz);
+                    Ansi.OUT.blue("已加载自定义 Freemarker 标签 [" + myDirective.directiveName() + "] Class -> " + clazz.getName()).ln();
+                    configuration.setSharedVariable(myDirective.directiveName(), myDirective);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

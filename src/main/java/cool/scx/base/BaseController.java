@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- * <p>BaseController class.</p>
+ * 通用 controller
  *
  * @author 司昌旭
  * @version 0.3.6
@@ -35,15 +35,23 @@ public class BaseController {
     private final UploadFileService uploadFileService;
 
     /**
-     * <p>Constructor for BaseController.</p>
+     * BaseController 构造函数
      *
-     * @param uploadFileService a {@link cool.scx.business.uploadfile.UploadFileService} object.
+     * @param uploadFileService 会自动注入
      */
     public BaseController(UploadFileService uploadFileService) {
         this.uploadFileService = uploadFileService;
     }
 
 
+    /**
+     * 获取 service
+     *
+     * @param modelName model 名称
+     * @param <T>       model 类型
+     * @return service
+     * @throws HttpResponseException service 未找到
+     */
     @SuppressWarnings("unchecked")
     private static <T extends BaseModel> BaseService<T> getBaseService(String modelName) throws HttpResponseException {
         try {

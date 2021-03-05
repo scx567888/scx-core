@@ -26,7 +26,7 @@ public class LogUtils {
      */
     public static void recordLog(String title, String content) {
         if (ScxConfig.showLog()) {
-            Ansi.ANSI.print(title).ln();
+            Ansi.OUT.print(title).ln();
         }
         var log = new ScxLog();
         log.userIp = NetUtils.getIpAddr();

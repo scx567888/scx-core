@@ -47,14 +47,14 @@ public class TableInfo {
     private static Field[] getCanInsertFields(Field[] allFields) {
         return Arrays.stream(allFields).filter(ta -> {
             var column = ta.getAnnotation(Column.class);
-            return column == null || !column.noInsert();
+            return column == null || !column.excludeOnInsert();
         }).toArray(Field[]::new);
     }
 
     private static Field[] getCanUpdateFields(Field[] allFields) {
         return Arrays.stream(allFields).filter(ta -> {
             var column = ta.getAnnotation(Column.class);
-            return column == null || !column.noUpdate();
+            return column == null || !column.excludeOnUpdate();
         }).toArray(Field[]::new);
     }
 

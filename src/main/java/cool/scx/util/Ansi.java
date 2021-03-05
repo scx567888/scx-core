@@ -2,10 +2,11 @@ package cool.scx.util;
 
 import cool.scx.enumeration.AnsiColor;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * <p>Ansi class.</p>
+ * 向控制台打印彩色
  *
  * @author scx56
  * @version $Id: $Id
@@ -15,9 +16,10 @@ public final class Ansi {
     /**
      * Constant <code>ANSI</code>
      */
-    public static final Ansi ANSI = new Ansi();
+    public static final Ansi OUT = new Ansi();
     private static final Map<Integer, AnsiColor> printColor = new HashMap<>();
     private static int nextPrintColor = 0;
+    private static boolean supportAnsiColor = false;
 
     static {
         var i = 0;
@@ -25,6 +27,8 @@ public final class Ansi {
             printColor.put(i, value);
             i = i + 1;
         }
+        //todo 此处应该检测控制台是否支持彩色
+        supportAnsiColor = true;
     }
 
     private Ansi() {
@@ -36,8 +40,12 @@ public final class Ansi {
      * @param o         a {@link java.lang.Object} object.
      * @param ansiColor a {@link cool.scx.enumeration.AnsiColor} object.
      */
-    public static void print(Object o, AnsiColor ansiColor) {
-        System.err.print("\u001B[" + ansiColor.code + "m" + o.toString() + "\u001B[0m");
+    private static void print(Object o, AnsiColor ansiColor) {
+        if (supportAnsiColor) {
+            System.out.print("\u001B[" + ansiColor.code + "m" + o.toString() + "\u001B[0m");
+        } else {
+            System.out.print(o.toString());
+        }
     }
 
     /**
@@ -176,9 +184,12 @@ public final class Ansi {
 
     /**
      * 换行
+     *
+     * @return a {@link cool.scx.util.Ansi} object.
      */
-    public void ln() {
-        System.err.println();
+    public Ansi ln() {
+        System.out.println();
+        return this;
     }
 
     /**
@@ -195,6 +206,5 @@ public final class Ansi {
         nextPrintColor = nextPrintColor + 1;
         return this;
     }
-
 
 }

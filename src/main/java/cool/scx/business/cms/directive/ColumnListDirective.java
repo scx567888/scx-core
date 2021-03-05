@@ -1,6 +1,7 @@
 package cool.scx.business.cms.directive;
 
 
+import cool.scx.annotation.ScxTemplateDirective;
 import cool.scx.base.BaseTemplateDirective;
 import cool.scx.business.cms.ColumnService;
 
@@ -12,9 +13,14 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-public class ColumnListDirective implements BaseTemplateDirective {
+@ScxTemplateDirective
+public class ColumnListDirective extends BaseTemplateDirective {
 
-    ColumnService columnService = new ColumnService();
+    private final ColumnService columnService;
+
+    public ColumnListDirective(ColumnService columnService) {
+        this.columnService = columnService;
+    }
 
     /**
      * {@inheritDoc}
@@ -22,18 +28,17 @@ public class ColumnListDirective implements BaseTemplateDirective {
      * 重写方法
      */
     @Override
-    public Object getParams(Map params) {
+    public Object getResults(Map<String, Object> params) {
         return columnService.listAll();
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * 获取自定义 标签名称
-     */
     @Override
-    public String getVariable() {
-        return "column_list";
+    public String directiveName() {
+        return "column_list_tag";
     }
 
+    @Override
+    public String variableName() {
+        return "column_list";
+    }
 }

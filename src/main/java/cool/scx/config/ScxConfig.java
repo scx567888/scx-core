@@ -181,11 +181,11 @@ public final class ScxConfig {
      * @param _args         an array of {@link java.lang.String} objects.
      */
     public static void initConfig(Class<?>[] _classSources, String[] _args) {
-        Ansi.ANSI.brightBlue("ScxConfig 初始化中...").ln();
+        Ansi.OUT.brightBlue("ScxConfig 初始化中...").ln();
         classSources = filterClassSource(_classSources);
         parameters = _args;
         loadConfig();
-        Ansi.ANSI.brightBlue("ScxConfig 初始化完成...").ln();
+        Ansi.OUT.brightBlue("ScxConfig 初始化完成...").ln();
     }
 
 
@@ -203,9 +203,9 @@ public final class ScxConfig {
      * <p>reloadConfig.</p>
      */
     public static void reloadConfig() {
-        Ansi.ANSI.brightBlue("ScxConfig 重新加载中...").ln();
+        Ansi.OUT.brightBlue("ScxConfig 重新加载中...").ln();
         loadConfig();
-        Ansi.ANSI.brightBlue("ScxConfig 重新加载完成...").ln();
+        Ansi.OUT.brightBlue("ScxConfig 重新加载完成...").ln();
     }
 
     /**
@@ -226,13 +226,13 @@ public final class ScxConfig {
                 throw new ConfigFileMissingException();
             }
             rootNode = mapper.readTree(configFile);
-            Ansi.ANSI.green("✔ 已加载配置文件                       \t -->\t " + configFile.getPath()).ln();
+            Ansi.OUT.green("✔ 已加载配置文件                       \t -->\t " + configFile.getPath()).ln();
         } catch (Exception e) {
             configFile = new File(PackageUtils.getAppRoot(), "scx-default.json");
             if (e instanceof JsonProcessingException) {
-                Ansi.ANSI.red("✘ 配置文件已损坏!!! 已生成正确的配置文件 scx-default.json").ln();
+                Ansi.OUT.red("✘ 配置文件已损坏!!! 已生成正确的配置文件 scx-default.json").ln();
             } else if (e instanceof ConfigFileMissingException) {
-                Ansi.ANSI.red("✘ 配置文件已丢失!!! 已使用默认配置文件 scx-default.json").ln();
+                Ansi.OUT.red("✘ 配置文件已丢失!!! 已使用默认配置文件 scx-default.json").ln();
             }
         }
         //说明没有读取到 正确的 json 文件

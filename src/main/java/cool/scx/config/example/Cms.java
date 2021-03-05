@@ -64,43 +64,43 @@ public class Cms {
         var cms = new Cms();
 
         cms.root = getConfigValue("scx.cms.root", "/c/",
-                s -> Ansi.ANSI.green("✔ Cms 根目录                         \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
+                s -> Ansi.OUT.green("✔ Cms 根目录                         \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.ANSI.red("✘ 未检测到 scx.cms.root              \t -->\t 已采用默认值 : " + PackageUtils.getFileByAppRoot(f)).ln();
+                    Ansi.OUT.red("✘ 未检测到 scx.cms.root              \t -->\t 已采用默认值 : " + PackageUtils.getFileByAppRoot(f)).ln();
                 }, JsonNode::asText, a -> a);
 
         cms.rootValue = PackageUtils.getFileByAppRoot(cms.root);
 
         cms.resourceHttpUrl = getConfigValue("scx.cms.resource-http-url", "/static/*",
-                s -> Ansi.ANSI.green("✔ Cms 静态资源 Url                     \t -->\t " + s).ln(),
+                s -> Ansi.OUT.green("✔ Cms 静态资源 Url                     \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.ANSI.red("✘ 未检测到 scx.cms.resource-http-url    \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("✘ 未检测到 scx.cms.resource-http-url    \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asText, (a) -> a);
 
 
         cms.resourceLocations = getConfigValue("scx.cms.resource-locations", "/c/static",
-                s -> Ansi.ANSI.green("✔ Cms 静态资源目录                     \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
+                s -> Ansi.OUT.green("✔ Cms 静态资源目录                     \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.ANSI.red("✘ 未检测到 scx.cms.resource-locations   \t -->\t 已采用默认值 : " + PackageUtils.getFileByAppRoot(f)).ln();
+                    Ansi.OUT.red("✘ 未检测到 scx.cms.resource-locations   \t -->\t 已采用默认值 : " + PackageUtils.getFileByAppRoot(f)).ln();
                 }, JsonNode::asText, a -> a);
 
         cms.resourceLocationsValue = PackageUtils.getFileByAppRoot(cms.resourceLocations);
 
         cms.templateSuffix = getConfigValue("scx.cms.template-suffix", ".html",
-                s -> Ansi.ANSI.green("✔ Cms 模板文件后缀                     \t -->\t " + s).ln(),
+                s -> Ansi.OUT.green("✔ Cms 模板文件后缀                     \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.ANSI.red("✘ 未检测到 scx.cms.template-suffix   \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("✘ 未检测到 scx.cms.template-suffix   \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asText, a -> a);
 
         cms.faviconIcoPath = getConfigValue("scx.cms.favicon-ico-path", "/c/favicon.ico",
-                s -> Ansi.ANSI.green("✔ Cms Favicon Ico 路径                 \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
+                s -> Ansi.OUT.green("✔ Cms Favicon Ico 路径                 \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.ANSI.red("✘ 未检测到 scx.cms.favicon-ico-path   \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("✘ 未检测到 scx.cms.favicon-ico-path   \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asText, a -> a);
 
         cms.faviconIcoPathValue = PackageUtils.getFileByAppRoot(cms.faviconIcoPath);

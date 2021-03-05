@@ -44,10 +44,10 @@ public final class SQLRunner {
     public static boolean testConnection() {
         try (var conn = getConnection()) {
             var dm = conn.getMetaData();
-            Ansi.ANSI.magenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").ln();
+            Ansi.OUT.magenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").ln();
             return true;
         } catch (Exception e) {
-            Ansi.ANSI.red("数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl()).ln();
+            Ansi.OUT.red("数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl()).ln();
             if (ScxConfig.showLog()) {
                 e.printStackTrace();
             }
@@ -129,7 +129,7 @@ public final class SQLRunner {
         }
         if (ScxConfig.showLog()) {
             var s = preparedStatement.toString();
-            Ansi.ANSI.print(ScxConfig.dateTimeFormatter().format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":"))).ln();
+            Ansi.OUT.print(ScxConfig.dateTimeFormatter().format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":"))).ln();
         }
         return preparedStatement;
     }

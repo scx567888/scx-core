@@ -1,15 +1,15 @@
 package cool.scx.enumeration;
 
 /**
- * <p>AnsiColor class.</p>
+ * AnsiColor 颜色枚举
+ * 枚举的顺序目前是按照渐变进行排列的
  *
  * @author scx56
- * @version $Id: $Id
+ * @version 0.9.15
  */
 public enum AnsiColor {
 
     BRIGHT_RED(91),
-    DEFAULT(39),
     RED(31),
     YELLOW(33),
     BRIGHT_YELLOW(93),
@@ -24,6 +24,7 @@ public enum AnsiColor {
     BLACK(30),
     BRIGHT_BLACK(90),
     WHITE(37),
+    DEFAULT(39),
     BRIGHT_WHITE(97);
 
     public final int code;

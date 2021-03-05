@@ -16,25 +16,25 @@ public abstract class BaseModel implements Serializable {
     /**
      * id
      */
-    @Column(primaryKey = true, noInsert = true, noUpdate = true, autoIncrement = true)
+    @Column(primaryKey = true, excludeOnInsert = true, excludeOnUpdate = true, autoIncrement = true)
     public Long id;
 
     /**
      * 修改时间
      */
-    @Column(noInsert = true, noUpdate = true, notNull = true, defaultValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP", needIndex = true)
+    @Column(excludeOnInsert = true, excludeOnUpdate = true, notNull = true, defaultValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP", needIndex = true)
     public LocalDateTime updateDate;
 
     /**
      * 创建时间
      */
-    @Column(noInsert = true, noUpdate = true, notNull = true, defaultValue = "CURRENT_TIMESTAMP", needIndex = true)
+    @Column(excludeOnInsert = true, excludeOnUpdate = true, notNull = true, defaultValue = "CURRENT_TIMESTAMP", needIndex = true)
     public LocalDateTime createDate;
 
     /**
      * 删除状态  false 未删除 true 已删除
      */
-    @Column(noInsert = true, notNull = true, defaultValue = "false")
+    @Column(excludeOnInsert = true, notNull = true, defaultValue = "false")
     public Boolean isDeleted;
 
 }

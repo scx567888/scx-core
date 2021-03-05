@@ -20,44 +20,37 @@ public class User extends BaseModel {
     /**
      * 登录名，创建后不可改
      */
-    @Column(notNull = true, useLike = true, unique = true, noUpdate = true)
+    @Column(notNull = true, useLike = true, unique = true, excludeOnUpdate = true)
     public String username;
-
     /**
      * 已加密的登录密码
      */
     @Column(notNull = true)
     @JsonIgnore
     public String password;
-
     /**
      * 随机加密盐值
      */
     @Column(notNull = true)
     @JsonIgnore
     public String salt;
-
     /**
      * 昵称
      */
     @Column(useLike = true)
     public String nickName;
-
     /**
      * 性别
      */
     public String gender;
-
     /**
      * 用户头像 id 此处存储的是 位于 uploadFile 表中的 id
      */
     public Long avatarId;
-
     /**
      * 电话号码
      */
     public String phone;
-
     /**
      * 用户级别 共六个级别
      * 2  超级管理员 一个系统应有且只有一个
@@ -70,20 +63,17 @@ public class User extends BaseModel {
     @Column(notNull = true, defaultValue = "8")
     @JsonIgnore
     public Byte level;
-
     /**
      * 最后一次登录时间
      */
     @JsonIgnore
     public LocalDateTime lastLoginDate;
-
     /**
      * dept id 集合
      */
     @NoColumn
     @JsonIgnore
     public String deptIds;
-
     /**
      * role id 集合
      */

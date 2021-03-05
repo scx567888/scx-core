@@ -1,6 +1,7 @@
 package cool.scx.business.cms.directive;
 
 
+import cool.scx.annotation.ScxTemplateDirective;
 import cool.scx.base.BaseTemplateDirective;
 import cool.scx.business.cms.ArticleService;
 
@@ -12,26 +13,31 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-public class ArticleListDirective implements BaseTemplateDirective {
+@ScxTemplateDirective
+public class ArticleListDirective extends BaseTemplateDirective {
 
-    ArticleService articleService = new ArticleService();
 
+    private final ArticleService articleService;
+
+    public ArticleListDirective(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object getParams(Map params) {
+    public Object getResults(Map<String, Object> params) {
         return articleService.listAll();
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public String getVariable() {
-        return "article_list";
+    public String directiveName() {
+        return "article_list_tag";
     }
 
+    @Override
+    public String variableName() {
+        return "article_list";
+    }
 }

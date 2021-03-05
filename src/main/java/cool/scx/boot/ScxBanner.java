@@ -15,14 +15,14 @@ public final class ScxBanner {
      * 在控制台上打印 banner
      */
     public static void show() {
-        Ansi.ANSI.red("   ▄████████ ").green(" ▄████████ ").blue("▀████    ▐████▀ ").ln();
-        Ansi.ANSI.red("  ███    ███ ").green("███    ███ ").blue("  ███▌   ████▀  ").ln();
-        Ansi.ANSI.red("  ███    █▀  ").green("███    █▀  ").blue("   ███  ▐███    ").ln();
-        Ansi.ANSI.red("  ███        ").green("███        ").blue("   ▀███▄███▀    ").ln();
-        Ansi.ANSI.red("▀███████████ ").green("███        ").blue("   ████▀██▄     ").ln();
-        Ansi.ANSI.red("         ███ ").green("███    █▄  ").blue("  ▐███  ▀███    ").ln();
-        Ansi.ANSI.red("   ▄█    ███ ").green("███    ███ ").blue(" ▄███     ███▄  ").ln();
-        Ansi.ANSI.red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(ScxConfig.scxVersion()).ln();
+        Ansi.OUT.red("   ▄████████ ").green(" ▄████████ ").blue("▀████    ▐████▀ ").ln();
+        Ansi.OUT.red("  ███    ███ ").green("███    ███ ").blue("  ███▌   ████▀  ").ln();
+        Ansi.OUT.red("  ███    █▀  ").green("███    █▀  ").blue("   ███  ▐███    ").ln();
+        Ansi.OUT.red("  ███        ").green("███        ").blue("   ▀███▄███▀    ").ln();
+        Ansi.OUT.red("▀███████████ ").green("███        ").blue("   ████▀██▄     ").ln();
+        Ansi.OUT.red("         ███ ").green("███    █▄  ").blue("  ▐███  ▀███    ").ln();
+        Ansi.OUT.red("   ▄█    ███ ").green("███    ███ ").blue(" ▄███     ███▄  ").ln();
+        Ansi.OUT.red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(ScxConfig.scxVersion()).ln();
     }
 
 }

@@ -57,7 +57,7 @@ public final class ScxContext {
     private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
     static {
-        Ansi.ANSI.magenta("ScxContext 初始化中...").ln();
+        Ansi.OUT.magenta("ScxContext 初始化中...").ln();
         APPLICATION_CONTEXT = new AnnotationConfigApplicationContext(PackageUtils.getBasePackages());
         ScxPlugins.pluginsClassList.forEach(APPLICATION_CONTEXT::register);
         initScxContext();
@@ -78,7 +78,14 @@ public final class ScxContext {
     private static void initScxContext() {
         PackageUtils.scanPackageIncludePlugins(clazz -> {
             if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class) || clazz.isAnnotationPresent(ScxModel.class)) {
-                SCX_BEAN_CLASS_NAME_MAPPING.put(clazz.getSimpleName().toLowerCase(), clazz);
+                String className = clazz.getSimpleName().toLowerCase();
+                Class<?> aClass = SCX_BEAN_CLASS_NAME_MAPPING.get(className);
+                if (aClass == null) {
+                    SCX_BEAN_CLASS_NAME_MAPPING.put(clazz.getSimpleName().toLowerCase(), clazz);
+                } else {
+                    SCX_BEAN_CLASS_NAME_MAPPING.put(clazz.getName(), clazz);
+                    Ansi.OUT.brightRed("检测到重复名称的 class [" + aClass.getName() + "," + clazz.getName() + "] , 可能会导致 baseController 调用时意义不明确 !!! 建议修改 !!!");
+                }
             }
             return true;
         });
@@ -101,7 +108,7 @@ public final class ScxContext {
     public static void fixTable() {
         var noNeedFix = new AtomicBoolean(true);
         if (SQLRunner.testConnection()) {
-            Ansi.ANSI.magenta("修复数据表中...").ln();
+            Ansi.OUT.magenta("修复数据表中...").ln();
             if (ScxConfig.fixTable()) {
                 SCX_BEAN_CLASS_NAME_MAPPING.forEach((k, v) -> {
                     if (v.isAnnotationPresent(ScxModel.class)) {
@@ -117,7 +124,7 @@ public final class ScxContext {
             }
         }
         if (noNeedFix.get()) {
-            Ansi.ANSI.magenta("没有表需要修复...").ln();
+            Ansi.OUT.magenta("没有表需要修复...").ln();
         }
     }
 
@@ -125,7 +132,7 @@ public final class ScxContext {
      * <p>init.</p>
      */
     public static void init() {
-        Ansi.ANSI.magenta("ScxContext 初始化完成...").ln();
+        Ansi.OUT.magenta("ScxContext 初始化完成...").ln();
     }
 
     /**
@@ -146,7 +153,7 @@ public final class ScxContext {
     public static boolean removeLoginUserByHeader(RoutingContext ctx) {
         var token = ctx.request().getHeader(ScxConfig.tokenKey());
         boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-        Ansi.ANSI.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+        Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
         return b;
     }
 
@@ -159,7 +166,7 @@ public final class ScxContext {
     public static boolean removeLoginUserByCookie(RoutingContext ctx) {
         var token = ctx.getCookie(ScxConfig.cookieKey()).getValue();
         boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-        Ansi.ANSI.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+        Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
         return b;
     }
 
@@ -176,7 +183,7 @@ public final class ScxContext {
         } else {
             sessionItem.token = token;
         }
-        Ansi.ANSI.print(username + " 登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+        Ansi.OUT.print(username + " 登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
     }
 
     /**
@@ -233,7 +240,7 @@ public final class ScxContext {
         } else {
             onlineItem.username = username;
         }
-        Ansi.ANSI.brightBlue(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size()).ln();
+        Ansi.OUT.brightBlue(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size()).ln();
     }
 
     /**

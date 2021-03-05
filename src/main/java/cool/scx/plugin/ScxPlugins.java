@@ -26,18 +26,18 @@ public final class ScxPlugins {
      * <p>reloadPlugins.</p>
      */
     public static void reloadPlugins() {
-        Ansi.ANSI.yellow("ScxPlugins 重新加载中...").ln();
+        Ansi.OUT.yellow("ScxPlugins 重新加载中...").ln();
         loadPlugins();
-        Ansi.ANSI.yellow("ScxPlugins 重新加载完成...").ln();
+        Ansi.OUT.yellow("ScxPlugins 重新加载完成...").ln();
     }
 
     /**
      * <p>initPlugins.</p>
      */
     public static void initPlugins() {
-        Ansi.ANSI.yellow("ScxPlugins 初始化中...").ln();
+        Ansi.OUT.yellow("ScxPlugins 初始化中...").ln();
         loadPlugins();
-        Ansi.ANSI.yellow("ScxPlugins 初始化完成...").ln();
+        Ansi.OUT.yellow("ScxPlugins 初始化完成...").ln();
     }
 
     /**
@@ -49,7 +49,7 @@ public final class ScxPlugins {
             Arrays.stream(pluginsRoot.listFiles()).filter(file -> file.getName().endsWith(".jar")).filter(file -> {
                 var f = ScxConfig.pluginDisabledList().contains(file.getName());
                 if (f) {
-                    Ansi.ANSI.brightRed("找到插件 名称 [" + file.getName() + "] 已禁用!!!").ln();
+                    Ansi.OUT.brightRed("找到插件 名称 [" + file.getName() + "] 已禁用!!!").ln();
                 }
                 return !f;
             }).forEach(file -> {
@@ -58,9 +58,9 @@ public final class ScxPlugins {
                                 pluginsClassList.add(clazz);
                                 return true;
                             }, file.toURI().toURL());
-                            Ansi.ANSI.yellow("找到插件 名称 [" + file.getName() + "] 已加载!!!").ln();
+                            Ansi.OUT.yellow("找到插件 名称 [" + file.getName() + "] 已加载!!!").ln();
                         } catch (Exception e) {
-                            Ansi.ANSI.red("找到插件 名称 [" + file.getName() + "] 已损坏!!!").ln();
+                            Ansi.OUT.red("找到插件 名称 [" + file.getName() + "] 已损坏!!!").ln();
                         }
                     }
             );
