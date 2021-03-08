@@ -18,7 +18,10 @@
 [/#list]
 
 [@column_list_tag a=1 b=2]
-${column_list}
+[#list column_list as column]
+路径：${column.columnPath!}
+名称：${column.columnName!}
+[/#list]
 [/@column_list_tag]
 
 <img src="static/images/test.png">

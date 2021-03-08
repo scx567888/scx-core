@@ -4,6 +4,7 @@ import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
+import cool.scx.util.Ansi;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.core.http.Cookie;
@@ -17,6 +18,7 @@ import io.vertx.ext.web.impl.RouterImpl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * <p>ScxRouterFactory class.</p>
@@ -93,31 +95,51 @@ public final class ScxRequestHandler extends RouterImpl {
      * @param router
      */
     private static void registerScxMappingHandler(Router router) {
-        var a = new ArrayList<ScxMappingHandler>();
-        var b = new ArrayList<ScxMappingHandler>();
+        var scxMappingHandlers = new ArrayList<ScxMappingHandler>();
         PackageUtils.scanPackageIncludePlugins(clazz -> {
             if (clazz.isAnnotationPresent(ScxController.class)) {
                 for (var method : clazz.getMethods()) {
                     method.setAccessible(true);
                     if (method.isAnnotationPresent(ScxMapping.class)) {
-                        var handler = new ScxMappingHandler(clazz, method);
-                        var isRegexUrl = handler.isRegexUrl;
-                        if (isRegexUrl) {
-                            a.add(handler);
-                        } else {
-                            b.add(handler);
+                        //现根据 注解 和 方法等创建一个路由
+                        var s = new ScxMappingHandler(clazz, method);
+                        //此处校验路由是否已经存在
+                        var b = checkRouteExists(scxMappingHandlers, s);
+                        if (!b) {
+                            scxMappingHandlers.add(s);
                         }
                     }
                 }
             }
             return true;
         });
-        b.addAll(a);
-        b.forEach(c -> {
+        //此处排序的意义在于将 需要正则表达式匹配的 放在最后 防止匹配错误
+        scxMappingHandlers.sort((h1, h2) -> h1.isRegexUrl ^ h2.isRegexUrl ? (h1.isRegexUrl ? 1 : -1) : 0);
+        scxMappingHandlers.forEach(c -> {
             var route = router.route(c.url);
             c.httpMethods.forEach(route::method);
             route.blockingHandler(c);
         });
+    }
+
+    /**
+     * 校验路由是否已经存在
+     *
+     * @param list    l
+     * @param handler h
+     * @return true 为存在 false 为不存在
+     */
+    private static boolean checkRouteExists(List<ScxMappingHandler> list, ScxMappingHandler handler) {
+        for (var httpMethod : handler.httpMethods) {
+            var d = list.stream().filter(a -> a.url.equals(handler.url) && a.httpMethods.contains(httpMethod)).findAny().orElse(null);
+            if (d != null) {
+                Ansi.OUT.brightMagenta("检测到重复的路由!!! " + httpMethod + " --> \"" + handler.url + "\" , 相关 class 及方法如下 ▼").ln()
+                        .brightMagenta(handler.clazz.getName() + " --> " + handler.method.getName()).ln()
+                        .brightMagenta(d.clazz.getName() + " --> " + d.method.getName()).ln();
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

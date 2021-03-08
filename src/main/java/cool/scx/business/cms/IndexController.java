@@ -1,7 +1,6 @@
 package cool.scx.business.cms;
 
 import cool.scx.annotation.FromBody;
-import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.Param;
 import cool.scx.business.user.User;

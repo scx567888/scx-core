@@ -53,7 +53,7 @@ public final class ObjectUtils {
     }
 
     /**
-     * todo 此处会对前台发送的不合法数据进行置空处理 若影响到业务开发 请注释掉此段代码
+     * todo 此处会对前台发送的不合法数据进行置空处理 若影响到业务开发 请注释掉此方法
      * 例子
      * json   {"username": "test","password": [1,2,3,4,5,6,7,8,8,9]}
      * class  public class User  { public String username; public String password; }
@@ -267,31 +267,6 @@ public final class ObjectUtils {
      */
     public static Map<String, Object> beanToMap(Object o) {
         return objectMapper.convertValue(o, mapType);
-    }
-
-    // 将对象转成字符串
-
-    /**
-     * <p>objectToMapDeep.</p>
-     *
-     * @param obj a {@link java.lang.Object} object.
-     * @return a {@link java.lang.Object} object.
-     */
-    public static Object objectToMapDeep(Object obj) {
-        Object ooo = null;
-        try {
-            String s = objectMapper.writeValueAsString(obj);
-            if (obj instanceof List) {
-                ooo = objectMapper.readValue(s, List.class);
-            } else if (obj instanceof BaseModel || obj instanceof Map) {
-                ooo = objectMapper.readValue(s, Map.class);
-            } else {
-                ooo = obj;
-            }
-        } catch (Exception ignored) {
-
-        }
-        return ooo;
     }
 
     /**

@@ -1,12 +1,13 @@
 package cool.scx.config;
 
 import cool.scx.annotation.ScxTemplateDirective;
-import cool.scx.base.BaseObjectWrapper;
 import cool.scx.base.BaseTemplateDirective;
 import cool.scx.context.ScxContext;
 import cool.scx.util.Ansi;
 import cool.scx.util.PackageUtils;
 import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapperBuilder;
+import freemarker.template.Version;
 
 /**
  * <p>ScxCmsConfig class.</p>
@@ -19,6 +20,10 @@ public final class ScxCmsConfig {
      * Constant <code>freemarkerConfig</code>
      */
     public static final Configuration freemarkerConfig;
+    /**
+     * 默认引擎版本
+     */
+    private static final Version VERSION = Configuration.VERSION_2_3_31;
 
     static {
         freemarkerConfig = initFreemarkerConfig();
@@ -26,9 +31,11 @@ public final class ScxCmsConfig {
 
     private static Configuration initFreemarkerConfig() {
         // freemarker 配置文件版本
-        var configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
-        //todo 此处需要处理
-        //configuration.setObjectWrapper(new BaseObjectWrapper(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS));
+        var configuration = new Configuration(VERSION);
+        var wrapperBuilder = new DefaultObjectWrapperBuilder(VERSION);
+        //暴露 实体类的 fields 因为 此项目中的实体类没有 get set
+        wrapperBuilder.setExposeFields(true);
+        configuration.setObjectWrapper(wrapperBuilder.build());
         try {
             configuration.setDirectoryForTemplateLoading(ScxConfig.cmsRoot());
         } catch (Exception e) {
