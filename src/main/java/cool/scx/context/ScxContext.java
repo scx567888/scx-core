@@ -106,10 +106,10 @@ public final class ScxContext {
      * <p>fixTable.</p>
      */
     public static void fixTable() {
-        var noNeedFix = new AtomicBoolean(true);
         if (SQLRunner.testConnection()) {
             Ansi.OUT.magenta("修复数据表中...").ln();
             if (ScxConfig.fixTable()) {
+                var noNeedFix = new AtomicBoolean(true);
                 SCX_BEAN_CLASS_NAME_MAPPING.forEach((k, v) -> {
                     if (v.isAnnotationPresent(ScxModel.class)) {
                         try {
@@ -121,10 +121,10 @@ public final class ScxContext {
                         }
                     }
                 });
+                if (noNeedFix.get()) {
+                    Ansi.OUT.magenta("没有表需要修复...").ln();
+                }
             }
-        }
-        if (noNeedFix.get()) {
-            Ansi.OUT.magenta("没有表需要修复...").ln();
         }
     }
 
