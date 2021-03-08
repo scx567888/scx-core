@@ -106,24 +106,22 @@ public final class ScxContext {
      * <p>fixTable.</p>
      */
     public static void fixTable() {
-        if (SQLRunner.testConnection()) {
+        if (ScxConfig.fixTable() && SQLRunner.testConnection()) {
             Ansi.OUT.magenta("修复数据表中...").ln();
-            if (ScxConfig.fixTable()) {
-                var noNeedFix = new AtomicBoolean(true);
-                SCX_BEAN_CLASS_NAME_MAPPING.forEach((k, v) -> {
-                    if (v.isAnnotationPresent(ScxModel.class)) {
-                        try {
-                            if (BaseDao.fixTable(v) != FixTableResult.NO_NEED_TO_FIX) {
-                                noNeedFix.set(false);
-                            }
-                        } catch (Exception ignored) {
-
+            var noNeedFix = new AtomicBoolean(true);
+            SCX_BEAN_CLASS_NAME_MAPPING.forEach((k, v) -> {
+                if (v.isAnnotationPresent(ScxModel.class)) {
+                    try {
+                        if (BaseDao.fixTable(v) != FixTableResult.NO_NEED_TO_FIX) {
+                            noNeedFix.set(false);
                         }
+                    } catch (Exception ignored) {
+
                     }
-                });
-                if (noNeedFix.get()) {
-                    Ansi.OUT.magenta("没有表需要修复...").ln();
                 }
+            });
+            if (noNeedFix.get()) {
+                Ansi.OUT.magenta("没有表需要修复...").ln();
             }
         }
     }
