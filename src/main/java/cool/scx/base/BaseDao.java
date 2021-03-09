@@ -311,11 +311,21 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     private String[] getWhereColumns(Entity entity, boolean ignoreLike) {
-        return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
-                .map(field -> StringUtils.camel2Underscore(field.getName()) +
-                        (((field.getAnnotation(Column.class) != null && field.getAnnotation(Column.class).useLike()) && ignoreLike) ? " LIKE  CONCAT('%',:" + field.getName() + ",'%')" : " = :" + field.getName()))
-                .toArray(String[]::new);
+        if (ignoreLike) {
+            return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
+                    .map(field -> StringUtils.camel2Underscore(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
+        } else {
+            return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
+                    .map(field -> {
+                        var columnName = StringUtils.camel2Underscore(field.getName());
+                        var column = field.getAnnotation(Column.class);
+                        if (column != null && column.useLike()) {
+                            return columnName + " LIKE  CONCAT('%',:" + field.getName() + ",'%')";
+                        } else {
+                            return columnName + " = :" + field.getName();
+                        }
+                    }).toArray(String[]::new);
+        }
     }
-
 
 }
