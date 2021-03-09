@@ -104,8 +104,8 @@ public class BaseController {
     ) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, limit, page, orderByColumn, sortType, queryObject);
-        var list = baseService.list(param);
-        var count = baseService.count(param);
+        var list = baseService.listWithLike(param);
+        var count = baseService.countWithLike(param);
         return Json.ok().tables(list, count);
     }
 

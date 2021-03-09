@@ -7,7 +7,7 @@
     <artifactId>scx</artifactId>
     <packaging>jar</packaging>
     <name>scx</name>
-    <version>0.9.19</version>
+    <version>0.9.20</version>
     <description>
         SCX is a "web development framework";
         Goal is to provide a simple and fast development experience.
@@ -206,20 +206,20 @@
                 </executions>
             </plugin>
             <!-- 对 jar 包等文件进行 gpg 签名 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-gpg-plugin</artifactId>-->
+<!--                <version>1.6</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>sign-artifacts</id>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>sign</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <!-- 此插件用于设置 java 程序编译时的参数 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
