@@ -76,7 +76,7 @@ public class UserController {
      * @param password 密码
      * @return json
      */
-    @ScxMapping(checkedLogin = CheckLoginType.None)
+    @ScxMapping(checkedLogin = CheckLoginType.None,method = Method.POST)
     public Json login(@FromBody("username") String username, @FromBody("password") String password) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
