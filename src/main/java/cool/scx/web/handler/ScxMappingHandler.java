@@ -69,7 +69,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
     public final ScxMapping scxMapping;
     public final ScxController scxController;
     public final Object example;
-    public final boolean isRegexUrl;
+    public final int order;
     public final Class<?> clazz;
     public final String url;
     public final Set<HttpMethod> httpMethods;
@@ -89,7 +89,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         this.scxMapping = method.getAnnotation(ScxMapping.class);
         this.example = ScxContext.getBean(clazz);
         this.url = getUrl();
-        this.isRegexUrl = isRegexUrl();
+        this.order = getOrder();
         this.httpMethods = getHttpMethod();
         this.permStr = clazz.getSimpleName() + ":" + method.getName();
     }
@@ -225,8 +225,17 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                 : StringUtils.clearHttpUrl(scxController.value(), scxMapping.value());
     }
 
-    private boolean isRegexUrl() {
-        return url.contains(":") || url.contains("*");
+    private int getOrder() {
+        var o = 0;
+        char[] chars = url.toCharArray();
+        for (char aChar : chars) {
+            if (aChar == ':') {
+                o = o + 1;
+            } else if (aChar == '*') {
+                o = o + 2;
+            }
+        }
+        return o;
     }
 
     /**

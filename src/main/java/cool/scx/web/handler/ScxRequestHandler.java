@@ -17,8 +17,10 @@ import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.impl.RouterImpl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>ScxRouterFactory class.</p>
@@ -114,8 +116,8 @@ public final class ScxRequestHandler extends RouterImpl {
             return true;
         });
         //此处排序的意义在于将 需要正则表达式匹配的 放在最后 防止匹配错误
-        scxMappingHandlers.sort((h1, h2) -> h1.isRegexUrl ^ h2.isRegexUrl ? (h1.isRegexUrl ? 1 : -1) : 0);
-        scxMappingHandlers.forEach(c -> {
+        var orderedScxMappingHandlers = scxMappingHandlers.stream().sorted(Comparator.comparing(s -> s.order)).collect(Collectors.toList());
+        orderedScxMappingHandlers.forEach(c -> {
             var route = router.route(c.url);
             c.httpMethods.forEach(route::method);
             route.blockingHandler(c);
