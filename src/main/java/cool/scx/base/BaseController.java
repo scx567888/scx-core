@@ -69,8 +69,6 @@ public class BaseController {
         var p = new Param<>(ObjectUtils.mapToBeanNotNull(queryObject, modelClass));
         if (limit != null && limit != -1) {
             p.setPagination(page, limit);
-        } else {
-            p.setPagination(1, 10);
         }
         if (orderByColumn != null) {
             if (sortType == null || "desc".equals(sortType)) {
