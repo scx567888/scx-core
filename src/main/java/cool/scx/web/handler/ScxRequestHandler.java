@@ -87,7 +87,7 @@ public final class ScxRequestHandler extends RouterImpl {
      */
 
     private static void registerBodyHandler(Router router) {
-        router.route().method(HttpMethod.POST).method(HttpMethod.PUT).handler(new BodyHandler());
+        router.route().method(HttpMethod.POST).method(HttpMethod.PUT).method(HttpMethod.DELETE).handler(new BodyHandler());
     }
 
     /**

@@ -21,6 +21,7 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -177,15 +178,14 @@ public class BaseController {
      * <p>batchDelete.</p>
      *
      * @param modelName a {@link java.lang.String} object.
-     * @param params    a {@link java.util.Map} object.
+     * @param deleteIds    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/batchDelete", method = Method.DELETE)
-    public Json batchDelete(String modelName, Map<String, Object> params) throws HttpResponseException {
-        var deleteIds = (Long[]) params.get("deleteIds");
+    public Json batchDelete(String modelName, @FromBody("deleteIds") List<Long> deleteIds) throws HttpResponseException {
         var baseService = getBaseService(modelName);
-        var deletedCount = baseService.deleteByIds(deleteIds);
+        var deletedCount = baseService.deleteByIds(deleteIds.toArray(Long[]::new));
         return Json.ok("success").data("deletedCount", deletedCount);
     }
 
