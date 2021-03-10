@@ -279,7 +279,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Binary} object.
      */
     @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", method = Method.GET)
-    public Image showPicture(String year, String month, String day, String hour, String timestamp, String fileName, @FormQuery("w") Integer width, @FormQuery("h") Integer height) {
+    public Image showPicture(String year, String month, String day, String hour, String timestamp, String fileName, @FromQuery("w") Integer width, @FromQuery("h") Integer height) {
         return new Image(new File(ScxConfig.uploadFilePath() + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName), width, height);
     }
 
@@ -293,7 +293,7 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Binary} object.
      */
     @ScxMapping("/showPictureById/:id")
-    public Image showPictureById(@FromPath Long id, @FormQuery("w") Integer width, @FormQuery("h") Integer height) {
+    public Image showPictureById(@FromPath Long id, @FromQuery("w") Integer width, @FromQuery("h") Integer height) {
         return new Image(ScxConfig.uploadFilePath() + "/" + uploadFileService.getById(id).filePath, width, height);
     }
 

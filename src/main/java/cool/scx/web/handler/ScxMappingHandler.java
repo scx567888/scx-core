@@ -265,7 +265,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                 finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, bodyParam.value(), parameters[i]);
                 continue;
             }
-            var queryParam = parameters[i].getAnnotation(FormQuery.class);
+            var queryParam = parameters[i].getAnnotation(FromQuery.class);
             if (queryParam != null) {
                 finalHandlerParams[i] = getParamFromQuery(queryParams, queryParam.value(), queryParam.merge(), parameters[i]);
                 continue;

@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FormQuery {
+public @interface FromQuery {
 
     /**
      * 查询参数名称 默认为空
