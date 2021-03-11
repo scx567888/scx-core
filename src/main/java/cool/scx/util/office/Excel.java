@@ -11,6 +11,9 @@ import java.util.Map;
 
 /**
  * Excel 操作类 (注意 此工具类只支持单 sheet)
+ *
+ * @author 司昌旭
+ * @version 0.9.1
  */
 public class Excel {
 
@@ -27,6 +30,8 @@ public class Excel {
     /**
      * 获取 03 版 excel (xls)
      *
+     * @param sheetName a {@link java.lang.String} object.
+     * @param rowSize   a int.
      * @return xls
      */
     public static Excel get03Excel(String sheetName, int rowSize) {
@@ -36,6 +41,8 @@ public class Excel {
     /**
      * 获取 07 版 excel (xlsx)
      *
+     * @param sheetName a {@link java.lang.String} object.
+     * @param rowSize   a int.
      * @return xlsx
      */
     public static Excel get07Excel(String sheetName, int rowSize) {
@@ -74,6 +81,12 @@ public class Excel {
         return cellAddresses;
     }
 
+    /**
+     * <p>setBorder.</p>
+     *
+     * @param cellAddresses a {@link org.apache.poi.ss.util.CellRangeAddress} object.
+     * @return a {@link org.apache.poi.ss.util.CellRangeAddress} object.
+     */
     public CellRangeAddress setBorder(CellRangeAddress cellAddresses) {
         RegionUtil.setBorderTop(BorderStyle.THIN, cellAddresses, sheet); // 下边框
         RegionUtil.setBorderLeft(BorderStyle.THIN, cellAddresses, sheet); // 下边框
@@ -93,10 +106,21 @@ public class Excel {
         return setBorder(firstRow, firstRow, firstCol, firstCol);
     }
 
+    /**
+     * <p>Getter for the field <code>sheet</code>.</p>
+     *
+     * @return a {@link org.apache.poi.ss.usermodel.Sheet} object.
+     */
     public Sheet getSheet() {
         return workbook.createSheet();
     }
 
+    /**
+     * <p>Getter for the field <code>sheet</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link org.apache.poi.ss.usermodel.Sheet} object.
+     */
     public Sheet getSheet(String name) {
         return workbook.createSheet(name);
     }
@@ -109,6 +133,7 @@ public class Excel {
      * @param firstCol 起始列 (横向)
      * @param right    向左合并几个单元格 可以为负数
      * @param down     向下合并几个单元格 可以为负数
+     * @return a {@link org.apache.poi.ss.util.CellRangeAddress} object.
      */
     public CellRangeAddress mergedRegion(int firstRow, int firstCol, int down, int right) {
         int _firstRow = down >= 0 ? firstRow : firstRow + down;
@@ -120,12 +145,28 @@ public class Excel {
         return cellAddresses;
     }
 
+    /**
+     * <p>mergedRegion.</p>
+     *
+     * @param addresses a {@link org.apache.poi.ss.util.CellRangeAddress} object.
+     * @return a {@link org.apache.poi.ss.util.CellRangeAddress} object.
+     */
     public CellRangeAddress mergedRegion(CellRangeAddress addresses) {
         sheet.addMergedRegion(addresses);
         return addresses;
     }
 
     //添加数据
+
+    /**
+     * <p>setCellValue.</p>
+     *
+     * @param firstRow      a int.
+     * @param firstCol      a int.
+     * @param value         a {@link java.lang.String} object.
+     * @param xssfCellStyle a {@link org.apache.poi.ss.usermodel.CellStyle} object.
+     * @return a {@link org.apache.poi.ss.usermodel.Cell} object.
+     */
     public Cell setCellValue(int firstRow, int firstCol, String value, CellStyle xssfCellStyle) {
         Cell cell = rowMap.get(firstRow).createCell(firstCol);
         cell.setCellValue(value);
@@ -134,20 +175,45 @@ public class Excel {
     }
 
     //添加数据
+
+    /**
+     * <p>setCellValue.</p>
+     *
+     * @param firstRow a int.
+     * @param firstCol a int.
+     * @param value    a {@link java.lang.String} object.
+     * @return a {@link org.apache.poi.ss.usermodel.Cell} object.
+     */
     public Cell setCellValue(int firstRow, int firstCol, String value) {
         Cell cell = rowMap.get(firstRow).createCell(firstCol);
         cell.setCellValue(value);
         return cell;
     }
 
+    /**
+     * <p>createCellStyle.</p>
+     *
+     * @return a {@link org.apache.poi.ss.usermodel.CellStyle} object.
+     */
     public CellStyle createCellStyle() {
         return workbook.createCellStyle();
     }
 
+    /**
+     * <p>createFont.</p>
+     *
+     * @return a {@link org.apache.poi.ss.usermodel.Font} object.
+     */
     public Font createFont() {
         return workbook.createFont();
     }
 
+    /**
+     * <p>getRow.</p>
+     *
+     * @param rowIndex a int.
+     * @return a {@link org.apache.poi.ss.usermodel.Row} object.
+     */
     public Row getRow(int rowIndex) {
         return rowMap.get(rowIndex);
     }

@@ -84,14 +84,32 @@ public class Download implements BaseVo {
         }
     }
 
+    /**
+     * <p>Constructor for Download.</p>
+     *
+     * @param bytes an array of {@link byte} objects.
+     */
     public Download(byte[] bytes) {
         this(bytes, "未知文件");
     }
 
+    /**
+     * <p>Constructor for Download.</p>
+     *
+     * @param bytes         an array of {@link byte} objects.
+     * @param _downloadName a {@link java.lang.String} object.
+     */
     public Download(byte[] bytes, String _downloadName) {
         this(bytes, _downloadName, 512000L);
     }
 
+    /**
+     * <p>Constructor for Download.</p>
+     *
+     * @param bytes         an array of {@link byte} objects.
+     * @param _downloadName a {@link java.lang.String} object.
+     * @param _throttle     a long.
+     */
     public Download(byte[] bytes, String _downloadName, long _throttle) {
         fromFile = false;
         this.file = null;

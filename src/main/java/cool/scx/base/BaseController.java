@@ -176,7 +176,7 @@ public class BaseController {
      * <p>batchDelete.</p>
      *
      * @param modelName a {@link java.lang.String} object.
-     * @param deleteIds    a {@link java.util.Map} object.
+     * @param deleteIds a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      * @throws cool.scx.exception.HttpResponseException if any.
      */
@@ -306,7 +306,7 @@ public class BaseController {
      * @param type         文件类型 , 分为 单个文件和分片文件
      * @return 文件保存的路径
      */
-    @ScxMapping(value = "/upload",method = Method.POST)
+    @ScxMapping(value = "/upload", method = Method.POST)
     public Json upload(String fileName,
                        String fileSize,
                        Integer chunksNumber,
