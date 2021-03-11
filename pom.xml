@@ -34,7 +34,7 @@
         <!-- jasypt 版本 -->
         <jasypt.version>1.9.3</jasypt.version>
         <!-- 图像处理包 版本 -->
-        <thumbnailator.version>0.4.13</thumbnailator.version>
+        <thumbnailator.version>0.4.14</thumbnailator.version>
         <!-- slf4j 版本 -->
         <slf4j.version>1.7.30</slf4j.version>
         <!-- logback 版本 -->
