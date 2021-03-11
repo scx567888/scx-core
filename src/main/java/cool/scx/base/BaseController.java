@@ -306,7 +306,7 @@ public class BaseController {
      * @param type         文件类型 , 分为 单个文件和分片文件
      * @return 文件保存的路径
      */
-    @ScxMapping("/upload")
+    @ScxMapping(value = "/upload",method = Method.POST)
     public Json upload(String fileName,
                        String fileSize,
                        Integer chunksNumber,
