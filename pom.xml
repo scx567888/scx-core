@@ -20,7 +20,7 @@
         <!-- 构建项目时jar包的默认启动类 在您自己的项目中请覆写此值 -->
         <scxApp.mainClass>cool.scx.ScxCoreApp</scxApp.mainClass>
         <!-- vert.x 版本 -->
-        <vertx.version>4.0.2</vertx.version>
+        <vertx.version>4.0.3</vertx.version>
         <!-- freemarker 版本 -->
         <freemarker.version>2.3.31</freemarker.version>
         <!-- jackson 版本 -->
