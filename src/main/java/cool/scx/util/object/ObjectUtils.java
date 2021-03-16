@@ -188,6 +188,16 @@ public final class ObjectUtils {
     }
 
     /**
+     * <p>beanToMap.</p>
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link java.util.Map} object.
+     */
+    public static Map<String, Object> beanToMapUnUseAnnotations(Object o) {
+        return unUseAnnotationsObjectMapper.convertValue(o, mapType);
+    }
+
+    /**
      * <p>mapToBeanNotNull.</p>
      *
      * @param map   a {@link java.util.Map} object.

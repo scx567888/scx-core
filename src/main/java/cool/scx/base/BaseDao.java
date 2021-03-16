@@ -180,7 +180,7 @@ public final class BaseDao<Entity extends BaseModel> {
     public Long save(Entity entity) {
         var c = Stream.of(table.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
         var sql = SQLBuilder.Insert(table.tableName).Columns(c).Values(c).GetSQL();
-        return SQLRunner.update(sql, ObjectUtils.beanToMap(entity)).generatedKeys.get(0);
+        return SQLRunner.update(sql, ObjectUtils.beanToMapUnUseAnnotations(entity)).generatedKeys.get(0);
     }
 
     /**
@@ -231,7 +231,7 @@ public final class BaseDao<Entity extends BaseModel> {
                 .OrderBy(param.orderBy)
                 .Pagination(param.getPage(), param.getLimit())
                 .GetSQL();
-        return SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject), entityClass);
+        return SQLRunner.query(sql, ObjectUtils.beanToMapUnUseAnnotations(param.queryObject), entityClass);
     }
 
     /**
@@ -247,7 +247,7 @@ public final class BaseDao<Entity extends BaseModel> {
                 .WhereSql(param.whereSql)
                 .GroupBy(param.groupBy)
                 .GetSQL();
-        return Integer.parseInt(SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject)).get(0).get("COUNT(*)").toString());
+        return Integer.parseInt(SQLRunner.query(sql, ObjectUtils.beanToMapUnUseAnnotations(param.queryObject)).get(0).get("COUNT(*)").toString());
     }
 
     /**
@@ -258,7 +258,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link cool.scx.bo.UpdateResult} object.
      */
     public UpdateResult update(Param<Entity> param, boolean includeNull) {
-        var beanMap = ObjectUtils.beanToMap(param.queryObject);
+        var beanMap = ObjectUtils.beanToMapUnUseAnnotations(param.queryObject);
         Long id = param.queryObject.id;
         var sql = SQLBuilder.Update(table.tableName);
         if (id != null) {
@@ -285,7 +285,7 @@ public final class BaseDao<Entity extends BaseModel> {
      */
     public Integer delete(Param<Entity> param) {
         //将 对象转换为 map 方便处理
-        var entityMap = ObjectUtils.beanToMap(param.queryObject);
+        var entityMap = ObjectUtils.beanToMapUnUseAnnotations(param.queryObject);
 
         var sql = SQLBuilder.Delete().Where(getWhereColumns(param.queryObject, false))
                 .WhereSql(param.whereSql).Table(table.tableName).GetSQL();

@@ -149,13 +149,11 @@ public class UserController {
     /**
      * <p>register.</p>
      *
-     * @param params a {@link java.util.Map} object.
+     * @param username a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping
-    public Json register(Map<String, Object> params) {
-        var username = (String) params.get("username");
-        var password = (String) params.get("password");
+    @ScxMapping(method = Method.POST)
+    public Json register(String username,String password) {
         var newUser = new Param<>(new User());
 
         newUser.addOrderBy("id", SortType.ASC).queryObject.username = username;
@@ -165,7 +163,6 @@ public class UserController {
             return Json.ok("userAlreadyExists");
         } else {
             newUser.queryObject.level = 4;
-            newUser.queryObject.level = 0;
             newUser.queryObject.password = password;
             userService.registeredUser(newUser.queryObject);
             return Json.ok("registerSuccess");
