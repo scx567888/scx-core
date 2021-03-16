@@ -76,7 +76,7 @@ public class UserController {
      * @param password 密码
      * @return json
      */
-    @ScxMapping(checkedLogin = CheckLoginType.None,method = Method.POST)
+    @ScxMapping(checkedLogin = CheckLoginType.None, method = Method.POST)
     public Json login(@FromBody("username") String username, @FromBody("password") String password) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
@@ -150,10 +150,11 @@ public class UserController {
      * <p>register.</p>
      *
      * @param username a {@link java.util.Map} object.
+     * @param password a {@link java.lang.String} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(method = Method.POST)
-    public Json register(String username,String password) {
+    public Json register(String username, String password) {
         var newUser = new Param<>(new User());
 
         newUser.addOrderBy("id", SortType.ASC).queryObject.username = username;
