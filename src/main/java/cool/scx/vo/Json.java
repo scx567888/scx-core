@@ -2,7 +2,7 @@ package cool.scx.vo;
 
 
 import cool.scx.base.BaseVo;
-import cool.scx.util.object.ObjectUtils;
+import cool.scx.util.ObjectUtils;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.ext.web.RoutingContext;
@@ -138,14 +138,12 @@ public final class Json implements BaseVo {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void sendToClient(RoutingContext context) {
         var response = context.response();
         response.putHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8");
-        response.end(Buffer.buffer(ObjectUtils.beanToByteArray(jsonMap)));
+        response.end(Buffer.buffer(ObjectUtils.beanToByteArrayUseAnnotations(jsonMap)));
     }
 
     /**
@@ -155,6 +153,6 @@ public final class Json implements BaseVo {
      */
     @Override
     public String toString() {
-        return ObjectUtils.beanToJson(jsonMap);
+        return ObjectUtils.beanToJsonUseAnnotations(jsonMap);
     }
 }

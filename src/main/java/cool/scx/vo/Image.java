@@ -85,9 +85,7 @@ public class Image implements BaseVo {
         imageCache.clear();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void sendToClient(RoutingContext context) {
         var response = context.response();

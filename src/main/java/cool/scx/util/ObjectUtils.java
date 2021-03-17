@@ -1,5 +1,6 @@
-package cool.scx.util.object;
+package cool.scx.util;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,84 +27,79 @@ import java.util.Map;
  */
 public final class ObjectUtils {
 
-    //普通的object mapper
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    //忽略注解 的 mapper
-    private static final ObjectMapper unUseAnnotationsObjectMapper = new ObjectMapper();
-    private static final TypeFactory typeFactory;
-    private static final TypeReference<Map<String, Object>> mapType = new TypeReference<>() {
+    //使用注解的 objectMapper 用于向前台发送数据
+    private static final ObjectMapper OBJECT_MAPPER_USE_ANNOTATIONS;
+    //忽略注解的 objectMapper  用于前台向后台发送数据和 后台数据序列化
+    private static final ObjectMapper OBJECT_MAPPER;
+    private static final TypeFactory TYPE_FACTORY;
+    private static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
     };
 
     static {
-        //初始化正常的 objectMap
-        objectMapper.registerModule(getJavaTimeModule());
-        setObjectMapperConfig(objectMapper);
-        objectMapper.getSerializerProvider().setNullKeySerializer(new NullKeySerializer());
-        typeFactory = objectMapper.getTypeFactory();
-        setNullOnError(objectMapper);
-
-        //初始化 忽略注解 的 mapper
-        unUseAnnotationsObjectMapper.registerModule(getJavaTimeModule());
-        setObjectMapperConfig(unUseAnnotationsObjectMapper);
-        unUseAnnotationsObjectMapper.getSerializerProvider().setNullKeySerializer(new NullKeySerializer());
-        setNullOnError(unUseAnnotationsObjectMapper);
-        unUseAnnotationsObjectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
+        OBJECT_MAPPER = getObjectMapper();
+        TYPE_FACTORY = OBJECT_MAPPER.getTypeFactory();
+        OBJECT_MAPPER_USE_ANNOTATIONS = getObjectMapper();
+        OBJECT_MAPPER_USE_ANNOTATIONS.configure(MapperFeature.USE_ANNOTATIONS, true);
     }
 
     /**
-     * todo 此处会对前台发送的不合法数据进行置空处理 若影响到业务开发 请注释掉此方法
-     * 例子
-     * json   {"username": "test","password": [1,2,3,4,5,6,7,8,8,9]}
-     * class  public class User  { public String username; public String password; }
-     * 有此代码 -- username=test;  password=null;
-     * 无此代码 --   com.fasterxml.jackson.databind.exc.MismatchedInputException
-     *
-     * @param o a {@link com.fasterxml.jackson.databind.ObjectMapper} object.
+     * 获取 objectMapper 对象
      */
-    public static void setNullOnError(ObjectMapper o) {
+    private static ObjectMapper getObjectMapper() {
+        var timeModule = new JavaTimeModule();
+        timeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(ScxConfig.dateTimeFormatter()));
+        timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(ScxConfig.dateTimeFormatter()));
+        var o = new ObjectMapper();
+        //初始化正常的 objectMap
+        o.registerModule(timeModule);
+        o.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        o.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        o.getSerializerProvider().setNullKeySerializer(new JsonSerializer<>() {
+            @Override
+            public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+                jsonGenerator.writeFieldName("");
+            }
+        });
+        /* todo 此处会对前台发送的不合法数据进行置空处理 若影响到业务开发 请注释掉此方法
+         * 例子
+         * json   {"username": "test","password": [1,2,3,4,5,6,7,8,8,9]}
+         * class  public class User  { public String username; public String password; }
+         * 有此代码 -- username=test;  password=null;
+         * 无此代码 --   com.fasterxml.jackson.databind.exc.MismatchedInputException
+         */
         o.addHandler(new DeserializationProblemHandler() {
             @Override
             public Object handleUnexpectedToken(DeserializationContext ctxt, JavaType targetType, JsonToken t, JsonParser p, String failureMsg) throws IOException {
                 return null;
             }
         });
-    }
-
-    private static JavaTimeModule getJavaTimeModule() {
-        var timeModule = new JavaTimeModule();
-        timeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(ScxConfig.dateTimeFormatter()));
-        timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(ScxConfig.dateTimeFormatter()));
-        return timeModule;
-    }
-
-    private static void setObjectMapperConfig(ObjectMapper o) {
-        o.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        o.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        o.configure(MapperFeature.USE_ANNOTATIONS, false);
+        return o;
     }
 
     /**
-     * <p>beanToJson.</p>
+     * <p>beanToJson.</p>  对象转 json 使用 注解如 @JsonIgnore
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link java.lang.String} object.
      */
-    public static String beanToJson(Object o) {
+    public static String beanToJsonUseAnnotations(Object o) {
         try {
-            return objectMapper.writeValueAsString(o);
+            return OBJECT_MAPPER_USE_ANNOTATIONS.writeValueAsString(o);
         } catch (Exception e) {
             return "";
         }
     }
 
     /**
-     * <p>beanToByteArray.</p>
+     * beanToByteArray. 对象转 json 使用 注解如 @JsonIgnore
      *
      * @param o a {@link java.lang.Object} object.
      * @return an array of {@link byte} objects.
      */
-    public static byte[] beanToByteArray(Object o) {
+    public static byte[] beanToByteArrayUseAnnotations(Object o) {
         try {
-            return objectMapper.writeValueAsBytes(o);
+            return OBJECT_MAPPER_USE_ANNOTATIONS.writeValueAsBytes(o);
         } catch (Exception e) {
             e.printStackTrace();
             return new byte[0];
@@ -118,7 +114,7 @@ public final class ObjectUtils {
      */
     public static JsonNode JsonToTree(String json) {
         try {
-            return objectMapper.readTree(json);
+            return OBJECT_MAPPER.readTree(json);
         } catch (Exception e) {
             return null;
         }
@@ -132,7 +128,7 @@ public final class ObjectUtils {
      */
     public static Map<String, Object> jsonToMap(String json) {
         try {
-            return objectMapper.readValue(json, mapType);
+            return OBJECT_MAPPER.readValue(json, MAP_TYPE);
         } catch (Exception e) {
             return new HashMap<>();
         }
@@ -147,7 +143,7 @@ public final class ObjectUtils {
      * @return a T object.
      */
     public static <T> T jsonNodeToBean(JsonNode jsonNode, Type type) {
-        var reader = objectMapper.readerFor(typeFactory.constructType(type));
+        var reader = OBJECT_MAPPER.readerFor(TYPE_FACTORY.constructType(type));
         try {
             return reader.readValue(jsonNode);
         } catch (Exception e) {
@@ -163,9 +159,9 @@ public final class ObjectUtils {
      * @param <T>   a T object.
      * @return a T object.
      */
-    public static <T> T mapToBean(Map<String, ?> map, Class<T> clazz) {
+    public static <T> T mapToBeanUseAnnotations(Map<String, ?> map, Class<T> clazz) {
         try {
-            return objectMapper.convertValue(map, clazz);
+            return OBJECT_MAPPER.convertValue(map, clazz);
         } catch (Exception e) {
             return null;
         }
@@ -179,9 +175,9 @@ public final class ObjectUtils {
      * @param <T>   a T object.
      * @return a T object.
      */
-    public static <T> T mapToBeanUnUseAnnotations(Map<String, ?> map, Class<T> clazz) {
+    public static <T> T mapToBean(Map<String, ?> map, Class<T> clazz) {
         try {
-            return unUseAnnotationsObjectMapper.convertValue(map, clazz);
+            return OBJECT_MAPPER.convertValue(map, clazz);
         } catch (Exception e) {
             return null;
         }
@@ -193,8 +189,18 @@ public final class ObjectUtils {
      * @param o a {@link java.lang.Object} object.
      * @return a {@link java.util.Map} object.
      */
-    public static Map<String, Object> beanToMapUnUseAnnotations(Object o) {
-        return unUseAnnotationsObjectMapper.convertValue(o, mapType);
+    public static Map<String, Object> beanToMap(Object o) {
+        return OBJECT_MAPPER.convertValue(o, MAP_TYPE);
+    }
+
+    /**
+     * <p>beanToMap.</p>
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link java.util.Map} object.
+     */
+    public static Map<String, Object> beanToMapUseAnnotations(Object o) {
+        return OBJECT_MAPPER_USE_ANNOTATIONS.convertValue(o, MAP_TYPE);
     }
 
     /**
@@ -208,7 +214,7 @@ public final class ObjectUtils {
     public static <T> T mapToBeanNotNull(Map<String, ?> map, Class<T> clazz) {
         T t = null;
         try {
-            t = objectMapper.convertValue(map, clazz);
+            t = OBJECT_MAPPER.convertValue(map, clazz);
         } catch (Exception ignored) {
 
         }
@@ -267,15 +273,6 @@ public final class ObjectUtils {
         }
     }
 
-    /**
-     * <p>beanToMap.</p>
-     *
-     * @param o a {@link java.lang.Object} object.
-     * @return a {@link java.util.Map} object.
-     */
-    public static Map<String, Object> beanToMap(Object o) {
-        return objectMapper.convertValue(o, mapType);
-    }
 
     /**
      * <p>beanToMapWithIndex.</p>
@@ -308,6 +305,5 @@ public final class ObjectUtils {
             return null;
         }
     }
-
 
 }
