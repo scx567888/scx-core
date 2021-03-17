@@ -224,16 +224,16 @@ public class UserService extends BaseService<User> {
      * @param user 新建用户
      * @return 新增的 id
      */
-    public Long registeredUser(User user) {
+    public User registeredUser(User user) {
         var deptIds = user.deptIds;
         var roleIds = user.roleIds;
         var passwordAndSalt = encryptPassword(user.password);
         user.password = passwordAndSalt[0];
         user.salt = passwordAndSalt[1];
-        var tempUserId = save(user).id;
-        saveUserDeptIds(tempUserId, deptIds);
-        saveUserRoleIds(tempUserId, roleIds);
-        return tempUserId;
+        var newUser = save(user);
+        saveUserDeptIds(newUser.id, deptIds);
+        saveUserRoleIds(newUser.id, roleIds);
+        return newUser;
     }
 
     /**

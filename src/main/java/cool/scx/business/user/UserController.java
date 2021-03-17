@@ -189,26 +189,26 @@ public class UserController {
         if (StringUtils.isNotEmpty(id)) {
             var user = userService.getById(id);
             if (user != null) {
-                return Json.ok().data("success", true).data("user", user).data("userDeptList", deptService.findDeptByUserId(id)).data("userRoleList", roleService.findRoleByUserId(id));
+                return Json.ok().data("user", user).data("userDeptList", deptService.findDeptByUserId(id)).data("userRoleList", roleService.findRoleByUserId(id));
             }
         }
-        return Json.ok().data("success", false);
+        return Json.ok().data("user", null);
     }
 
 
     /**
      * <p>addUser.</p>
      *
-     * @param params a {@link java.util.Map} object.
+     * @param user a {@link cool.scx.business.user.User} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping
-    public Json addUser(Map<String, Object> params) {
-        var user = ObjectUtils.mapToBean(params, User.class);
+    public Json addUser(User user) {
         if (user.username != null && user.password != null) {
-            user.id = userService.registeredUser(user);
+            return Json.ok().items(userService.registeredUser(user));
+        } else {
+            return Json.fail("");
         }
-        return Json.ok().items(user);
     }
 
     /**
