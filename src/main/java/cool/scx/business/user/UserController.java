@@ -75,6 +75,7 @@ public class UserController {
      * @param username 用户 包含用户名和密码
      * @param password 密码
      * @return json
+     * @param device a {@link cool.scx.enumeration.Device} object.
      */
     @ScxMapping(method = Method.POST)
     public Json login(@FromBody("username") String username, @FromBody("password") String password, Device device) {

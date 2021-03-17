@@ -175,6 +175,7 @@ public final class ScxContext {
      *
      * @param token    a {@link java.lang.String} object.
      * @param username a {@link java.lang.String} object.
+     * @param device a {@link cool.scx.enumeration.Device} object.
      */
     public static void addLoginItem(Device device, String token, String username) {
         var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.username.equals(username) && device == u.device).findAny().orElse(null);
@@ -192,6 +193,7 @@ public final class ScxContext {
      *
      * @param token a {@link java.lang.String} object.
      * @return a {@link cool.scx.business.user.User} object.
+     * @param device a {@link cool.scx.enumeration.Device} object.
      */
     public static User getLoginUserByToken(Device device,String token) {
         var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token)&&u.device==device).findAny().orElse(null);
@@ -329,6 +331,11 @@ public final class ScxContext {
         DEVICE_THREAD_LOCAL.set(getDevice(routingContext));
     }
 
+    /**
+     * <p>device.</p>
+     *
+     * @return a {@link cool.scx.enumeration.Device} object.
+     */
     public static Device device() {
         return DEVICE_THREAD_LOCAL.get();
     }

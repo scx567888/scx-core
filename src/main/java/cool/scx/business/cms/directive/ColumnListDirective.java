@@ -37,17 +37,13 @@ public class ColumnListDirective extends BaseTemplateDirective {
         return columnService.listAll();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String directiveName() {
         return "column_list_tag";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String variableName() {
         return "column_list";

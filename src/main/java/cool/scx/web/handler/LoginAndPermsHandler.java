@@ -17,6 +17,7 @@ public interface LoginAndPermsHandler {
      * <p>noLogin.</p>
      *
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param device  a {@link cool.scx.enumeration.Device} object.
      */
     default void noLogin(Device device, RoutingContext context) {
         if (device == Device.ADMIN) {
@@ -34,6 +35,7 @@ public interface LoginAndPermsHandler {
      * <p>noPerms.</p>
      *
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param device  a {@link cool.scx.enumeration.Device} object.
      */
     default void noPerms(Device device, RoutingContext context) {
         if (device == Device.ADMIN) {

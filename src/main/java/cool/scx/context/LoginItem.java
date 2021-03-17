@@ -34,6 +34,7 @@ public class LoginItem {
      *
      * @param _token    _token
      * @param _username _username
+     * @param _device a {@link cool.scx.enumeration.Device} object.
      */
     public LoginItem(Device _device,String _token, String _username) {
         this.device = _device;

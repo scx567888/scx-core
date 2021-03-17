@@ -249,6 +249,11 @@ public final class ScxConfig {
         return "S-Token";
     }
 
+    /**
+     * <p>deviceKey.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String deviceKey() {
         return "S-Device";
     }

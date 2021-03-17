@@ -310,7 +310,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
     public void handle(RoutingContext context) {
         ScxContext.routingContext(context);
         //检查是否登录 并且权限是否正确
-        boolean b = checkedLoginAndPerms( context);
+        boolean b = checkedLoginAndPerms(context);
         //这里验证失败不需要返回 因为 对相应的客户端的相应的处理已经在 checkedLoginAndPerms 中完成
         if (!b) {
             return;

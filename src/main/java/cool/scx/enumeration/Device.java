@@ -2,6 +2,9 @@ package cool.scx.enumeration;
 
 /**
  * 登录设备
+ *
+ * @author 司昌旭
+ * @version 1.0.2
  */
 public enum Device {
     ANDROID("ANDROID"),
