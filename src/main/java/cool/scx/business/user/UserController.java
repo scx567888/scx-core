@@ -74,8 +74,8 @@ public class UserController {
      *
      * @param username 用户 包含用户名和密码
      * @param password 密码
+     * @param device   a {@link cool.scx.enumeration.Device} object.
      * @return json
-     * @param device a {@link cool.scx.enumeration.Device} object.
      */
     @ScxMapping(method = Method.POST)
     public Json login(@FromBody("username") String username, @FromBody("password") String password, Device device) {
@@ -87,12 +87,12 @@ public class UserController {
             var loginUser = userService.login(username, password);
             if (device == Device.ADMIN || device == Device.APPLE || device == Device.ANDROID) {
                 var token = StringUtils.getUUID();
-                ScxContext.addLoginItem(device,token, loginUser.username);
+                ScxContext.addLoginItem(device, token, loginUser.username);
                 //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
                 return Json.ok().data("token", token);
             } else if (device == Device.WEBSITE) {
                 String value = ScxContext.routingContext().getCookie(ScxConfig.tokenKey()).getValue();
-                ScxContext.addLoginItem(device,value, loginUser.username);
+                ScxContext.addLoginItem(device, value, loginUser.username);
                 return Json.ok("登录成功");
             } else {
                 return Json.ok("登录设备未知 !!!");
@@ -117,16 +117,14 @@ public class UserController {
     /**
      * <p>info.</p>
      *
-     * @param token a  object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-
-    @ScxMapping(value = "info/:token", method = Method.GET)
-    public Json info(@FromPath String token) {
+    @ScxMapping(value = "info", method = Method.GET)
+    public Json info() {
         var user = ScxContext.getLoginUser();
         //从session取出用户信息
         if (user == null) {
-            return Json.fail(Json.SESSION_TIMEOUT, "登录已失效");
+            return Json.fail(Json.ILLEGAL_TOKEN, "登录已失效");
         } else {
             //返回登录用户的信息给前台 含用户的所有角色和权限
             var permList = userService.getPermStrByUser(user);

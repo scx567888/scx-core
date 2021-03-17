@@ -27,24 +27,19 @@ public final class Json implements BaseVo {
      */
     public static final int FAIL_CODE = -1;
     /**
-     * 非法的令牌 code
+     * 非法的令牌 & 令牌已失效 code
      */
-    public static final int ILLEGAL_TOKEN = 58;
-    /**
-     * session 过期
-     */
-    public static final int SESSION_TIMEOUT = 44;
+    public static final int ILLEGAL_TOKEN = 41;
     /**
      * 没有权限
      */
-    public static final int NO_PERMISSION = 51;
+    public static final int NO_PERMISSION = 43;
     /**
      * 后台系统错误
      */
     public static final int SYSTEM_ERROR = 50;
 
     private final Map<String, Object> jsonMap = new HashMap<>();
-
 
     /**
      * 无参构造：操作成功返回的响应信息
