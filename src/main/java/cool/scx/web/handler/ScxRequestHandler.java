@@ -163,6 +163,7 @@ public final class ScxRequestHandler extends RouterImpl {
         router.route().handler(c -> {
             if (c.getCookie(ScxConfig.tokenKey()) == null) {
                 Cookie cookie = new CookieImpl(ScxConfig.tokenKey(), StringUtils.getUUID());
+                cookie.setMaxAge(60 * 60 * 24 * 7);
                 c.addCookie(cookie);
             }
             c.next();
