@@ -1,6 +1,8 @@
 package cool.scx.context;
 
 
+import cool.scx.enumeration.Device;
+
 /**
  * 已登录用户对象
  * 此对象会在 scxContext 中以类似 map 的形式存储
@@ -23,12 +25,18 @@ public class LoginItem {
     public String username;
 
     /**
+     *
+     */
+    public Device device;
+
+    /**
      * 构造函数
      *
      * @param _token    _token
      * @param _username _username
      */
-    public LoginItem(String _token, String _username) {
+    public LoginItem(Device _device,String _token, String _username) {
+        this.device = _device;
         this.token = _token;
         this.username = _username;
     }

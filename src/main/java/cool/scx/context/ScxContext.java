@@ -176,14 +176,15 @@ public final class ScxContext {
      * @param token    a {@link java.lang.String} object.
      * @param username a {@link java.lang.String} object.
      */
-    public static void addLoginItem(Device device,String token, String username) {
-        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);
+    public static void addLoginItem(Device device, String token, String username) {
+        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.username.equals(username) && device == u.device).findAny().orElse(null);
         if (sessionItem == null) {
-            LOGIN_ITEMS.add(new LoginItem(token, username));
+            LOGIN_ITEMS.add(new LoginItem(device, token, username));
         } else {
             sessionItem.token = token;
+            sessionItem.device = device;
         }
-        Ansi.OUT.print(username + " 登录了 , 登录设备 ["+device.toString()+"] , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+        Ansi.OUT.print(username + " 登录了 , 登录设备 [" + device.toString() + "] , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
     }
 
     /**
@@ -192,8 +193,8 @@ public final class ScxContext {
      * @param token a {@link java.lang.String} object.
      * @return a {@link cool.scx.business.user.User} object.
      */
-    public static User getLoginUserByToken(String token) {
-        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token)).findAny().orElse(null);
+    public static User getLoginUserByToken(Device device,String token) {
+        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token)&&u.device==device).findAny().orElse(null);
         if (sessionItem == null) {
             return null;
         }
@@ -210,19 +211,19 @@ public final class ScxContext {
     public static User getLoginUser() {
         if (device() == Device.WEBSITE) {
             String token = routingContext().getCookie(ScxConfig.tokenKey()).getValue();
-            return getLoginUserByToken(token);
+            return getLoginUserByToken(device(),token);
         }
         if (device() == Device.ADMIN) {
             String token = routingContext().request().getHeader(ScxConfig.tokenKey());
-            return getLoginUserByToken(token);
+            return getLoginUserByToken(device(),token);
         }
         if (device() == Device.APPLE) {
             String token = routingContext().request().getHeader(ScxConfig.tokenKey());
-            return getLoginUserByToken(token);
+            return getLoginUserByToken(device(),token);
         }
         if (device() == Device.ANDROID) {
             String token = routingContext().request().getHeader(ScxConfig.tokenKey());
-            return getLoginUserByToken(token);
+            return getLoginUserByToken(device(),token);
         }
         return null;
     }
@@ -328,7 +329,7 @@ public final class ScxContext {
         DEVICE_THREAD_LOCAL.set(getDevice(routingContext));
     }
 
-    public static Device device(){
+    public static Device device() {
         return DEVICE_THREAD_LOCAL.get();
     }
 

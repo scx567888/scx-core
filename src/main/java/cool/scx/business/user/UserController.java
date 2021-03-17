@@ -122,7 +122,7 @@ public class UserController {
 
     @ScxMapping(value = "info/:token", method = Method.GET)
     public Json info(@FromPath String token) {
-        var user = ScxContext.getLoginUserByToken(token);
+        var user = ScxContext.getLoginUser();
         //从session取出用户信息
         if (user == null) {
             return Json.fail(Json.SESSION_TIMEOUT, "登录已失效");

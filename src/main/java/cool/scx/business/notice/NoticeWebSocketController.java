@@ -4,6 +4,7 @@ import cool.scx.annotation.ScxWebSocketController;
 import cool.scx.base.BaseWebSocketController;
 import cool.scx.context.OnlineItem;
 import cool.scx.context.ScxContext;
+import cool.scx.enumeration.Device;
 import cool.scx.util.Ansi;
 import cool.scx.util.object.ObjectUtils;
 import cool.scx.vo.Json;
@@ -52,7 +53,8 @@ public class NoticeWebSocketController implements BaseWebSocketController {
         //这条信息是 登录(websocket)验证信息
         if ("login".equals(type.toString())) {
             String token = map.get("token").toString();
-            var nowLoginUser = ScxContext.getLoginUserByToken(token);
+            Device device = Device.ADMIN;//todo 此处获取不正确
+            var nowLoginUser = ScxContext.getLoginUserByToken(device,token);
             //这条websocket 连接验证通过
             if (nowLoginUser != null) {
                 ScxContext.addOnlineItem(webSocket, nowLoginUser.username);
