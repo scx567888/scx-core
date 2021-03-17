@@ -1,6 +1,5 @@
 package cool.scx.annotation;
 
-import cool.scx.enumeration.CheckLoginType;
 import cool.scx.enumeration.Method;
 
 import java.lang.annotation.ElementType;
@@ -30,7 +29,7 @@ public @interface ScxMapping {
      *
      * @return 检查登录的类型
      */
-    CheckLoginType checkedLogin() default CheckLoginType.None;
+    boolean checkedLogin() default false;
 
     /**
      * 映射的路径

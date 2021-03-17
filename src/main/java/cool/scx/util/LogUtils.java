@@ -31,7 +31,7 @@ public class LogUtils {
         var log = new ScxLog();
         log.userIp = NetUtils.getIpAddr();
         try {
-            log.username = ScxContext.getLoginUserByHeader().username;
+            log.username = ScxContext.getLoginUser().username;
             log.type = 1;
         } catch (Exception e) {
             log.username = "系统日志";

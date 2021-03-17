@@ -6,7 +6,7 @@ import cool.scx.base.BaseVo;
 import cool.scx.bo.FileUpload;
 import cool.scx.business.user.User;
 import cool.scx.context.ScxContext;
-import cool.scx.enumeration.CheckLoginType;
+import cool.scx.enumeration.Device;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.Ansi;
 import cool.scx.util.PackageUtils;
@@ -164,32 +164,23 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         return map;
     }
 
+
     /**
      * 同时验证登录和权限
      *
      * @param context 上下文对象
      * @return 验证结果 true 为 允许继续向下进行处理 false 表示截至继续运行
      */
-    private boolean checkedLoginAndPerms(RoutingContext context) {
+    private boolean checkedLoginAndPerms(Device device, RoutingContext context) {
         //如果 不检查登录 对应的也没有必要检查 权限 所以直接返回 true
-        if (scxMapping.checkedLogin() == CheckLoginType.None) {
+        if (!scxMapping.checkedLogin()) {
             return true;
         } else {
             //当前登录的用户
-            User currentUser = null;
-            // 根据不同的验证来源 获取用户
-            if (scxMapping.checkedLogin() == CheckLoginType.Header) {
-                currentUser = ScxContext.getLoginUserByHeader();
-            } else if (scxMapping.checkedLogin() == CheckLoginType.Cookie) {
-                currentUser = ScxContext.getLoginUserByCookie();
-            }
+            User currentUser = ScxContext.getLoginUser();
             //session 中没有用户证明没有登录 返回 false
             if (currentUser == null) {
-                if (scxMapping.checkedLogin() == CheckLoginType.Header) {
-                    LOGIN_AND_PERMS_HANDLER.noLoginByHeader(context);
-                } else if (scxMapping.checkedLogin() == CheckLoginType.Cookie) {
-                    LOGIN_AND_PERMS_HANDLER.noLoginByCookie(context);
-                }
+                LOGIN_AND_PERMS_HANDLER.noLogin(device, context);
                 return false;
             } else {
                 //这里就是 需要登录 并且 能够获取到当前登录用户的
@@ -206,11 +197,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                         if (permStrByUser.contains(permStr)) {
                             return true;
                         } else {
-                            if (scxMapping.checkedLogin() == CheckLoginType.Header) {
-                                LOGIN_AND_PERMS_HANDLER.noPermsByHeader(context);
-                            } else if (scxMapping.checkedLogin() == CheckLoginType.Cookie) {
-                                LOGIN_AND_PERMS_HANDLER.noPermsByCookie(context);
-                            }
+                            LOGIN_AND_PERMS_HANDLER.noPerms(device, context);
                             return false;
                         }
                     }
@@ -245,7 +232,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
      * @return a {@link java.lang.Object} object.
      * @throws java.lang.Exception if any.
      */
-    private Object getResult(RoutingContext ctx) throws Exception {
+    private Object getResult(Device device, RoutingContext ctx) throws Exception {
         Set<FileUpload> uploadFiles = ctx.get("uploadFiles");
         if (uploadFiles == null) {
             uploadFiles = new HashSet<>();
@@ -262,6 +249,10 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             var nowType = parameters[i].getType();
             if (nowType == RoutingContext.class) {
                 finalHandlerParams[i] = ctx;
+                continue;
+            }
+            if (nowType == Device.class) {
+                finalHandlerParams[i] = device;
                 continue;
             }
             if (nowType == FileUpload.class) {
@@ -318,8 +309,9 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
     @Override
     public void handle(RoutingContext context) {
         ScxContext.routingContext(context);
+        Device device = ScxContext.getDevice();
         //检查是否登录 并且权限是否正确
-        boolean b = checkedLoginAndPerms(context);
+        boolean b = checkedLoginAndPerms(device, context);
         //这里验证失败不需要返回 因为 对相应的客户端的相应的处理已经在 checkedLoginAndPerms 中完成
         if (!b) {
             return;
@@ -328,7 +320,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         var response = context.response();
         Object result;
         try {
-            result = getResult(context);
+            result = getResult(device, context);
         } catch (Exception e) {
             var cause = e.getCause();
             // 我们后面会自定义一些其他 自定义异常

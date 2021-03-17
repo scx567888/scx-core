@@ -16,7 +16,7 @@ import cool.scx.business.system.ScxLog;
 import cool.scx.business.system.ScxLogService;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.enumeration.CheckLoginType;
+import cool.scx.enumeration.Device;
 import cool.scx.enumeration.Method;
 import cool.scx.enumeration.SortType;
 import cool.scx.exception.AuthException;
@@ -76,18 +76,26 @@ public class UserController {
      * @param password 密码
      * @return json
      */
-    @ScxMapping(checkedLogin = CheckLoginType.None, method = Method.POST)
-    public Json login(@FromBody("username") String username, @FromBody("password") String password) {
+    @ScxMapping(method = Method.POST)
+    public Json login(@FromBody("username") String username, @FromBody("password") String password, Device device) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
         }
         try {
             //登录
             var loginUser = userService.login(username, password);
-            var token = StringUtils.getUUID();
-            ScxContext.addLoginItem(token, loginUser.username);
-            //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
-            return Json.ok().data("token", token);
+            if (device == Device.ADMIN || device == Device.APPLE || device == Device.ANDROID) {
+                var token = StringUtils.getUUID();
+                ScxContext.addLoginItem(token, loginUser.username);
+                //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
+                return Json.ok().data("token", token);
+            } else if (device == Device.WEBSITE) {
+                String value = ScxContext.routingContext().getCookie(ScxConfig.tokenKey()).getValue();
+                ScxContext.addLoginItem(value, loginUser.username);
+                return Json.ok("登录成功");
+            } else {
+                return Json.ok("登录设备未知 !!!");
+            }
         } catch (UnknownUserException uue) {
             return Json.fail(ScxConfig.confusionLoginError() ? "usernameOrPasswordError" : "userNotFound");
         } catch (WrongPasswordException wpe) {
@@ -149,12 +157,13 @@ public class UserController {
     /**
      * <p>register.</p>
      *
-     * @param username a {@link java.util.Map} object.
-     * @param password a {@link java.lang.String} object.
+     * @param params a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(method = Method.POST)
-    public Json register(String username, String password) {
+    @ScxMapping
+    public Json register(Map<String, Object> params) {
+        var username = (String) params.get("username");
+        var password = (String) params.get("password");
         var newUser = new Param<>(new User());
 
         newUser.addOrderBy("id", SortType.ASC).queryObject.username = username;
@@ -164,6 +173,7 @@ public class UserController {
             return Json.ok("userAlreadyExists");
         } else {
             newUser.queryObject.level = 4;
+            newUser.queryObject.level = 0;
             newUser.queryObject.password = password;
             userService.registeredUser(newUser.queryObject);
             return Json.ok("registerSuccess");
@@ -222,12 +232,11 @@ public class UserController {
     /**
      * 退出登录方法 清空 session 里的登录数据
      *
-     * @param ctx RoutingContext
      * @return 是否成功退出
      */
     @ScxMapping
-    public Json logout(RoutingContext ctx) {
-        ScxContext.removeLoginUserByHeader(ctx);
+    public Json logout() {
+        ScxContext.removeLoginUser();
         return Json.ok("User Logged Out");
     }
 
@@ -255,7 +264,7 @@ public class UserController {
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json avatarUpdate(User queryUser) {
-        var currentUser = ScxContext.getLoginUserByHeader();
+        var currentUser = ScxContext.getLoginUser();
         currentUser.avatarId = queryUser.avatarId;
         var b = userService.update(currentUser) != null;
         LogUtils.recordLog("更改了头像 用户名是 :" + currentUser.username);
@@ -270,7 +279,7 @@ public class UserController {
      */
     @ScxMapping(useMethodNameAsUrl = true)
     public Json getUserLog(RoutingContext context) {
-        var currentUser = ScxContext.getLoginUserByHeader();
+        var currentUser = ScxContext.getLoginUser();
         var scxLog = new Param<>(new ScxLog());
         scxLog.queryObject.username = currentUser.username;
         scxLog.queryObject.type = 1;
@@ -288,7 +297,7 @@ public class UserController {
     @ScxMapping(useMethodNameAsUrl = true)
     public Json infoUpdate(Map<String, Object> params) {
         var queryUser = ObjectUtils.mapToBean(params, User.class);
-        var currentUser = ScxContext.getLoginUserByHeader();
+        var currentUser = ScxContext.getLoginUser();
         currentUser.nickName = queryUser.nickName;
         currentUser.phone = queryUser.phone;
         currentUser.password = queryUser.password;

@@ -8,6 +8,7 @@ import cool.scx.business.user.User;
 import cool.scx.business.user.UserService;
 import cool.scx.config.ScxConfig;
 import cool.scx.dao.SQLRunner;
+import cool.scx.enumeration.Device;
 import cool.scx.enumeration.FixTableResult;
 import cool.scx.plugin.ScxPlugins;
 import cool.scx.util.Ansi;
@@ -134,39 +135,40 @@ public final class ScxContext {
     }
 
     /**
-     * <p>removeLoginUserByHeader.</p>
-     *
-     * @return a boolean.
-     */
-    public static boolean removeLoginUserByHeader() {
-        return removeLoginUserByHeader(routingContext());
-    }
-
-    /**
      * <p>logoutUser.</p>
      *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a boolean.
      */
-    public static boolean removeLoginUserByHeader(RoutingContext ctx) {
-        var token = ctx.request().getHeader(ScxConfig.tokenKey());
-        boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-        Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-        return b;
+    public static boolean removeLoginUser() {
+        Device device = getDevice();
+        if (device == Device.WEBSITE) {
+            var token = routingContext().getCookie(ScxConfig.tokenKey()).getValue();
+            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
+            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+            return b;
+        }
+        if (device == Device.ADMIN) {
+            var token = routingContext().request().getHeader(ScxConfig.tokenKey());
+            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
+            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+            return b;
+        }
+        if (device == Device.APPLE) {
+            var token = routingContext().request().getHeader(ScxConfig.tokenKey());
+            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
+            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+            return b;
+        }
+        if (device == Device.ANDROID) {
+            var token = routingContext().request().getHeader(ScxConfig.tokenKey());
+            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
+            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+            return b;
+        }
+        return false;
+
     }
 
-    /**
-     * <p>logoutUserByCookie.</p>
-     *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object.
-     * @return a boolean.
-     */
-    public static boolean removeLoginUserByCookie(RoutingContext ctx) {
-        var token = ctx.getCookie(ScxConfig.cookieKey()).getValue();
-        boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-        Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-        return b;
-    }
 
     /**
      * <p>addUserToSession.</p>
@@ -199,24 +201,31 @@ public final class ScxContext {
         return USER_SERVICE.findByUsername(sessionItem.username);
     }
 
+
     /**
      * <p>getLoginUserByHeader.</p>
      *
      * @return a {@link cool.scx.business.user.User} object.
      */
-    public static User getLoginUserByHeader() {
-        String token = routingContext().request().getHeader(ScxConfig.tokenKey());
-        return getLoginUserByToken(token);
-    }
-
-    /**
-     * <p>getCurrentUserByCookie.</p>
-     *
-     * @return a {@link cool.scx.business.user.User} object.
-     */
-    public static User getLoginUserByCookie() {
-        String token = routingContext().getCookie(ScxConfig.cookieKey()).getValue();
-        return getLoginUserByToken(token);
+    public static User getLoginUser() {
+        Device device = getDevice();
+        if (device == Device.WEBSITE) {
+            String token = routingContext().getCookie(ScxConfig.tokenKey()).getValue();
+            return getLoginUserByToken(token);
+        }
+        if (device == Device.ADMIN) {
+            String token = routingContext().request().getHeader(ScxConfig.tokenKey());
+            return getLoginUserByToken(token);
+        }
+        if (device == Device.APPLE) {
+            String token = routingContext().request().getHeader(ScxConfig.tokenKey());
+            return getLoginUserByToken(token);
+        }
+        if (device == Device.ANDROID) {
+            String token = routingContext().request().getHeader(ScxConfig.tokenKey());
+            return getLoginUserByToken(token);
+        }
+        return null;
     }
 
     /**
@@ -317,6 +326,24 @@ public final class ScxContext {
      */
     public static void routingContext(RoutingContext routingContext) {
         ROUTING_CONTEXT_THREAD_LOCAL.set(routingContext);
+    }
+
+    public static Device getDevice() {
+        String device = routingContext().request().getHeader("Device");
+        if (device == null || device.equalsIgnoreCase("WEBSITE")) {
+            return Device.WEBSITE;
+        }
+        if (device.equalsIgnoreCase("APPLE")) {
+            return Device.APPLE;
+        }
+        if (device.equalsIgnoreCase("ADMIN")) {
+            return Device.ADMIN;
+        }
+        if (device.equalsIgnoreCase("ANDROID")) {
+            return Device.ANDROID;
+        } else {
+            return Device.UNKNOWN;
+        }
     }
 
 }

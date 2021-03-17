@@ -241,21 +241,16 @@ public final class ScxConfig {
     }
 
     /**
-     * <p>cookieKey.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public static String cookieKey() {
-        return "S-Cookie";
-    }
-
-    /**
      * <p>tokenKey.</p>
      *
      * @return a {@link java.lang.String} object.
      */
     public static String tokenKey() {
         return "S-Token";
+    }
+
+    public static String deviceKey() {
+        return "S-Device";
     }
 
     /**

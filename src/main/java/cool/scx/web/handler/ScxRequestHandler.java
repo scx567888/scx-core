@@ -160,8 +160,8 @@ public final class ScxRequestHandler extends RouterImpl {
      */
     private static void registerCookieHandler(Router router) {
         router.route().handler(c -> {
-            if (c.getCookie(ScxConfig.cookieKey()) == null) {
-                Cookie cookie = new CookieImpl(ScxConfig.cookieKey(), StringUtils.getUUID());
+            if (c.getCookie(ScxConfig.tokenKey()) == null) {
+                Cookie cookie = new CookieImpl(ScxConfig.tokenKey(), StringUtils.getUUID());
                 c.addCookie(cookie);
             }
             c.next();

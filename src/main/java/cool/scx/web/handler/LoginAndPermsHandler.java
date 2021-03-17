@@ -1,5 +1,7 @@
 package cool.scx.web.handler;
 
+import cool.scx.enumeration.Device;
+import cool.scx.util.Ansi;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
@@ -16,17 +18,16 @@ public interface LoginAndPermsHandler {
      *
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
      */
-    default void noLoginByCookie(RoutingContext context) {
-        Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
-    }
-
-    /**
-     * <p>noLoginByHeader.</p>
-     *
-     * @param context a {@link io.vertx.ext.web.RoutingContext} object.
-     */
-    default void noLoginByHeader(RoutingContext context) {
-        Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
+    default void noLogin(Device device, RoutingContext context) {
+        if (device == Device.ADMIN) {
+            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
+        } else if (device == Device.ANDROID) {
+            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
+        } else if (device == Device.APPLE) {
+            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
+        } else if (device == Device.WEBSITE) {
+            Ansi.OUT.red("未登录").ln();
+        }
     }
 
     /**
@@ -34,17 +35,16 @@ public interface LoginAndPermsHandler {
      *
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
      */
-    default void noPermsByCookie(RoutingContext context) {
-        Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
-    }
-
-    /**
-     * <p>noPermsByHeader.</p>
-     *
-     * @param context a {@link io.vertx.ext.web.RoutingContext} object.
-     */
-    default void noPermsByHeader(RoutingContext context) {
-        Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
+    default void noPerms(Device device, RoutingContext context) {
+        if (device == Device.ADMIN) {
+            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
+        } else if (device == Device.ANDROID) {
+            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
+        } else if (device == Device.APPLE) {
+            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
+        } else if (device == Device.WEBSITE) {
+            Ansi.OUT.red("没有权限").ln();
+        }
     }
 
 }
