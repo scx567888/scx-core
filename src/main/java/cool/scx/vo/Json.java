@@ -27,7 +27,7 @@ public final class Json implements BaseVo {
      */
     public static final int FAIL_CODE = -1;
     /**
-     * 非法的令牌 & 令牌已失效 code
+     * 非法的令牌 或 令牌已失效 code
      */
     public static final int ILLEGAL_TOKEN = 41;
     /**
