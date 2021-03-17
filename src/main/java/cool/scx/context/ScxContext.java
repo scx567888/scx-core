@@ -56,6 +56,7 @@ public final class ScxContext {
     private static final Map<String, Class<?>> SCX_BEAN_CLASS_NAME_MAPPING = new HashMap<>();
     private static final AnnotationConfigApplicationContext APPLICATION_CONTEXT;
     private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<Device> DEVICE_THREAD_LOCAL = new ThreadLocal<>();
 
     static {
         Ansi.OUT.magenta("ScxContext 初始化中...").ln();
@@ -140,26 +141,25 @@ public final class ScxContext {
      * @return a boolean.
      */
     public static boolean removeLoginUser() {
-        Device device = getDevice();
-        if (device == Device.WEBSITE) {
+        if (device() == Device.WEBSITE) {
             var token = routingContext().getCookie(ScxConfig.tokenKey()).getValue();
             boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
             Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
             return b;
         }
-        if (device == Device.ADMIN) {
+        if (device() == Device.ADMIN) {
             var token = routingContext().request().getHeader(ScxConfig.tokenKey());
             boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
             Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
             return b;
         }
-        if (device == Device.APPLE) {
+        if (device() == Device.APPLE) {
             var token = routingContext().request().getHeader(ScxConfig.tokenKey());
             boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
             Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
             return b;
         }
-        if (device == Device.ANDROID) {
+        if (device() == Device.ANDROID) {
             var token = routingContext().request().getHeader(ScxConfig.tokenKey());
             boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
             Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
@@ -176,14 +176,14 @@ public final class ScxContext {
      * @param token    a {@link java.lang.String} object.
      * @param username a {@link java.lang.String} object.
      */
-    public static void addLoginItem(String token, String username) {
+    public static void addLoginItem(Device device,String token, String username) {
         var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);
         if (sessionItem == null) {
             LOGIN_ITEMS.add(new LoginItem(token, username));
         } else {
             sessionItem.token = token;
         }
-        Ansi.OUT.print(username + " 登录了 , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+        Ansi.OUT.print(username + " 登录了 , 登录设备 ["+device.toString()+"] , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
     }
 
     /**
@@ -208,20 +208,19 @@ public final class ScxContext {
      * @return a {@link cool.scx.business.user.User} object.
      */
     public static User getLoginUser() {
-        Device device = getDevice();
-        if (device == Device.WEBSITE) {
+        if (device() == Device.WEBSITE) {
             String token = routingContext().getCookie(ScxConfig.tokenKey()).getValue();
             return getLoginUserByToken(token);
         }
-        if (device == Device.ADMIN) {
+        if (device() == Device.ADMIN) {
             String token = routingContext().request().getHeader(ScxConfig.tokenKey());
             return getLoginUserByToken(token);
         }
-        if (device == Device.APPLE) {
+        if (device() == Device.APPLE) {
             String token = routingContext().request().getHeader(ScxConfig.tokenKey());
             return getLoginUserByToken(token);
         }
-        if (device == Device.ANDROID) {
+        if (device() == Device.ANDROID) {
             String token = routingContext().request().getHeader(ScxConfig.tokenKey());
             return getLoginUserByToken(token);
         }
@@ -326,10 +325,15 @@ public final class ScxContext {
      */
     public static void routingContext(RoutingContext routingContext) {
         ROUTING_CONTEXT_THREAD_LOCAL.set(routingContext);
+        DEVICE_THREAD_LOCAL.set(getDevice(routingContext));
     }
 
-    public static Device getDevice() {
-        String device = routingContext().request().getHeader("Device");
+    public static Device device(){
+        return DEVICE_THREAD_LOCAL.get();
+    }
+
+    private static Device getDevice(RoutingContext routingContext) {
+        String device = routingContext.request().getHeader(ScxConfig.deviceKey());
         if (device == null || device.equalsIgnoreCase("WEBSITE")) {
             return Device.WEBSITE;
         }

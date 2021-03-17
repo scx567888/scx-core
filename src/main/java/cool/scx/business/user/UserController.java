@@ -86,12 +86,12 @@ public class UserController {
             var loginUser = userService.login(username, password);
             if (device == Device.ADMIN || device == Device.APPLE || device == Device.ANDROID) {
                 var token = StringUtils.getUUID();
-                ScxContext.addLoginItem(token, loginUser.username);
+                ScxContext.addLoginItem(device,token, loginUser.username);
                 //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
                 return Json.ok().data("token", token);
             } else if (device == Device.WEBSITE) {
                 String value = ScxContext.routingContext().getCookie(ScxConfig.tokenKey()).getValue();
-                ScxContext.addLoginItem(value, loginUser.username);
+                ScxContext.addLoginItem(device,value, loginUser.username);
                 return Json.ok("登录成功");
             } else {
                 return Json.ok("登录设备未知 !!!");
@@ -234,7 +234,7 @@ public class UserController {
      *
      * @return 是否成功退出
      */
-    @ScxMapping
+    @ScxMapping(method = Method.POST)
     public Json logout() {
         ScxContext.removeLoginUser();
         return Json.ok("User Logged Out");

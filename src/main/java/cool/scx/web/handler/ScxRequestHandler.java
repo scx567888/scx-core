@@ -68,6 +68,7 @@ public final class ScxRequestHandler extends RouterImpl {
         allowedHeaders.add("accept");
         allowedHeaders.add("X-PINGARUNER");
         allowedHeaders.add(ScxConfig.tokenKey());
+        allowedHeaders.add(ScxConfig.deviceKey());
 
         var allowedMethods = new HashSet<HttpMethod>();
         allowedMethods.add(HttpMethod.GET);
