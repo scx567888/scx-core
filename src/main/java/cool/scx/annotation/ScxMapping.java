@@ -22,7 +22,7 @@ public @interface ScxMapping {
      *
      * @return 权限
      */
-    boolean unCheckedPerms() default false;
+    boolean checkedPerms() default false;
 
     /**
      * 检查登录

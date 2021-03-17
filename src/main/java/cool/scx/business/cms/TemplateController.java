@@ -97,7 +97,7 @@ public class TemplateController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws java.io.IOException if any.
      */
-    @ScxMapping(value = "upload", unCheckedPerms = true)
+    @ScxMapping(value = "upload")
     public Json upload(File file, String filePath) throws IOException {
         //filePath = filePath + "\\" + file.getOriginalFilename();
         //FileUtils.fileAppend(filePath, file.getBytes());

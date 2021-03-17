@@ -185,7 +185,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             } else {
                 //这里就是 需要登录 并且 能够获取到当前登录用户的
                 //不需要 检查权限 直接返回 true
-                if (scxMapping.unCheckedPerms()) {
+                if (!scxMapping.checkedPerms()) {
                     return true;
                 } else {
                     //这里就是 管理员级别  不受权限验证
