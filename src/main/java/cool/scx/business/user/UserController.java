@@ -74,15 +74,15 @@ public class UserController {
      *
      * @param username 用户 包含用户名和密码
      * @param password 密码
-     * @param device   a {@link cool.scx.enumeration.Device} object.
      * @return json
      */
     @ScxMapping(method = Method.POST)
-    public Json login(@FromBody("username") String username, @FromBody("password") String password, Device device) {
+    public Json login(@FromBody("username") String username, @FromBody("password") String password) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
         }
         try {
+            var device=ScxContext.device();
             //登录
             var loginUser = userService.login(username, password);
             if (device == Device.ADMIN || device == Device.APPLE || device == Device.ANDROID) {
