@@ -21,7 +21,9 @@ public class BodyHandler implements Handler<RoutingContext> {
     public BodyHandler() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(RoutingContext context) {
         HttpServerRequest request = context.request();

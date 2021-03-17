@@ -28,19 +28,25 @@ public class ArticleListDirective extends BaseTemplateDirective {
         this.articleService = articleService;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getResults(Map<String, Object> params) {
         return articleService.listAll();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String directiveName() {
         return "article_list_tag";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String variableName() {
         return "article_list";

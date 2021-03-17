@@ -9,8 +9,8 @@ import cool.scx.dao.SQLBuilder;
 import cool.scx.dao.SQLRunner;
 import cool.scx.enumeration.FixTableResult;
 import cool.scx.util.Ansi;
-import cool.scx.util.StringUtils;
 import cool.scx.util.ObjectUtils;
+import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;

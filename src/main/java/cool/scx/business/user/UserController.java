@@ -24,8 +24,8 @@ import cool.scx.exception.TooManyErrorsException;
 import cool.scx.exception.UnknownUserException;
 import cool.scx.exception.WrongPasswordException;
 import cool.scx.util.LogUtils;
-import cool.scx.util.StringUtils;
 import cool.scx.util.ObjectUtils;
+import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
@@ -82,7 +82,7 @@ public class UserController {
             return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
         }
         try {
-            var device=ScxContext.device();
+            var device = ScxContext.device();
             //登录
             var loginUser = userService.login(username, password);
             if (device == Device.ADMIN || device == Device.APPLE || device == Device.ANDROID) {

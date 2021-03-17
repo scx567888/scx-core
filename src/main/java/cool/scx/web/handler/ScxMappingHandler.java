@@ -9,9 +9,9 @@ import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.Ansi;
+import cool.scx.util.ObjectUtils;
 import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.util.ObjectUtils;
 import cool.scx.vo.Json;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
@@ -303,7 +303,9 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                 .collect(Collectors.toSet());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(RoutingContext context) {
         ScxContext.routingContext(context);
