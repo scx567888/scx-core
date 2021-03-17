@@ -26,7 +26,7 @@
         <!-- jackson 版本 -->
         <jackson.version>2.12.2</jackson.version>
         <!-- spring 版本 -->
-        <spring.version>5.3.4</spring.version>
+        <spring.version>5.3.5</spring.version>
         <!-- 不要轻易修改 mysql 驱动版本 因为 mysql 的驱动总有bug 这个版本是测试暂时没问题的 -->
         <mysqlDriver.version>8.0.23</mysqlDriver.version>
         <!--  hikaricp 版本 -->
