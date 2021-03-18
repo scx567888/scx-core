@@ -1,8 +1,5 @@
 package cool.scx.util.file;
 
-import cool.scx.bo.FileUpload;
-import cool.scx.config.ScxConfig;
-import cool.scx.util.Ansi;
 import cool.scx.util.StringUtils;
 
 import java.io.*;
@@ -58,75 +55,37 @@ public class FileUtils {
         DISPLAY_SIZE_MAP.put("TB", 1099511627776L);
     }
 
-    //文件全上传完了 将临时文件 重命名 移动至 上传文件夹并 删除临时文件
 
-    /**
-     * <p>uploadFile.</p>
-     *
-     * @param file       a {@link cool.scx.bo.FileUpload} object.
-     * @param fileName   a {@link java.lang.String} object.
-     * @param index      a {@link java.lang.Integer} object.
-     * @param chunkTotal a {@link java.lang.Integer} object.
-     * @return a boolean.
-     */
-    public static boolean uploadFile(FileUpload file, String fileName, Integer index, Integer chunkTotal) {
-        String tempFilePath;
-        if (index == -1) {
-            //单文件 直接写入磁盘
-            tempFilePath = ScxConfig.uploadFilePath().getPath() + "\\" + fileName;
-        } else {
-            //分片文件 分片写入
-            tempFilePath = ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileName + "\\" + fileName + ".scxTemp";
-            changeUploadFileConfig(fileName, index + 1, chunkTotal);
-        }
-        fileAppend(tempFilePath, file.buffer.getBytes());
-        return true;
-    }
-
-    /**
-     * <p>changeUploadFileConfig.</p>
-     *
-     * @param fileName   a {@link java.lang.String} object.
-     * @param nowChunk   a {@link java.lang.Integer} object.
-     * @param chunkTotal a {@link java.lang.Integer} object.
-     */
-    public static void changeUploadFileConfig(String fileName, Integer nowChunk, Integer chunkTotal) {
-        var configFilePath = ScxConfig.uploadFilePath() + "\\TEMP\\" + fileName + "\\" + ".scxUpload";
-        var config = new File(configFilePath);
-        var tempFileParent = config.getParentFile();
-        if (!tempFileParent.exists()) {
-            boolean b = tempFileParent.mkdirs();
-            if (!b) {
-                Ansi.OUT.print("创建目录失败!!!").ln();
+    public static Integer getLastUploadChunk(File uploadConfigFile, Integer chunkLength) {
+        if (uploadConfigFile.exists()) {
+            try (var br = new BufferedReader(new FileReader(uploadConfigFile))) {
+                return Integer.parseInt(br.readLine().split("-")[0]);
+            } catch (Exception e) {
+                return 1;
             }
-        }
-        try {
-            var fw = new FileWriter(config, false);
-            var bw = new BufferedWriter(fw);
-            bw.write(nowChunk + "-" + chunkTotal);
-            bw.flush();
-            bw.close();
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            try (var fw = new FileWriter(uploadConfigFile, false); var bw = new BufferedWriter(fw)) {
+                bw.write("1-" + chunkLength);
+                bw.flush();
+            } catch (Exception ignored) {
+            }
+            return 1;
         }
     }
 
-    /**
-     * <p>getDateStr.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public static String getDateStr() {
-        var cale = Calendar.getInstance();
-        String str;
-        str = cale.get(Calendar.YEAR) + "/";
-        str = str + (cale.get(Calendar.MONTH) + 1) + "/";
-        str = str + cale.get(Calendar.DATE) + "/";
-        str = str + cale.get(Calendar.HOUR_OF_DAY) + "/";
-        str = str + new Date().getTime() + "";
-        return str;
+    public static void changeLastUploadChunk(File uploadConfigFile, Integer nowChunkIndex) {
+
+        try (var br = new BufferedReader(new FileReader(uploadConfigFile));
+             var fw = new FileWriter(uploadConfigFile, false);
+             var bw = new BufferedWriter(fw)) {
+            var chunkLength = Integer.parseInt(br.readLine().split("-")[1]);
+            bw.write(nowChunkIndex + "-" + chunkLength);
+            bw.flush();
+        } catch (Exception ignored) {
+        }
+
     }
+
 
     /**
      * <p>deleteFileByPath.</p>
@@ -156,28 +115,6 @@ public class FileUtils {
 
     }
 
-    /**
-     * <p>validateFile.</p>
-     *
-     * @param fileName      a {@link java.lang.String} object.
-     * @param fileWritePath a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    public static boolean validateFile(String fileName, String fileWritePath) {
-        var moveFrom = FileSystems.getDefault().getPath(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileName + "\\" + fileName + ".scxTemp");
-        var moveto = FileSystems.getDefault().getPath(ScxConfig.uploadFilePath().getPath() + fileWritePath);
-        try {
-            Files.createDirectories(moveto.getParent());
-            Files.move(moveFrom, moveto, StandardCopyOption.REPLACE_EXISTING);
-            Files.walk(Paths.get(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileName + "\\"))
-                    .sorted(Comparator.reverseOrder()).map(Path::toFile)
-                    .forEach(file -> System.err.println(file.delete()));
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     /**
      * 追加 byte 到另一个文件中
@@ -185,14 +122,16 @@ public class FileUtils {
      * @param path  文件根路径
      * @param bytes 追加内容
      */
-    public static void fileAppend(String path, byte[] bytes) {
+    public static Boolean fileAppend(String path, byte[] bytes) {
         var tempPath = Paths.get(path);
         try {
             Files.createDirectories(tempPath.getParent());
             //实现文件追加写入
             Files.write(tempPath, bytes, StandardOpenOption.APPEND, StandardOpenOption.CREATE, StandardOpenOption.SYNC, StandardOpenOption.WRITE);
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

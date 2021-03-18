@@ -13,13 +13,15 @@ import cool.scx.exception.HttpResponseException;
 import cool.scx.util.LogUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
+import cool.scx.util.StringUtils;
 import cool.scx.util.file.FileUtils;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
-import java.io.*;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -295,92 +297,85 @@ public class BaseController {
         return new Image(ScxConfig.uploadFilePath() + "/" + uploadFileService.getById(id).filePath, width, height);
     }
 
+
     /**
      * 单个文件上传 和 分片文件上传
      *
-     * @param file         文件
-     * @param fileName     文件名
-     * @param fileSize     文件大小
-     * @param chunksNumber 当前分片数
-     * @param chunk        总分片数
-     * @param type         文件类型 , 分为 单个文件和分片文件
-     * @return 文件保存的路径
+     * @param fileName      文件名
+     * @param fileSize      文件大小
+     * @param fileMD5       文件md5
+     * @param chunkLength   分片总长度
+     * @param nowChunkIndex 当前分片
+     * @param fileData      文件内容
+     * @return r
      */
     @ScxMapping(value = "/upload", method = Method.POST)
-    public Json upload(String fileName,
-                       String fileSize,
-                       Integer chunksNumber,
-                       Integer chunk,
-                       Integer type, FileUpload file) {
-        if ("".equals(fileName)) {
-            fileName = file.fileName;
+    public Json upload(String fileName, Long fileSize, String fileMD5, Integer chunkLength, Integer nowChunkIndex, FileUpload fileData) {
+        //先判断 文件是否已经上传过
+        if (StringUtils.isNotEmpty(fileMD5)) {
+            UploadFile fileByMd5 = uploadFileService.findFileByMd5(fileMD5);
+            //证明有其他人上传过此文件 就不上传了 直接 返回文件上传成功的信息给用户
+            if (fileByMd5 != null) {
+                var uploadFile = new UploadFile();
+                uploadFile.fileId = StringUtils.getUUID();
+                uploadFile.fileName = fileName;
+                uploadFile.uploadTime = LocalDateTime.now();
+                uploadFile.filePath = fileByMd5.filePath;
+                uploadFile.fileSizeDisplay = fileByMd5.fileSizeDisplay;
+                uploadFile.fileSize = fileByMd5.fileSize;
+                uploadFile.fileMD5 = fileByMd5.fileMD5;
+                var save = uploadFileService.save(uploadFile);
+                return Json.ok().data("type", "uploadSuccess").items(save);
+            }
         }
-        //文件上传类型 0 为单文件 1 为分片文件
-        if (type == 0) {
-            String fileWritePath = FileUtils.getDateStr() + '/' + fileName;
-            var b = FileUtils.uploadFile(file, fileWritePath, -1, -1);
-            if (b) {
-                //保存文件信息
-                var u = new UploadFile();
-                u.fileName = fileName;
-                u.filePath = fileWritePath;
-                u.uploadTime = LocalDateTime.now();
-                u.fileSize = fileSize;
-                u.id = uploadFileService.save(u).id;
-                return Json.ok().items(u);
+
+        //单文件上传
+        if (chunkLength == 1) {
+            var uploadFile = UploadFile.getNewUpload(fileName, fileSize, fileMD5);
+            var fileStoragePath = ScxConfig.uploadFilePath().getPath() + "\\" + uploadFile.filePath;
+            Boolean aBoolean = FileUtils.fileAppend(fileStoragePath, fileData.buffer.getBytes());
+            //文件存储成功 将文件信息写入数据库
+            if (aBoolean) {
+                var save = uploadFileService.save(uploadFile);
+                return Json.ok().data("type", "uploadSuccess").items(save);
             } else {
-                return Json.fail("上传失败");
+                return Json.ok().data("type", "uploadFail");
             }
         } else {
-            var b = FileUtils.uploadFile(file, fileName, chunk, chunksNumber);
-            if (b) {
-                //当前分片上传成功 返回下一个请求的分片
-                return Json.ok().data("chunk", chunk + 1);
+            //分片文件上传
+            //先获取已经上传的块
+            //当前文件上传的临时标识 可以在这里面获取文件上传的信息 包括上传到多少
+            //没传完呢
+            var uploadTempFile = new File(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "\\.scxTemp");
+            var uploadConfigFile = new File(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "\\.scxUpload");
+            if (nowChunkIndex < chunkLength) {
+                var lastUploadChunk = FileUtils.getLastUploadChunk(uploadConfigFile, chunkLength);
+                if (lastUploadChunk >= nowChunkIndex) {
+                    return Json.ok().data("type", "needMore").items(nowChunkIndex);
+                } else {
+                    Boolean aBoolean = FileUtils.fileAppend(uploadTempFile.getPath(), fileData.buffer.getBytes());
+                    FileUtils.changeLastUploadChunk(uploadConfigFile, nowChunkIndex);
+                    return Json.ok().data("type", "needMore").items(nowChunkIndex + 1);
+                }
             } else {
-                return Json.ok().data("chunk", -1);
+                //传完了
+                //分片文件全部上传完成
+                //移动临时文件 向数据库写数据 清楚残留文件
+                var uploadFile = UploadFile.getNewUpload(fileName, fileSize, fileMD5);
+                var fileStoragePath = ScxConfig.uploadFilePath().getPath() + "\\" + uploadFile.filePath;
+                FileUtils.fileAppend(uploadTempFile.getPath(), fileData.buffer.getBytes());
+                boolean b = uploadTempFile.renameTo(new File(fileStoragePath));
+                if (b) {
+                    FileUtils.deleteFileByPath(uploadTempFile.getParent());
+                    var save = uploadFileService.save(uploadFile);
+                    return Json.ok().data("type", "uploadSuccess").items(save);
+
+                } else {
+                    return Json.ok().data("type", "uploadFail");
+                }
             }
+
         }
     }
 
-    /**
-     * 校验文件  和 获取分割文件上传最后一次的分块
-     * 文件校验结果 true 为合并并校验成功
-     *
-     * @param fileName 获取文件名
-     * @param fileSize 获取文件大小
-     * @param type     获取类型 0 代表文件要进行上传操作 返回最后一次上传的区块 1代表全部上传完成 进行最后一部操作
-     * @return a {@link cool.scx.vo.Json} object.
-     */
-    @ScxMapping("/upload/validateFile")
-    public Json uploadValidateFile(String fileName, String fileSize, Integer type) {
-        //返回文件最后上传的区块
-        if (type == 0) {
-            String scxUploadPath = ScxConfig.uploadFilePath() + "\\TEMP\\" + fileName + "\\" + ".scxUpload";
-            try {
-                FileReader fileReader = new FileReader(scxUploadPath);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-                var lastChunk = bufferedReader.readLine().split("-")[0];
-                fileReader.close();
-                bufferedReader.close();
-                return Json.ok().data("lastChunk", lastChunk);
-            } catch (IOException e) {
-                return Json.ok().data("lastChunk", 0);
-            }
-        } else {
-            String fileWritePath = FileUtils.getDateStr() + '\\' + fileName;
-            var b = FileUtils.validateFile(fileName, fileWritePath);
-            if (b) {
-                //保存数据
-                UploadFile u = new UploadFile();
-                u.fileName = fileName;
-                u.filePath = fileWritePath;
-                u.uploadTime = LocalDateTime.now();
-                u.fileSize = fileSize;
-                u.id = uploadFileService.save(u).id;
-                return Json.ok().items(u);
-            } else {
-                return Json.fail("上传失败");
-            }
-        }
-    }
 }

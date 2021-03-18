@@ -10,7 +10,7 @@
     "real-delete": false,
     "login-error-lock-times": 3,
     "login-error-lock-second": 60,
-    "fix-table": false,
+    "fix-table": true,
     "date-time-pattern": "yyyy-MM-dd HH:mm:ss",
     "body-limit": "16384KB",
     "plugin": {
