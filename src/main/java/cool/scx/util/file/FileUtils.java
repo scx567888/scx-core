@@ -55,37 +55,28 @@ public class FileUtils {
         DISPLAY_SIZE_MAP.put("TB", 1099511627776L);
     }
 
-
     public static Integer getLastUploadChunk(File uploadConfigFile, Integer chunkLength) {
-        if (uploadConfigFile.exists()) {
-            try (var br = new BufferedReader(new FileReader(uploadConfigFile))) {
-                return Integer.parseInt(br.readLine().split("-")[0]);
-            } catch (Exception e) {
-                return 1;
-            }
-        } else {
-            try (var fw = new FileWriter(uploadConfigFile, false); var bw = new BufferedWriter(fw)) {
-                bw.write("1-" + chunkLength);
-                bw.flush();
-            } catch (Exception ignored) {
-            }
+        try (var fr = new FileReader(uploadConfigFile); var br = new BufferedReader(fr)) {
+            return Integer.parseInt(br.readLine().split("-")[0]);
+        } catch (Exception e) {
+            changeLastUploadChunk(uploadConfigFile, 1, chunkLength);
             return 1;
         }
     }
 
-    public static void changeLastUploadChunk(File uploadConfigFile, Integer nowChunkIndex) {
-
-        try (var br = new BufferedReader(new FileReader(uploadConfigFile));
-             var fw = new FileWriter(uploadConfigFile, false);
-             var bw = new BufferedWriter(fw)) {
-            var chunkLength = Integer.parseInt(br.readLine().split("-")[1]);
+    public static void changeLastUploadChunk(File uploadConfigFile, Integer nowChunkIndex, Integer chunkLength) {
+        try {
+            Files.createDirectories(Path.of(uploadConfigFile.getParent()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (var fw = new FileWriter(uploadConfigFile, false); var bw = new BufferedWriter(fw)) {
             bw.write(nowChunkIndex + "-" + chunkLength);
             bw.flush();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
-
 
     /**
      * <p>deleteFileByPath.</p>
@@ -123,7 +114,7 @@ public class FileUtils {
      * @param bytes 追加内容
      */
     public static Boolean fileAppend(String path, byte[] bytes) {
-        var tempPath = Paths.get(path);
+        var tempPath = Path.of(path);
         try {
             Files.createDirectories(tempPath.getParent());
             //实现文件追加写入
@@ -132,6 +123,36 @@ public class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    /**
+     * 将一个文件移动到另一个位置
+     *
+     * @param moveFrom
+     * @param moveto
+     * @return
+     */
+    public static boolean fileMove(String moveFrom, String moveto) {
+        var moveFromPath = Path.of(moveFrom);
+        var moveToPath = Path.of(moveto);
+        try {
+            Files.createDirectories(moveToPath.getParent());
+            Files.move(moveFromPath, moveToPath, StandardCopyOption.REPLACE_EXISTING);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static void deleteUploadTemp(String uploadConfigPath) {
+        try {
+            Files.walk(Path.of(uploadConfigPath).getParent())
+                    .sorted(Comparator.reverseOrder()).map(Path::toFile)
+                    .forEach(File::delete);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

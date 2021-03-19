@@ -22,7 +22,6 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -316,65 +315,45 @@ public class BaseController {
             UploadFile fileByMd5 = uploadFileService.findFileByMd5(fileMD5);
             //证明有其他人上传过此文件 就不上传了 直接 返回文件上传成功的信息给用户
             if (fileByMd5 != null) {
-                var uploadFile = new UploadFile();
-                uploadFile.fileId = StringUtils.getUUID();
-                uploadFile.fileName = fileName;
-                uploadFile.uploadTime = LocalDateTime.now();
-                uploadFile.filePath = fileByMd5.filePath;
-                uploadFile.fileSizeDisplay = fileByMd5.fileSizeDisplay;
-                uploadFile.fileSize = fileByMd5.fileSize;
-                uploadFile.fileMD5 = fileByMd5.fileMD5;
-                var save = uploadFileService.save(uploadFile);
+                var save = uploadFileService.save(UploadFile.copyUploadFile(fileName, fileByMd5));
                 return Json.ok().data("type", "uploadSuccess").items(save);
             }
         }
 
-        //单文件上传
-        if (chunkLength == 1) {
+        var uploadTempFile = ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "\\.scxTemp";
+        var uploadConfigFile = new File(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "\\.scxUpload");
+        //最后一个分块 上传完成
+        if (nowChunkIndex.equals(chunkLength)) {
+            //先将数据写入临时文件中
+            FileUtils.fileAppend(uploadTempFile, fileData.buffer.getBytes());
+            //获取文件信息描述对象
             var uploadFile = UploadFile.getNewUpload(fileName, fileSize, fileMD5);
+            //获取文件真实的存储路径
             var fileStoragePath = ScxConfig.uploadFilePath().getPath() + "\\" + uploadFile.filePath;
-            Boolean aBoolean = FileUtils.fileAppend(fileStoragePath, fileData.buffer.getBytes());
-            //文件存储成功 将文件信息写入数据库
-            if (aBoolean) {
+            //讲临时文件移动并重命名到 真实的存储路径
+            var renameSuccess = FileUtils.fileMove(uploadTempFile, fileStoragePath);
+            //移动成功 说明文件上传成功
+            if (renameSuccess) {
+                //删除临时文件夹
+                FileUtils.deleteUploadTemp(uploadTempFile);
+                //存储到数据库
                 var save = uploadFileService.save(uploadFile);
+                //像前台发送上传成功的消息
                 return Json.ok().data("type", "uploadSuccess").items(save);
             } else {
+                //移动失败 返回上传失败的信息
                 return Json.ok().data("type", "uploadFail");
             }
         } else {
-            //分片文件上传
-            //先获取已经上传的块
-            //当前文件上传的临时标识 可以在这里面获取文件上传的信息 包括上传到多少
-            //没传完呢
-            var uploadTempFile = new File(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "\\.scxTemp");
-            var uploadConfigFile = new File(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "\\.scxUpload");
-            if (nowChunkIndex < chunkLength) {
-                var lastUploadChunk = FileUtils.getLastUploadChunk(uploadConfigFile, chunkLength);
-                if (lastUploadChunk >= nowChunkIndex) {
-                    return Json.ok().data("type", "needMore").items(nowChunkIndex);
-                } else {
-                    Boolean aBoolean = FileUtils.fileAppend(uploadTempFile.getPath(), fileData.buffer.getBytes());
-                    FileUtils.changeLastUploadChunk(uploadConfigFile, nowChunkIndex);
-                    return Json.ok().data("type", "needMore").items(nowChunkIndex + 1);
-                }
+            var lastUploadChunk = FileUtils.getLastUploadChunk(uploadConfigFile, chunkLength);
+            //前台是第一次上传 但是后台不是
+            if (nowChunkIndex == 1 && lastUploadChunk != 1) {
+                return Json.ok().data("type", "needMore").items(lastUploadChunk);
             } else {
-                //传完了
-                //分片文件全部上传完成
-                //移动临时文件 向数据库写数据 清楚残留文件
-                var uploadFile = UploadFile.getNewUpload(fileName, fileSize, fileMD5);
-                var fileStoragePath = ScxConfig.uploadFilePath().getPath() + "\\" + uploadFile.filePath;
-                FileUtils.fileAppend(uploadTempFile.getPath(), fileData.buffer.getBytes());
-                boolean b = uploadTempFile.renameTo(new File(fileStoragePath));
-                if (b) {
-                    FileUtils.deleteFileByPath(uploadTempFile.getParent());
-                    var save = uploadFileService.save(uploadFile);
-                    return Json.ok().data("type", "uploadSuccess").items(save);
-
-                } else {
-                    return Json.ok().data("type", "uploadFail");
-                }
+                FileUtils.fileAppend(uploadTempFile, fileData.buffer.getBytes());
+                FileUtils.changeLastUploadChunk(uploadConfigFile, nowChunkIndex, chunkLength);
+                return Json.ok().data("type", "needMore").items(nowChunkIndex);
             }
-
         }
     }
 

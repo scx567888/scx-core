@@ -45,4 +45,17 @@ public class UploadFile extends BaseModel {
         return uploadFile;
     }
 
+    //复制一个 uploadFile 但是 id 不相同
+    public static UploadFile copyUploadFile(String fileName, UploadFile oldUploadFile) {
+        var uploadFile = new UploadFile();
+        uploadFile.fileId = StringUtils.getUUID();
+        uploadFile.fileName = fileName;
+        uploadFile.uploadTime = LocalDateTime.now();
+        uploadFile.filePath = oldUploadFile.filePath;
+        uploadFile.fileSizeDisplay = oldUploadFile.fileSizeDisplay;
+        uploadFile.fileSize = oldUploadFile.fileSize;
+        uploadFile.fileMD5 = oldUploadFile.fileMD5;
+        return uploadFile;
+    }
+
 }
