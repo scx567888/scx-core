@@ -1,6 +1,9 @@
 package cool.scx.base;
 
-import cool.scx.annotation.*;
+import cool.scx.annotation.FromBody;
+import cool.scx.annotation.FromQuery;
+import cool.scx.annotation.ScxController;
+import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.FileUpload;
 import cool.scx.bo.Param;
 import cool.scx.business.uploadfile.UploadFile;
@@ -18,10 +21,9 @@ import cool.scx.util.file.FileUtils;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
 import cool.scx.vo.Json;
-import io.vertx.ext.web.RoutingContext;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -242,24 +244,19 @@ public class BaseController {
     /**
      * 通用下载资源方法
      *
-     * @param year      year
-     * @param month     month
-     * @param day       day
-     * @param hour      hour
-     * @param timestamp timestamp
-     * @param fileName  要下载的文件名
-     * @param ctx       a {@link io.vertx.ext.web.RoutingContext} object.
      * @return a {@link cool.scx.vo.Download} object.
      * @throws cool.scx.exception.HttpResponseException if any.
-     * @throws java.io.UnsupportedEncodingException     if any.
      */
-    @ScxMapping(value = "/download/:year/:month/:day/:hour/:timestamp/:fileName", method = Method.GET)
-    public Download download(String year, String month, String day, String hour, String timestamp, String fileName, RoutingContext ctx) throws HttpResponseException, UnsupportedEncodingException {
-        var file = new File(ScxConfig.uploadFilePath() + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName);
+    @ScxMapping(value = "/download/:fileId", method = Method.GET)
+    public Download download(String fileId) throws HttpResponseException {
+        var param = new Param<>(new UploadFile());
+        param.queryObject.fileId = fileId;
+        UploadFile uploadFile = uploadFileService.get(param);
+        var file = new File(ScxConfig.uploadFilePath() + "\\" + uploadFile.filePath);
         if (!file.exists()) {
-            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("要下载的文件不存在或已被删除!!!"));
+            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
         }
-        LogUtils.recordLog("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + fileName);
+        LogUtils.recordLog("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + uploadFile.fileName);
         //  这里让文件限速到 500 kb
         return new Download(file, file.getName(), 512000L);
     }
@@ -267,35 +264,23 @@ public class BaseController {
     /**
      * 通用查看图片方法
      *
-     * @param year      year
-     * @param month     month
-     * @param day       day
-     * @param hour      hour
-     * @param timestamp timestamp
-     * @param fileName  要下载的文件名
-     * @param width     a {@link java.lang.Integer} object.
-     * @param height    a {@link java.lang.Integer} object.
-     * @return a {@link cool.scx.vo.Binary} object.
-     */
-    @ScxMapping(value = "/showPicture/:year/:month/:day/:hour/:timestamp/:fileName", method = Method.GET)
-    public Image showPicture(String year, String month, String day, String hour, String timestamp, String fileName, @FromQuery("w") Integer width, @FromQuery("h") Integer height) {
-        return new Image(new File(ScxConfig.uploadFilePath() + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + timestamp + "/" + fileName), width, height);
-    }
-
-    /**
-     * 通用查看图片方法
-     *
-     * @param id     要显示的图片 id
-     *               下载文件或错误
+     * @param fileId 文件 id
      * @param width  a {@link java.lang.Integer} object.
      * @param height a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Binary} object.
      */
-    @ScxMapping("/showPictureById/:id")
-    public Image showPictureById(@FromPath Long id, @FromQuery("w") Integer width, @FromQuery("h") Integer height) {
-        return new Image(ScxConfig.uploadFilePath() + "/" + uploadFileService.getById(id).filePath, width, height);
-    }
+    @ScxMapping(value = "/showPicture/:fileId", method = Method.GET)
+    public Image showPicture(String fileId, @FromQuery("w") Integer width, @FromQuery("h") Integer height) throws HttpResponseException {
+        var param = new Param<>(new UploadFile());
+        param.queryObject.fileId = fileId;
+        UploadFile uploadFile = uploadFileService.get(param);
+        if (uploadFile == null) {
+            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
+        } else {
+            return new Image(new File(ScxConfig.uploadFilePath() + "\\" + uploadFile.filePath), width, height);
+        }
 
+    }
 
     /**
      * 单个文件上传 和 分片文件上传
@@ -315,8 +300,11 @@ public class BaseController {
             UploadFile fileByMd5 = uploadFileService.findFileByMd5(fileMD5);
             //证明有其他人上传过此文件 就不上传了 直接 返回文件上传成功的信息给用户
             if (fileByMd5 != null) {
-                var save = uploadFileService.save(UploadFile.copyUploadFile(fileName, fileByMd5));
-                return Json.ok().data("type", "uploadSuccess").items(save);
+                File file = new File(ScxConfig.uploadFilePath() + "\\" + fileByMd5.filePath);
+                if (file.exists()) {
+                    var save = uploadFileService.save(UploadFile.copyUploadFile(fileName, fileByMd5));
+                    return Json.ok().data("type", "alreadyExists").items(save);
+                }
             }
         }
 
@@ -335,7 +323,7 @@ public class BaseController {
             //移动成功 说明文件上传成功
             if (renameSuccess) {
                 //删除临时文件夹
-                FileUtils.deleteUploadTemp(uploadTempFile);
+                FileUtils.deleteFiles(Path.of(uploadTempFile).getParent());
                 //存储到数据库
                 var save = uploadFileService.save(uploadFile);
                 //像前台发送上传成功的消息
@@ -346,13 +334,12 @@ public class BaseController {
             }
         } else {
             var lastUploadChunk = FileUtils.getLastUploadChunk(uploadConfigFile, chunkLength);
-            //前台是第一次上传 但是后台不是
-            if (nowChunkIndex == 1 && lastUploadChunk != 1) {
-                return Json.ok().data("type", "needMore").items(lastUploadChunk);
-            } else {
+            if (nowChunkIndex - lastUploadChunk == 1) {
                 FileUtils.fileAppend(uploadTempFile, fileData.buffer.getBytes());
                 FileUtils.changeLastUploadChunk(uploadConfigFile, nowChunkIndex, chunkLength);
                 return Json.ok().data("type", "needMore").items(nowChunkIndex);
+            } else {
+                return Json.ok().data("type", "needMore").items(lastUploadChunk);
             }
         }
     }

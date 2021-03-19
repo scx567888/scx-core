@@ -4,11 +4,14 @@ import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.Param;
 import cool.scx.config.ScxConfig;
+import cool.scx.enumeration.Method;
 import cool.scx.util.StringUtils;
 import cool.scx.util.file.FileUtils;
 import cool.scx.vo.Json;
 
-import java.util.Map;
+import java.nio.file.Path;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <p>UploadController class.</p>
@@ -16,10 +19,10 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxController
+@ScxController("/api/uploadFile")
 public class UploadController {
 
-    final UploadFileService uploadFileService;
+    private final UploadFileService uploadFileService;
 
     /**
      * <p>Constructor for UploadController.</p>
@@ -31,38 +34,45 @@ public class UploadController {
     }
 
     /**
-     * <p>deleteFile.</p>
-     *
-     * @param id a {@link java.lang.Long} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     */
-    @ScxMapping
-    public Json deleteFile(Long id) {
-        var result = true;
-        UploadFile uploadFile = uploadFileService.getById(id);
-        if (uploadFile != null) {
-            var b = FileUtils.deleteFileByPath(ScxConfig.uploadFilePath() + uploadFile.filePath);
-            //当文件成功删除后在删除 数据库记录
-            result = b && uploadFileService.deleteByIds(id) == 1;
-        }
-        return result ? Json.ok("success") : Json.ok("error");
-    }
-
-    /**
      * <p>listFile.</p>
      *
-     * @param params a {@link java.util.Map} object.
+     * @param fileIds a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping()
-    public Json listFile(Map<String, Object> params) {
+    @ScxMapping(value = "listFile", method = Method.POST)
+    public Json listFile(String fileIds) {
         var param = new Param<>(new UploadFile());
-        var fileIds = params.get("fileIds");
         if (StringUtils.isNotEmpty(fileIds)) {
-            param.whereSql = " id in (" + String.join(",", fileIds.toString().split(",")) + ")";
+            String collect = Stream.of(fileIds.split(",")).map(s -> "'" + s + "'").collect(Collectors.joining(","));
+            param.whereSql = " file_id in (" + collect + ")";
         } else {
-            param.whereSql = " id = -1";
+            param.whereSql = " file_id = -1";
         }
         return Json.ok().items(uploadFileService.list(param));
     }
+
+
+    @ScxMapping(value = "deleteFile", method = Method.DELETE)
+    public Json deleteFile(String fileIds) {
+        //先获取文件的基本信息
+        var param = new Param<>(new UploadFile());
+        param.queryObject.fileId = fileIds;
+        UploadFile needDeleteFile = uploadFileService.get(param);
+
+        //判断文件是否被其他人引用过
+        var param1 = new Param<>(new UploadFile());
+        param1.queryObject.fileMD5 = needDeleteFile.fileMD5;
+        Integer count = uploadFileService.count(param1);
+
+        //删除数据库中的文件数据
+        uploadFileService.deleteByIds(needDeleteFile.id);
+        //没有被其他人引用过 可以删除物理文件
+        if (count == 1) {
+            FileUtils.deleteFiles(Path.of(ScxConfig.uploadFilePath() + "\\" + needDeleteFile.filePath).getParent());
+        }
+
+        return Json.ok("deleteSuccess");
+    }
+
+
 }

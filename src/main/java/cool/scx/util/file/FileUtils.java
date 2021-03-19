@@ -59,8 +59,8 @@ public class FileUtils {
         try (var fr = new FileReader(uploadConfigFile); var br = new BufferedReader(fr)) {
             return Integer.parseInt(br.readLine().split("-")[0]);
         } catch (Exception e) {
-            changeLastUploadChunk(uploadConfigFile, 1, chunkLength);
-            return 1;
+            changeLastUploadChunk(uploadConfigFile, 0, chunkLength);
+            return 0;
         }
     }
 
@@ -76,34 +76,6 @@ public class FileUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * <p>deleteFileByPath.</p>
-     *
-     * @param path a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    public static boolean deleteFileByPath(String path) {
-        var file = new File(path);
-        if (file.isDirectory()) {
-            //文件夹下已经没有文件了
-            if (Objects.requireNonNull(file.list()).length == 0) {
-                if (!file.delete()) {
-                    return false;
-                }
-                deleteFileByPath(file.getParent());
-            }
-        } else {
-            if (file.exists()) {
-                if (!file.delete()) {
-                    return false;
-                }
-                deleteFileByPath(file.getParent());
-            }
-        }
-        return true;
-
     }
 
 
@@ -146,14 +118,18 @@ public class FileUtils {
         }
     }
 
-    public static void deleteUploadTemp(String uploadConfigPath) {
+    public static void deleteFiles(Path filePath) {
         try {
-            Files.walk(Path.of(uploadConfigPath).getParent())
+            Files.walk(filePath)
                     .sorted(Comparator.reverseOrder()).map(Path::toFile)
                     .forEach(File::delete);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void deleteFiles(String filePath) {
+        deleteFiles(Path.of(filePath));
     }
 
     /**
