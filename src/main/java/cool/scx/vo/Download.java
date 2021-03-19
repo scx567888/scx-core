@@ -145,7 +145,7 @@ public class Download implements BaseVo {
         var response = context.response();
         var fileType = FileUtils.getFileTypeByHead(file);
         //通知 客户端 服务端支持断点续传
-        response.putHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
+        response.putHeader("Accept-Ranges", "bytes");
         //通知客户端服务器端 文件的类型 如果未知就返回流
         response.putHeader("Content-Type", fileType != null ? fileType.contentType : "application/octet-stream");
         //通知客户端 类型为下载
@@ -186,9 +186,13 @@ public class Download implements BaseVo {
             var bucket = new byte[bucketSize];
             // 桶(缓冲区)
             while (in.read(bucket) != -1) {
-                response.write(Buffer.buffer(bucket));
-                if (openThrottle) {
-                    Thread.sleep(500);
+                if (!response.closed()) {
+                    response.write(Buffer.buffer(bucket));
+                    if (openThrottle) {
+                        Thread.sleep(500);
+                    }
+                } else {
+                    break;
                 }
             }
             response.end();
@@ -235,9 +239,13 @@ public class Download implements BaseVo {
         var splitList = ByteUtils.getSplitList(bucketSize, bytes);
 
         for (byte[] b : splitList) {
-            response.write(Buffer.buffer(b));
-            if (openThrottle) {
-                Thread.sleep(500);
+            if (!response.closed()) {
+                response.write(Buffer.buffer(b));
+                if (openThrottle) {
+                    Thread.sleep(500);
+                }
+            } else {
+                break;
             }
         }
         response.end();
