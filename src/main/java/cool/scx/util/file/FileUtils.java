@@ -422,6 +422,12 @@ public class FileUtils {
         return Math.multiplyExact(amount, s);
     }
 
+    /**
+     * <p>byteArrayToHex.</p>
+     *
+     * @param byteArray an array of {@link byte} objects.
+     * @return a {@link java.lang.String} object.
+     */
     public static String byteArrayToHex(byte[] byteArray) {
 
         // 首先初始化一个字符数组，用来存放每个16进制字符
@@ -454,6 +460,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * <p>fileMD5.</p>
+     *
+     * @param inputFile a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String fileMD5(String inputFile) {
 
         // 缓冲区大小（这个可以抽出一个参数）
