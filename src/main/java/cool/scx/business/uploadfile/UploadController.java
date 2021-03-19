@@ -9,6 +9,7 @@ import cool.scx.util.StringUtils;
 import cool.scx.util.file.FileUtils;
 import cool.scx.vo.Json;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -59,10 +60,10 @@ public class UploadController {
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = "deleteFile", method = Method.DELETE)
-    public Json deleteFile(String fileIds) {
+    public Json deleteFile(String fileId) {
         //先获取文件的基本信息
         var param = new Param<>(new UploadFile());
-        param.queryObject.fileId = fileIds;
+        param.queryObject.fileId = fileId;
         UploadFile needDeleteFile = uploadFileService.get(param);
 
         if (needDeleteFile != null) {
@@ -71,11 +72,25 @@ public class UploadController {
             param1.queryObject.fileMD5 = needDeleteFile.fileMD5;
             Integer count = uploadFileService.count(param1);
 
-            //删除数据库中的文件数据
-            uploadFileService.deleteByIds(needDeleteFile.id);
             //没有被其他人引用过 可以删除物理文件
             if (count == 1) {
-                FileUtils.deleteFiles(Path.of(ScxConfig.uploadFilePath() + "\\" + needDeleteFile.filePath).getParent());
+                var filePath = ScxConfig.uploadFilePath() + "\\" + needDeleteFile.filePath;
+                var file = new File(filePath);
+                if (file.exists()) {
+                    boolean b = FileUtils.deleteFiles(Path.of(ScxConfig.uploadFilePath() + "\\" + needDeleteFile.filePath).getParent());
+                    if (b) {
+                        //删除数据库中的文件数据
+                        uploadFileService.deleteByIds(needDeleteFile.id);
+                        return Json.ok("deleteSuccess");
+                    } else {
+                        return Json.ok("deleteFail");
+                    }
+                } else {
+                    //删除数据库中的文件数据
+                    uploadFileService.deleteByIds(needDeleteFile.id);
+                    return Json.ok("deleteSuccess");
+                }
+
             }
         }
 

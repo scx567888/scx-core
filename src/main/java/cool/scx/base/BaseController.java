@@ -262,7 +262,7 @@ public class BaseController {
         }
         LogUtils.recordLog("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + uploadFile.fileName);
         //  这里让文件限速到 500 kb
-        return new Download(file, file.getName(), 512000L);
+        return new Download(file, uploadFile.fileName, 512000L);
     }
 
     /**
@@ -300,6 +300,8 @@ public class BaseController {
      */
     @ScxMapping(value = "/upload", method = Method.POST)
     public Json upload(String fileName, Long fileSize, String fileMD5, Integer chunkLength, Integer nowChunkIndex, FileUpload fileData) {
+        var uploadTempFile = ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5+"_"+ fileName+ "\\.scxTemp";
+        var uploadConfigFile = new File(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5+"_"+ fileName + "\\.scxUpload");
         //先判断 文件是否已经上传过
         if (StringUtils.isNotEmpty(fileMD5)) {
             UploadFile fileByMd5 = uploadFileService.findFileByMd5(fileMD5);
@@ -308,13 +310,13 @@ public class BaseController {
                 File file = new File(ScxConfig.uploadFilePath() + "\\" + fileByMd5.filePath);
                 if (file.exists()) {
                     var save = uploadFileService.save(UploadFile.copyUploadFile(fileName, fileByMd5));
+                    //有可能有之前的残留临时文件 再次一并清楚
+                    FileUtils.deleteFiles(Path.of(uploadTempFile).getParent());
                     return Json.ok().data("type", "alreadyExists").items(save);
                 }
             }
         }
 
-        var uploadTempFile = ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "\\.scxTemp";
-        var uploadConfigFile = new File(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "\\.scxUpload");
         //最后一个分块 上传完成
         if (nowChunkIndex.equals(chunkLength)) {
             //先将数据写入临时文件中

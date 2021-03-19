@@ -141,13 +141,24 @@ public class FileUtils {
      *
      * @param filePath a {@link java.nio.file.Path} object.
      */
-    public static void deleteFiles(Path filePath) {
+    public static boolean deleteFiles(Path filePath) {
         try {
-            Files.walk(filePath)
-                    .sorted(Comparator.reverseOrder()).map(Path::toFile)
-                    .forEach(File::delete);
-        } catch (IOException e) {
-            e.printStackTrace();
+            Files.walkFileTree(filePath, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
