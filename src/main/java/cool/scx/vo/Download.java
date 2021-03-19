@@ -58,7 +58,7 @@ public class Download implements BaseVo {
      */
     public Download(File file, String downloadName) {
 
-        this(file, downloadName, 512000L);
+        this(file, downloadName, 2048000L);
     }
 
     /**
@@ -80,7 +80,7 @@ public class Download implements BaseVo {
         } else {
             //不节流
             openThrottle = false;
-            this.throttle = 512000L;
+            this.throttle = 2048000L;
         }
     }
 
@@ -100,7 +100,7 @@ public class Download implements BaseVo {
      * @param _downloadName a {@link java.lang.String} object.
      */
     public Download(byte[] bytes, String _downloadName) {
-        this(bytes, _downloadName, 512000L);
+        this(bytes, _downloadName, 2048000L);
     }
 
     /**
@@ -122,7 +122,7 @@ public class Download implements BaseVo {
         } else {
             //不节流
             openThrottle = false;
-            this.throttle = 512000L;
+            this.throttle = 2048000L;
         }
     }
 
