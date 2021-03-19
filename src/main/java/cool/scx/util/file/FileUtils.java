@@ -55,6 +55,13 @@ public class FileUtils {
         DISPLAY_SIZE_MAP.put("TB", 1099511627776L);
     }
 
+    /**
+     * <p>getLastUploadChunk.</p>
+     *
+     * @param uploadConfigFile a {@link java.io.File} object.
+     * @param chunkLength      a {@link java.lang.Integer} object.
+     * @return a {@link java.lang.Integer} object.
+     */
     public static Integer getLastUploadChunk(File uploadConfigFile, Integer chunkLength) {
         try (var fr = new FileReader(uploadConfigFile); var br = new BufferedReader(fr)) {
             return Integer.parseInt(br.readLine().split("-")[0]);
@@ -64,6 +71,13 @@ public class FileUtils {
         }
     }
 
+    /**
+     * <p>changeLastUploadChunk.</p>
+     *
+     * @param uploadConfigFile a {@link java.io.File} object.
+     * @param nowChunkIndex    a {@link java.lang.Integer} object.
+     * @param chunkLength      a {@link java.lang.Integer} object.
+     */
     public static void changeLastUploadChunk(File uploadConfigFile, Integer nowChunkIndex, Integer chunkLength) {
         try {
             Files.createDirectories(Path.of(uploadConfigFile.getParent()));
@@ -84,6 +98,7 @@ public class FileUtils {
      *
      * @param path  文件根路径
      * @param bytes 追加内容
+     * @return a {@link java.lang.Boolean} object.
      */
     public static Boolean fileAppend(String path, byte[] bytes) {
         var tempPath = Path.of(path);
@@ -101,9 +116,9 @@ public class FileUtils {
     /**
      * 将一个文件移动到另一个位置
      *
-     * @param moveFrom
-     * @param moveto
-     * @return
+     * @param moveFrom a {@link java.lang.String} object.
+     * @param moveto   a {@link java.lang.String} object.
+     * @return a boolean.
      */
     public static boolean fileMove(String moveFrom, String moveto) {
         var moveFromPath = Path.of(moveFrom);
@@ -118,6 +133,11 @@ public class FileUtils {
         }
     }
 
+    /**
+     * <p>deleteFiles.</p>
+     *
+     * @param filePath a {@link java.nio.file.Path} object.
+     */
     public static void deleteFiles(Path filePath) {
         try {
             Files.walk(filePath)
@@ -128,6 +148,11 @@ public class FileUtils {
         }
     }
 
+    /**
+     * <p>deleteFiles.</p>
+     *
+     * @param filePath a {@link java.lang.String} object.
+     */
     public static void deleteFiles(String filePath) {
         deleteFiles(Path.of(filePath));
     }

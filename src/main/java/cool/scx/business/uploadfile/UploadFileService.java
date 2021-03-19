@@ -12,6 +12,12 @@ import cool.scx.bo.Param;
  */
 @ScxService
 public class UploadFileService extends BaseService<UploadFile> {
+    /**
+     * <p>findFileByMd5.</p>
+     *
+     * @param fileMD5 a {@link java.lang.String} object.
+     * @return a {@link cool.scx.business.uploadfile.UploadFile} object.
+     */
     public UploadFile findFileByMd5(String fileMD5) {
         var p = new Param<>(new UploadFile());
         p.queryObject.fileMD5 = fileMD5;

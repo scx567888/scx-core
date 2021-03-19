@@ -32,6 +32,14 @@ public class UploadFile extends BaseModel {
 
     public String fileMD5;//文件的 md5 值
 
+    /**
+     * <p>getNewUpload.</p>
+     *
+     * @param fileName a {@link java.lang.String} object.
+     * @param fileSize a {@link java.lang.Long} object.
+     * @param fileMD5 a {@link java.lang.String} object.
+     * @return a {@link cool.scx.business.uploadfile.UploadFile} object.
+     */
     public static UploadFile getNewUpload(String fileName, Long fileSize, String fileMD5) {
         var uploadFile = new UploadFile();
         String datePath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy\\MM\\dd"));
@@ -46,6 +54,13 @@ public class UploadFile extends BaseModel {
     }
 
     //复制一个 uploadFile 但是 id 不相同
+    /**
+     * <p>copyUploadFile.</p>
+     *
+     * @param fileName a {@link java.lang.String} object.
+     * @param oldUploadFile a {@link cool.scx.business.uploadfile.UploadFile} object.
+     * @return a {@link cool.scx.business.uploadfile.UploadFile} object.
+     */
     public static UploadFile copyUploadFile(String fileName, UploadFile oldUploadFile) {
         var uploadFile = new UploadFile();
         uploadFile.fileId = StringUtils.getUUID();

@@ -244,6 +244,7 @@ public class BaseController {
     /**
      * 通用下载资源方法
      *
+     * @param fileId a {@link java.lang.String} object.
      * @return a {@link cool.scx.vo.Download} object.
      * @throws cool.scx.exception.HttpResponseException if any.
      */
@@ -268,6 +269,7 @@ public class BaseController {
      * @param width  a {@link java.lang.Integer} object.
      * @param height a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Binary} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = "/showPicture/:fileId", method = Method.GET)
     public Image showPicture(String fileId, @FromQuery("w") Integer width, @FromQuery("h") Integer height) throws HttpResponseException {
