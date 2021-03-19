@@ -10,7 +10,10 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -140,6 +143,7 @@ public class FileUtils {
      * <p>deleteFiles.</p>
      *
      * @param filePath a {@link java.nio.file.Path} object.
+     * @return a boolean.
      */
     public static boolean deleteFiles(Path filePath) {
         try {

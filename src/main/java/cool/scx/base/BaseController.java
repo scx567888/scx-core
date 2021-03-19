@@ -300,8 +300,8 @@ public class BaseController {
      */
     @ScxMapping(value = "/upload", method = Method.POST)
     public Json upload(String fileName, Long fileSize, String fileMD5, Integer chunkLength, Integer nowChunkIndex, FileUpload fileData) {
-        var uploadTempFile = ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5+"_"+ fileName+ "\\.scxTemp";
-        var uploadConfigFile = new File(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5+"_"+ fileName + "\\.scxUpload");
+        var uploadTempFile = ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "_" + fileName + "\\.scxTemp";
+        var uploadConfigFile = new File(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "_" + fileName + "\\.scxUpload");
         //先判断 文件是否已经上传过
         if (StringUtils.isNotEmpty(fileMD5)) {
             UploadFile fileByMd5 = uploadFileService.findFileByMd5(fileMD5);

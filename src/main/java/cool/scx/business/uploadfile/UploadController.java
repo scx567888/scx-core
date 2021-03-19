@@ -56,8 +56,8 @@ public class UploadController {
     /**
      * <p>deleteFile.</p>
      *
-     * @param fileIds a {@link java.lang.String} object.
      * @return a {@link cool.scx.vo.Json} object.
+     * @param fileId a {@link java.lang.String} object.
      */
     @ScxMapping(value = "deleteFile", method = Method.DELETE)
     public Json deleteFile(String fileId) {
