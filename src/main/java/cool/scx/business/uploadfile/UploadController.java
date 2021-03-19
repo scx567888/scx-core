@@ -56,8 +56,8 @@ public class UploadController {
     /**
      * <p>deleteFile.</p>
      *
-     * @return a {@link cool.scx.vo.Json} object.
      * @param fileId a {@link java.lang.String} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = "deleteFile", method = Method.DELETE)
     public Json deleteFile(String fileId) {
@@ -78,20 +78,13 @@ public class UploadController {
                 var file = new File(filePath);
                 if (file.exists()) {
                     boolean b = FileUtils.deleteFiles(Path.of(ScxConfig.uploadFilePath() + "\\" + needDeleteFile.filePath).getParent());
-                    if (b) {
-                        //删除数据库中的文件数据
-                        uploadFileService.deleteByIds(needDeleteFile.id);
-                        return Json.ok("deleteSuccess");
-                    } else {
+                    if (!b) {
                         return Json.ok("deleteFail");
                     }
-                } else {
-                    //删除数据库中的文件数据
-                    uploadFileService.deleteByIds(needDeleteFile.id);
-                    return Json.ok("deleteSuccess");
                 }
-
             }
+            //删除数据库中的文件数据
+            uploadFileService.deleteByIds(needDeleteFile.id);
         }
 
         return Json.ok("deleteSuccess");
