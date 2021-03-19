@@ -65,16 +65,18 @@ public class UploadController {
         param.queryObject.fileId = fileIds;
         UploadFile needDeleteFile = uploadFileService.get(param);
 
-        //判断文件是否被其他人引用过
-        var param1 = new Param<>(new UploadFile());
-        param1.queryObject.fileMD5 = needDeleteFile.fileMD5;
-        Integer count = uploadFileService.count(param1);
+        if (needDeleteFile != null) {
+            //判断文件是否被其他人引用过
+            var param1 = new Param<>(new UploadFile());
+            param1.queryObject.fileMD5 = needDeleteFile.fileMD5;
+            Integer count = uploadFileService.count(param1);
 
-        //删除数据库中的文件数据
-        uploadFileService.deleteByIds(needDeleteFile.id);
-        //没有被其他人引用过 可以删除物理文件
-        if (count == 1) {
-            FileUtils.deleteFiles(Path.of(ScxConfig.uploadFilePath() + "\\" + needDeleteFile.filePath).getParent());
+            //删除数据库中的文件数据
+            uploadFileService.deleteByIds(needDeleteFile.id);
+            //没有被其他人引用过 可以删除物理文件
+            if (count == 1) {
+                FileUtils.deleteFiles(Path.of(ScxConfig.uploadFilePath() + "\\" + needDeleteFile.filePath).getParent());
+            }
         }
 
         return Json.ok("deleteSuccess");

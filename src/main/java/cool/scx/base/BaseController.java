@@ -253,6 +253,9 @@ public class BaseController {
         var param = new Param<>(new UploadFile());
         param.queryObject.fileId = fileId;
         UploadFile uploadFile = uploadFileService.get(param);
+        if (uploadFile == null) {
+            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
+        }
         var file = new File(ScxConfig.uploadFilePath() + "\\" + uploadFile.filePath);
         if (!file.exists()) {
             throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
@@ -320,6 +323,11 @@ public class BaseController {
             var uploadFile = UploadFile.getNewUpload(fileName, fileSize, fileMD5);
             //获取文件真实的存储路径
             var fileStoragePath = ScxConfig.uploadFilePath().getPath() + "\\" + uploadFile.filePath;
+            //计算 md5 只有前后台 md5 相同文件才算 正确
+            var serverMd5Str = FileUtils.fileMD5(uploadTempFile);
+            if (!fileMD5.equalsIgnoreCase(serverMd5Str)) {
+                return Json.ok().data("type", "uploadFail");
+            }
             //讲临时文件移动并重命名到 真实的存储路径
             var renameSuccess = FileUtils.fileMove(uploadTempFile, fileStoragePath);
             //移动成功 说明文件上传成功
