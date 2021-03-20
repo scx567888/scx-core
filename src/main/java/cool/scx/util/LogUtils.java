@@ -1,7 +1,7 @@
 package cool.scx.util;
 
-import cool.scx.business.system.ScxLog;
-import cool.scx.business.system.ScxLogService;
+import cool.scx.core.system.ScxLog;
+import cool.scx.core.system.ScxLogService;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 

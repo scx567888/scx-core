@@ -4,8 +4,8 @@ import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseDao;
-import cool.scx.business.user.User;
-import cool.scx.business.user.UserService;
+import cool.scx.core.user.User;
+import cool.scx.core.user.UserService;
 import cool.scx.config.ScxConfig;
 import cool.scx.dao.SQLRunner;
 import cool.scx.enumeration.Device;
@@ -193,7 +193,7 @@ public final class ScxContext {
      *
      * @param token  a {@link java.lang.String} object.
      * @param device a {@link cool.scx.enumeration.Device} object.
-     * @return a {@link cool.scx.business.user.User} object.
+     * @return a {@link cool.scx.core.user.User} object.
      */
     public static User getLoginUserByToken(Device device, String token) {
         var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token) && u.device == device).findAny().orElse(null);
@@ -208,7 +208,7 @@ public final class ScxContext {
     /**
      * <p>getLoginUserByHeader.</p>
      *
-     * @return a {@link cool.scx.business.user.User} object.
+     * @return a {@link cool.scx.core.user.User} object.
      */
     public static User getLoginUser() {
         if (device() == Device.WEBSITE) {

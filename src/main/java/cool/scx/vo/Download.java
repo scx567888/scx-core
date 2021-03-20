@@ -57,7 +57,6 @@ public class Download implements BaseVo {
      * @param downloadName a {@link java.lang.String} object.
      */
     public Download(File file, String downloadName) {
-
         this(file, downloadName, 2048000L);
     }
 
