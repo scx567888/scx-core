@@ -128,6 +128,8 @@ public class UploadController {
             //计算 md5 只有前后台 md5 相同文件才算 正确
             var serverMd5Str = FileUtils.fileMD5(uploadTempFile);
             if (!fileMD5.equalsIgnoreCase(serverMd5Str)) {
+                //md5 不相同 说明临时文件可能损坏 删除临时文件
+                FileUtils.deleteFiles(Path.of(uploadTempFile).getParent());
                 return Json.ok().data("type", "uploadFail");
             }
             //讲临时文件移动并重命名到 真实的存储路径
