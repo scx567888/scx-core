@@ -1,7 +1,7 @@
 package cool.scx.boot;
 
-import cool.scx.core.license.LicenseService;
 import cool.scx.context.ScxContext;
+import cool.scx.core.license.LicenseService;
 import cool.scx.util.Ansi;
 import cool.scx.util.LogUtils;
 import cool.scx.web.ScxServer;
