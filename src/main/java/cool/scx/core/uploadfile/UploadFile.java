@@ -21,18 +21,19 @@ public class UploadFile extends BaseModel {
 
     public String fileId;//这里为了防止用户可以根据 id 猜测出来文件 不使用 basemodel 的 id
 
+    @Column(type = "TEXT")
     public String filePath;//文件存储的路径 (相对与上传根目录的)
 
     public String fileSizeDisplay;//文件的大小 (格式化后的 就是人能看懂的那种)
 
     public Long fileSize;//文件的大小
 
-    @Column(needIndex = true,notNull = true,useLike = true)
+    @Column(type = "TEXT", notNull = true)
     public String fileName;//文件名
 
     public LocalDateTime uploadTime;//上传日期
 
-    @Column(needIndex = true, unique = true, excludeOnUpdate = true,notNull = true)
+    @Column(needIndex = true, excludeOnUpdate = true, notNull = true)
     public String fileMD5;//文件的 md5 值
 
     /**

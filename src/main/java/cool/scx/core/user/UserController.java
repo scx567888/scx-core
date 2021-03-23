@@ -129,11 +129,12 @@ public class UserController {
             //返回登录用户的信息给前台 含用户的所有角色和权限
             var permList = userService.getPermStrByUser(user);
             return Json.ok()
-                    .data("userId", user.id)
-                    .data("name", user.username)
+                    .data("id", user.id)
+                    .data("username", user.username)
                     .data("nickName", user.nickName)
-                    .data("avatarId", user.avatarId)
-                    .data("perms", permList);
+                    .data("avatar", user.avatar)
+                    .data("perms", permList)
+                    .data("realDelete", ScxConfig.realDelete());
         }
     }
 
@@ -262,7 +263,7 @@ public class UserController {
     @ScxMapping(useMethodNameAsUrl = true)
     public Json avatarUpdate(User queryUser) {
         var currentUser = ScxContext.getLoginUser();
-        currentUser.avatarId = queryUser.avatarId;
+        currentUser.avatar = queryUser.avatar;
         var b = userService.update(currentUser) != null;
         LogUtils.recordLog("更改了头像 用户名是 :" + currentUser.username);
         return Json.ok().data("success", b);

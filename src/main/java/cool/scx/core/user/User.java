@@ -46,7 +46,7 @@ public class User extends BaseModel {
     /**
      * 用户头像 id 此处存储的是 位于 uploadFile 表中的 id
      */
-    public Long avatarId;
+    public String avatar;
     /**
      * 电话号码
      */
