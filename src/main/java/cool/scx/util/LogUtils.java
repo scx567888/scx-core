@@ -1,9 +1,9 @@
 package cool.scx.util;
 
-import cool.scx.core.system.ScxLog;
-import cool.scx.core.system.ScxLogService;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
+import cool.scx.core.system.ScxLog;
+import cool.scx.core.system.ScxLogService;
 
 /**
  * 日志工具类

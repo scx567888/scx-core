@@ -2,6 +2,7 @@ package cool.scx.web;
 
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
+import cool.scx.exception.handler.ScxServerExceptionHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.NetUtils;
 import cool.scx.web.handler.ScxRequestHandler;
@@ -9,6 +10,9 @@ import cool.scx.web.handler.ScxWebSocketHandler;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
+
+import javax.swing.*;
+import java.net.BindException;
 
 /**
  * scx 服务器
@@ -19,10 +23,13 @@ import io.vertx.core.net.JksOptions;
 public final class ScxServer {
 
     /**
+     * 端口号
+     */
+    public static int port = ScxConfig.port();
+    /**
      * 后台服务器
      */
     private static HttpServer server;
-
     /**
      * 服务器是否在运行中
      */
@@ -69,7 +76,6 @@ public final class ScxServer {
         if (serverRunning) {
             return;
         }
-        var port = checkPort(ScxConfig.port());
         server.listen(port, http -> {
             if (http.succeeded()) {
                 Ansi.OUT.green("服务器启动成功...").ln();
@@ -78,9 +84,16 @@ public final class ScxServer {
                 Ansi.OUT.green("> 本地 : " + httpOrHttps + "://localhost:" + port + "/").ln();
                 ScxContext.eventBus().publish("startVertxServer", "");
                 serverRunning = true;
+                if (ScxConfig.showGui()) {
+                    JOptionPane.showMessageDialog(null, "> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/\r\n> 本地 : " + httpOrHttps + "://localhost:" + port + "/", "✔ 服务器启动成功...", JOptionPane.INFORMATION_MESSAGE);
+                }
             } else {
-                Throwable cause = http.cause();
-                cause.printStackTrace();
+                var cause = http.cause();
+                if (cause instanceof BindException) {
+                    ScxServerExceptionHandler.bindExceptionHandler();
+                } else {
+                    cause.printStackTrace();
+                }
             }
         });
     }
@@ -107,18 +120,4 @@ public final class ScxServer {
         return serverRunning;
     }
 
-    /**
-     * 检查端口号是否可以使用
-     * 当端口号不可以使用时会 将端口号进行累加 1 直到端口号可以使用
-     *
-     * @param p 需要检查的端口号
-     * @return 可以使用的端口号
-     */
-    private static int checkPort(int p) {
-        while (NetUtils.isLocalePortUsing(p)) {
-            p = p + 1;
-            Ansi.OUT.red("✘ 端口号 [ " + (p - 1) + " ] 已被占用 !!!         \t -->\t 新端口号 : " + p).ln();
-        }
-        return p;
-    }
 }

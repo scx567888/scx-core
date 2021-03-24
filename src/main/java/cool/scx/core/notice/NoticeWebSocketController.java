@@ -21,7 +21,9 @@ import io.vertx.core.http.WebSocketFrame;
 @ScxWebSocketController("/notice")
 public class NoticeWebSocketController implements BaseWebSocketController {
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onOpen(ServerWebSocket webSocket) {
         ScxContext.addOnlineItem(webSocket, null);
@@ -39,7 +41,9 @@ public class NoticeWebSocketController implements BaseWebSocketController {
         Ansi.OUT.brightRed(webSocket.binaryHandlerID() + " 关闭了!!! 当前总连接数 : " + ScxContext.getOnlineItemList().size()).ln();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket) {
         var binaryHandlerID = webSocket.binaryHandlerID();
@@ -79,13 +83,17 @@ public class NoticeWebSocketController implements BaseWebSocketController {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) {
 //        System.out.println(binaryData);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onError(Throwable event, ServerWebSocket webSocket) {
         event.printStackTrace();
