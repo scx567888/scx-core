@@ -180,7 +180,8 @@ public final class BaseDao<Entity extends BaseModel> {
     public Long save(Entity entity) {
         var c = Stream.of(table.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
         var sql = SQLBuilder.Insert(table.tableName).Columns(c).Values(c).GetSQL();
-        return SQLRunner.update(sql, ObjectUtils.beanToMap(entity)).generatedKeys.get(0);
+        var updateResult = SQLRunner.update(sql, ObjectUtils.beanToMap(entity));
+        return updateResult.generatedKeys.size() > 0 ? updateResult.generatedKeys.get(0) : -1;
     }
 
     /**

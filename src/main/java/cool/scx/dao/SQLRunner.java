@@ -3,6 +3,7 @@ package cool.scx.dao;
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
+import cool.scx.exception.handler.SQLRunnerExceptionHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 
@@ -47,10 +48,7 @@ public final class SQLRunner {
             Ansi.OUT.magenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").ln();
             return true;
         } catch (Exception e) {
-            Ansi.OUT.red("数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl()).ln();
-            if (ScxConfig.showLog()) {
-                e.printStackTrace();
-            }
+            SQLRunnerExceptionHandler.sqlExceptionHandler(e);
             return false;
         }
     }

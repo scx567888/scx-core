@@ -493,7 +493,7 @@ public class FileUtils {
             e.printStackTrace();
         }
 
-        try (var fileInputStream = new FileInputStream(inputFile); var digestInputStream = new DigestInputStream(fileInputStream, messageDigest);) {
+        try (var fileInputStream = new FileInputStream(inputFile); var digestInputStream = new DigestInputStream(fileInputStream, messageDigest)) {
 
             byte[] buffer = new byte[bufferSize];
 
