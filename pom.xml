@@ -298,6 +298,20 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <!-- 此插件用于 运行项目 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>${scxApp.mainClass}</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
