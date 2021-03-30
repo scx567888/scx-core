@@ -1,2 +1,1 @@
-call mvn compile
-mvn exec:exec
+mvn compile exec:java

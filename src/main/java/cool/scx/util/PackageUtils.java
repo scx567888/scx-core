@@ -113,7 +113,7 @@ public class PackageUtils {
 
     private static Class<?> getClassByName(String className) {
         try {
-            return Class.forName(className, false, ClassLoader.getSystemClassLoader());
+            return Class.forName(className, false,PackageUtils.class.getClassLoader());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -144,7 +144,7 @@ public class PackageUtils {
 
     private static Class<?> getClassByName(String className, ClassLoader classLoader) {
         try {
-            return Class.forName(className, false, ClassLoader.getSystemClassLoader());
+            return Class.forName(className, false, PackageUtils.class.getClassLoader());
         } catch (ClassNotFoundException e) {
             try {
                 return classLoader.loadClass(className);
