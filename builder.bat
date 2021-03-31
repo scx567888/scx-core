@@ -8,6 +8,7 @@ if  "%outPutUrl%"  ==  "" (set "outPutUrl=%cd%\built")
 echo [33m打包后的文件将存储在 %outPutUrl%[0m
 echo [36m正在设置临时环境变量[0m
 @echo on
+set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Duser.language=zh
 set Path=C:\Windows\system32;C:\Windows;C:\Apps\jdk\bin;C:\Apps\git\cmd;C:\Apps\ideaIU\plugins\maven\lib\maven3\bin;C:\Apps\node;C:\Apps\7z\;
 set JAVA_HOME=C:\Apps\jdk
 @echo off

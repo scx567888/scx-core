@@ -162,7 +162,7 @@
     <scm>
         <connection>scm:git:https://github.com/scx567888/scx.git</connection>
         <developerConnection>scm:git:https://github.com/scx567888/scx.git</developerConnection>
-        <url>${url}</url>
+        <url>${project.url}</url>
     </scm>
 
     <!-- mvn deploy 发布的路径 -->
