@@ -31,7 +31,10 @@ move target\scx-%scxVersion%.jar %outPutUrl%
 move target\lib %outPutUrl%\lib
 xcopy src\main\resources\c %outPutUrl%\c\ /E /Y
 copy src\main\resources\scx.json %outPutUrl%
-echo java -jar scx-%scxVersion%.jar > %outPutUrl%\startup.bat
+echo @echo off > %outPutUrl%\startup.bat
+echo chcp 65001 >> %outPutUrl%\startup.bat
+echo set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Duser.language=zh >> %outPutUrl%\startup.bat
+echo java -jar scx-%scxVersion%.jar >> %outPutUrl%\startup.bat
 echo [31m清理残余文件[0m
 call mvn clean
 echo [32m打包成功[0m
