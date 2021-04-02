@@ -35,10 +35,6 @@
         <jasypt.version>1.9.3</jasypt.version>
         <!-- 图像处理包 版本 -->
         <thumbnailator.version>0.4.14</thumbnailator.version>
-        <!-- slf4j 版本 -->
-        <slf4j.version>1.7.30</slf4j.version>
-        <!-- logback 版本 -->
-        <logback.version>1.2.3</logback.version>
         <!-- poi 版本 -->
         <poi.version>4.1.2</poi.version>
     </properties>
@@ -117,18 +113,6 @@
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
             <version>${thumbnailator.version}</version>
-        </dependency>
-
-        <!-- 日志包 -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
         </dependency>
 
         <!-- 操作 office -->
@@ -293,7 +277,6 @@
                         <!-- 默认 sql 脚本 -->
                         <exclude>/sql/</exclude>
                         <!-- 默认 配置文件 -->
-                        <exclude>/*.xml</exclude>
                         <exclude>/*.json</exclude>
                     </excludes>
                 </configuration>
