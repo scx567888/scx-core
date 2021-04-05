@@ -117,9 +117,7 @@ public class CrudController {
     public Json save(String modelName, Map<String, Object> entityMap) throws HttpResponseException {
         var baseService = getBaseService(modelName);
         var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
-        var newObjectId = baseService.save(realObject).id;
-        var newObject = baseService.getById(newObjectId);
-        return Json.ok().items(newObject);
+        return Json.ok().items(baseService.save(realObject));
     }
 
     /**
@@ -134,8 +132,7 @@ public class CrudController {
     public Json update(String modelName, Map<String, Object> entityMap) throws Exception {
         var baseService = getBaseService(modelName);
         var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
-        var newObj = baseService.update(realObject);
-        return Json.ok().items(newObj);
+        return Json.ok().items(baseService.update(realObject));
     }
 
     /**
