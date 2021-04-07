@@ -7,7 +7,7 @@ import cool.scx.base.BaseDao;
 import cool.scx.config.ScxConfig;
 import cool.scx.core.user.User;
 import cool.scx.core.user.UserService;
-import cool.scx.dao.SQLRunner;
+import cool.scx.sql.SQLRunner;
 import cool.scx.enumeration.Device;
 import cool.scx.enumeration.FixTableResult;
 import cool.scx.plugin.ScxPlugins;

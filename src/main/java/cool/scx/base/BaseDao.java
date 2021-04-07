@@ -5,14 +5,16 @@ import cool.scx.bo.Param;
 import cool.scx.bo.TableInfo;
 import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
-import cool.scx.dao.SQLBuilder;
-import cool.scx.dao.SQLRunner;
+import cool.scx.sql.SQLBuilder;
+import cool.scx.sql.SQLHelper;
+import cool.scx.sql.SQLRunner;
 import cool.scx.enumeration.FixTableResult;
 import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
+import java.sql.ResultSetMetaData;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -50,18 +52,32 @@ public final class BaseDao<Entity extends BaseModel> {
     public static FixTableResult fixTable(Class<?> clazz) {
         var table = getTableInfo(clazz);
         try (var connection = SQLRunner.getConnection()) {
-            //第一步 先检查表是否存在 如果不存在 创建表
-            var dbMetaData = Objects.requireNonNull(connection).getMetaData();
-            var types = new String[]{"TABLE"};
-            var tabs = dbMetaData.getTables(null, null, table.tableName, types);
-            if (tabs.next()) {
-                var tableName = tabs.getString("TABLE_NAME");
-                var resultSet = dbMetaData.getColumns(null, null, tableName, null);
-                var stringArrayList = new ArrayList<>();
-                while (resultSet.next()) {
-                    stringArrayList.add(resultSet.getString("COLUMN_NAME"));
+            //获取当前连接对象的 MetaData
+            var dbMetaData = connection.getMetaData();
+            //根据表名称获取表
+            var nowTable = dbMetaData.getTables(null, null, table.tableName, new String[]{"TABLE"});
+            //获取到表
+            if (nowTable.next()) {
+                var nowColumns = dbMetaData.getColumns(null, null, nowTable.getString("TABLE_NAME"), null);
+
+                while (nowColumns.next()) {
+                    var dataMap=new HashMap<>();
+                    ResultSetMetaData rsMeta=nowColumns.getMetaData();
+                    int columnCount=rsMeta.getColumnCount();
+                    for (int i=1; i<=columnCount; i++) {
+                        dataMap.put(rsMeta.getColumnLabel(i), nowColumns.getObject(i));
+                    }
+                    System.out.println();
                 }
-                var nonExistentFields = Stream.of(table.allFields).filter(field -> !stringArrayList.contains(StringUtils.camel2Underscore(field.getName()))).collect(Collectors.toList());
+
+                var stringArrayList = new ArrayList<>();
+                while (nowColumns.next()) {
+                    stringArrayList.add(nowColumns.getString("COLUMN_NAME"));
+                }
+                var nonExistentFields = Stream.of(table.allFields).filter(field ->
+                        !stringArrayList.contains(StringUtils.camel2Underscore(field.getName()))
+                ).collect(Collectors.toList());
+
                 if (nonExistentFields.size() != 0) {
                     var columns = nonExistentFields.stream().map(field -> StringUtils.camel2Underscore(field.getName())).collect(Collectors.joining(" , ", " [ ", " ] "));
                     Ansi.OUT.brightBlue("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!").ln();
@@ -88,6 +104,15 @@ public final class BaseDao<Entity extends BaseModel> {
             e.printStackTrace();
             return FixTableResult.FIX_FAIL;
         }
+    }
+
+
+    /**
+     * 检查字段是否符合要求
+     * @return
+     */
+    private static boolean checkColumn(){
+        return false;
     }
 
     private static List<String> getOtherSQLByField(Field... allFields) {
@@ -127,19 +152,7 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
 
-    private static String getSQlColumnTypeByClass(Class<?> clazz) {
-        var TypeMapping = new HashMap<Class<?>, String>();
-        TypeMapping.put(java.lang.Integer.class, "int");
-        TypeMapping.put(java.lang.Long.class, "bigint");
-        TypeMapping.put(java.lang.Double.class, "double");
-        TypeMapping.put(java.lang.Boolean.class, "tinyint(1)");
-        TypeMapping.put(java.time.LocalDateTime.class, "datetime");
-        var type = TypeMapping.get(clazz);
-        if (type == null) {
-            return " varchar(128) ";
-        }
-        return type;
-    }
+
 
     private static String getSQLColumnByField(Field field) {
         var columnName = "`" + StringUtils.camel2Underscore(field.getName()) + "` ";
@@ -150,7 +163,7 @@ public final class BaseDao<Entity extends BaseModel> {
         var onUpdate = "";
         var fieldColumn = field.getAnnotation(Column.class);
         if (fieldColumn != null) {
-            type = "".equals(fieldColumn.type()) ? getSQlColumnTypeByClass(field.getType()) : fieldColumn.type();
+            type = "".equals(fieldColumn.type()) ? SQLHelper.getSQlColumnTypeByClass(field.getType()) : fieldColumn.type();
             notNull = fieldColumn.notNull() ? " NOT NULL" : " NULL";
             if (fieldColumn.autoIncrement()) {
                 autoIncrement = " AUTO_INCREMENT ";
@@ -165,7 +178,7 @@ public final class BaseDao<Entity extends BaseModel> {
                 onUpdate += " ON UPDATE " + fieldColumn.defaultValue();
             }
         } else {
-            type = getSQlColumnTypeByClass(field.getType());
+            type = SQLHelper.getSQlColumnTypeByClass(field.getType());
             notNull = " NULL ";
         }
         return columnName + type + notNull + autoIncrement + defaultValue + onUpdate;

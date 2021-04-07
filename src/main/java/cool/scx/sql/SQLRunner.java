@@ -1,4 +1,4 @@
-package cool.scx.dao;
+package cool.scx.sql;
 
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.bo.UpdateResult;
