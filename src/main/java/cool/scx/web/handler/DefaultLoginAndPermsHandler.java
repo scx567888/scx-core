@@ -13,6 +13,9 @@ import io.vertx.ext.web.RoutingContext;
  */
 public class DefaultLoginAndPermsHandler implements LoginAndPermsHandler {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void noLogin(Device device, RoutingContext context) {
         if (device == Device.ADMIN) {
@@ -26,6 +29,9 @@ public class DefaultLoginAndPermsHandler implements LoginAndPermsHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void noPerms(Device device, RoutingContext context) {
         if (device == Device.ADMIN) {

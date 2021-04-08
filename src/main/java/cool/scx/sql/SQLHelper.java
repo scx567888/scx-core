@@ -16,6 +16,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * <p>SQLHelper class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class SQLHelper {
     private static final Map<String, TableInfo> tableCache = new ConcurrentHashMap<>(256);
 
@@ -35,6 +41,12 @@ public class SQLHelper {
         return tempTable;
     }
 
+    /**
+     * <p>getSQlColumnTypeByClass.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String getSQlColumnTypeByClass(Class<?> clazz) {
         var TypeMapping = new HashMap<Class<?>, String>();
         TypeMapping.put(java.lang.Integer.class, "int");

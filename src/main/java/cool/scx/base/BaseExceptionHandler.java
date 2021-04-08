@@ -2,6 +2,12 @@ package cool.scx.base;
 
 import javax.swing.*;
 
+/**
+ * <p>Abstract BaseExceptionHandler class.</p>
+ *
+ * @author 司昌旭
+ * @version 1.0.10
+ */
 public abstract class BaseExceptionHandler {
 
     static {

@@ -1,5 +1,11 @@
 package cool.scx.sql;
 
+/**
+ * <p>SQLColumnType class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class SQLColumnType {
 
     String TYPE_NAME;

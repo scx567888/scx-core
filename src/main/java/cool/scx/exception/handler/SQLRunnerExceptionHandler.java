@@ -6,8 +6,19 @@ import cool.scx.util.Ansi;
 
 import javax.swing.*;
 
+/**
+ * <p>SQLRunnerExceptionHandler class.</p>
+ *
+ * @author 司昌旭
+ * @version 1.0.10
+ */
 public class SQLRunnerExceptionHandler extends BaseExceptionHandler {
 
+    /**
+     * <p>sqlExceptionHandler.</p>
+     *
+     * @param e a {@link java.lang.Exception} object.
+     */
     public static void sqlExceptionHandler(Exception e) {
         Ansi.OUT.red("✘ 数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl()).ln();
         var options = new Object[]{"忽略错误", "退出"};
