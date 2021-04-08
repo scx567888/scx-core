@@ -7,11 +7,13 @@
     <artifactId>scx</artifactId>
     <packaging>jar</packaging>
     <name>scx</name>
+
     <version>1.0.10</version>
+
     <description>
-        SCX is a "web development framework";
-        Goal is to provide a simple and fast development experience.
+        SCX是一个 "Web 开发框架"; 目标是提供简单快速的开发体验。
     </description>
+
     <url>https://github.com/scx567888/scx</url>
 
     <properties>
@@ -19,24 +21,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- 构建项目时jar包的默认启动类 在您自己的项目中请覆写此值 -->
         <scxApp.mainClass>cool.scx.ScxCoreApp</scxApp.mainClass>
-        <!-- vert.x 版本 -->
-        <vertx.version>4.0.3</vertx.version>
-        <!-- freemarker 版本 -->
-        <freemarker.version>2.3.31</freemarker.version>
-        <!-- jackson 版本 -->
-        <jackson.version>2.12.2</jackson.version>
-        <!-- spring 版本 -->
-        <spring.version>5.3.5</spring.version>
-        <!-- 不要轻易修改 mysql 驱动版本 因为 mysql 的驱动总有bug 这个版本是测试暂时没问题的 -->
-        <mysqlDriver.version>8.0.23</mysqlDriver.version>
-        <!--  hikaricp 版本 -->
-        <hikaricp.version>4.0.3</hikaricp.version>
-        <!-- jasypt 版本 -->
-        <jasypt.version>1.9.3</jasypt.version>
-        <!-- 图像处理包 版本 -->
-        <thumbnailator.version>0.4.14</thumbnailator.version>
-        <!-- poi 版本 -->
-        <poi.version>4.1.2</poi.version>
     </properties>
 
     <dependencies>
@@ -45,66 +29,67 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web</artifactId>
-            <version>${vertx.version}</version>
+            <version>4.0.3</version>
         </dependency>
 
         <!-- freemarker 用于cms 前台页面渲染工作 -->
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>${freemarker.version}</version>
+            <version>2.3.31</version>
         </dependency>
 
         <!-- Jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
+            <version>2.12.2</version>
         </dependency>
 
         <!-- 依赖注入 -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
+            <version>5.3.5</version>
         </dependency>
 
-        <!--  数据库 驱动 以及连接池 -->
+        <!-- mysql 驱动 注意 : 不要轻易修改 mysql 驱动版本 因为 mysql 的驱动总有bug 这个版本是测试暂时没问题的 -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>${mysqlDriver.version}</version>
+            <version>8.0.23</version>
         </dependency>
+
+        <!-- 连接池 -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>${hikaricp.version}</version>
+            <version>4.0.3</version>
         </dependency>
 
         <!-- 轻量级的加密解密工具包 -->
         <dependency>
             <groupId>org.jasypt</groupId>
             <artifactId>jasypt</artifactId>
-            <version>${jasypt.version}</version>
+            <version>1.9.3</version>
         </dependency>
 
-        <!-- 操作 特定格式文件的工具包 -->
+        <!-- 图像处理包工具包 -->
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-            <version>${thumbnailator.version}</version>
+            <version>0.4.14</version>
         </dependency>
 
-        <!-- 操作 office -->
+        <!-- 操作 Excel  -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>${poi.version}</version>
+            <version>4.1.2</version>
         </dependency>
 
     </dependencies>
 
-    <!-- 此项目的 licenses -->
     <licenses>
         <license>
             <name>MIT License</name>
@@ -112,7 +97,6 @@
         </license>
     </licenses>
 
-    <!-- 开发者信息 -->
     <developers>
         <developer>
             <name>司昌旭</name>
@@ -122,7 +106,6 @@
         </developer>
     </developers>
 
-    <!-- scm -->
     <scm>
         <connection>scm:git:https://github.com/scx567888/scx.git</connection>
         <developerConnection>scm:git:https://github.com/scx567888/scx.git</developerConnection>
