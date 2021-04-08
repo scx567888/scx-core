@@ -99,17 +99,16 @@
 
     <developers>
         <developer>
+            <id>scx</id>
             <name>司昌旭</name>
             <email>scx567888@outlook.com</email>
-            <organization>https://github.com/scx567888</organization>
-            <url>https://scx.cool</url>
         </developer>
     </developers>
 
     <scm>
         <connection>scm:git:https://github.com/scx567888/scx.git</connection>
         <developerConnection>scm:git:https://github.com/scx567888/scx.git</developerConnection>
-        <url>${project.url}</url>
+        <url>https://github.com/scx567888/scx</url>
     </scm>
 
     <!-- mvn deploy 发布的路径 -->
