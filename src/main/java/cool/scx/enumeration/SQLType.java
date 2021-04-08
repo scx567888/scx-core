@@ -3,8 +3,8 @@ package cool.scx.enumeration;
 /**
  * <p>SQLType class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.0.10
  */
 public enum SQLType {
     INSERT,

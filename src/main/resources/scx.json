@@ -34,8 +34,7 @@
       "root": "/c/",
       "resource-http-url": "/static/*",
       "resource-locations": "absPath:C:/Users/scx56/Projects/scx/src/main/resources/c/static/",
-      "template-suffix": ".html",
-      "favicon-ico-path": "absPath:C:/Users/scx56/Projects/scx/src/main/resources/c/favicon.ico"
+      "template-suffix": ".html"
     }
   }
 }

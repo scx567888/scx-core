@@ -6,7 +6,7 @@ import cool.scx.boot.ScxApp;
  * 核心模块启动类
  *
  * @author 司昌旭
- * @version 0.3.6
+ * @version 1.0.10
  */
 public class ScxCoreApp {
 

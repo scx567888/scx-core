@@ -8,8 +8,8 @@ import io.vertx.ext.web.RoutingContext;
 /**
  * <p>DefaultLoginAndPermsHandler class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.0.10
  */
 public class DefaultLoginAndPermsHandler implements LoginAndPermsHandler {
 

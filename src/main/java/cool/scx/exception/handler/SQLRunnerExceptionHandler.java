@@ -1,21 +1,12 @@
 package cool.scx.exception.handler;
 
+import cool.scx.base.BaseExceptionHandler;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
 
 import javax.swing.*;
 
-public class SQLRunnerExceptionHandler {
-    static {
-        /*
-          初始化提示框样式
-         */
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+public class SQLRunnerExceptionHandler extends BaseExceptionHandler {
 
     public static void sqlExceptionHandler(Exception e) {
         Ansi.OUT.red("✘ 数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl()).ln();

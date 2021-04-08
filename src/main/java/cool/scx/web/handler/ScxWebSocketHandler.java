@@ -14,8 +14,8 @@ import java.util.Map;
 /**
  * 这个 handler 会获取所有的 websocket 请求并进行转发
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.0.10
  */
 public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
 

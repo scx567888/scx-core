@@ -11,14 +11,13 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
 
-import javax.swing.*;
 import java.net.BindException;
 
 /**
  * scx 服务器
  *
  * @author 司昌旭
- * @version 0.5.8
+ * @version 1.0.10
  */
 public final class ScxServer {
 
@@ -30,10 +29,6 @@ public final class ScxServer {
      * 后台服务器
      */
     private static HttpServer server;
-    /**
-     * 服务器是否在运行中
-     */
-    private static boolean serverRunning = false;
 
     /**
      * 初始化 服务器
@@ -61,32 +56,15 @@ public final class ScxServer {
     }
 
     /**
-     * <p>reloadServer.</p>
-     */
-    public static void reloadServer() {
-        Ansi.OUT.brightBlue("正在重新加载服务器...").ln();
-        loadServer();
-        Ansi.OUT.green("正在重新加载服务器完毕...").ln();
-    }
-
-    /**
      * <p>startVertxServer.</p>
      */
     public static void startServer() {
-        if (serverRunning) {
-            return;
-        }
         server.listen(port, http -> {
             if (http.succeeded()) {
                 Ansi.OUT.green("服务器启动成功...").ln();
                 var httpOrHttps = ScxConfig.openHttps() ? "https" : "http";
                 Ansi.OUT.green("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/").ln();
                 Ansi.OUT.green("> 本地 : " + httpOrHttps + "://localhost:" + port + "/").ln();
-                ScxContext.eventBus().publish("startVertxServer", "");
-                serverRunning = true;
-                if (ScxConfig.showGui()) {
-                    JOptionPane.showMessageDialog(null, "> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/\r\n> 本地 : " + httpOrHttps + "://localhost:" + port + "/", "✔ 服务器启动成功...", JOptionPane.INFORMATION_MESSAGE);
-                }
             } else {
                 var cause = http.cause();
                 if (cause instanceof BindException) {
@@ -104,20 +82,11 @@ public final class ScxServer {
     public static void stopServer() {
         server.close(c -> {
             if (c.succeeded()) {
-                ScxContext.eventBus().publish("stopVertxServer", "");
-                serverRunning = false;
+                Ansi.OUT.brightRed("服务器已停止...").ln();
+            } else {
+                Ansi.OUT.brightRed("服务器停止失败...").ln();
             }
         });
-        Ansi.OUT.brightRed("服务器已停止...").ln();
-    }
-
-    /**
-     * <p>isServerRunning.</p>
-     *
-     * @return a boolean.
-     */
-    public static boolean isServerRunning() {
-        return serverRunning;
     }
 
 }

@@ -22,8 +22,8 @@ import static cool.scx.config.ScxConfig.getConfigValue;
 /**
  * <p>Scx class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.0.10
  */
 public class Scx {
     /**
@@ -56,10 +56,7 @@ public class Scx {
      * 是否显示 log
      */
     public boolean showLog;
-    /**
-     * 是否显示 gui
-     */
-    public boolean showGui;
+
     /**
      * 是否真实删除
      */
@@ -168,13 +165,6 @@ public class Scx {
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("✘ 未检测到 scx.show-log              \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asBoolean, Boolean::valueOf);
-
-        scx.showGui = getConfigValue("scx.show-gui", false,
-                s -> Ansi.OUT.green("✔ 是否将显示 GUI                      \t -->\t " + (s ? "是" : "否")).ln(),
-                f -> {
-                    needFixConfig.set(true);
-                    Ansi.OUT.red("✘ 未检测到 scx.show-gui              \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
         scx.realDelete = getConfigValue("scx.real-delete", false,

@@ -7,7 +7,7 @@ import io.vertx.ext.web.RoutingContext;
  * <p>LoginAndPermsHandler interface.</p>
  *
  * @author 司昌旭
- * @version $Id: $Id
+ * @version 1.0.10
  */
 public interface LoginAndPermsHandler {
 

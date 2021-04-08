@@ -19,8 +19,8 @@ import java.io.FileInputStream;
 /**
  * <p>Image class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.0.10
  */
 public class Image implements BaseVo {
 

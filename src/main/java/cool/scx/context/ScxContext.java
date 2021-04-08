@@ -3,14 +3,14 @@ package cool.scx.context;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseDao;
 import cool.scx.config.ScxConfig;
 import cool.scx.core.user.User;
 import cool.scx.core.user.UserService;
-import cool.scx.sql.SQLRunner;
 import cool.scx.enumeration.Device;
 import cool.scx.enumeration.FixTableResult;
 import cool.scx.plugin.ScxPlugins;
+import cool.scx.sql.SQLHelper;
+import cool.scx.sql.SQLRunner;
 import cool.scx.util.Ansi;
 import cool.scx.util.PackageUtils;
 import io.vertx.core.Vertx;
@@ -114,7 +114,7 @@ public final class ScxContext {
             SCX_BEAN_CLASS_NAME_MAPPING.forEach((k, v) -> {
                 if (v.isAnnotationPresent(ScxModel.class)) {
                     try {
-                        if (BaseDao.fixTable(v) != FixTableResult.NO_NEED_TO_FIX) {
+                        if (SQLHelper.fixTable(v) != FixTableResult.NO_NEED_TO_FIX) {
                             noNeedFix.set(false);
                         }
                     } catch (Exception ignored) {

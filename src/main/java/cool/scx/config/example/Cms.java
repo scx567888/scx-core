@@ -13,8 +13,8 @@ import static cool.scx.config.ScxConfig.getConfigValue;
 /**
  * <p>Cms class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.0.10
  */
 public class Cms {
     /**
@@ -47,12 +47,6 @@ public class Cms {
      * cms 资源后缀
      */
     public String templateSuffix;
-    /**
-     * cms Favicon 图标路径 字符串值
-     */
-    public String faviconIcoPath;
-    @JsonIgnore
-    public File faviconIcoPathValue;
 
     /**
      * <p>Constructor for Cms.</p>
@@ -96,14 +90,6 @@ public class Cms {
                     Ansi.OUT.red("✘ 未检测到 scx.cms.template-suffix   \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asText, a -> a);
 
-        cms.faviconIcoPath = getConfigValue("scx.cms.favicon-ico-path", "/c/favicon.ico",
-                s -> Ansi.OUT.green("✔ Cms Favicon Ico 路径                 \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
-                f -> {
-                    needFixConfig.set(true);
-                    Ansi.OUT.red("✘ 未检测到 scx.cms.favicon-ico-path   \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asText, a -> a);
-
-        cms.faviconIcoPathValue = PackageUtils.getFileByAppRoot(cms.faviconIcoPath);
         return cms;
     }
 }

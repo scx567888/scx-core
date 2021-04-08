@@ -7,8 +7,8 @@ import io.vertx.core.http.WebSocketFrame;
 /**
  * <p>BaseWebSocketController interface.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.0.10
  */
 public interface BaseWebSocketController {
 

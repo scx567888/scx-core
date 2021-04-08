@@ -41,22 +41,6 @@ public final class ScxConfig {
     private static Class<?>[] classSources;
     private static String[] parameters;
 
-
-    /**
-     * 根据文件名获取配置文件
-     *
-     * @param configName 要获取的配置文件的名称
-     * @return 配置文件的文件
-     */
-    public static File getConfigFile(String configName) {
-        var configFile = new File(PackageUtils.getAppRoot(), configName);
-        if (configFile.isFile() && configFile.exists()) {
-            return configFile;
-        } else {
-            throw new RuntimeException("配置文件 " + configName + " 不存在 !!!");
-        }
-    }
-
     /**
      * 从默认配置文件获取配置值 并自动判断类型
      * 没有找到配置文件会返回 null
@@ -197,15 +181,6 @@ public final class ScxConfig {
         tempSet.addAll(Arrays.asList(args));
         //返回处理后的数组
         return tempSet.toArray(Class<?>[]::new);
-    }
-
-    /**
-     * <p>reloadConfig.</p>
-     */
-    public static void reloadConfig() {
-        Ansi.OUT.brightBlue("ScxConfig 重新加载中...").ln();
-        loadConfig();
-        Ansi.OUT.brightBlue("ScxConfig 重新加载完成...").ln();
     }
 
     /**
@@ -375,14 +350,6 @@ public final class ScxConfig {
         return nowScxExample.bodyLimitValue;
     }
 
-    /**
-     * <p>cmsFaviconIcoPath.</p>
-     *
-     * @return a {@link java.io.File} object.
-     */
-    public static File cmsFaviconIcoPath() {
-        return nowScxExample.cms.faviconIcoPathValue;
-    }
 
     /**
      * <p>allowedOrigin.</p>
@@ -463,15 +430,6 @@ public final class ScxConfig {
      */
     public static String scxVersion() {
         return "1.0.10";
-    }
-
-    /**
-     * <p>showGui.</p>
-     *
-     * @return a boolean.
-     */
-    public static boolean showGui() {
-        return nowScxExample.showGui;
     }
 
     /**

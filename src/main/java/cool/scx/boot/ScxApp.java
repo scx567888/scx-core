@@ -3,7 +3,6 @@ package cool.scx.boot;
 import cool.scx.config.ScxCmsConfig;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.gui.ScxGui;
 import cool.scx.plugin.ScxPlugins;
 import cool.scx.web.ScxServer;
 
@@ -49,8 +48,6 @@ public final class ScxApp {
         ScxServer.initServer();
         //启动服务器
         ScxServer.startServer();
-        //初始化 gui
-        ScxGui.init();
         //初始化 license
         ScxLicense.init();
     }

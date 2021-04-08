@@ -1,5 +1,6 @@
 package cool.scx.exception.handler;
 
+import cool.scx.base.BaseExceptionHandler;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
 import cool.scx.util.NetUtils;
@@ -13,17 +14,7 @@ import javax.swing.*;
  * @author 司昌旭
  * @version 1.0.8
  */
-public class ScxServerExceptionHandler {
-    static {
-        /**
-         * 初始化提示框样式
-         */
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+public class ScxServerExceptionHandler extends BaseExceptionHandler {
 
     /**
      * <p>bindExceptionHandler.</p>

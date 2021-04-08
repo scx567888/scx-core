@@ -12,8 +12,8 @@ import static cool.scx.config.ScxConfig.getConfigValue;
 /**
  * <p>DataSource class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.0.10
  */
 public class DataSource {
     /**

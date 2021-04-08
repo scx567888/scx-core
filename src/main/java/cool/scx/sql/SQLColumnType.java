@@ -4,12 +4,9 @@ public class SQLColumnType {
 
     String TYPE_NAME;
     String COLUMN_SIZE;
-    String IS_GENERATEDCOLUMN ;
-    String IS_AUTOINCREMENT ;
-    String IS_NULLABLE ;
-    String COLUMN_NAME ;
-//    String typeName;
-
-
+    String IS_GENERATED_COLUMN;
+    String IS_AUTOINCREMENT;
+    String IS_NULLABLE;
+    String COLUMN_NAME;
 
 }

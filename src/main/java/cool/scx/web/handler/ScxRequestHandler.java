@@ -16,6 +16,7 @@ import io.vertx.ext.web.handler.FaviconHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.impl.RouterImpl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -48,10 +49,10 @@ public final class ScxRequestHandler extends RouterImpl {
     /**
      * 注册 FaviconIco 图标 handler
      *
-     * @param router
+     * @param router r
      */
     private static void registerFaviconHandler(Router router) {
-        router.route().handler(FaviconHandler.create(ScxContext.VERTX, ScxConfig.cmsFaviconIcoPath().getPath()));
+        router.route().handler(FaviconHandler.create(ScxContext.VERTX, new File(ScxConfig.cmsRoot(), "favicon.ico").getPath()));
     }
 
     /**

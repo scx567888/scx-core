@@ -12,8 +12,8 @@ import java.lang.annotation.Target;
  * 使用此注解时 必须同时继承
  * BaseTemplateDirective
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.0.10
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
