@@ -53,8 +53,8 @@ public final class ScxServer {
         if (ScxConfig.openHttps()) {
             httpServerOptions.setSsl(true)
                     .setKeyStoreOptions(new JksOptions()
-                            .setPath(ScxConfig.certPath().getPath())
-                            .setPassword(ScxConfig.certPassword()));
+                            .setPath(ScxConfig.sslPath().getPath())
+                            .setPassword(ScxConfig.sslPassword()));
         }
         server = ScxContext.VERTX.createHttpServer(httpServerOptions);
         server.requestHandler(requestHandler).webSocketHandler(webSocketHandler);

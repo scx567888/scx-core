@@ -232,12 +232,12 @@
                     <excludes>
                         <!-- 默认 cms 模板测试文件 -->
                         <exclude>/c/</exclude>
-                        <!-- 默认 ssl 占位空文件 -->
-                        <exclude>/certificate/</exclude>
                         <!-- 默认 插件 占位空文件 -->
                         <exclude>/plugins/</exclude>
                         <!-- 默认 sql 脚本 -->
                         <exclude>/sql/</exclude>
+                        <!-- 默认 ssl 占位空文件 -->
+                        <exclude>/ssl/</exclude>
                         <!-- 默认 配置文件 -->
                         <exclude>/*.json</exclude>
                     </excludes>

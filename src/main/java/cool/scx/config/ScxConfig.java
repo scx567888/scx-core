@@ -277,21 +277,21 @@ public final class ScxConfig {
     }
 
     /**
-     * <p>certPath.</p>
+     * <p>sslPath.</p>
      *
      * @return a {@link java.io.File} object.
      */
-    public static File certPath() {
-        return nowScxExample.https.certPathValue;
+    public static File sslPath() {
+        return nowScxExample.https.sslPathValue;
     }
 
     /**
-     * <p>certPassword.</p>
+     * <p>sslPassword.</p>
      *
      * @return a {@link java.lang.String} object.
      */
-    public static String certPassword() {
-        return nowScxExample.https.certificatePasswordValue;
+    public static String sslPassword() {
+        return nowScxExample.https.sslPasswordValue;
     }
 
     /**

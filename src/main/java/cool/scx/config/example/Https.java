@@ -24,23 +24,23 @@ public class Https {
      */
     public boolean isOpen;
     /**
-     * ssh 证书路径 字符串值
+     * ssl 证书路径 字符串值
      */
-    public String certPath;
+    public String sslPath;
     /**
-     * ssh 证书路径 真实值
+     * ssl 证书路径 真实值
      */
     @JsonIgnore
-    public File certPathValue;
+    public File sslPathValue;
     /**
-     * ssh 证书密码 字符串值
+     * ssl 证书密码 字符串值
      */
-    public String certPassword;
+    public String sslPassword;
     /**
-     * ssh 证书密码 真实值 (解密后)
+     * ssl 证书密码 真实值 (解密后)
      */
     @JsonIgnore
-    public String certificatePasswordValue;
+    public String sslPasswordValue;
 
     /**
      * <p>Constructor for Https.</p>
@@ -57,32 +57,32 @@ public class Https {
                     Ansi.OUT.red("✘ 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
-        https.certPath = getConfigValue("scx.https.cert-path", "",
+        https.sslPath = getConfigValue("scx.https.ssl-path", "",
                 s -> Ansi.OUT.green("✔ 证书路径                           \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("✘ 未检测到 scx.https.cert-path       \t -->\t 请检查证书路径是否正确").ln();
+                    Ansi.OUT.red("✘ 未检测到 scx.https.ssl-path       \t -->\t 请检查证书路径是否正确").ln();
                 }, JsonNode::asText, a -> a);
 
-        https.certPathValue = PackageUtils.getFileByAppRoot(https.certPath);
+        https.sslPathValue = PackageUtils.getFileByAppRoot(https.sslPath);
 
-        https.certPassword = getConfigValue("scx.https.cert-password", "",
+        https.sslPassword = getConfigValue("scx.https.ssl-password", "",
                 Tidy::NoCode,
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("✘ 未检测到 scx.https.cert-password      \t -->\t 请检查证书密码是否正确").ln();
+                    Ansi.OUT.red("✘ 未检测到 scx.https.ssl-password      \t -->\t 请检查证书密码是否正确").ln();
                 }, JsonNode::asText, a -> a);
 
         if (https.isOpen) {
-            var tempCertificatePasswordValue = "";
+            var tempSSLPasswordValue = "";
             try {
-                tempCertificatePasswordValue = CryptoUtils.decryptText(https.certPassword);
+                tempSSLPasswordValue = CryptoUtils.decryptText(https.sslPassword);
             } catch (Exception e) {
-                Ansi.OUT.red("✘ 解密 scx.https.certificate-password  出错        \t -->\t 请检查证书密码是否正确").ln();
+                Ansi.OUT.red("✘ 解密 scx.https.ssl-password  出错        \t -->\t 请检查证书密码是否正确").ln();
             }
-            https.certificatePasswordValue = tempCertificatePasswordValue;
+            https.sslPasswordValue = tempSSLPasswordValue;
         } else {
-            https.certificatePasswordValue = "";
+            https.sslPasswordValue = "";
         }
         return https;
     }
