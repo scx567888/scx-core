@@ -137,9 +137,9 @@ public final class ScxContext {
     }
 
     /**
-     * <p>init.</p>
+     * 初始化 context
      */
-    public static void init() {
+    public static void initContext() {
         Ansi.OUT.magenta("ScxContext 初始化完成...").ln();
     }
 

@@ -159,7 +159,7 @@ public final class ScxConfig {
     }
 
     /**
-     * <p>init.</p>
+     * 初始化 配置文件
      *
      * @param _classSources an array of {@link java.lang.Class} objects.
      * @param _args         an array of {@link java.lang.String} objects.

@@ -22,9 +22,9 @@ public class ScxLicense {
     }
 
     /**
-     * <p>init.</p>
+     * 初始化 license
      */
-    public static void init() {
+    public static void checkLicense() {
         Ansi.OUT.brightCyan("校验 license 中 ...").ln();
         var licenseRight = licenseService.passLicense();
         if (!licenseRight) {

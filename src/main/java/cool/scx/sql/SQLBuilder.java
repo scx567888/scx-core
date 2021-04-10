@@ -10,67 +10,66 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * <p>SQLBuilder class.</p>
+ * SQLBuilder class 用来构建 sql 语句
  *
  * @author 司昌旭
- * @version 0.3.6
+ * @version 1.0.10
  */
 public final class SQLBuilder {
-    private final SQLType _sqlType; //当前sql 的类型 有 insert delete update select
-    private String _tableName; //表名
-    private String[] _selectColumns; //所有查询列 类似 user_name AS userName
-    private String[] _whereColumns; //所有where 条件 类似 id = 1
-    private Set<String> _groupBySet = new HashSet<>(); //所有列名
-    private Map<String, SortType> _orderByMap = new HashMap<>(); //所有列名
-    private Integer _page; //起始分页(此值需要进行计算)
-    private Integer _limit; //分页条数
-    private String _whereSql; //所有列名
-    private String[] _columns; //所有列名
-    private String[] _updateColumns; //所有列名
-    private String[][] _values; //所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
 
-    private SQLBuilder() {
-        _sqlType = SQLType.SELECT;
-    }
+    /**
+     * 当前sql 的类型 有 insert delete update select
+     */
+    private final SQLType _sqlType;
+    /**
+     * 表名
+     */
+    private String _tableName;
+    /**
+     * 所有查询列 类似 user_name AS userName
+     */
+    private String[] _selectColumns;
+    /**
+     * 所有where 条件 类似 id = 1
+     */
+    private String[] _whereColumns;
+    /**
+     * 所有列名
+     */
+    private Set<String> _groupBySet = new HashSet<>();
+    /**
+     * 所有列名
+     */
+    private Map<String, SortType> _orderByMap = new HashMap<>();
+    /**
+     * 起始分页(此值需要进行计算)
+     */
+    private Integer _page;
+    /**
+     * 分页条数
+     */
+    private Integer _limit;
+    /**
+     * 自定义的查询语句
+     */
+    private String _whereSql;
+
+    /**
+     * 所有列名
+     */
+    private String[] _columns;
+    /**
+     * 更新的 列名
+     */
+    private String[] _updateColumns;
+
+    /**
+     * 所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
+     */
+    private String[][] _values;
 
     private SQLBuilder(SQLType sqlType) {
         _sqlType = sqlType;
-    }
-
-    /**
-     * <p>Insert.</p>
-     *
-     * @return a {@link cool.scx.sql.SQLBuilder} object.
-     */
-    public static SQLBuilder Insert() {
-        return new SQLBuilder(SQLType.INSERT);
-    }
-
-    /**
-     * <p>Update.</p>
-     *
-     * @return a {@link cool.scx.sql.SQLBuilder} object.
-     */
-    public static SQLBuilder Update() {
-        return new SQLBuilder(SQLType.UPDATE);
-    }
-
-    /**
-     * <p>Select.</p>
-     *
-     * @return a {@link cool.scx.sql.SQLBuilder} object.
-     */
-    public static SQLBuilder Select() {
-        return new SQLBuilder(SQLType.SELECT);
-    }
-
-    /**
-     * <p>Delete.</p>
-     *
-     * @return a {@link cool.scx.sql.SQLBuilder} object.
-     */
-    public static SQLBuilder Delete() {
-        return new SQLBuilder(SQLType.DELETE);
     }
 
     /**
@@ -147,17 +146,6 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>Columns.</p>
-     *
-     * @param columns an array of {@link java.lang.String} objects.
-     * @return a {@link cool.scx.sql.SQLBuilder} object.
-     */
-    public SQLBuilder Columns(String[] columns) {
-        _columns = columns;
-        return this;
-    }
-
-    /**
      * <p>Values.</p>
      *
      * @param fields an array of {@link java.lang.reflect.Field} objects.
@@ -227,18 +215,6 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>Pagination.</p>
-     *
-     * @param limit a {@link java.lang.Integer} object.
-     * @return a {@link cool.scx.sql.SQLBuilder} object.
-     */
-    public SQLBuilder Pagination(Integer limit) {
-        _page = 1;
-        _limit = limit;
-        return this;
-    }
-
-    /**
      * <p>WhereSql.</p>
      *
      * @param whereSql a {@link java.lang.String} object.
@@ -249,13 +225,41 @@ public final class SQLBuilder {
         return this;
     }
 
+    private String getWhereSql() {
+        var whereSql = "";
+        //没有 实体类查询条件 直接用 whereSql
+        if (_whereColumns == null || _whereColumns.length == 0) {
+            if (!StringUtils.isEmpty(_whereSql)) {
+                whereSql = " WHERE " + _whereSql;
+            }
+        } else {
+            //拼接一下
+            if (StringUtils.isEmpty(_whereSql)) {
+                whereSql = " WHERE " + String.join(" AND ", _whereColumns);
+            } else {
+                whereSql = " WHERE " + String.join(" AND ", _whereColumns) + " AND " + _whereSql;
+            }
+        }
+        return whereSql;
+    }
+
+    /**
+     * <p>SelectColumns.</p>
+     *
+     * @param selectColumns an array of {@link java.lang.String} objects.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
+     */
+    public SQLBuilder SelectColumns(String[] selectColumns) {
+        _selectColumns = selectColumns;
+        return this;
+    }
+
     /**
      * <p>GetSQL.</p>
      *
      * @return a {@link java.lang.String} object.
      */
     public String GetSQL() {
-
         switch (_sqlType) {
             case INSERT:
                 if (_values.length == 1) {
@@ -291,35 +295,5 @@ public final class SQLBuilder {
                 return "";
         }
     }
-
-    private String getWhereSql() {
-        var whereSql = "";
-        //没有 实体类查询条件 直接用 whereSql
-        if (_whereColumns == null || _whereColumns.length == 0) {
-            if (!StringUtils.isEmpty(_whereSql)) {
-                whereSql = " WHERE " + _whereSql;
-            }
-        } else {
-            //拼接一下
-            if (StringUtils.isEmpty(_whereSql)) {
-                whereSql = " WHERE " + String.join(" AND ", _whereColumns);
-            } else {
-                whereSql = " WHERE " + String.join(" AND ", _whereColumns) + " AND " + _whereSql;
-            }
-        }
-        return whereSql;
-    }
-
-    /**
-     * <p>SelectColumns.</p>
-     *
-     * @param selectColumns an array of {@link java.lang.String} objects.
-     * @return a {@link cool.scx.sql.SQLBuilder} object.
-     */
-    public SQLBuilder SelectColumns(String[] selectColumns) {
-        _selectColumns = selectColumns;
-        return this;
-    }
-
 
 }

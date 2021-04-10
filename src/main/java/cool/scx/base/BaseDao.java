@@ -39,7 +39,7 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     /**
-     * <p>save.</p>
+     * 保存单条数据
      *
      * @param entity a Entity object.
      * @return a {@link java.lang.Long} object.
@@ -52,7 +52,7 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     /**
-     * <p>saveList.</p>
+     * 保存多条数据
      *
      * @param entityList a {@link java.util.List} object.
      * @return a {@link java.util.List} object.
@@ -79,7 +79,7 @@ public final class BaseDao<Entity extends BaseModel> {
             map.putAll(ObjectUtils.beanToMapWithIndex(i, entityList.get(i)));
         }
 
-        var sql = SQLBuilder.Insert().Table(table.tableName).Columns(table.canInsertFields).Values(values).GetSQL();
+        var sql = SQLBuilder.Insert(table.tableName).Columns(table.canInsertFields).Values(values).GetSQL();
 
         return SQLRunner.update(sql, map).generatedKeys;
     }
@@ -92,7 +92,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link java.util.List} object.
      */
     public List<Entity> list(Param<Entity> param, boolean ignoreLike) {
-        var sql = SQLBuilder.Select().SelectColumns(table.selectColumns).Table(table.tableName)
+        var sql = SQLBuilder.Select(table.tableName).SelectColumns(table.selectColumns)
                 .Where(getWhereColumns(param.queryObject, ignoreLike))
                 .WhereSql(param.whereSql)
                 .GroupBy(param.groupBy)
@@ -155,8 +155,8 @@ public final class BaseDao<Entity extends BaseModel> {
         //将 对象转换为 map 方便处理
         var entityMap = ObjectUtils.beanToMap(param.queryObject);
 
-        var sql = SQLBuilder.Delete().Where(getWhereColumns(param.queryObject, false))
-                .WhereSql(param.whereSql).Table(table.tableName).GetSQL();
+        var sql = SQLBuilder.Delete(table.tableName).Where(getWhereColumns(param.queryObject, false))
+                .WhereSql(param.whereSql).GetSQL();
         return SQLRunner.update(sql, entityMap).affectedLength;
     }
 

@@ -1,8 +1,7 @@
-**/.idea/
+/.idea/
 
-**/target/
-**/built/
-**/maven-repo/
+/target/
+/built/
 
 *.iws
 *.iml

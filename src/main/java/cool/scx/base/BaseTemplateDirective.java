@@ -24,11 +24,11 @@ public abstract class BaseTemplateDirective implements TemplateDirectiveModel {
      * {@inheritDoc}
      * 执行方法
      */
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public void execute(Environment environment, Map params, TemplateModel[] model, TemplateDirectiveBody body) throws TemplateException, IOException {
         var results = getResults((Map<String, Object>) params);
-        TemplateModel wrap = environment.getObjectWrapper().wrap(results);
+        var wrap = environment.getObjectWrapper().wrap(results);
         environment.setVariable(variableName(), wrap);
         body.render(environment.getOut());
     }

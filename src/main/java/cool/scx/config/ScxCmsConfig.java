@@ -39,8 +39,8 @@ public final class ScxCmsConfig {
         try {
             configuration.setDirectoryForTemplateLoading(ScxConfig.cmsRoot());
         } catch (Exception e) {
-            System.err.println(ScxConfig.cmsRoot().getPath());
-            System.err.println("Cms 模板目录不存在!!! Cms 功能将不可用!!!");
+            Ansi.OUT.brightRed(ScxConfig.cmsRoot().getPath()).ln();
+            Ansi.OUT.brightRed("Cms 模板目录不存在!!! Cms 功能将不可用!!!").ln();
         }
 
         //设置 字符集
@@ -65,9 +65,9 @@ public final class ScxCmsConfig {
     }
 
     /**
-     * <p>init.</p>
+     * 初始化 cms 配置文件
      */
-    public static void init() {
+    public static void initCmsConfig() {
 
     }
 }

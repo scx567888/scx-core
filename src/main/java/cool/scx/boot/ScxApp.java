@@ -32,24 +32,15 @@ public final class ScxApp {
      */
     private static void run(Class<?>[] source, String... args) {
         //此处每个初始化方法都依赖上一个的初始化方法 所以顺序不要打乱
-        //先打印出 banner
         ScxBanner.show();
-        //初始化 配置文件
         ScxConfig.initConfig(source, args);
-        //初始化插件
         ScxPlugins.initPlugins();
-        //初始化 cms 配置文件
-        ScxCmsConfig.init();
-        //初始化 context
-        ScxContext.init();
-        //初始化 事件监听
-        ScxListener.init();
-        //初始化 服务器
+        ScxCmsConfig.initCmsConfig();
+        ScxContext.initContext();
+        ScxListener.initListener();
         ScxServer.initServer();
-        //启动服务器
         ScxServer.startServer();
-        //初始化 license
-        ScxLicense.init();
+        ScxLicense.checkLicense();
     }
 
 }

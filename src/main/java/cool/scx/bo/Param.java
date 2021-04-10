@@ -1,21 +1,21 @@
 package cool.scx.bo;
 
 import cool.scx.enumeration.SortType;
+import cool.scx.util.Ansi;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * <p>Param class.</p>
+ * 查询参数类
  *
  * @author 司昌旭
- * @version 0.3.6
+ * @version 1.0.10
  */
 public final class Param<Entity> {
-    private final Field[] entityFields;
+
     public Map<String, SortType> orderBy = new HashMap<>();//排序的字段
     public Set<String> groupBy = new HashSet<>();//自定义分组 SQL 添加
     public String whereSql = "";//自定义WHERE SQL添加
@@ -30,36 +30,37 @@ public final class Param<Entity> {
      */
     public Param(Entity queryObject) {
         this.queryObject = queryObject;
-        this.entityFields = queryObject.getClass().getFields();
     }
 
     /**
-     * <p>addOrderBy.</p>
+     * 添加排序项
      *
      * @param orderByColumn a {@link java.lang.String} object.
      * @param sortType      a {@link cool.scx.enumeration.SortType} object.
      * @return a 当前实例
      */
     public Param<Entity> addOrderBy(String orderByColumn, SortType sortType) {
-        if (checkStringInFields(orderByColumn)) {
+        try {
+            queryObject.getClass().getField(orderByColumn);
             this.orderBy.put(orderByColumn, sortType);
-        } else {
-            System.err.println(orderByColumn + " 不存在于 " + queryObject.getClass() + " 的 field 内 请检查 orderBy 字段是否正确 或直接采用 param.orderBy 进行赋值 !!!");
+        } catch (NoSuchFieldException e) {
+            Ansi.OUT.brightRed(orderByColumn + " 不存在于 " + queryObject.getClass() + " 的 field 内 请检查 orderBy 字段是否正确 或直接采用 param.orderBy 进行赋值 !!!").ln();
         }
         return this;
     }
 
     /**
-     * <p>addGroupBy.</p>
+     * 设置分组项
      *
      * @param groupByColumn a {@link java.lang.String} object.
      * @return a 当前实例
      */
     public Param<Entity> addGroupBy(String groupByColumn) {
-        if (checkStringInFields(groupByColumn)) {
+        try {
+            queryObject.getClass().getField(groupByColumn);
             this.groupBy.add(groupByColumn);
-        } else {
-            System.err.println(groupByColumn + " 不存在于 " + queryObject.getClass() + " 的 field 内 请检查 groupBy 字段是否正确 或直接采用 param.groupBy 进行赋值 !!!");
+        } catch (NoSuchFieldException e) {
+            Ansi.OUT.brightRed(groupByColumn + " 不存在于 " + queryObject.getClass() + " 的 field 内 请检查 groupBy 字段是否正确 或直接采用 param.groupBy 进行赋值 !!!").ln();
         }
         return this;
     }
@@ -82,7 +83,7 @@ public final class Param<Entity> {
     }
 
     /**
-     * <p>setPagination.</p>
+     * 设置分页 默认 第一页
      *
      * @param limit a {@link java.lang.Integer} object.
      * @return a 当前实例
@@ -98,29 +99,21 @@ public final class Param<Entity> {
     }
 
     /**
-     * <p>Getter for the field <code>page</code>.</p>
+     * 获取 分页索引
      *
-     * @return a {@link java.lang.Integer} object.
+     * @return a 分页索引
      */
     public Integer getPage() {
         return page;
     }
 
     /**
-     * <p>Getter for the field <code>limit</code>.</p>
+     * 获取分页大小
      *
-     * @return a {@link java.lang.Integer} object.
+     * @return a 分页大小
      */
     public Integer getLimit() {
         return limit;
     }
 
-    private boolean checkStringInFields(String str) {
-        for (var entityField : entityFields) {
-            if (entityField.getName().equals(str)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

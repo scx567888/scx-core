@@ -3,7 +3,7 @@ package cool.scx.base;
 import javax.swing.*;
 
 /**
- * <p>Abstract BaseExceptionHandler class.</p>
+ * BaseExceptionHandler 父类
  *
  * @author 司昌旭
  * @version 1.0.10

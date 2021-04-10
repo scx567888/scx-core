@@ -33,9 +33,9 @@ public final class ScxListener {
     }
 
     /**
-     * <p>init.</p>
+     * 初始化 事件监听
      */
-    public static void init() {
+    public static void initListener() {
 
     }
 }

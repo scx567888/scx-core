@@ -53,7 +53,7 @@
             <version>5.3.5</version>
         </dependency>
 
-        <!-- mysql 驱动 注意 : 不要轻易修改 mysql 驱动版本 因为 mysql 的驱动总有bug 这个版本是测试暂时没问题的 -->
+        <!-- mysql 驱动 注意 : 不要轻易修改 mysql 驱动版本 因为 mysql 的驱动总有bug 这个版本是测试暂时没问题的 !!! -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -113,20 +113,24 @@
 
     <!-- mvn deploy 发布的路径 -->
     <distributionManagement>
+
         <!-- release 版本 -->
         <repository>
             <id>oss-sonatype</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
+
         <!-- snapshots (快照) 版本 -->
         <snapshotRepository>
             <id>oss-sonatype</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+
     </distributionManagement>
 
     <build>
         <plugins>
+
             <!-- 此插件用于打包 java doc -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -146,6 +150,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <!-- 此插件用于打包源码 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -160,6 +165,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <!-- 对 jar 包等文件进行 gpg 签名 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -175,6 +181,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <!-- 此插件用于设置 java 程序编译时的参数 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -190,6 +197,7 @@
                     <target>11</target>
                 </configuration>
             </plugin>
+
             <!-- 此插件用于设置 java 程序的依赖项 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -214,6 +222,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <!-- 此插件用于将项目打包为 可执行 jar 包-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -243,6 +252,7 @@
                     </excludes>
                 </configuration>
             </plugin>
+
             <!-- 此插件用于 运行项目 -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -252,6 +262,7 @@
                     <mainClass>${scxApp.mainClass}</mainClass>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 

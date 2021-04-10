@@ -17,15 +17,30 @@ import java.util.stream.Stream;
  * @version 0.5.0
  */
 public class TableInfo {
-    public final Field[] canUpdateFields;//实体类型不含@NoColunm 和@NoUpdate 注解的field
+    /**
+     * 实体类型不含@NoColunm 和@NoUpdate 注解的field
+     */
+    public final Field[] canUpdateFields;
 
-    public final Field[] canInsertFields;//实体类型不含@NoColunm 和@NoInsert 注解的field
+    /**
+     * 实体类型不含@NoColunm 和@NoInsert 注解的field
+     */
+    public final Field[] canInsertFields;
 
-    public final Field[] allFields;//实体类型不含@NoColunm 注解的field
+    /**
+     * 实体类型不含@NoColunm 注解的field
+     */
+    public final Field[] allFields;
 
-    public final String tableName;//表名
+    /**
+     * 表名
+     */
+    public final String tableName;
 
-    public final String[] selectColumns;//所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
+    /**
+     * 所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
+     */
+    public final String[] selectColumns;
 
     /**
      * <p>Constructor for TableInfo.</p>

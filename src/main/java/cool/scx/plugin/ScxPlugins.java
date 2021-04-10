@@ -32,7 +32,7 @@ public final class ScxPlugins {
     }
 
     /**
-     * <p>initPlugins.</p>
+     * 初始化插件
      */
     public static void initPlugins() {
         Ansi.OUT.yellow("ScxPlugins 初始化中...").ln();

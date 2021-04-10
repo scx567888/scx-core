@@ -3,7 +3,7 @@ package cool.scx.bo;
 import io.vertx.core.buffer.Buffer;
 
 /**
- * <p>FileUpload class.</p>
+ * 文件上传前台接受类
  *
  * @author 司昌旭
  * @version 1.0.10
