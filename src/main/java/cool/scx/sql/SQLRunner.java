@@ -143,8 +143,9 @@ public final class SQLRunner {
     public static UpdateResult update(String sql, Map<String, Object> param) {
         var ids = new ArrayList<Long>();
         var affectedLength = -1;
-        try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param); var resultSet = preparedStatement.getGeneratedKeys()) {
+        try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param)) {
             affectedLength = preparedStatement.executeUpdate();
+            var resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {
                 ids.add(resultSet.getLong(1));
             }

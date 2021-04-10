@@ -7,9 +7,7 @@ import cool.scx.util.Ansi;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,42 +21,53 @@ import java.util.stream.Stream;
  * @version $Id: $Id
  */
 public class SQLHelper {
-    private static final Map<String, TableInfo> tableCache = new ConcurrentHashMap<>(256);
 
     /**
-     * <p>getTableInfo.</p>
+     * tableInfo 缓存
+     */
+    private static final Map<String, TableInfo> TABLE_INFO_CACHE = new ConcurrentHashMap<>(256);
+
+
+    /**
+     * 根据 class 通过反射获取 对应的 TableInfo (表结构)
      *
-     * @param clazz a {@link java.lang.Class} object.
-     * @return a {@link cool.scx.bo.TableInfo} object.
+     * @param clazz class
+     * @return a tableInfo
      */
     public static TableInfo getTableInfo(Class<?> clazz) {
-        var tempTable = tableCache.get(clazz.getName());
+        var tempTable = TABLE_INFO_CACHE.get(clazz.getName());
         if (tempTable != null) {
             return tempTable;
         }
         tempTable = new TableInfo(clazz);
-        tableCache.put(clazz.getName(), tempTable);
+        TABLE_INFO_CACHE.put(clazz.getName(), tempTable);
         return tempTable;
     }
 
     /**
-     * <p>getSQlColumnTypeByClass.</p>
+     * 根据 class 获取类型
      *
      * @param clazz a {@link java.lang.Class} object.
      * @return a {@link java.lang.String} object.
      */
-    public static String getSQlColumnTypeByClass(Class<?> clazz) {
-        var TypeMapping = new HashMap<Class<?>, String>();
-        TypeMapping.put(java.lang.Integer.class, "int");
-        TypeMapping.put(java.lang.Long.class, "bigint");
-        TypeMapping.put(java.lang.Double.class, "double");
-        TypeMapping.put(java.lang.Boolean.class, "BIT(1)");
-        TypeMapping.put(java.time.LocalDateTime.class, "DATETIME");
-        var type = TypeMapping.get(clazz);
-        if (type == null) {
-            return "varchar(128)";
+    public static String getColumnTypeByType(Class<?> clazz) {
+        if (clazz == java.lang.String.class) {
+            return "VARCHAR(128)";
+        } else if (clazz == java.lang.Long.class) {
+            return "BIGINT";
+        } else if (clazz == java.lang.Double.class) {
+            return "DOUBLE";
+        } else if (clazz == java.lang.Byte.class) {
+            return "TINYINT";
+        } else if (clazz == java.lang.Integer.class) {
+            return "INTEGER";
+        } else if (clazz == java.lang.Boolean.class) {
+            return "BIT";
+        } else if (clazz == java.time.LocalDateTime.class) {
+            return "DATETIME";
+        } else {
+            return "VARCHAR(128)";
         }
-        return type;
     }
 
     /**
@@ -77,17 +86,6 @@ public class SQLHelper {
             //获取到表
             if (nowTable.next()) {
                 var nowColumns = dbMetaData.getColumns(null, null, nowTable.getString("TABLE_NAME"), null);
-
-                while (nowColumns.next()) {
-                    var dataMap = new HashMap<>();
-                    ResultSetMetaData rsMeta = nowColumns.getMetaData();
-                    int columnCount = rsMeta.getColumnCount();
-                    for (int i = 1; i <= columnCount; i++) {
-                        dataMap.put(rsMeta.getColumnLabel(i), nowColumns.getObject(i));
-                    }
-                    System.out.println();
-                }
-
                 var stringArrayList = new ArrayList<>();
                 while (nowColumns.next()) {
                     stringArrayList.add(nowColumns.getString("COLUMN_NAME"));
@@ -124,15 +122,6 @@ public class SQLHelper {
         }
     }
 
-    /**
-     * 检查字段是否符合要求
-     *
-     * @return
-     */
-    private static boolean checkColumn() {
-        return false;
-    }
-
     private static List<String> getOtherSQLByField(Field... allFields) {
         var list = new ArrayList<String>();
         for (Field field : allFields) {
@@ -163,7 +152,7 @@ public class SQLHelper {
         var onUpdate = "";
         var fieldColumn = field.getAnnotation(Column.class);
         if (fieldColumn != null) {
-            type = "".equals(fieldColumn.type()) ? SQLHelper.getSQlColumnTypeByClass(field.getType()) : fieldColumn.type();
+            type = "".equals(fieldColumn.type()) ? SQLHelper.getColumnTypeByType(field.getType()) : fieldColumn.type();
             notNull = fieldColumn.notNull() ? " NOT NULL" : " NULL";
             if (fieldColumn.autoIncrement()) {
                 autoIncrement = " AUTO_INCREMENT ";
@@ -178,7 +167,7 @@ public class SQLHelper {
                 onUpdate += " ON UPDATE " + fieldColumn.defaultValue();
             }
         } else {
-            type = SQLHelper.getSQlColumnTypeByClass(field.getType());
+            type = SQLHelper.getColumnTypeByType(field.getType());
             notNull = " NULL ";
         }
         return columnName + type + notNull + autoIncrement + defaultValue + onUpdate;
