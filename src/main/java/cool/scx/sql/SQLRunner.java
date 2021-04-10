@@ -45,7 +45,7 @@ public final class SQLRunner {
      * 获取 JDBC 连接
      *
      * @return jdbc 连接
-     * @throws java.lang.Exception 数据库连接失败
+     * @throws java.lang.Exception if any.
      */
     public static Connection getConnection() throws Exception {
         return dataSource.getConnection();
@@ -119,7 +119,8 @@ public final class SQLRunner {
     /**
      * 执行 sql 语句
      *
-     * @param sql a {@link java.lang.String} object.
+     * @param sql   a {@link java.lang.String} object.
+     * @param param a {@link java.util.Map} object.
      * @return a 执行结果
      */
     public static boolean execute(String sql, Map<String, Object> param) {
