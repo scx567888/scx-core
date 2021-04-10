@@ -46,7 +46,7 @@ public class DataSource {
                 s -> Ansi.OUT.green("Y 数据库 JDBC Url                      \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.data-source.url          \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.data-source.url         \t -->\t 已采用默认值 : " + f).ln();
                 },
                 JsonNode::asText, a -> a);
 
@@ -54,7 +54,7 @@ public class DataSource {
                 s -> Ansi.OUT.green("Y 数据库连接用户                       \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.data-source.username     \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.data-source.username    \t -->\t 已采用默认值 : " + f).ln();
                 },
                 JsonNode::asText, a -> a);
 
@@ -62,7 +62,7 @@ public class DataSource {
                 s -> Ansi.OUT.green("Y 数据库连接密码                       \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.data-source.password     \t -->\t 请检查数据库密码是否正确").ln();
+                    Ansi.OUT.red("N 未检测到 scx.data-source.password    \t -->\t 请检查数据库密码是否正确").ln();
                 },
                 JsonNode::asText, a -> a);
 

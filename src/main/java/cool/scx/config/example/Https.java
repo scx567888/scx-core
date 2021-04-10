@@ -54,14 +54,14 @@ public class Https {
                 s -> Ansi.OUT.green("Y 是否开启 https                       \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.https.is-open           \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
         https.sslPath = getConfigValue("scx.https.ssl-path", "",
                 s -> Ansi.OUT.green("Y 证书路径                            \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.https.ssl-path        \t -->\t 请检查证书路径是否正确").ln();
+                    Ansi.OUT.red("N 未检测到 scx.https.ssl-path         \t -->\t 请检查证书路径是否正确").ln();
                 }, JsonNode::asText, a -> a);
 
         https.sslPathValue = PackageUtils.getFileByAppRoot(https.sslPath);

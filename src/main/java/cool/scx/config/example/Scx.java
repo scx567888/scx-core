@@ -117,7 +117,7 @@ public class Scx {
                 },
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.port                  \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.port                   \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asInt, Integer::parseInt);
 
         scx.cms = Cms.from(needFixConfig);
@@ -146,7 +146,7 @@ public class Scx {
                 s -> Ansi.OUT.green("Y 是否混淆登录错误                     \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.confusion-login-error \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.confusion-login-error  \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
         scx.loginErrorLockTimes = getConfigValue("scx.login-error-lock-times", 999,
@@ -167,20 +167,20 @@ public class Scx {
                 s -> Ansi.OUT.green("Y 是否打印日志                         \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.show-log              \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.show-log               \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
         scx.realDelete = getConfigValue("scx.real-delete", false,
                 s -> Ansi.OUT.green("Y 数据库删除方式为                     \t -->\t " + (s ? "物理删除" : "逻辑删除")).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.real-delete           \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.real-delete            \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
         scx.license = getConfigValue("scx.license", "", Tidy::NoCode,
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.license               \t -->\t 请检查 license 是否正确").ln();
+                    Ansi.OUT.red("N 未检测到 scx.license                \t -->\t 请检查 license 是否正确").ln();
                 }, JsonNode::asText, (a) -> a);
 
         scx.https = Https.from(needFixConfig);
@@ -189,7 +189,7 @@ public class Scx {
                 s -> Ansi.OUT.green("Y 日期格式为                          \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.date-time-pattern        \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.date-time-pattern       \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asText, (a) -> a);
 
         scx.dateTimeFormatter = DateTimeFormatter.ofPattern(scx.dateTimePattern);
@@ -199,7 +199,7 @@ public class Scx {
                 s -> Ansi.OUT.green("Y 允许的请求源                         \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.allowed-origin           \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.allowed-origin          \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asText, (a) -> a);
 
         scx.dataSource = DataSource.from(needFixConfig);
@@ -221,7 +221,7 @@ public class Scx {
                 newConfig.put("scx", scx);
                 //合并新的和旧的配置文件 并写入到 配置文件的路径中
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputStream, objectMapper.updateValue(oldJsonNode.deepCopy(), newConfig));
-                Ansi.OUT.brightGreen("Y 因配置文件损坏,已自动修复配置文件           \t -->\t " + configPath).ln();
+                Ansi.OUT.brightGreen("X 检测到配置文件损坏,已自动修复 !!!").ln();
                 outputStream.flush();
             } catch (IOException e) {
                 e.printStackTrace();

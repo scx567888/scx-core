@@ -53,7 +53,7 @@ public class Plugin {
                 s -> Ansi.OUT.green("Y 禁用插件列表                         \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.plugin.disabled-list     \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.plugin.disabled-list    \t -->\t 已采用默认值 : " + f).ln();
                 },
                 c -> {
                     var tempSet = new HashSet<String>();
