@@ -62,7 +62,7 @@ public class SQLHelper {
         } else if (clazz == java.lang.Integer.class) {
             return "INTEGER";
         } else if (clazz == java.lang.Boolean.class) {
-            return "BIT";
+            return "TINYINT(1)";
         } else if (clazz == java.time.LocalDateTime.class) {
             return "DATETIME";
         } else {
