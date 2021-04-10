@@ -7,11 +7,20 @@ import java.util.LinkedHashSet;
 
 /**
  * 最基本的参数处理
+ *
+ * @author 司昌旭
+ * @version 1.0.10
  */
 public class ScxParameters {
     private static Class<?>[] classSources;
     private static String[] parameters;
 
+    /**
+     * <p>initParameters.</p>
+     *
+     * @param _classSources an array of {@link java.lang.Class} objects.
+     * @param _args         an array of {@link java.lang.String} objects.
+     */
     public static void initParameters(Class<?>[] _classSources, String[] _args) {
         classSources = filterClassSource(_classSources);
         parameters = _args;

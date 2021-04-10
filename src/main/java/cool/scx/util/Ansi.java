@@ -19,8 +19,8 @@ public final class Ansi {
      */
     public static final Ansi OUT = new Ansi();
     private static final Map<Integer, AnsiColor> printColor = new HashMap<>();
-    private static int nextPrintColor = 0;
     private static final boolean supportAnsiColor;
+    private static int nextPrintColor = 0;
 
     static {
         var i = 0;
@@ -46,6 +46,18 @@ public final class Ansi {
         } else {
             System.out.print(o.toString());
         }
+    }
+
+    private static boolean isSupportAnsiColor() {
+        for (String parameter : ScxParameters.parameters()) {
+            if (parameter.startsWith("--supportAnsiColor=")) {
+                String[] split = parameter.split("=");
+                if (split.length == 2) {
+                    return "true".equals(split[1]);
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -92,7 +104,6 @@ public final class Ansi {
         return this;
     }
 
-
     /**
      * 青色
      *
@@ -125,7 +136,6 @@ public final class Ansi {
         print(o, AnsiColor.BRIGHT_MAGENTA);
         return this;
     }
-
 
     /**
      * 亮红色
@@ -205,18 +215,6 @@ public final class Ansi {
         print(o, printColor.get(nextPrintColor));
         nextPrintColor = nextPrintColor + 1;
         return this;
-    }
-
-    private static boolean isSupportAnsiColor() {
-        for (String parameter : ScxParameters.parameters()) {
-            if (parameter.startsWith("--supportAnsiColor=")) {
-                String[] split = parameter.split("=");
-                if (split.length == 2) {
-                    return "true".equals(split[1]);
-                }
-            }
-        }
-        return true;
     }
 
 }
