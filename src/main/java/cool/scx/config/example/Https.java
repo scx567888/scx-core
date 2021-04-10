@@ -51,17 +51,17 @@ public class Https {
     public static Https from(AtomicBoolean needFixConfig) {
         var https = new Https();
         https.isOpen = getConfigValue("scx.https.is-open", false,
-                s -> Ansi.OUT.green("✔ 是否开启 https                       \t -->\t " + (s ? "是" : "否")).ln(),
+                s -> Ansi.OUT.green("Y 是否开启 https                       \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("✘ 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.https.is-open            \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
         https.sslPath = getConfigValue("scx.https.ssl-path", "",
-                s -> Ansi.OUT.green("✔ 证书路径                           \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
+                s -> Ansi.OUT.green("Y 证书路径                           \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("✘ 未检测到 scx.https.ssl-path        \t -->\t 请检查证书路径是否正确").ln();
+                    Ansi.OUT.red("N 未检测到 scx.https.ssl-path        \t -->\t 请检查证书路径是否正确").ln();
                 }, JsonNode::asText, a -> a);
 
         https.sslPathValue = PackageUtils.getFileByAppRoot(https.sslPath);
@@ -70,7 +70,7 @@ public class Https {
                 Tidy::NoCode,
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("✘ 未检测到 scx.https.ssl-password      \t -->\t 请检查证书密码是否正确").ln();
+                    Ansi.OUT.red("N 未检测到 scx.https.ssl-password      \t -->\t 请检查证书密码是否正确").ln();
                 }, JsonNode::asText, a -> a);
 
         if (https.isOpen) {
@@ -78,7 +78,7 @@ public class Https {
             try {
                 tempSSLPasswordValue = CryptoUtils.decryptText(https.sslPassword);
             } catch (Exception e) {
-                Ansi.OUT.red("✘ 解密 scx.https.ssl-password  出错        \t -->\t 请检查证书密码是否正确").ln();
+                Ansi.OUT.red("N 解密 scx.https.ssl-password  出错        \t -->\t 请检查证书密码是否正确").ln();
             }
             https.sslPasswordValue = tempSSLPasswordValue;
         } else {

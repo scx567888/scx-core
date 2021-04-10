@@ -58,36 +58,36 @@ public class Cms {
         var cms = new Cms();
 
         cms.root = getConfigValue("scx.cms.root", "/c/",
-                s -> Ansi.OUT.green("✔ Cms 根目录                         \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
+                s -> Ansi.OUT.green("Y Cms 根目录                         \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("✘ 未检测到 scx.cms.root              \t -->\t 已采用默认值 : " + PackageUtils.getFileByAppRoot(f)).ln();
+                    Ansi.OUT.red("N 未检测到 scx.cms.root              \t -->\t 已采用默认值 : " + PackageUtils.getFileByAppRoot(f)).ln();
                 }, JsonNode::asText, a -> a);
 
         cms.rootValue = PackageUtils.getFileByAppRoot(cms.root);
 
         cms.resourceHttpUrl = getConfigValue("scx.cms.resource-http-url", "/static/*",
-                s -> Ansi.OUT.green("✔ Cms 静态资源 Url                     \t -->\t " + s).ln(),
+                s -> Ansi.OUT.green("Y Cms 静态资源 Url                     \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("✘ 未检测到 scx.cms.resource-http-url    \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.cms.resource-http-url    \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asText, (a) -> a);
 
 
         cms.resourceLocations = getConfigValue("scx.cms.resource-locations", "/c/static",
-                s -> Ansi.OUT.green("✔ Cms 静态资源目录                     \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
+                s -> Ansi.OUT.green("Y Cms 静态资源目录                     \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("✘ 未检测到 scx.cms.resource-locations   \t -->\t 已采用默认值 : " + PackageUtils.getFileByAppRoot(f)).ln();
+                    Ansi.OUT.red("N 未检测到 scx.cms.resource-locations   \t -->\t 已采用默认值 : " + PackageUtils.getFileByAppRoot(f)).ln();
                 }, JsonNode::asText, a -> a);
 
         cms.resourceLocationsValue = PackageUtils.getFileByAppRoot(cms.resourceLocations);
 
         cms.templateSuffix = getConfigValue("scx.cms.template-suffix", ".html",
-                s -> Ansi.OUT.green("✔ Cms 模板文件后缀                     \t -->\t " + s).ln(),
+                s -> Ansi.OUT.green("Y Cms 模板文件后缀                     \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("✘ 未检测到 scx.cms.template-suffix   \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.cms.template-suffix   \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asText, a -> a);
 
         return cms;

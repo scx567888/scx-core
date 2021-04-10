@@ -1,6 +1,6 @@
 package cool.scx.util;
 
-import cool.scx.config.ScxConfig;
+import cool.scx.boot.ScxParameters;
 import cool.scx.plugin.ScxPlugins;
 
 import java.io.File;
@@ -48,7 +48,7 @@ public class PackageUtils {
     public static void scanPackage(Function<Class<?>, Boolean> fun, URL... classOrJarPaths) {
         var classList = new HashSet<Class<?>>();
         if (classOrJarPaths.length == 0) {
-            classOrJarPaths = Arrays.stream(ScxConfig.classSources()).map(PackageUtils::getClassSourceRealPath).toArray(URL[]::new);
+            classOrJarPaths = Arrays.stream(ScxParameters.classSources()).map(PackageUtils::getClassSourceRealPath).toArray(URL[]::new);
         }
         for (var c : classOrJarPaths) {
             try {
@@ -170,7 +170,7 @@ public class PackageUtils {
      * @return a {@link java.io.File} object.
      */
     public static File getAppRoot() {
-        var file = new File(getClassSourceRealPath(ScxConfig.getAppClassSources()).getFile());
+        var file = new File(getClassSourceRealPath(ScxParameters.getAppClassSources()).getFile());
         return file.getPath().endsWith(".jar") ? file.getParentFile() : file;
     }
 
@@ -180,7 +180,7 @@ public class PackageUtils {
      * @return an array of {@link java.lang.String} objects.
      */
     public static String[] getBasePackages() {
-        return Arrays.stream(ScxConfig.classSources()).map(Class::getPackageName).toArray(String[]::new);
+        return Arrays.stream(ScxParameters.classSources()).map(Class::getPackageName).toArray(String[]::new);
     }
 
 }
