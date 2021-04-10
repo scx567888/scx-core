@@ -1,7 +1,7 @@
 package cool.scx.enumeration;
 
 /**
- * <p>FixTableResult class.</p>
+ * 修复表结果
  *
  * @author 司昌旭
  * @version 1.0.10

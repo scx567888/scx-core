@@ -20,7 +20,7 @@ import java.util.Map;
  * 通用 Crud的 controller
  *
  * @author 司昌旭
- * @version 0.3.6
+ * @version 1.0.10
  */
 @ScxController("api")
 public class CrudController {
