@@ -154,14 +154,14 @@ public class Scx {
                 }, JsonNode::asInt, Integer::valueOf);
 
         scx.loginErrorLockSecond = getConfigValue("scx.login-error-lock-second", 10,
-                s -> Ansi.OUT.green("✔ 登录错误锁定的时间                    \t -->\t " + s + " 秒").ln(),
+                s -> Ansi.OUT.green("✔ 登录错误锁定时间                     \t -->\t " + s + " 秒").ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("✘ 未检测到 scx.login-error-lock-second \t -->\t 已采用默认值 : " + f).ln();
                 }, JsonNode::asInt, Integer::valueOf);
 
         scx.showLog = getConfigValue("scx.show-log", true,
-                s -> Ansi.OUT.green("✔ 是否将错误日志打印到控制台             \t -->\t " + (s ? "是" : "否")).ln(),
+                s -> Ansi.OUT.green("✔ 是否打印日志                         \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("✘ 未检测到 scx.show-log              \t -->\t 已采用默认值 : " + f).ln();
