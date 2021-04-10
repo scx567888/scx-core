@@ -8,6 +8,7 @@ import cool.scx.core.user.User;
 import cool.scx.core.user.UserService;
 import cool.scx.enumeration.Device;
 import cool.scx.enumeration.FixTableResult;
+import cool.scx.exception.handler.SQLRunnerExceptionHandler;
 import cool.scx.plugin.ScxPlugins;
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.SQLRunner;
@@ -108,7 +109,14 @@ public final class ScxContext {
      * <p>fixTable.</p>
      */
     public static void fixTable() {
-        if (ScxConfig.fixTable() && SQLRunner.testConnection()) {
+        try (var conn = SQLRunner.getConnection()) {
+            var dm = conn.getMetaData();
+            Ansi.OUT.magenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").ln();
+        } catch (Exception e) {
+            SQLRunnerExceptionHandler.sqlExceptionHandler(e);
+            return;
+        }
+        if (ScxConfig.fixTable()) {
             Ansi.OUT.magenta("修复数据表中...").ln();
             var noNeedFix = new AtomicBoolean(true);
             SCX_BEAN_CLASS_NAME_MAPPING.forEach((k, v) -> {

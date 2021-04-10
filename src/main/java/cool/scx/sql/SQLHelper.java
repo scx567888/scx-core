@@ -107,7 +107,7 @@ public class SQLHelper {
                     } else {
                         alertSql += ";";
                     }
-                    SQLRunner.execute(alertSql);
+                    SQLRunner.execute(alertSql, null);
                     return FixTableResult.FIX_SUCCESS;
                 } else {
                     return FixTableResult.NO_NEED_TO_FIX;
@@ -115,7 +115,7 @@ public class SQLHelper {
             } else {
                 Ansi.OUT.brightMagenta("未找到表 " + table.tableName + " --> 正在自动建立 !!!").ln();
                 var createTableSql = "CREATE TABLE `" + table.tableName + "` ( " + Stream.of(table.allFields).map(field -> getSQLColumnByField(field) + ",").collect(Collectors.joining("", "", "")) + String.join(",", getOtherSQLByField(table.allFields)) + ") ;";
-                SQLRunner.execute(createTableSql);
+                SQLRunner.execute(createTableSql, null);
                 return FixTableResult.FIX_SUCCESS;
             }
         } catch (Exception e) {

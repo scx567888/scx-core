@@ -3,10 +3,9 @@ package cool.scx.sql;
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
-import cool.scx.exception.handler.SQLRunnerExceptionHandler;
 import cool.scx.util.Ansi;
-import cool.scx.util.ObjectUtils;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -15,22 +14,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 /**
- * <p>SQLRunner class.</p>
+ * SQLRunner 执行 sql 语句
  *
  * @author 司昌旭
- * @version 0.3.6
+ * @version 1.0.10
  */
 public final class SQLRunner {
 
-    private static final HikariDataSource dataSource;
+    /**
+     * 数据源
+     */
+    private static final HikariDataSource dataSource = new HikariDataSource();
+
+    /**
+     * 参数过滤正则表达式
+     */
     private static final Pattern pattern = Pattern.compile("(:([\\w.]+))");
 
     static {
-        dataSource = new HikariDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setJdbcUrl(ScxConfig.dataSourceUrl());
         dataSource.setUsername(ScxConfig.dataSourceUsername());
@@ -38,43 +42,33 @@ public final class SQLRunner {
     }
 
     /**
-     * <p>testConnection.</p>
+     * 获取 JDBC 连接
      *
-     * @return a boolean.
-     */
-    public static boolean testConnection() {
-        try (var conn = getConnection()) {
-            var dm = conn.getMetaData();
-            Ansi.OUT.magenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").ln();
-            return true;
-        } catch (Exception e) {
-            SQLRunnerExceptionHandler.sqlExceptionHandler(e);
-            return false;
-        }
-    }
-
-    /**
-     * <p>getConnection.</p>
-     *
-     * @return a Connection object.
-     * @throws java.lang.Exception if any.
+     * @return jdbc 连接
+     * @throws java.lang.Exception 数据库连接失败
      */
     public static Connection getConnection() throws Exception {
         return dataSource.getConnection();
     }
 
-    private static <T> ArrayList<T> query(String sql, Map<String, Object> param, Function<Map<String, Object>, T> convertFun) {
-        var list = new ArrayList<T>();
+    /**
+     * 查询 返回值为 map集合
+     *
+     * @param sql   a {@link java.lang.String} object.
+     * @param param a {@link java.util.Map} object.
+     * @return a map 集合
+     */
+    public static List<Map<String, Object>> query(String sql, Map<String, Object> param) {
+        var list = new ArrayList<Map<String, Object>>();
         try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param); var resultSet = preparedStatement.executeQuery()) {
-            var resultSetMetaData = resultSet.getMetaData();
-            var count = resultSetMetaData.getColumnCount();
-            //从rs中取出数据，并且封装到ArrayList中
+            var rsm = resultSet.getMetaData();
+            var count = rsm.getColumnCount();
             while (resultSet.next()) {
                 var s = new HashMap<String, Object>();
                 for (int i = 1; i <= count; i++) {
-                    s.put(resultSetMetaData.getColumnLabel(i), resultSet.getObject(i));
+                    s.put(rsm.getColumnLabel(i), resultSet.getObject(i));
                 }
-                list.add(convertFun.apply(s));
+                list.add(s);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,29 +77,84 @@ public final class SQLRunner {
     }
 
     /**
-     * <p>query.</p>
+     * 查询 返回值  对象集合
      *
-     * @param sql   a {@link java.lang.String} object.
-     * @param param a {@link java.util.Map} object.
-     * @param clazz a {@link java.lang.Class} object.
-     * @param <T>   a T object.
-     * @return a {@link java.util.List} object.
+     * @param sql   sql
+     * @param param 参数
+     * @param clazz 待转换的对象
+     * @param <T>   泛型
+     * @return list T
      */
     public static <T> List<T> query(String sql, Map<String, Object> param, Class<T> clazz) {
-        return query(sql, param, c -> ObjectUtils.mapToBean(c, clazz));
+        var list = new ArrayList<T>();
+        try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param); var rs = preparedStatement.executeQuery()) {
+            var rsm = rs.getMetaData();
+            var count = rsm.getColumnCount();
+            var allField = new Field[count + 1];
+            for (int i = 1; i <= count; i++) {
+                try {
+                    allField[i] = clazz.getField(rsm.getColumnLabel(i));
+                    allField[i].setAccessible(true);
+                } catch (Exception e) {
+                    allField[i] = null;
+                }
+            }
+            //从rs中取出数据，并且封装到ArrayList中
+            while (rs.next()) {
+                T t = clazz.getDeclaredConstructor().newInstance();
+                for (int i = 1; i <= count; i++) {
+                    var field = allField[i];
+                    if (field != null) {
+                        field.set(t, rs.getObject(i, field.getType()));
+                    }
+                }
+                list.add(t);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     /**
-     * <p>query.</p>
+     * 执行 sql 语句
+     *
+     * @param sql a {@link java.lang.String} object.
+     * @return a 执行结果
+     */
+    public static boolean execute(String sql, Map<String, Object> param) {
+        try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param)) {
+            preparedStatement.execute();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 执行更新语句
      *
      * @param sql   a {@link java.lang.String} object.
      * @param param a {@link java.util.Map} object.
-     * @return a {@link java.util.List} object.
+     * @return a {@link cool.scx.bo.UpdateResult} object.
      */
-    public static List<Map<String, Object>> query(String sql, Map<String, Object> param) {
-        return query(sql, param, c -> c);
+    public static UpdateResult update(String sql, Map<String, Object> param) {
+        var ids = new ArrayList<Long>();
+        var affectedLength = -1;
+        try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param); var resultSet = preparedStatement.getGeneratedKeys()) {
+            affectedLength = preparedStatement.executeUpdate();
+            while (resultSet.next()) {
+                ids.add(resultSet.getLong(1));
+            }
+            if (ids.size() == 0) {
+                ids.add(-1L);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new UpdateResult(affectedLength, ids);
     }
-
 
     /**
      * 使用参数值 paramMap，填充 PreparedStatement
@@ -116,14 +165,16 @@ public final class SQLRunner {
      * @return PreparedStatement
      * @throws java.lang.Exception if any.
      */
-    public static PreparedStatement getPreparedStatement(Connection con, String sql, Map<String, Object> paramMap) throws Exception {
-        var matcher = pattern.matcher(sql);
+    private static PreparedStatement getPreparedStatement(Connection con, String sql, Map<String, Object> paramMap) throws Exception {
         var result = pattern.matcher(sql).replaceAll("?");
         var preparedStatement = con.prepareStatement(result, Statement.RETURN_GENERATED_KEYS);
-        int index = 1;
-        while (matcher.find()) {
-            preparedStatement.setObject(index, paramMap.get(matcher.group(2)));
-            index++;
+        var index = 1;
+        if (paramMap != null) {
+            var matcher = pattern.matcher(sql);
+            while (matcher.find()) {
+                preparedStatement.setObject(index, paramMap.get(matcher.group(2)));
+                index++;
+            }
         }
         if (ScxConfig.showLog()) {
             var s = preparedStatement.toString();
@@ -131,47 +182,5 @@ public final class SQLRunner {
         }
         return preparedStatement;
     }
-
-    /**
-     * <p>execute.</p>
-     *
-     * @param sql a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    public static boolean execute(String sql) {
-        try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, new HashMap<>())) {
-            preparedStatement.execute();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * <p>update.</p>
-     *
-     * @param sql   a {@link java.lang.String} object.
-     * @param param a {@link java.util.Map} object.
-     * @return a {@link cool.scx.bo.UpdateResult} object.
-     */
-    public static UpdateResult update(String sql, Map<String, Object> param) {
-        try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, param)) {
-            var affectedLength = preparedStatement.executeUpdate();
-            var resultSet = preparedStatement.getGeneratedKeys();
-            var ids = new ArrayList<Long>();
-            while (resultSet.next()) {
-                ids.add(resultSet.getLong(1));
-            }
-            if (ids.size() == 0) {
-                ids.add(-1L);
-            }
-            return new UpdateResult(affectedLength, ids);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new UpdateResult(-1, new ArrayList<>());
-        }
-    }
-
 
 }
