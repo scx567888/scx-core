@@ -410,7 +410,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String scxVersion() {
-        return "1.0.11";
+        return "1.0.12";
     }
 
     /**
