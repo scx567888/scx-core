@@ -58,7 +58,7 @@ public class Https {
                 }, JsonNode::asBoolean, Boolean::valueOf);
 
         https.sslPath = getConfigValue("scx.https.ssl-path", "",
-                s -> Ansi.OUT.green("Y 证书路径                           \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
+                s -> Ansi.OUT.green("Y 证书路径                            \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.https.ssl-path        \t -->\t 请检查证书路径是否正确").ln();
