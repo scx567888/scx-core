@@ -43,6 +43,7 @@ public class NoticeWebSocketController implements BaseWebSocketController {
 
     /**
      * {@inheritDoc}
+     * todo 此处功能待处理
      */
     @Override
     public void onMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket) {
@@ -52,18 +53,20 @@ public class NoticeWebSocketController implements BaseWebSocketController {
         var callBackId = map.get("callBackId").toString();
         //这条信息是 登录(websocket)验证信息
         if ("login".equals(type.toString())) {
-            String token = map.get("token").toString();
-            Device device = Device.ADMIN;//todo 此处获取不正确
-            var nowLoginUser = ScxContext.getLoginUserByToken(device, token);
-            //这条websocket 连接验证通过
-            if (nowLoginUser != null) {
-                ScxContext.addOnlineItem(webSocket, nowLoginUser.username);
-                //理论上 sessionItem 不可能为空 但是 还是应该判断一下 这里嫌麻烦 先不写了 todo
-                var s = Json.ok().data("callBackId", callBackId).data("message", nowLoginUser).toString();
-                webSocket.writeTextMessage(s);
-                Ansi.OUT.brightGreen(binaryHandlerID + " 登录了!!! 登录的用户名 : " + nowLoginUser.username).ln();
+            Object token = map.get("token");
+            if (token != null) {
+                Device device = Device.ADMIN;//todo 此处获取不正确
+                var nowLoginUser = ScxContext.getLoginUserByToken(device, token.toString());
+                //这条websocket 连接验证通过
+                if (nowLoginUser != null) {
+                    ScxContext.addOnlineItem(webSocket, nowLoginUser.username);
+                    //理论上 sessionItem 不可能为空 但是 还是应该判断一下 这里嫌麻烦 先不写了 todo
+                    var s = Json.ok().data("callBackId", callBackId).data("message", nowLoginUser).toString();
+                    webSocket.writeTextMessage(s);
+                    Ansi.OUT.brightGreen(binaryHandlerID + " 登录了!!! 登录的用户名 : " + nowLoginUser.username).ln();
+                }
+                Ansi.OUT.brightYellow("当前总在线用户数量 : " + ScxContext.getOnlineUserCount()).ln();
             }
-            Ansi.OUT.brightYellow("当前总在线用户数量 : " + ScxContext.getOnlineUserCount()).ln();
         } else if ("sendMessage".equals(type.toString())) {
             //发送的用户
             var username = map.get("username").toString();
