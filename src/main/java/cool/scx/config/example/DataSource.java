@@ -70,21 +70,21 @@ public class DataSource {
                 s -> Ansi.OUT.green("Y 数据源 Host                          \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.data-source.host         \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.data-source.host        \t -->\t 已采用默认值 : " + f).ln();
                 });
 
         dataSource.port = ScxConfig.value("scx.data-source.port", 3306,
                 s -> Ansi.OUT.green("Y 数据源 端口号                        \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.data-source.port             \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.data-source.port        \t -->\t 已采用默认值 : " + f).ln();
                 });
 
         dataSource.database = ScxConfig.value("scx.data-source.database", "scx",
                 s -> Ansi.OUT.green("Y 数据源 数据库名称                    \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.data-source.database         \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.data-source.database    \t -->\t 已采用默认值 : " + f).ln();
                 });
 
         dataSource.username = ScxConfig.value("scx.data-source.username", "root",
@@ -105,7 +105,7 @@ public class DataSource {
                 s -> Ansi.OUT.green("Y 数据源 连接参数                      \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
-                    Ansi.OUT.red("N 未检测到 scx.data-source.parameters    \t -->\t 已采用默认值 : " + f).ln();
+                    Ansi.OUT.red("N 未检测到 scx.data-source.parameters  \t -->\t 已采用默认值 : " + f).ln();
                 });
 
         try {

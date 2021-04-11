@@ -6,7 +6,6 @@
     "confusion-login-error": false,
     "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
     "show-log": true,
-    "show-gui": false,
     "real-delete": false,
     "login-error-lock-times": 3,
     "login-error-lock-second": 60,
@@ -24,11 +23,11 @@
       "host": "127.0.0.1",
       "port": 3306,
       "database": "scx",
-      "username": "root",
-      "password": "OgaIGDNXuGHN8riHCTVsgeSro4o2IVY/wTU3+467XCYkdDT2bkoJROBhGOTcA3Z0",
       "parameters": [
         "allowMultiQueries=true"
-      ]
+      ],
+      "username": "root",
+      "password": "OgaIGDNXuGHN8riHCTVsgeSro4o2IVY/wTU3+467XCYkdDT2bkoJROBhGOTcA3Z0"
     },
     "https": {
       "is-open": false,
