@@ -2,6 +2,7 @@ package cool.scx.sql;
 
 import cool.scx.annotation.Column;
 import cool.scx.bo.TableInfo;
+import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.FixTableResult;
 import cool.scx.util.Ansi;
 import cool.scx.util.StringUtils;
@@ -26,6 +27,8 @@ public class SQLHelper {
      * tableInfo 缓存
      */
     private static final Map<String, TableInfo> TABLE_INFO_CACHE = new ConcurrentHashMap<>(256);
+
+    private static final String database = ScxConfig.dataSource().database;
 
 
     /**
@@ -82,10 +85,10 @@ public class SQLHelper {
             //获取当前连接对象的 MetaData
             var dbMetaData = connection.getMetaData();
             //根据表名称获取表
-            var nowTable = dbMetaData.getTables(null, null, table.tableName, new String[]{"TABLE"});
+            var nowTable = dbMetaData.getTables(database, database, table.tableName, new String[]{"TABLE"});
             //获取到表
             if (nowTable.next()) {
-                var nowColumns = dbMetaData.getColumns(null, null, nowTable.getString("TABLE_NAME"), null);
+                var nowColumns = dbMetaData.getColumns(database, database, nowTable.getString("TABLE_NAME"), null);
                 var stringArrayList = new ArrayList<>();
                 while (nowColumns.next()) {
                     stringArrayList.add(nowColumns.getString("COLUMN_NAME"));

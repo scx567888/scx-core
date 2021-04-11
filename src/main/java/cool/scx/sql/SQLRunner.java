@@ -38,8 +38,11 @@ public final class SQLRunner {
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         var d = ScxConfig.dataSource();
         var jdbcUrl = "jdbc:mysql://" + d.host + ":" + d.port + "/" + d.database;
-        if (d.parameters.size() > 0) {
-            jdbcUrl = jdbcUrl + "?" + String.join("&", d.parameters);
+        for (String parameter : d.parameters) {
+            var p = parameter.split("=");
+            if (p.length == 2) {
+                dataSource.addDataSourceProperty(p[0], p[1]);
+            }
         }
         dataSource.setJdbcUrl(jdbcUrl);
         dataSource.setUsername(d.username);
