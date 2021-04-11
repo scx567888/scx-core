@@ -41,7 +41,12 @@ public final class ScxConfig {
     private static JsonNode nowScxConfigJsonNode;
 
 
-
+    /**
+     * 获取 JsonNode 转换器
+     *
+     * @param aClass a {@link java.lang.Class} object.
+     * @return a {@link java.util.function.Function} object.
+     */
     public static Function<JsonNode, Object> getJsonNodeConverter(Class<?> aClass) {
         if (aClass == String.class) {
             return JsonNode::asText;
@@ -70,6 +75,12 @@ public final class ScxConfig {
         }
     }
 
+    /**
+     * 获取环境变量参数转换器
+     *
+     * @param aClass a {@link java.lang.Class} object.
+     * @return a {@link java.util.function.Function} object.
+     */
     public static Function<String, Object> getParameterConverter(Class<?> aClass) {
         if (aClass == String.class) {
             return a -> a;

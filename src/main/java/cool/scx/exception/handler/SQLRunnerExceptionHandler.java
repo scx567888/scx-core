@@ -1,7 +1,6 @@
 package cool.scx.exception.handler;
 
 import cool.scx.base.BaseExceptionHandler;
-import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
 
 import javax.swing.*;
