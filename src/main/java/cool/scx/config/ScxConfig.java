@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.boot.ScxParameters;
+import cool.scx.config.example.DataSource;
 import cool.scx.config.example.Scx;
 import cool.scx.exception.ConfigFileMissingException;
 import cool.scx.util.Ansi;
@@ -13,6 +14,8 @@ import cool.scx.util.Tidy;
 import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -38,16 +41,53 @@ public final class ScxConfig {
     private static JsonNode nowScxConfigJsonNode;
 
 
-    /**
-     * 从默认配置文件获取配置值 并自动判断类型
-     * 没有找到配置文件会返回 null
-     *
-     * @param keyPath keyPath
-     * @param <T>     a T object.
-     * @return a T object.
-     */
-    public static <T> T getConfigValue(String keyPath) {
-        return getConfigValue(keyPath, null);
+
+    public static Function<JsonNode, Object> getJsonNodeConverter(Class<?> aClass) {
+        if (aClass == String.class) {
+            return JsonNode::asText;
+        } else if (aClass == Integer.class) {
+            return JsonNode::asInt;
+        } else if (aClass == Long.class) {
+            return JsonNode::asLong;
+        } else if (aClass == Double.class) {
+            return JsonNode::asDouble;
+        } else if (aClass == Boolean.class) {
+            return JsonNode::asBoolean;
+        } else if (aClass == HashSet.class) {
+            return c -> {
+                var tempSet = new HashSet<String>();
+                c.forEach(cc -> tempSet.add(cc.asText()));
+                return tempSet;
+            };
+        } else if (aClass == ArrayList.class) {
+            return c -> {
+                var tempList = new ArrayList<String>();
+                c.forEach(cc -> tempList.add(cc.asText()));
+                return tempList;
+            };
+        } else {
+            return c -> c;
+        }
+    }
+
+    public static Function<String, Object> getParameterConverter(Class<?> aClass) {
+        if (aClass == String.class) {
+            return a -> a;
+        } else if (aClass == Integer.class) {
+            return Integer::parseInt;
+        } else if (aClass == Boolean.class) {
+            return Boolean::parseBoolean;
+        } else if (aClass == Long.class) {
+            return Long::parseLong;
+        } else if (aClass == Double.class) {
+            return Double::parseDouble;
+        } else if (aClass == HashSet.class) {
+            return a -> new HashSet<>(Arrays.asList(a.split(",")));
+        } else if (aClass == ArrayList.class) {
+            return a -> Arrays.asList(a.split(","));
+        } else {
+            return a -> a;
+        }
     }
 
     /**
@@ -59,56 +99,33 @@ public final class ScxConfig {
      * @param <T>        a T object.
      * @return a T object.
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T getConfigValue(String keyPath, T defaultVal) {
-        return (T) getConfigValue(keyPath, defaultVal, Tidy::NoCode, Tidy::NoCode, c -> {
-            if (c.isArray()) {
-                var tempList = new ArrayList<Object>();
-                c.forEach(cc -> tempList.add(getValueByJsonNode(cc)));
-                return tempList;
-            } else {
-                return getValueByJsonNode(c);
-            }
-        }, a -> a);
-    }
-
-    /**
-     * 从默认配置文件获取配置值 并自动判断类型
-     * 没有找到配置文件会返回 默认值
-     *
-     * @param keyPath       keyPath
-     * @param defaultVal    默认值
-     * @param successFun    获取成功的回调
-     * @param failFun       获取失败的回调
-     * @param convertFun    jsonNode 转换的方法 因为获取到的是 jsonNode 类型所以需要手动进行转换
-     * @param convertArgFun 外部参数转换的方法
-     * @param <T>           a T object.
-     * @return a T object.
-     */
-    public static <T> T getConfigValue(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun, Function<JsonNode, T> convertFun, Function<String, T> convertArgFun) {
-        return getConfigValue(keyPath, defaultVal, successFun, failFun, convertFun, convertArgFun, nowScxConfigJsonNode);
+    public static <T> T value(String keyPath, T defaultVal) {
+        return value(keyPath, defaultVal, Tidy::NoCode, Tidy::NoCode);
     }
 
     /**
      * 从指定的配置文件获取配置值 并自动判断类型
      * 没有找到配置文件会返回 默认值
      *
-     * @param keyPath       keyPath
-     * @param defaultVal    默认值
-     * @param successFun    获取成功的回调
-     * @param failFun       获取失败的回调
-     * @param convertFun    jsonNode 转换的方法 因为获取到的是 jsonNode 类型所以需要手动进行转换
-     * @param convertArgFun 外部参数转换的方法
-     * @param jsonNodeVal   指定的配置文件
-     * @param <T>           a T object.
+     * @param keyPath    keyPath
+     * @param defaultVal 默认值
+     * @param successFun 获取成功的回调
+     * @param failFun    获取失败的回调
+     * @param <T>        a T object.
      * @return a T object.
      */
-    public static <T> T getConfigValue(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun, Function<JsonNode, T> convertFun, Function<String, T> convertArgFun, JsonNode jsonNodeVal) {
+    @SuppressWarnings("unchecked")
+    public static <T> T value(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun) {
+        var jsonNodeVal = nowScxConfigJsonNode;
+        var aClass = defaultVal.getClass();
+        var convertFun = getJsonNodeConverter(aClass);
+        var convertArgFun = getParameterConverter(aClass);
+
         for (String parameter : ScxParameters.parameters()) {
             if (parameter.startsWith("--" + keyPath + "=")) {
                 String[] split = parameter.split("=");
                 if (split.length == 2) {
-                    T c = convertArgFun.apply(split[1]);
+                    T c = (T) convertArgFun.apply(split[1]);
                     successFun.accept(c);
                     return c;
                 }
@@ -124,35 +141,13 @@ public final class ScxConfig {
             }
         }
         if (jsonNodeVal != null) {
-            T c = convertFun.apply(jsonNodeVal);
+            T c = (T) convertFun.apply(jsonNodeVal);
             successFun.accept(c);
             return c;
         } else {
             failFun.accept(defaultVal);
             return defaultVal;
         }
-    }
-
-    /**
-     * 根据 jsonNode 的类型自动判断 并获取值
-     *
-     * @param jsonNode jsonNode
-     * @return 值
-     */
-    private static Object getValueByJsonNode(JsonNode jsonNode) {
-        if (jsonNode.isInt()) {
-            return jsonNode.asInt();
-        }
-        if (jsonNode.isLong()) {
-            return jsonNode.asLong();
-        }
-        if (jsonNode.isDouble()) {
-            return jsonNode.asDouble();
-        }
-        if (jsonNode.isBoolean()) {
-            return jsonNode.asBoolean();
-        }
-        return jsonNode.asText();
     }
 
     /**
@@ -360,30 +355,12 @@ public final class ScxConfig {
     }
 
     /**
-     * <p>dataSourceUrl.</p>
+     * 数据源配置
      *
      * @return a {@link java.lang.String} object.
      */
-    public static String dataSourceUrl() {
-        return nowScxExample.dataSource.url;
-    }
-
-    /**
-     * <p>dataSourceUsername.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public static String dataSourceUsername() {
-        return nowScxExample.dataSource.username;
-    }
-
-    /**
-     * <p>dataSourcePassword.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public static String dataSourcePassword() {
-        return nowScxExample.dataSource.passwordValue;
+    public static DataSource dataSource() {
+        return nowScxExample.dataSource;
     }
 
     /**

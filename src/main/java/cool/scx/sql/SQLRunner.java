@@ -36,9 +36,14 @@ public final class SQLRunner {
 
     static {
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setJdbcUrl(ScxConfig.dataSourceUrl());
-        dataSource.setUsername(ScxConfig.dataSourceUsername());
-        dataSource.setPassword(ScxConfig.dataSourcePassword());
+        var d = ScxConfig.dataSource();
+        var jdbcUrl = "jdbc:mysql://" + d.host + ":" + d.port + "/" + d.database;
+        if (d.parameters.size() > 0) {
+            jdbcUrl = jdbcUrl + "?" + String.join("&", d.parameters);
+        }
+        dataSource.setJdbcUrl(jdbcUrl);
+        dataSource.setUsername(d.username);
+        dataSource.setPassword(d.passwordValue);
     }
 
     /**

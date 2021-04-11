@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
 import cool.scx.util.NetUtils;
 import cool.scx.util.PackageUtils;
@@ -16,8 +17,6 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static cool.scx.config.ScxConfig.getConfigValue;
 
 /**
  * <p>Scx class.</p>
@@ -98,6 +97,9 @@ public class Scx {
     public Https https;
     public Cms cms;
 
+    private Scx() {
+    }
+
     /**
      * 在获取各个值时 如果发生错误就 修复 配置文件
      *
@@ -110,7 +112,7 @@ public class Scx {
         var needFixConfig = new AtomicBoolean(false);
         var scx = new Scx();
 
-        scx.port = getConfigValue("scx.port", 8080,
+        scx.port = ScxConfig.value("scx.port", 8080,
                 s -> {
                     Ansi.OUT.green("Y 服务器 IP 地址                       \t -->\t " + NetUtils.getLocalAddress()).ln();
                     Ansi.OUT.green("Y 端口号                               \t -->\t " + s).ln();
@@ -118,99 +120,98 @@ public class Scx {
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.port                   \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asInt, Integer::parseInt);
+                });
 
         scx.cms = Cms.from(needFixConfig);
 
         scx.plugin = Plugin.from(needFixConfig);
 
-        scx.uploadFilePath = getConfigValue("scx.upload-file-path", "/scxUploadFile/",
+        scx.uploadFilePath = ScxConfig.value("scx.upload-file-path", "/scxUploadFile/",
                 s -> Ansi.OUT.green("Y 文件上传目录                         \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.upload-file-path        \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asText, a -> a);
+                });
 
         scx.uploadFilePathValue = PackageUtils.getFileByAppRoot(scx.uploadFilePath);
 
-        scx.bodyLimit = getConfigValue("scx.body-limit", "16384KB",
+        scx.bodyLimit = ScxConfig.value("scx.body-limit", "16384KB",
                 s -> Ansi.OUT.green("Y 请求体大小限制                       \t -->\t " + FileUtils.longToDisplaySize(FileUtils.displaySizeToLong(s))).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.body-limit             \t -->\t 已采用默认值 : " + FileUtils.longToDisplaySize(FileUtils.displaySizeToLong(f))).ln();
-                }, JsonNode::asText, a -> a);
+                });
 
         scx.bodyLimitValue = FileUtils.displaySizeToLong(scx.bodyLimit);
 
-        scx.confusionLoginError = getConfigValue("scx.confusion-login-error", false,
+        scx.confusionLoginError = ScxConfig.value("scx.confusion-login-error", false,
                 s -> Ansi.OUT.green("Y 是否混淆登录错误                     \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.confusion-login-error  \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asBoolean, Boolean::valueOf);
+                });
 
-        scx.loginErrorLockTimes = getConfigValue("scx.login-error-lock-times", 999,
+        scx.loginErrorLockTimes = ScxConfig.value("scx.login-error-lock-times", 999,
                 s -> Ansi.OUT.green("Y 登录错误锁定次数                     \t -->\t " + s + " 次").ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.login-error-lock-times \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asInt, Integer::valueOf);
+                });
 
-        scx.loginErrorLockSecond = getConfigValue("scx.login-error-lock-second", 10,
+        scx.loginErrorLockSecond = ScxConfig.value("scx.login-error-lock-second", 10,
                 s -> Ansi.OUT.green("Y 登录错误锁定时间                     \t -->\t " + s + " 秒").ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.login-error-lock-second \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asInt, Integer::valueOf);
+                });
 
-        scx.showLog = getConfigValue("scx.show-log", true,
+        scx.showLog = ScxConfig.value("scx.show-log", true,
                 s -> Ansi.OUT.green("Y 是否打印日志                         \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.show-log               \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asBoolean, Boolean::valueOf);
+                });
 
-        scx.realDelete = getConfigValue("scx.real-delete", false,
+        scx.realDelete = ScxConfig.value("scx.real-delete", false,
                 s -> Ansi.OUT.green("Y 数据库删除方式为                     \t -->\t " + (s ? "物理删除" : "逻辑删除")).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.real-delete            \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asBoolean, Boolean::valueOf);
+                });
 
-        scx.license = getConfigValue("scx.license", "", Tidy::NoCode,
+        scx.license = ScxConfig.value("scx.license", "", Tidy::NoCode,
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.license                \t -->\t 请检查 license 是否正确").ln();
-                }, JsonNode::asText, (a) -> a);
+                });
 
         scx.https = Https.from(needFixConfig);
 
-        scx.dateTimePattern = getConfigValue("scx.date-time-pattern", "yyyy-MM-dd HH:mm:ss",
+        scx.dateTimePattern = ScxConfig.value("scx.date-time-pattern", "yyyy-MM-dd HH:mm:ss",
                 s -> Ansi.OUT.green("Y 日期格式为                          \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.date-time-pattern       \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asText, (a) -> a);
+                });
 
         scx.dateTimeFormatter = DateTimeFormatter.ofPattern(scx.dateTimePattern);
 
 
-        scx.allowedOrigin = getConfigValue("scx.allowed-origin", "*",
+        scx.allowedOrigin = ScxConfig.value("scx.allowed-origin", "*",
                 s -> Ansi.OUT.green("Y 允许的请求源                         \t -->\t " + s).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.allowed-origin          \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asText, (a) -> a);
+                });
 
         scx.dataSource = DataSource.from(needFixConfig);
 
-        scx.fixTable = getConfigValue("scx.fix-table", false,
+        scx.fixTable = ScxConfig.value("scx.fix-table", false,
                 s -> Ansi.OUT.green("Y 修复数据表                          \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.fix-table               \t -->\t 已采用默认值 : " + f).ln();
-                },
-                JsonNode::asBoolean, Boolean::valueOf);
+                });
 
         //如果需要修复配置文件
         if (needFixConfig.get()) {

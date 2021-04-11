@@ -20,7 +20,7 @@ public class SQLRunnerExceptionHandler extends BaseExceptionHandler {
      * @param e a {@link java.lang.Exception} object.
      */
     public static void sqlExceptionHandler(Exception e) {
-        Ansi.OUT.red("N 数据源连接失败                       \t -->\t " + ScxConfig.dataSourceUrl()).ln();
+        Ansi.OUT.red("X 数据源连接失败 !!!").ln();
         var options = new Object[]{"忽略错误", "退出"};
         int result = JOptionPane.showOptionDialog(null, "错误信息:\r\n " + e.getMessage(), "N 数据源连接错误 !!!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options[0]);
         if (result == 1) {

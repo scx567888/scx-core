@@ -1,7 +1,7 @@
 package cool.scx.config.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.JsonNode;
+import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
 import cool.scx.util.CryptoUtils;
 import cool.scx.util.PackageUtils;
@@ -9,8 +9,6 @@ import cool.scx.util.Tidy;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static cool.scx.config.ScxConfig.getConfigValue;
 
 /**
  * <p>Https class.</p>
@@ -42,45 +40,47 @@ public class Https {
     @JsonIgnore
     public String sslPasswordValue;
 
+    private Https() {
+    }
+
     /**
-     * <p>Constructor for Https.</p>
+     * 从配置文件加载
      *
      * @param needFixConfig a {@link java.util.concurrent.atomic.AtomicBoolean} object.
      * @return a {@link cool.scx.config.example.Https} object.
      */
     public static Https from(AtomicBoolean needFixConfig) {
         var https = new Https();
-        https.isOpen = getConfigValue("scx.https.is-open", false,
+
+        https.isOpen = ScxConfig.value("scx.https.is-open", false,
                 s -> Ansi.OUT.green("Y 是否开启 https                       \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.https.is-open           \t -->\t 已采用默认值 : " + f).ln();
-                }, JsonNode::asBoolean, Boolean::valueOf);
+                });
 
-        https.sslPath = getConfigValue("scx.https.ssl-path", "",
+        https.sslPath = ScxConfig.value("scx.https.ssl-path", "",
                 s -> Ansi.OUT.green("Y 证书路径                            \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.https.ssl-path         \t -->\t 请检查证书路径是否正确").ln();
-                }, JsonNode::asText, a -> a);
+                });
 
         https.sslPathValue = PackageUtils.getFileByAppRoot(https.sslPath);
 
-        https.sslPassword = getConfigValue("scx.https.ssl-password", "",
+        https.sslPassword = ScxConfig.value("scx.https.ssl-password", "",
                 Tidy::NoCode,
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.https.ssl-password      \t -->\t 请检查证书密码是否正确").ln();
-                }, JsonNode::asText, a -> a);
+                });
 
         if (https.isOpen) {
-            var tempSSLPasswordValue = "";
             try {
-                tempSSLPasswordValue = CryptoUtils.decryptText(https.sslPassword);
+                https.sslPasswordValue = CryptoUtils.decryptText(https.sslPassword);
             } catch (Exception e) {
                 Ansi.OUT.red("N 解密 scx.https.ssl-password  出错        \t -->\t 请检查证书密码是否正确").ln();
             }
-            https.sslPasswordValue = tempSSLPasswordValue;
         } else {
             https.sslPasswordValue = "";
         }
