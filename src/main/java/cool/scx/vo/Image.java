@@ -120,8 +120,8 @@ public class Image implements BaseVo {
     /**
      * 检查图片缓存
      *
-     * @param response
-     * @return
+     * @param response r
+     * @return r
      */
     private boolean checkImageCache(HttpServerResponse response) {
         var str = file.getPath() + ";" + height + ";" + width;

@@ -53,13 +53,13 @@ public class UserController {
     /**
      * <p>Constructor for UserController.</p>
      *
-     * @param userService     a {@link UserService} object.
-     * @param scxLogService   a {@link ScxLogService} object.
-     * @param deptService     a {@link DeptService} object.
-     * @param roleService     a {@link RoleService} object.
-     * @param userRoleService a {@link UserRoleService} object.
-     * @param userDeptService a {@link UserDeptService} object.
-     * @param licenseService
+     * @param userService     a {@link cool.scx.core.user.UserService} object.
+     * @param scxLogService   a {@link cool.scx.core.system.ScxLogService} object.
+     * @param deptService     a {@link cool.scx.core.dept.DeptService} object.
+     * @param roleService     a {@link cool.scx.core.role.RoleService} object.
+     * @param userRoleService a {@link cool.scx.core.role.UserRoleService} object.
+     * @param userDeptService a {@link cool.scx.core.dept.UserDeptService} object.
+     * @param licenseService  r
      */
     public UserController(UserService userService, ScxLogService scxLogService, DeptService deptService, RoleService roleService, UserRoleService userRoleService, UserDeptService userDeptService, LicenseService licenseService) {
         this.userService = userService;

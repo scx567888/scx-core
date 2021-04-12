@@ -3,7 +3,6 @@ package cool.scx.core.license;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
 import cool.scx.config.ScxConfig;
-import cool.scx.core.system.ScxLogService;
 import cool.scx.util.CryptoUtils;
 import cool.scx.util.LogUtils;
 
@@ -18,18 +17,6 @@ import java.util.Date;
  */
 @ScxService
 public class LicenseService extends BaseService<License> {
-
-    private final ScxLogService scxLogService;
-
-    /**
-     * <p>Constructor for LicenseService.</p>
-     *
-     * @param scxLogService a {@link cool.scx.core.system.ScxLogService} object.
-     */
-    public LicenseService(ScxLogService scxLogService) {
-        this.scxLogService = scxLogService;
-    }
-
 
     /**
      * 加密时间

@@ -58,7 +58,7 @@ public final class ScxRequestHandler extends RouterImpl {
     /**
      * // 注册 跨域 处理器
      *
-     * @param router
+     * @param router r
      */
     private static void registerCorsHandler(Router router) {
         var allowedHeaders = new HashSet<String>();
@@ -85,7 +85,7 @@ public final class ScxRequestHandler extends RouterImpl {
     /**
      * // 处理 body 请求体处理器
      *
-     * @param router
+     * @param router r
      */
 
     private static void registerBodyHandler(Router router) {
@@ -96,7 +96,7 @@ public final class ScxRequestHandler extends RouterImpl {
      * todo
      * 处理 scxMapping 处理器
      *
-     * @param router
+     * @param router r
      */
     private static void registerScxMappingHandler(Router router) {
         var scxMappingHandlers = new ArrayList<ScxMappingHandler>();
@@ -147,9 +147,9 @@ public final class ScxRequestHandler extends RouterImpl {
     }
 
     /**
-     * // 静态文件 处理器
+     * 静态文件 处理器
      *
-     * @param router
+     * @param router r
      */
     private static void registerStaticHandler(Router router) {
         router.route(ScxConfig.cmsResourceUrl()).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations().getPath()));
@@ -158,7 +158,7 @@ public final class ScxRequestHandler extends RouterImpl {
     /**
      * 设置 session
      *
-     * @param router
+     * @param router r
      */
     private static void registerCookieHandler(Router router) {
         router.route().handler(c -> {

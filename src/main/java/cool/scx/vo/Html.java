@@ -44,6 +44,17 @@ public final class Html implements BaseVo {
     }
 
     /**
+     * 像浏览器发送 html
+     *
+     * @param str html 代码
+     */
+    public static void sendStr(String str) {
+        var response = ScxContext.routingContext().response();
+        response.putHeader("Content-Type", "text/html; charset=utf-8");
+        response.end(Buffer.buffer(str));
+    }
+
+    /**
      * <p>add.</p>
      *
      * @param key   a {@link java.lang.String} object.
@@ -69,11 +80,5 @@ public final class Html implements BaseVo {
         var response = context.response();
         response.putHeader("Content-Type", "text/html; charset=utf-8");
         response.end(Buffer.buffer(sw.toString()));
-    }
-
-    public static void sendStr(String str) {
-        var response = ScxContext.routingContext().response();
-        response.putHeader("Content-Type", "text/html; charset=utf-8");
-        response.end(Buffer.buffer(str));
     }
 }

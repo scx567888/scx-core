@@ -34,9 +34,7 @@ public class BodyHandler implements Handler<RoutingContext> {
             if (!((RoutingContextInternal) context).seenHandler(2)) {
                 var handler = new BHandler(context, parseContentLengthHeader(request));
                 request.handler(handler);
-                request.endHandler((v) -> {
-                    handler.end();
-                });
+                request.endHandler((v) -> handler.end());
                 ((RoutingContextInternal) context).visitHandler(2);
             } else {
                 context.next();
@@ -47,8 +45,8 @@ public class BodyHandler implements Handler<RoutingContext> {
     /**
      * 获取 ContentLength
      *
-     * @param request
-     * @return
+     * @param request r
+     * @return l
      */
     private long parseContentLengthHeader(HttpServerRequest request) {
         String contentLength = request.getHeader(HttpHeaders.CONTENT_LENGTH);

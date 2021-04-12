@@ -200,8 +200,8 @@ public class UserService extends BaseService<User> {
     /**
      * 根据 userid 保存 dept列表到 数据库
      *
-     * @param userId
-     * @param deptIds
+     * @param userId  r
+     * @param deptIds r
      */
     private void saveUserDeptIds(Long userId, String deptIds) {
         deptService.saveDeptListWithUserId(userId, deptIds);
@@ -210,8 +210,8 @@ public class UserService extends BaseService<User> {
     /**
      * 根据 userid 保存 role 列表到 数据库
      *
-     * @param userId
-     * @param roleIds
+     * @param userId  r
+     * @param roleIds r
      */
     private void saveUserRoleIds(Long userId, String roleIds) {
         roleService.saveRoleListWithUserId(userId, roleIds);
