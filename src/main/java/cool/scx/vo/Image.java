@@ -135,9 +135,9 @@ public class Image implements BaseVo {
     }
 
     /**
-     * //就不是普通的图片 我们就返回他在操作系统中的展示图标即可
+     * 就不是普通的图片 我们就返回他在操作系统中的展示图标即可
      *
-     * @param response
+     * @param response r
      */
     private void sendSystemIcon(HttpServerResponse response) {
         try (var out = new ByteArrayOutputStream()) {
@@ -158,7 +158,7 @@ public class Image implements BaseVo {
     /**
      * 没找到图片
      *
-     * @param response
+     * @param response r
      */
     private void notFound(HttpServerResponse response) {
         response.setStatusCode(404).end("No Found");
@@ -167,7 +167,7 @@ public class Image implements BaseVo {
     /**
      * 裁剪后的图片
      *
-     * @param response
+     * @param response r
      */
     private void sendCroppedPicture(HttpServerResponse response) {
         try (var out = new ByteArrayOutputStream()) {
@@ -186,7 +186,7 @@ public class Image implements BaseVo {
     /**
      * 发送原始图片
      *
-     * @param response
+     * @param response r
      */
     private void sendRawPicture(HttpServerResponse response) {
         // 没有宽高 直接返回图片本身

@@ -72,9 +72,9 @@ public final class NetUtils {
      * @return 返回String类型的字符串 ，如果请求失败，返回null
      */
     public static String sendHttpRequest(String urlParam, String requestMethod) {
-        HttpURLConnection con = null;
-        BufferedReader buffer = null;
-        StringBuffer resultBuffer = null;
+        HttpURLConnection con;
+        BufferedReader buffer;
+        StringBuffer resultBuffer;
         InputStream ins = null;
         try {
             URL url = new URL(urlParam);

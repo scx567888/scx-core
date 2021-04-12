@@ -12,8 +12,8 @@ import java.util.LinkedHashSet;
  * @version 1.0.10
  */
 public class ScxParameters {
-    private static Class<?>[] classSources;
-    private static String[] parameters;
+    private static Class<?>[] classSources = new Class[0];
+    private static String[] parameters = new String[0];
 
     /**
      * <p>initParameters.</p>
