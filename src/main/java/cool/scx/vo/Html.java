@@ -3,6 +3,7 @@ package cool.scx.vo;
 import cool.scx.base.BaseVo;
 import cool.scx.config.ScxCmsConfig;
 import cool.scx.config.ScxConfig;
+import cool.scx.context.ScxContext;
 import freemarker.template.Template;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.RoutingContext;
@@ -68,5 +69,11 @@ public final class Html implements BaseVo {
         var response = context.response();
         response.putHeader("Content-Type", "text/html; charset=utf-8");
         response.end(Buffer.buffer(sw.toString()));
+    }
+
+    public static void sendStr(String str) {
+        var response = ScxContext.routingContext().response();
+        response.putHeader("Content-Type", "text/html; charset=utf-8");
+        response.end(Buffer.buffer(str));
     }
 }

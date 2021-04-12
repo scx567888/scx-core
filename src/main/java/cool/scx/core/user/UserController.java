@@ -11,6 +11,7 @@ import cool.scx.core.dept.Dept;
 import cool.scx.core.dept.DeptService;
 import cool.scx.core.dept.UserDept;
 import cool.scx.core.dept.UserDeptService;
+import cool.scx.core.license.LicenseService;
 import cool.scx.core.role.RoleService;
 import cool.scx.core.role.UserRole;
 import cool.scx.core.role.UserRoleService;
@@ -47,24 +48,27 @@ public class UserController {
     private final RoleService roleService;
     private final UserRoleService userRoleService;
     private final UserDeptService userDeptService;
+    private final LicenseService licenseService;
 
     /**
      * <p>Constructor for UserController.</p>
      *
-     * @param userService     a {@link cool.scx.core.user.UserService} object.
-     * @param scxLogService   a {@link cool.scx.core.system.ScxLogService} object.
-     * @param deptService     a {@link cool.scx.core.dept.DeptService} object.
-     * @param roleService     a {@link cool.scx.core.role.RoleService} object.
-     * @param userRoleService a {@link cool.scx.core.role.UserRoleService} object.
-     * @param userDeptService a {@link cool.scx.core.dept.UserDeptService} object.
+     * @param userService     a {@link UserService} object.
+     * @param scxLogService   a {@link ScxLogService} object.
+     * @param deptService     a {@link DeptService} object.
+     * @param roleService     a {@link RoleService} object.
+     * @param userRoleService a {@link UserRoleService} object.
+     * @param userDeptService a {@link UserDeptService} object.
+     * @param licenseService
      */
-    public UserController(UserService userService, ScxLogService scxLogService, DeptService deptService, RoleService roleService, UserRoleService userRoleService, UserDeptService userDeptService) {
+    public UserController(UserService userService, ScxLogService scxLogService, DeptService deptService, RoleService roleService, UserRoleService userRoleService, UserDeptService userDeptService, LicenseService licenseService) {
         this.userService = userService;
         this.scxLogService = scxLogService;
         this.deptService = deptService;
         this.roleService = roleService;
         this.userRoleService = userRoleService;
         this.userDeptService = userDeptService;
+        this.licenseService = licenseService;
     }
 
     /**
@@ -80,6 +84,9 @@ public class UserController {
     public Json login(@FromBody("username") String username, @FromBody("password") String password) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
+        }
+        if (!licenseService.passLicense()) {
+            return Json.fail(Json.FAIL_CODE, "licenseError");
         }
         try {
             var device = ScxContext.device();

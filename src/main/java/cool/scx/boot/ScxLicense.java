@@ -4,7 +4,6 @@ import cool.scx.context.ScxContext;
 import cool.scx.core.license.LicenseService;
 import cool.scx.util.Ansi;
 import cool.scx.util.LogUtils;
-import cool.scx.web.ScxServer;
 
 /**
  * 校验 license 的工具类
@@ -28,9 +27,7 @@ public class ScxLicense {
         Ansi.OUT.brightCyan("校验 license 中 ...").ln();
         var licenseRight = licenseService.passLicense();
         if (!licenseRight) {
-            ScxServer.stopServer();
             LogUtils.recordLog("license 已失效!!! 请联系服务商...");
-            System.exit(0);
         } else {
             LogUtils.recordLog("license 通过校验 ...");
         }

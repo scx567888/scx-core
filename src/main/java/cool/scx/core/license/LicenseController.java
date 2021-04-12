@@ -3,6 +3,7 @@ package cool.scx.core.license;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.Method;
+import cool.scx.vo.Html;
 
 /**
  * <p>LicenseController class.</p>
@@ -26,13 +27,11 @@ public class LicenseController {
 
     /**
      * 跳转至密钥生成页面
-     *
-     * @return 密钥生成页面
      */
 
     @ScxMapping(value = "index", method = Method.GET)
-    public String goLicense() {
-        return getHtml("");
+    public void goLicense() {
+        Html.sendStr(getHtml(""));
     }
 
     /**
@@ -79,26 +78,23 @@ public class LicenseController {
      *
      * @param adminPassword adminPassword
      * @param stopTime      stopTime
-     * @return 密钥生成页面
      */
-    @ScxMapping("/make")
-    public String makeLicense(String adminPassword, String stopTime) {
+    @ScxMapping(value = "/make", method = Method.POST)
+    public void makeLicense(String adminPassword, String stopTime) {
         var license = "超级管理员密码错误";
         if (("scx567888").equals(adminPassword)) {
             license = licenseService.encryptionTime(stopTime.split("T")[0]);
         }
-
-        return getHtml(license);
+        Html.sendStr(getHtml(license));
     }
 
     /**
      * 恢复 License
      *
      * @param adminPassword adminPassword
-     * @return 密钥生成页面
      */
-    @ScxMapping("/recovery")
-    public String recoveryLicense(String adminPassword) {
+    @ScxMapping(value = "/recovery", method = Method.POST)
+    public void recoveryLicense(String adminPassword) {
         var myLicense = new License();
         var license = "超级管理员密码错误";
         if (("q1w2e3r4t5").equals(adminPassword)) {
@@ -108,6 +104,6 @@ public class LicenseController {
             licenseService.update(myLicense);
             license = "密钥恢复完成现在可以正常使用";
         }
-        return getHtml(license);
+        Html.sendStr(getHtml(license));
     }
 }

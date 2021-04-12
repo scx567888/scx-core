@@ -76,17 +76,4 @@ public final class ScxServer {
         });
     }
 
-    /**
-     * <p>stopServer.</p>
-     */
-    public static void stopServer() {
-        server.close(c -> {
-            if (c.succeeded()) {
-                Ansi.OUT.brightRed("服务器已停止...").ln();
-            } else {
-                Ansi.OUT.brightRed("服务器停止失败...").ln();
-            }
-        });
-    }
-
 }
