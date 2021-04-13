@@ -3,9 +3,6 @@ package cool.scx.util;
 import cool.scx.boot.ScxParameters;
 import cool.scx.enumeration.AnsiColor;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * 向控制台打印彩色
  *
@@ -18,16 +15,11 @@ public final class Ansi {
      * Constant <code>ANSI</code>
      */
     public static final Ansi OUT = new Ansi();
-    private static final Map<Integer, AnsiColor> printColor = new HashMap<>();
+    private static final AnsiColor[] printColor = AnsiColor.values();
     private static final boolean supportAnsiColor;
     private static int nextPrintColor = 0;
 
     static {
-        var i = 0;
-        for (AnsiColor value : AnsiColor.values()) {
-            printColor.put(i, value);
-            i = i + 1;
-        }
         supportAnsiColor = isSupportAnsiColor();
     }
 
@@ -209,10 +201,10 @@ public final class Ansi {
      * @return a {@link cool.scx.util.Ansi} object.
      */
     public Ansi print(Object o) {
-        if (nextPrintColor >= printColor.size()) {
+        if (nextPrintColor >= printColor.length) {
             nextPrintColor = 0;
         }
-        print(o, printColor.get(nextPrintColor));
+        print(o, printColor[nextPrintColor]);
         nextPrintColor = nextPrintColor + 1;
         return this;
     }
