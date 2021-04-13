@@ -2,15 +2,18 @@
     <img src="https://scx.cool/img/scx-logo.svg" width="300px"  alt="scx-logo"/>
 </p>
 <p align="center">
+    <a target="_blank" href="https://dev.azure.com/scx567888/scx/_build/latest?definitionId=1&branchName=master">
+        <img src="https://dev.azure.com/scx567888/scx/_apis/build/status/scx567888.scx?branchName=master"/>
+    </a>
     <a target="_blank" href="https://github.com/scx567888/scx">
         <img src="https://img.shields.io/badge/version-1.0.13-ff69b4" alt="version"/>
-    </a> 
+    </a>
     <a target="_blank" href="https://github.com/scx567888/scx">
         <img src="https://img.shields.io/github/languages/code-size/scx567888/scx?color=orange" alt="code-size"/>
     </a>
     <a target="_blank" href="https://github.com/scx567888/scx/issues">
         <img src="https://img.shields.io/github/issues/scx567888/scx" alt="issues"/>
-    </a> 
+    </a>
     <a target="_blank" href="https://github.com/scx567888/scx/blob/master/LICENSE">
         <img src="https://img.shields.io/github/license/scx567888/scx" alt="license"/>
     </a>
