@@ -26,10 +26,10 @@
         <img src="https://img.shields.io/badge/Freemarker-2.3.31-blue" alt="freemarker"/>
     </a>
     <a target="_blank" href="https://github.com/FasterXML/jackson">
-        <img src="https://img.shields.io/badge/Jackson-2.12.2-blue" alt="jackson"/>
+        <img src="https://img.shields.io/badge/Jackson-2.12.3-blue" alt="jackson"/>
     </a>
     <a target="_blank" href="https://github.com/spring-projects/spring-framework">
-        <img src="https://img.shields.io/badge/Spring--Framework-5.3.5-blue" alt="Spring-Framework"/>
+        <img src="https://img.shields.io/badge/Spring--Framework-5.3.6-blue" alt="Spring-Framework"/>
     </a>
     <a target="_blank" href="https://github.com/brettwooldridge/HikariCP">
         <img src="https://img.shields.io/badge/HikariCP-4.0.3-blue" alt="HikariCP"/>
