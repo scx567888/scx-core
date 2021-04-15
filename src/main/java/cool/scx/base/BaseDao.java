@@ -126,23 +126,19 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link cool.scx.bo.UpdateResult} object.
      */
     public UpdateResult update(Param<Entity> param, boolean includeNull) {
-        var beanMap = ObjectUtils.beanToMap(param.queryObject);
-        Long id = param.queryObject.id;
-        var sql = SQLBuilder.Update(table.tableName);
-        if (id != null) {
-            var setColumns = Stream.of(table.canUpdateFields)
-                    .filter(field -> (!includeNull && ObjectUtils.getFieldValue(field, param.queryObject) != null))
-                    .toArray(Field[]::new);
-            sql.UpdateColumns(setColumns).WhereSql(" id = :id ");
+        var entityMap = ObjectUtils.beanToMap(param.queryObject);
+        var setColumns = Stream.of(table.canUpdateFields)
+                .filter(field -> (!includeNull && ObjectUtils.getFieldValue(field, param.queryObject) != null))
+                .toArray(Field[]::new);
+        var sql = SQLBuilder.Update(table.tableName).UpdateColumns(setColumns);
+        if (param.queryObject.id != null) {
+            sql.WhereSql(" id = :id ");
         } else if (!StringUtils.isEmpty(param.whereSql)) {
-            var setColumns = Stream.of(table.canUpdateFields)
-                    .filter(field -> (!includeNull && ObjectUtils.getFieldValue(field, param.queryObject) != null))
-                    .toArray(Field[]::new);
-            sql.UpdateColumns(setColumns).WhereSql(param.whereSql);
+            sql.WhereSql(param.whereSql);
         } else {
             throw new RuntimeException("更新数据时必须指定 id 或 自定义的 where 语句 !!!");
         }
-        return SQLRunner.update(sql.GetSQL(), beanMap);
+        return SQLRunner.update(sql.GetSQL(), entityMap);
     }
 
     /**
@@ -152,12 +148,15 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link java.lang.Integer} object.
      */
     public Integer delete(Param<Entity> param) {
-        //将 对象转换为 map 方便处理
         var entityMap = ObjectUtils.beanToMap(param.queryObject);
-
-        var sql = SQLBuilder.Delete(table.tableName).Where(getWhereColumns(param.queryObject, false))
-                .WhereSql(param.whereSql).GetSQL();
-        return SQLRunner.update(sql, entityMap).affectedLength;
+        var sql = SQLBuilder.Delete(table.tableName);
+        var whereColumns = getWhereColumns(param.queryObject, false);
+        if (whereColumns.length > 0 || StringUtils.isNotEmpty(param.whereSql)) {
+            sql.Where(whereColumns).WhereSql(param.whereSql);
+        } else {
+            throw new RuntimeException("删除数据时必须指定 删除条件(queryObject) 或 自定义的 where 语句 !!!");
+        }
+        return SQLRunner.update(sql.GetSQL(), entityMap).affectedLength;
     }
 
     /**
