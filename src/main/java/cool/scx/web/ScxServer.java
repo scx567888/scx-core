@@ -1,5 +1,6 @@
 package cool.scx.web;
 
+import cool.scx.boot.ScxTimer;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.exception.handler.ScxServerExceptionHandler;
@@ -61,7 +62,7 @@ public final class ScxServer {
     public static void startServer() {
         server.listen(port, http -> {
             if (http.succeeded()) {
-                Ansi.OUT.green("服务器启动成功...").ln();
+                Ansi.OUT.green("服务器启动成功... 用时 " + ScxTimer.timerStop() + " ms").ln();
                 var httpOrHttps = ScxConfig.openHttps() ? "https" : "http";
                 Ansi.OUT.green("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/").ln();
                 Ansi.OUT.green("> 本地 : " + httpOrHttps + "://localhost:" + port + "/").ln();

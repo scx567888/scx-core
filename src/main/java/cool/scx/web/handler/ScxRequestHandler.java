@@ -10,7 +10,6 @@ import cool.scx.util.StringUtils;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.impl.CookieImpl;
-import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.FaviconHandler;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -19,9 +18,8 @@ import io.vertx.ext.web.impl.RouterImpl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  * <p>ScxRouterFactory class.</p>
@@ -36,69 +34,62 @@ public final class ScxRequestHandler extends RouterImpl {
      */
     public ScxRequestHandler() {
         super(ScxContext.VERTX);
-        registerFaviconHandler(this);
-        registerCookieHandler(this);
-        registerCorsHandler(this);
-        registerBodyHandler(this);
-        registerScxMappingHandler(this);
-        registerStaticHandler(this);
-        // 当以上所有处理器都无法匹配时 向客户端返回 404
-        this.route().handler(handle -> handle.fail(404));
+        registerFaviconHandler();
+        registerCookieHandler();
+        registerCorsHandler();
+        registerBodyHandler();
+        registerScxMappingHandler();
+        registerStaticHandler();
+        registerNotFoundHandler();
     }
 
     /**
      * 注册 FaviconIco 图标 handler
-     *
-     * @param router r
      */
-    private static void registerFaviconHandler(Router router) {
-        router.route().handler(FaviconHandler.create(ScxContext.VERTX, new File(ScxConfig.cmsRoot(), "favicon.ico").getPath()));
+    private void registerFaviconHandler() {
+        this.route().handler(FaviconHandler.create(ScxContext.VERTX, new File(ScxConfig.cmsRoot(), "favicon.ico").getPath()));
+    }
+
+    /**
+     * 设置 session
+     */
+    private void registerCookieHandler() {
+        this.route().handler(c -> {
+            if (c.getCookie(ScxConfig.tokenKey()) == null) {
+                Cookie cookie = new CookieImpl(ScxConfig.tokenKey(), StringUtils.getUUID());
+                cookie.setMaxAge(60 * 60 * 24 * 7);
+                c.addCookie(cookie);
+            }
+            c.next();
+        });
     }
 
     /**
      * 注册 跨域 处理器
-     *
-     * @param router r
      */
-    private static void registerCorsHandler(Router router) {
-        var allowedHeaders = new HashSet<String>();
-        allowedHeaders.add("x-requested-with");
-        allowedHeaders.add("Access-Control-Allow-Origin");
-        allowedHeaders.add("origin");
-        allowedHeaders.add("Content-Type");
-        allowedHeaders.add("accept");
-        allowedHeaders.add("X-PINGARUNER");
-        allowedHeaders.add(ScxConfig.tokenKey());
-        allowedHeaders.add(ScxConfig.deviceKey());
+    private void registerCorsHandler() {
+        var allowedHeaders = Set.of("x-requested-with", "Access-Control-Allow-Origin",
+                "origin", "Content-Type", "accept", "X-PINGARUNER", ScxConfig.tokenKey(), ScxConfig.deviceKey());
 
-        var allowedMethods = new HashSet<HttpMethod>();
-        allowedMethods.add(HttpMethod.GET);
-        allowedMethods.add(HttpMethod.POST);
-        allowedMethods.add(HttpMethod.OPTIONS);
-        allowedMethods.add(HttpMethod.DELETE);
-        allowedMethods.add(HttpMethod.PATCH);
-        allowedMethods.add(HttpMethod.PUT);
+        var allowedMethods = Set.of(HttpMethod.GET, HttpMethod.POST,
+                HttpMethod.OPTIONS, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT);
 
-        router.route().handler(CorsHandler.create(ScxConfig.allowedOrigin()).allowedHeaders(allowedHeaders).allowedMethods(allowedMethods).allowCredentials(true));
+        this.route().handler(CorsHandler.create(ScxConfig.allowedOrigin()).allowedHeaders(allowedHeaders).allowedMethods(allowedMethods).allowCredentials(true));
     }
 
     /**
      * 处理 body 请求体处理器
-     *
-     * @param router r
      */
 
-    private static void registerBodyHandler(Router router) {
-        router.route().method(HttpMethod.POST).method(HttpMethod.PUT).method(HttpMethod.DELETE).handler(new BodyHandler());
+    private void registerBodyHandler() {
+        this.route().method(HttpMethod.POST).method(HttpMethod.PUT).method(HttpMethod.DELETE).handler(new BodyHandler());
     }
 
     /**
      * todo
      * 处理 scxMapping 处理器
-     *
-     * @param router r
      */
-    private static void registerScxMappingHandler(Router router) {
+    private void registerScxMappingHandler() {
         var scxMappingHandlers = new ArrayList<ScxMappingHandler>();
         PackageUtils.scanPackageIncludePlugins(clazz -> {
             if (clazz.isAnnotationPresent(ScxController.class)) {
@@ -118,9 +109,8 @@ public final class ScxRequestHandler extends RouterImpl {
             return true;
         });
         //此处排序的意义在于将 需要正则表达式匹配的 放在最后 防止匹配错误
-        var orderedScxMappingHandlers = scxMappingHandlers.stream().sorted(Comparator.comparing(s -> s.order)).collect(Collectors.toList());
-        orderedScxMappingHandlers.forEach(c -> {
-            var route = router.route(c.url);
+        scxMappingHandlers.stream().sorted(Comparator.comparing(s -> s.order)).forEachOrdered(c -> {
+            var route = this.route(c.url);
             c.httpMethods.forEach(route::method);
             route.blockingHandler(c);
         });
@@ -134,41 +124,32 @@ public final class ScxRequestHandler extends RouterImpl {
      * @return true 为存在 false 为不存在
      */
     private static boolean checkRouteExists(List<ScxMappingHandler> list, ScxMappingHandler handler) {
-        for (var httpMethod : handler.httpMethods) {
-            var d = list.stream().filter(a -> a.url.equals(handler.url) && a.httpMethods.contains(httpMethod)).findAny().orElse(null);
-            if (d != null) {
-                Ansi.OUT.brightMagenta("检测到重复的路由!!! " + httpMethod + " --> \"" + handler.url + "\" , 相关 class 及方法如下 ▼").ln()
-                        .brightMagenta(handler.clazz.getName() + " --> " + handler.method.getName()).ln()
-                        .brightMagenta(d.clazz.getName() + " --> " + d.method.getName()).ln();
-                return true;
+        for (var a : list) {
+            if (a.url.equals(handler.url)) {
+                for (var h : handler.httpMethods) {
+                    if (a.httpMethods.contains(h)) {
+                        Ansi.OUT.brightMagenta("检测到重复的路由!!! " + h + " --> \"" + handler.url + "\" , 相关 class 及方法如下 ▼").ln()
+                                .brightMagenta(handler.clazz.getName() + " --> " + handler.method.getName()).ln()
+                                .brightMagenta(a.clazz.getName() + " --> " + a.method.getName()).ln();
+                        return true;
+                    }
+                }
             }
         }
         return false;
     }
 
-    /**
-     * 静态文件 处理器
-     *
-     * @param router r
-     */
-    private static void registerStaticHandler(Router router) {
-        router.route(ScxConfig.cmsResourceUrl()).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations().getPath()));
-    }
 
     /**
-     * 设置 session
-     *
-     * @param router r
+     * 静态文件 处理器
      */
-    private static void registerCookieHandler(Router router) {
-        router.route().handler(c -> {
-            if (c.getCookie(ScxConfig.tokenKey()) == null) {
-                Cookie cookie = new CookieImpl(ScxConfig.tokenKey(), StringUtils.getUUID());
-                cookie.setMaxAge(60 * 60 * 24 * 7);
-                c.addCookie(cookie);
-            }
-            c.next();
-        });
+    private void registerStaticHandler() {
+        this.route(ScxConfig.cmsResourceUrl()).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations().getPath()));
+    }
+
+    private void registerNotFoundHandler() {
+        // 当以上所有处理器都无法匹配时 向客户端返回 404
+        this.route().handler(handle -> handle.fail(404));
     }
 
 }

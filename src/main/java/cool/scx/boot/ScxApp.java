@@ -32,6 +32,7 @@ public final class ScxApp {
      */
     private static void run(Class<?>[] source, String... args) {
         //此处每个初始化方法都依赖上一个的初始化方法 所以顺序不要打乱
+        ScxTimer.timerStart();
         ScxParameters.initParameters(source, args);
         ScxBanner.show();
         ScxConfig.initConfig();
