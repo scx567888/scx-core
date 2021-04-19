@@ -174,32 +174,28 @@ public final class ScxConfig {
      * 加载 配置文件
      */
     private static void loadConfig() {
-        File configFile;
+        var scxConfigJson = new File(PackageUtils.getAppRoot(), "scx-config.json");
         var mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.nullNode();
+        var rootNode = mapper.nullNode();
         try {
             //获取所有 已 scx 开头 .json 结尾的文件
-            //这里假设这些就是 配置文件
-            var scxConfigJsons = PackageUtils.getAppRoot().listFiles(file -> file.isFile() && file.getName().startsWith("scx") && file.getName().endsWith(".json"));
-            //数量不为空 就返回第一个
-            if (scxConfigJsons != null && scxConfigJsons.length > 0) {
-                configFile = scxConfigJsons[0];
-            } else {
+            if (!scxConfigJson.exists()) {
                 throw new ConfigFileMissingException();
             }
-            rootNode = mapper.readTree(configFile);
-            Ansi.OUT.green("Y 已加载配置文件                       \t -->\t " + configFile.getPath()).ln();
+            rootNode = mapper.readTree(scxConfigJson);
+            Ansi.OUT.green("Y 已加载配置文件                       \t -->\t " + scxConfigJson.getPath()).ln();
         } catch (Exception e) {
-            configFile = new File(PackageUtils.getAppRoot(), "scx-default.json");
             if (e instanceof JsonProcessingException) {
-                Ansi.OUT.red("N 配置文件已损坏!!! 已生成正确的配置文件 scx-default.json").ln();
+                Ansi.OUT.red("N 配置文件已损坏!!! 已创建正确的配置文件 scx-config.json").ln();
             } else if (e instanceof ConfigFileMissingException) {
-                Ansi.OUT.red("N 配置文件已丢失!!! 已使用默认配置文件 scx-default.json").ln();
+                Ansi.OUT.red("N 配置文件已丢失!!! 已创建默认的配置文件 scx-config.json").ln();
+            } else {
+                e.printStackTrace();
             }
         }
         //说明没有读取到 正确的 json 文件
         nowScxConfigJsonNode = rootNode;
-        nowScxExample = Scx.from(configFile, nowScxConfigJsonNode);
+        nowScxExample = Scx.from(scxConfigJson, nowScxConfigJsonNode);
     }
 
     /**

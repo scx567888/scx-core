@@ -30,7 +30,7 @@ call mvn clean package
 move target\scx-%scxVersion%.jar %outPutUrl%
 move target\lib %outPutUrl%\lib
 xcopy src\main\resources\c %outPutUrl%\c\ /E /Y
-copy src\main\resources\scx.json %outPutUrl%
+copy src\main\resources\scx-config.json %outPutUrl%
 echo @echo off > %outPutUrl%\startup.bat
 echo chcp 65001 >> %outPutUrl%\startup.bat
 echo set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Duser.language=zh >> %outPutUrl%\startup.bat
