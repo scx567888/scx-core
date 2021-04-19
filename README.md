@@ -6,7 +6,7 @@
         <img src="https://dev.azure.com/scx567888/scx/_apis/build/status/scx567888.scx?branchName=master"/>
     </a>
     <a target="_blank" href="https://github.com/scx567888/scx">
-        <img src="https://img.shields.io/badge/version-1.0.14-ff69b4" alt="version"/>
+        <img src="https://img.shields.io/badge/version-1.0.15-ff69b4" alt="version"/>
     </a>
     <a target="_blank" href="https://github.com/scx567888/scx">
         <img src="https://img.shields.io/github/languages/code-size/scx567888/scx?color=orange" alt="code-size"/>
@@ -46,7 +46,7 @@
 <dependency>
     <groupId>cool.scx</groupId>
     <artifactId>scx</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.15</version>
 </dependency>
 ```
 
