@@ -44,6 +44,29 @@ public final class ScxRequestHandler extends RouterImpl {
     }
 
     /**
+     * 校验路由是否已经存在
+     *
+     * @param list    l
+     * @param handler h
+     * @return true 为存在 false 为不存在
+     */
+    private static boolean checkRouteExists(List<ScxMappingHandler> list, ScxMappingHandler handler) {
+        for (var a : list) {
+            if (a.url.equals(handler.url)) {
+                for (var h : handler.httpMethods) {
+                    if (a.httpMethods.contains(h)) {
+                        Ansi.OUT.brightMagenta("检测到重复的路由!!! " + h + " --> \"" + handler.url + "\" , 相关 class 及方法如下 ▼").ln()
+                                .brightMagenta(handler.clazz.getName() + " --> " + handler.method.getName()).ln()
+                                .brightMagenta(a.clazz.getName() + " --> " + a.method.getName()).ln();
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * 注册 FaviconIco 图标 handler
      */
     private void registerFaviconHandler() {
@@ -115,30 +138,6 @@ public final class ScxRequestHandler extends RouterImpl {
             route.blockingHandler(c);
         });
     }
-
-    /**
-     * 校验路由是否已经存在
-     *
-     * @param list    l
-     * @param handler h
-     * @return true 为存在 false 为不存在
-     */
-    private static boolean checkRouteExists(List<ScxMappingHandler> list, ScxMappingHandler handler) {
-        for (var a : list) {
-            if (a.url.equals(handler.url)) {
-                for (var h : handler.httpMethods) {
-                    if (a.httpMethods.contains(h)) {
-                        Ansi.OUT.brightMagenta("检测到重复的路由!!! " + h + " --> \"" + handler.url + "\" , 相关 class 及方法如下 ▼").ln()
-                                .brightMagenta(handler.clazz.getName() + " --> " + handler.method.getName()).ln()
-                                .brightMagenta(a.clazz.getName() + " --> " + a.method.getName()).ln();
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
 
     /**
      * 静态文件 处理器
