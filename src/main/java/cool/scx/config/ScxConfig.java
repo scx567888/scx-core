@@ -178,7 +178,6 @@ public final class ScxConfig {
         var mapper = new ObjectMapper();
         var rootNode = mapper.nullNode();
         try {
-            //获取所有 已 scx 开头 .json 结尾的文件
             if (!scxConfigJson.exists()) {
                 throw new ConfigFileMissingException();
             }
