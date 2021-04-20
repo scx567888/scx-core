@@ -5,8 +5,8 @@
     <a target="_blank" href="https://dev.azure.com/scx567888/scx/_build/latest?definitionId=1&branchName=master">
         <img src="https://dev.azure.com/scx567888/scx/_apis/build/status/scx567888.scx?branchName=master"/>
     </a>
-    <a target="_blank" href="https://github.com/scx567888/scx">
-        <img src="https://img.shields.io/badge/version-1.0.15-ff69b4" alt="version"/>
+    <a target="_blank" href="https://search.maven.org/artifact/cool.scx/scx/1.0.15/jar">
+        <img src="https://img.shields.io/maven-central/v/cool.scx/scx?color=ff69b4" alt="maven-central"/>
     </a>
     <a target="_blank" href="https://github.com/scx567888/scx">
         <img src="https://img.shields.io/github/languages/code-size/scx567888/scx?color=orange" alt="code-size"/>
