@@ -1,4 +1,4 @@
-package cool.scx.core.notice;
+package cool.scx.core.websocket;
 
 import cool.scx.annotation.ScxWebSocketController;
 import cool.scx.base.BaseWebSocketController;
@@ -12,28 +12,14 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
 
-/**
- * 通知公告
- *
- * @author 司昌旭
- * @version 0.3.6
- */
-@ScxWebSocketController("/notice")
-public class NoticeWebSocketController implements BaseWebSocketController {
+@ScxWebSocketController("/scx")
+public class CoreWebSocket implements BaseWebSocketController {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onOpen(ServerWebSocket webSocket) {
         ScxContext.addOnlineItem(webSocket, null);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * 客户端终止连接
-     */
     @Override
     public void onClose(ServerWebSocket webSocket) {
         //如果客户端终止连接 将此条连接作废
@@ -41,10 +27,6 @@ public class NoticeWebSocketController implements BaseWebSocketController {
         Ansi.OUT.brightRed(webSocket.binaryHandlerID() + " 关闭了!!! 当前总连接数 : " + ScxContext.getOnlineItemList().size()).ln();
     }
 
-    /**
-     * {@inheritDoc}
-     * todo 此处功能待处理
-     */
     @Override
     public void onMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket) {
         var binaryHandlerID = webSocket.binaryHandlerID();
@@ -86,20 +68,13 @@ public class NoticeWebSocketController implements BaseWebSocketController {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) {
 //        System.out.println(binaryData);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onError(Throwable event, ServerWebSocket webSocket) {
         event.printStackTrace();
     }
-
 }
