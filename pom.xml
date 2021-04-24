@@ -46,7 +46,7 @@
             <version>2.12.3</version>
         </dependency>
 
-        <!-- 依赖注入 -->
+        <!-- Spring 依赖注入 -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
