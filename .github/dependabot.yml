@@ -1,0 +1,14 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 99
+  ignore:
+  - dependency-name: mysql:mysql-connector-java
+    versions:
+    - 8.0.24
+  - dependency-name: org.apache.poi:poi-ooxml
+    versions:
+    - 5.0.0
