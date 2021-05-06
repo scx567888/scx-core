@@ -25,7 +25,6 @@ import java.util.Map;
 @ScxController("api")
 public class CrudController {
 
-
     /**
      * 获取 service
      *
@@ -41,6 +40,16 @@ public class CrudController {
             return (BaseService<T>) o;
         } catch (Exception e) {
             throw new HttpResponseException(ctx -> Json.fail(modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
+        }
+    }
+
+    private static BaseModel getBaseModel(Map<String, Object> entityMap, String modelName) throws HttpResponseException {
+        try {
+            return (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
+        } catch (Exception e) {
+            e.printStackTrace();
+            //这里一般就是 参数转换错误
+            throw new HttpResponseException(routingContext -> Json.fail(Json.SYSTEM_ERROR, "参数错误!!!").sendToClient(routingContext));
         }
     }
 
@@ -116,7 +125,7 @@ public class CrudController {
     @ScxMapping(value = ":modelName", method = Method.POST)
     public Json save(String modelName, Map<String, Object> entityMap) throws HttpResponseException {
         var baseService = getBaseService(modelName);
-        var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
+        var realObject = getBaseModel(entityMap, modelName);
         return Json.ok().items(baseService.save(realObject));
     }
 
@@ -131,7 +140,7 @@ public class CrudController {
     @ScxMapping(value = ":modelName", method = Method.PUT)
     public Json update(String modelName, Map<String, Object> entityMap) throws Exception {
         var baseService = getBaseService(modelName);
-        var realObject = (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
+        var realObject = getBaseModel(entityMap, modelName);
         return Json.ok().items(baseService.update(realObject));
     }
 

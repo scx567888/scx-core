@@ -1,11 +1,8 @@
 package cool.scx.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -58,19 +55,6 @@ public final class ObjectUtils {
             @Override
             public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
                 jsonGenerator.writeFieldName("");
-            }
-        });
-        /* todo 此处会对前台发送的不合法数据进行置空处理 若影响到业务开发 请注释掉此方法
-         * 例子
-         * json   {"username": "test","password": [1,2,3,4,5,6,7,8,8,9]}
-         * class  public class User  { public String username; public String password; }
-         * 有此代码 -- username=test;  password=null;
-         * 无此代码 --   com.fasterxml.jackson.databind.exc.MismatchedInputException
-         */
-        o.addHandler(new DeserializationProblemHandler() {
-            @Override
-            public Object handleUnexpectedToken(DeserializationContext ctxt, JavaType targetType, JsonToken t, JsonParser p, String failureMsg) throws IOException {
-                return null;
             }
         });
         o.configure(MapperFeature.USE_ANNOTATIONS, false);
@@ -176,11 +160,7 @@ public final class ObjectUtils {
      * @return a T object.
      */
     public static <T> T mapToBean(Map<String, ?> map, Class<T> clazz) {
-        try {
-            return OBJECT_MAPPER.convertValue(map, clazz);
-        } catch (Exception e) {
-            return null;
-        }
+        return OBJECT_MAPPER.convertValue(map, clazz);
     }
 
     /**
@@ -237,42 +217,13 @@ public final class ObjectUtils {
      * @param <T>         T
      * @return 处理后的值
      */
-    @SuppressWarnings("unchecked")
     public static <T> T parseSimpleType(Object value, Class<T> targetClass) {
         try {
-            if (value == null || targetClass == value.getClass()) {
-                return (T) value;
-            }
-            if (targetClass == Integer.class || targetClass == int.class) {
-                return (T) Integer.valueOf(value.toString());
-            }
-            if (targetClass == Boolean.class || targetClass == boolean.class) {
-                return (T) Boolean.valueOf(value.toString());
-            }
-            if (targetClass == Byte.class || targetClass == byte.class) {
-                return (T) Byte.valueOf(value.toString());
-            }
-            if (targetClass == Character.class || targetClass == char.class) {
-                return (T) value;
-            }
-            if (targetClass == Double.class || targetClass == double.class) {
-                return (T) Double.valueOf(value.toString());
-            }
-            if (targetClass == Float.class || targetClass == float.class) {
-                return (T) Float.valueOf(value.toString());
-            }
-            if (targetClass == Long.class || targetClass == long.class) {
-                return (T) Long.valueOf(value.toString());
-            }
-            if (targetClass == Short.class || targetClass == short.class) {
-                return (T) Short.valueOf(value.toString());
-            }
-            return null;
+            return OBJECT_MAPPER.convertValue(value, targetClass);
         } catch (Exception e) {
             return null;
         }
     }
-
 
     /**
      * <p>beanToMapWithIndex.</p>
