@@ -12,14 +12,26 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
 
+/**
+ * <p>CoreWebSocket class.</p>
+ *
+ * @author 司昌旭
+ * @version 1.0.16
+ */
 @ScxWebSocketController("/scx")
 public class CoreWebSocket implements BaseWebSocketController {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onOpen(ServerWebSocket webSocket) {
         ScxContext.addOnlineItem(webSocket, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onClose(ServerWebSocket webSocket) {
         //如果客户端终止连接 将此条连接作废
@@ -27,6 +39,9 @@ public class CoreWebSocket implements BaseWebSocketController {
         Ansi.OUT.brightRed(webSocket.binaryHandlerID() + " 关闭了!!! 当前总连接数 : " + ScxContext.getOnlineItemList().size()).ln();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket) {
         var binaryHandlerID = webSocket.binaryHandlerID();
@@ -68,11 +83,17 @@ public class CoreWebSocket implements BaseWebSocketController {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) {
 //        System.out.println(binaryData);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onError(Throwable event, ServerWebSocket webSocket) {
         event.printStackTrace();
