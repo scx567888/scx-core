@@ -47,7 +47,8 @@ public class IndexController {
             var s1 = new ArrayList<User>();
             for (int i = 0; i < 50; i++) {
                 var s = new User();
-                s.username = StringUtils.getUUID();
+                //测试表情符能否存储
+                s.username = StringUtils.getUUID()+"👶";
                 s.password = StringUtils.getUUID();
                 s.salt = StringUtils.getUUID();
                 s.level = 8;

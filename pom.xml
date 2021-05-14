@@ -53,11 +53,11 @@
             <version>5.3.7</version>
         </dependency>
 
-        <!-- mysql 驱动 注意 : 驱动版本应与数据库版本 [8.0.22] 对应 除非必要不要修改版本!!! -->
+        <!-- mysql 驱动 注意 : 驱动版本应与数据库版本 [8.0.25] 对应 除非必要不要修改版本!!! -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.22</version>
+            <version>8.0.25</version>
         </dependency>
 
         <!-- 连接池 -->
