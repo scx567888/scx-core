@@ -5,7 +5,7 @@
     <a target="_blank" href="https://github.com/scx567888/scx/actions/workflows/ci.yml">
         <img src="https://github.com/scx567888/scx/actions/workflows/ci.yml/badge.svg" alt="CI"/>
     </a>
-    <a target="_blank" href="https://search.maven.org/artifact/cool.scx/scx/1.0.16/jar">
+    <a target="_blank" href="https://search.maven.org/artifact/cool.scx/scx/1.0.17/jar">
         <img src="https://img.shields.io/maven-central/v/cool.scx/scx?color=ff69b4" alt="maven-central"/>
     </a>
     <a target="_blank" href="https://github.com/scx567888/scx">
@@ -46,7 +46,7 @@
 <dependency>
     <groupId>cool.scx</groupId>
     <artifactId>scx</artifactId>
-    <version>1.0.16</version>
+    <version>1.0.17</version>
 </dependency>
 ```
 
