@@ -2,8 +2,8 @@
     <img src="https://scx.cool/img/scx-logo.svg" width="300px"  alt="scx-logo"/>
 </p>
 <p align="center">
-    <a target="_blank" href="https://github.com/scx567888/scx/actions/workflows/CI.yml">
-        <img src="https://github.com/scx567888/scx/actions/workflows/CI.yml/badge.svg"/>
+    <a target="_blank" href="https://github.com/scx567888/scx/actions/workflows/ci.yml">
+        <img src="https://github.com/scx567888/scx/actions/workflows/ci.yml/badge.svg" alt="CI"/>
     </a>
     <a target="_blank" href="https://search.maven.org/artifact/cool.scx/scx/1.0.16/jar">
         <img src="https://img.shields.io/maven-central/v/cool.scx/scx?color=ff69b4" alt="maven-central"/>
@@ -29,7 +29,7 @@
         <img src="https://img.shields.io/badge/Jackson-2.12.3-blue" alt="jackson"/>
     </a>
     <a target="_blank" href="https://github.com/spring-projects/spring-framework">
-        <img src="https://img.shields.io/badge/Spring--Framework-5.3.6-blue" alt="Spring-Framework"/>
+        <img src="https://img.shields.io/badge/Spring--Framework-5.3.7-blue" alt="Spring-Framework"/>
     </a>
     <a target="_blank" href="https://github.com/brettwooldridge/HikariCP">
         <img src="https://img.shields.io/badge/HikariCP-4.0.3-blue" alt="HikariCP"/>
