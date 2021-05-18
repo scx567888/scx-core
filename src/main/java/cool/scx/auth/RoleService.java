@@ -1,5 +1,6 @@
 package cool.scx.auth;
 
+import cool.scx.annotation.NeedImpl;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
@@ -18,7 +19,8 @@ import java.util.stream.Collectors;
  * @version 0.3.6
  */
 @ScxService
-public class RoleService extends BaseService<Role> {
+@NeedImpl
+public abstract class RoleService extends BaseService<Role> {
 
     private final UserRoleService userRoleService;
 

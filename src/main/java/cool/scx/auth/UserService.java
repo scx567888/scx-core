@@ -1,5 +1,6 @@
 package cool.scx.auth;
 
+import cool.scx.annotation.NeedImpl;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
@@ -28,8 +29,9 @@ import java.util.stream.Collectors;
  * @author 司昌旭
  * @version 0.3.6
  */
+@NeedImpl
 @ScxService
-public class UserService extends BaseService<User> {
+public  abstract class UserService extends BaseService<User> {
     private static final HashMap<String, LoginError> loginErrorMap = new HashMap<>();
 
     private final DeptService deptService;
