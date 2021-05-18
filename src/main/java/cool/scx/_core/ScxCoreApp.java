@@ -1,6 +1,7 @@
-package cool.scx;
+package cool.scx._core;
 
 import cool.scx.boot.ScxApp;
+import cool.scx.boot.ScxModule;
 
 /**
  * 核心模块启动类
@@ -8,7 +9,7 @@ import cool.scx.boot.ScxApp;
  * @author 司昌旭
  * @version 1.0.10
  */
-public class ScxCoreApp {
+public class ScxCoreApp implements ScxModule {
 
     /**
      * 核心启动方法
@@ -16,6 +17,6 @@ public class ScxCoreApp {
      * @param args 外部参数
      */
     public static void main(String[] args) {
-        ScxApp.run(ScxCoreApp.class, args);
+        ScxApp.run(new ScxCoreApp(), args);
     }
 }

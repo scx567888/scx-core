@@ -14,14 +14,8 @@ import cool.scx.web.ScxServer;
  */
 public final class ScxApp {
 
-    /**
-     * 运行项目
-     *
-     * @param source 启动的 class
-     * @param args   外部参数
-     */
-    public static void run(Class<?> source, String... args) {
-        run(new Class[]{source}, args);
+    public static <T extends ScxModule> void run(T source, String... args) {
+        run(new ScxModule[]{source}, args);
     }
 
     /**
@@ -30,7 +24,7 @@ public final class ScxApp {
      * @param source 启动的 class
      * @param args   外部参数
      */
-    private static void run(Class<?>[] source, String... args) {
+    public static <T extends ScxModule> void run(T[] source, String... args) {
         //此处每个初始化方法都依赖上一个的初始化方法 所以顺序不要打乱
         ScxTimer.timerStart();
         ScxParameters.initParameters(source, args);

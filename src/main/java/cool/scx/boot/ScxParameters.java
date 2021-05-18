@@ -1,6 +1,6 @@
 package cool.scx.boot;
 
-import cool.scx.ScxCoreApp;
+import cool.scx._core.ScxCoreApp;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -21,8 +21,14 @@ public class ScxParameters {
      * @param _classSources an array of {@link java.lang.Class} objects.
      * @param _args         an array of {@link java.lang.String} objects.
      */
-    public static void initParameters(Class<?>[] _classSources, String[] _args) {
-        classSources = filterClassSource(_classSources);
+    public static <T extends ScxModule> void initParameters(T[] _classSources, String[] _args) {
+        var s = new Class[_classSources.length];
+        for (int i = 0; i < _classSources.length; i++) {
+            _classSources[i].onStart();
+            var n = _classSources[i].getClass();
+            s[i] = n;
+        }
+        classSources = filterClassSource(s);
         parameters = _args;
     }
 
