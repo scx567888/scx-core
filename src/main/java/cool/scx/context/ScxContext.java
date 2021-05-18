@@ -3,9 +3,9 @@ package cool.scx.context;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
+import cool.scx.auth.User;
+import cool.scx.auth.UserService;
 import cool.scx.config.ScxConfig;
-import cool.scx.core.user.User;
-import cool.scx.core.user.UserService;
 import cool.scx.enumeration.Device;
 import cool.scx.enumeration.FixTableResult;
 import cool.scx.exception.handler.SQLRunnerExceptionHandler;
@@ -201,7 +201,7 @@ public final class ScxContext {
      *
      * @param token  a {@link java.lang.String} object.
      * @param device a {@link cool.scx.enumeration.Device} object.
-     * @return a {@link cool.scx.core.user.User} object.
+     * @return a {@link cool.scx.base.BaseUser} object.
      */
     public static User getLoginUserByToken(Device device, String token) {
         var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token) && u.device == device).findAny().orElse(null);
@@ -216,7 +216,7 @@ public final class ScxContext {
     /**
      * <p>getLoginUserByHeader.</p>
      *
-     * @return a {@link cool.scx.core.user.User} object.
+     * @return a {@link cool.scx.base.BaseUser} object.
      */
     public static User getLoginUser() {
         if (device() == Device.WEBSITE) {
@@ -316,6 +316,17 @@ public final class ScxContext {
      */
     public static EventBus eventBus() {
         return VERTX.eventBus();
+    }
+
+    /**
+     * 根据接口获取实现类
+     *
+     * @param clazz c
+     * @param <T>   t
+     * @return c
+     */
+    public static <T, F extends T> F GetImpl(Class<T> clazz) {
+        return null;
     }
 
     /**

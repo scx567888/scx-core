@@ -42,7 +42,7 @@ public final class ScxApp {
         ScxListener.initListener();
         ScxServer.initServer();
         ScxServer.startServer();
-        ScxLicense.checkLicense();
+        ScxContext.getBean(ScxLicense.class).checkLicense();
     }
 
 }

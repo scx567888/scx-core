@@ -9,6 +9,7 @@ import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,8 +28,43 @@ public class SQLHelper {
      * tableInfo 缓存
      */
     private static final Map<String, TableInfo> TABLE_INFO_CACHE = new ConcurrentHashMap<>(256);
+    /**
+     * javaType 到 sqlType 的映射
+     */
+    private final static HashMap<Class<?>, String> JAVA_TYPE_SQL_TYPE_MAP = new HashMap<>();
 
+    /**
+     * 数据库实例
+     */
     private static final String database = ScxConfig.dataSource().database;
+
+
+    static {
+        //基本类型 (不包含 char )
+        JAVA_TYPE_SQL_TYPE_MAP.put(byte.class, "TINYINT");
+        JAVA_TYPE_SQL_TYPE_MAP.put(short.class, "SMALLINT");
+        JAVA_TYPE_SQL_TYPE_MAP.put(int.class, "INT");
+        JAVA_TYPE_SQL_TYPE_MAP.put(long.class, "BIGINT");
+        JAVA_TYPE_SQL_TYPE_MAP.put(float.class, "FLOAT");
+        JAVA_TYPE_SQL_TYPE_MAP.put(double.class, "DOUBLE");
+        JAVA_TYPE_SQL_TYPE_MAP.put(boolean.class, "TINYINT(1)");
+        //以上基本类型对应的包装类型
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.lang.Byte.class, "TINYINT");
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.lang.Short.class, "SMALLINT");
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.lang.Integer.class, "INT");
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.lang.Long.class, "BIGINT");
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.lang.Float.class, "FLOAT");
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.lang.Double.class, "DOUBLE");
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.lang.Boolean.class, "TINYINT(1)");
+        //其他类型
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.lang.String.class, "VARCHAR(128)");
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.math.BigInteger.class, "BIGINT");
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.math.BigDecimal.class, "DECIMAL");
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.time.LocalDateTime.class, "DATETIME");
+        //数组类型
+        JAVA_TYPE_SQL_TYPE_MAP.put(byte[].class, "LONGBLOB");
+        JAVA_TYPE_SQL_TYPE_MAP.put(java.lang.Byte[].class, "LONGBLOB");
+    }
 
 
     /**
@@ -45,32 +81,6 @@ public class SQLHelper {
         tempTable = new TableInfo(clazz);
         TABLE_INFO_CACHE.put(clazz.getName(), tempTable);
         return tempTable;
-    }
-
-    /**
-     * 根据 class 获取类型
-     *
-     * @param clazz a {@link java.lang.Class} object.
-     * @return a {@link java.lang.String} object.
-     */
-    public static String getColumnTypeByType(Class<?> clazz) {
-        if (clazz == java.lang.String.class) {
-            return "VARCHAR(128)";
-        } else if (clazz == java.lang.Long.class) {
-            return "BIGINT";
-        } else if (clazz == java.lang.Double.class) {
-            return "DOUBLE";
-        } else if (clazz == java.lang.Byte.class) {
-            return "TINYINT";
-        } else if (clazz == java.lang.Integer.class) {
-            return "INTEGER";
-        } else if (clazz == java.lang.Boolean.class) {
-            return "TINYINT(1)";
-        } else if (clazz == java.time.LocalDateTime.class) {
-            return "DATETIME";
-        } else {
-            return "VARCHAR(128)";
-        }
     }
 
     /**
@@ -146,6 +156,10 @@ public class SQLHelper {
     }
 
 
+    /**
+     * @param field
+     * @return
+     */
     private static String getSQLColumnByField(Field field) {
         var columnName = "`" + StringUtils.camel2Underscore(field.getName()) + "` ";
         var type = "";
@@ -155,7 +169,7 @@ public class SQLHelper {
         var onUpdate = "";
         var fieldColumn = field.getAnnotation(Column.class);
         if (fieldColumn != null) {
-            type = "".equals(fieldColumn.type()) ? SQLHelper.getColumnTypeByType(field.getType()) : fieldColumn.type();
+            type = "".equals(fieldColumn.type()) ? getSQLType(field.getType()) : fieldColumn.type();
             notNull = fieldColumn.notNull() ? " NOT NULL" : " NULL";
             if (fieldColumn.autoIncrement()) {
                 autoIncrement = " AUTO_INCREMENT ";
@@ -170,10 +184,35 @@ public class SQLHelper {
                 onUpdate += " ON UPDATE " + fieldColumn.defaultValue();
             }
         } else {
-            type = SQLHelper.getColumnTypeByType(field.getType());
+            type = getSQLType(field.getType());
             notNull = " NULL ";
         }
         return columnName + type + notNull + autoIncrement + defaultValue + onUpdate;
+    }
+
+
+    /**
+     * 根据 class 获取类型
+     *
+     * @param javaType a {@link java.lang.Class} object.
+     * @return a {@link java.lang.String} object.
+     */
+    public static String getSQLType(Class<?> javaType) {
+        String sqlType = JAVA_TYPE_SQL_TYPE_MAP.get(javaType);
+        if (sqlType == null) {
+            return "JSON";
+        }
+        return sqlType;
+    }
+
+    /**
+     * <p>isSupportedType.</p>
+     *
+     * @param javaType a {@link java.lang.Class} object.
+     * @return a boolean.
+     */
+    public static boolean isSupportedType(Class<?> javaType) {
+        return JAVA_TYPE_SQL_TYPE_MAP.get(javaType) != null;
     }
 
 }

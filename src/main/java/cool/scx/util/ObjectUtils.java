@@ -76,6 +76,20 @@ public final class ObjectUtils {
     }
 
     /**
+     * <p>beanToJson.</p>  对象转 json 不使用 注解如 @JsonIgnore
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link java.lang.String} object.
+     */
+    public static String beanToJson(Object o) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(o);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    /**
      * beanToByteArray. 对象转 json 使用 注解如 @JsonIgnore
      *
      * @param o a {@link java.lang.Object} object.
@@ -99,6 +113,22 @@ public final class ObjectUtils {
     public static JsonNode JsonToTree(String json) {
         try {
             return OBJECT_MAPPER.readTree(json);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * <p>JsonToTree.</p>
+     *
+     * @param json a {@link java.lang.String} object.
+     * @param type a {@link java.lang.Class} object.
+     * @param <T>  a T object.
+     * @return a {@link com.fasterxml.jackson.databind.JsonNode} object.
+     */
+    public static <T> T JsonToBean(String json, Class<T> type) {
+        try {
+            return OBJECT_MAPPER.readValue(json, type);
         } catch (Exception e) {
             return null;
         }

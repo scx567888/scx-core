@@ -2,10 +2,10 @@ package cool.scx.web.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.annotation.*;
+import cool.scx.auth.User;
 import cool.scx.base.BaseVo;
 import cool.scx.bo.FileUpload;
 import cool.scx.context.ScxContext;
-import cool.scx.core.user.User;
 import cool.scx.enumeration.Device;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.Ansi;
