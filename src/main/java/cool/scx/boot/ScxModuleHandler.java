@@ -63,7 +63,6 @@ public final class ScxModuleHandler {
      * <p>initModules.</p>
      *
      * @param modules an array of T[] objects.
-     * @param <T>     a T object.
      */
     public static <T extends BaseModule> void initModules(T[] modules) {
         for (int i = 0; i < modules.length; i++) {
@@ -89,7 +88,6 @@ public final class ScxModuleHandler {
      * <p>addModule.</p>
      *
      * @param baseModule a T object.
-     * @param <T>        a T object.
      */
     public static <T extends BaseModule> void addModule(T baseModule) {
         SCX_MODULE_LIST.add(getModuleByBaseModule(baseModule));

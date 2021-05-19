@@ -186,10 +186,14 @@ public final class SQLRunner {
             var matcher = pattern.matcher(sql);
             while (matcher.find()) {
                 var tempValue = paramMap.get(matcher.group(2));
-                if (SQLHelper.isSupportedType(tempValue.getClass())) {
-                    preparedStatement.setObject(index, tempValue);
+                if (tempValue != null) {
+                    if (SQLHelper.isSupportedType(tempValue.getClass())) {
+                        preparedStatement.setObject(index, tempValue);
+                    } else {
+                        preparedStatement.setString(index, ObjectUtils.beanToJson(tempValue));
+                    }
                 } else {
-                    preparedStatement.setString(index, ObjectUtils.beanToJson(tempValue));
+                    preparedStatement.setObject(index, null);
                 }
                 index++;
             }
