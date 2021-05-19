@@ -50,12 +50,22 @@
 </dependency>
 ```
 
-2. 编写启动类
+2-1. 编写并使用自己的模块
 
 ``` java
-public class YourApp {
+public class YourModule implements BaseModule {
     public static void main(String[] args) {
-        ScxApp.run(YourApp.class, args);
+        ScxApp.run(new YourModule(), args);
+    }
+}
+```
+
+2-2. 同时使用内置的模块
+
+``` java
+public class YourModule implements BaseModule {
+    public static void main(String[] args) {
+        ScxApp.run(new BaseModule[]{new CoreModule(),new YourModule()}, args);
     }
 }
 ```
