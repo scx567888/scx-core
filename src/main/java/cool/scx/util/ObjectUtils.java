@@ -17,25 +17,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <p>ObjectUtils class.</p>
+ * 处理对象的工具类
  *
  * @author 司昌旭
  * @version 0.3.6
  */
 public final class ObjectUtils {
 
-    //使用注解的 objectMapper 用于向前台发送数据
-    private static final ObjectMapper OBJECT_MAPPER_USE_ANNOTATIONS;
-    //忽略注解的 objectMapper  用于前台向后台发送数据和 后台数据序列化
-    private static final ObjectMapper OBJECT_MAPPER;
-    private static final TypeFactory TYPE_FACTORY;
+    /**
+     * 忽略 Jackson 注解的 objectMapper  用于前台向后台发送数据和 后台数据序列化
+     */
+    private static final ObjectMapper OBJECT_MAPPER = getObjectMapper();
+
+    /**
+     * 使用 Jackson 注解的 objectMapper 用于向前台发送数据
+     */
+    private static final ObjectMapper OBJECT_MAPPER_USE_ANNOTATIONS = getObjectMapper();
+
+    /**
+     * 类型工厂
+     */
+    private static final TypeFactory TYPE_FACTORY = OBJECT_MAPPER.getTypeFactory();
+
+    /**
+     * map 类
+     */
     private static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
     };
 
     static {
-        OBJECT_MAPPER = getObjectMapper();
-        TYPE_FACTORY = OBJECT_MAPPER.getTypeFactory();
-        OBJECT_MAPPER_USE_ANNOTATIONS = getObjectMapper();
+        //设置 OBJECT_MAPPER 使用 Jackson 注解
         OBJECT_MAPPER_USE_ANNOTATIONS.configure(MapperFeature.USE_ANNOTATIONS, true);
     }
 
@@ -62,7 +73,7 @@ public final class ObjectUtils {
     }
 
     /**
-     * <p>beanToJson.</p>  对象转 json 使用 注解如 @JsonIgnore
+     * 对象转 json 使用 注解如 @JsonIgnore
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link java.lang.String} object.
@@ -76,7 +87,7 @@ public final class ObjectUtils {
     }
 
     /**
-     * <p>beanToJson.</p>  对象转 json 不使用 注解如 @JsonIgnore
+     * 对象转 json 不使用 注解如 @JsonIgnore
      *
      * @param o a {@link java.lang.Object} object.
      * @return a {@link java.lang.String} object.
@@ -90,7 +101,7 @@ public final class ObjectUtils {
     }
 
     /**
-     * beanToByteArray. 对象转 json 使用 注解如 @JsonIgnore
+     * 对象转 json 使用 注解如 @JsonIgnore
      *
      * @param o a {@link java.lang.Object} object.
      * @return an array of {@link byte} objects.
@@ -166,22 +177,6 @@ public final class ObjectUtils {
     }
 
     /**
-     * <p>mapToBean.</p>
-     *
-     * @param map   a {@link java.util.Map} object.
-     * @param clazz a {@link java.lang.Class} object.
-     * @param <T>   a T object.
-     * @return a T object.
-     */
-    public static <T> T mapToBeanUseAnnotations(Map<String, ?> map, Class<T> clazz) {
-        try {
-            return OBJECT_MAPPER.convertValue(map, clazz);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
      * <p>mapToBeanUnUseAnnotations.</p>
      *
      * @param map   a {@link java.util.Map} object.
@@ -204,42 +199,6 @@ public final class ObjectUtils {
     }
 
     /**
-     * <p>beanToMap.</p>
-     *
-     * @param o a {@link java.lang.Object} object.
-     * @return a {@link java.util.Map} object.
-     */
-    public static Map<String, Object> beanToMapUseAnnotations(Object o) {
-        return OBJECT_MAPPER_USE_ANNOTATIONS.convertValue(o, MAP_TYPE);
-    }
-
-    /**
-     * <p>mapToBeanNotNull.</p>
-     *
-     * @param map   a {@link java.util.Map} object.
-     * @param clazz a {@link java.lang.Class} object.
-     * @param <T>   a T object.
-     * @return a T object.
-     */
-    public static <T> T mapToBeanNotNull(Map<String, ?> map, Class<T> clazz) {
-        T t = null;
-        try {
-            t = OBJECT_MAPPER.convertValue(map, clazz);
-        } catch (Exception ignored) {
-
-        }
-        if (t == null) {
-            try {
-                t = clazz.getDeclaredConstructor().newInstance();
-            } catch (Exception ignored) {
-
-            }
-        }
-        return t;
-    }
-
-
-    /**
      * 处理字符串，基础类型以及对应的包装类型
      *
      * @param value       需要处理的值
@@ -256,7 +215,8 @@ public final class ObjectUtils {
     }
 
     /**
-     * <p>beanToMapWithIndex.</p>
+     * 将实体类转为 map 并添加索引
+     * 注意 此方法只能转换第一层
      *
      * @param index a {@link java.lang.Integer} object.
      * @param o     a {@link java.lang.Object} object.

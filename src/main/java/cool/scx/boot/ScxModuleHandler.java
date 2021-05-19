@@ -1,0 +1,240 @@
+package cool.scx.boot;
+
+import cool.scx.base.BaseModule;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+
+/**
+ * 模块 Handler
+ */
+public final class ScxModuleHandler {
+
+    private static final List<ScxModule> SCX_MODULE_LIST = new ArrayList<>();
+
+    private static ScxModule ROOT_SCX_MODULE = null;
+
+    public static <T extends BaseModule> void initModules(T[] modules) {
+        for (int i = 0; i < modules.length; i++) {
+            var tempScxModule = getModuleByBaseModule(modules[i]);
+            // 最后一个通过代码注入的模块
+            if (i == modules.length - 1) {
+                ROOT_SCX_MODULE = tempScxModule;
+            }
+            addModule(tempScxModule);
+        }
+    }
+
+    public static void addModule(ScxModule module) {
+        SCX_MODULE_LIST.add(module);
+    }
+
+    public static <T extends BaseModule> void addModule(T baseModule) {
+        SCX_MODULE_LIST.add(getModuleByBaseModule(baseModule));
+    }
+
+    /**
+     * todo
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    public static ScxModule getModuleByFile(File file) throws Exception {
+        ScxModule tempModule = new ScxModule();
+        tempModule.moduleName = "";
+        tempModule.isPlugin = false;
+        return tempModule;
+    }
+
+    private static <T extends BaseModule> ScxModule getModuleByBaseModule(T module) {
+        ScxModule tempModule = new ScxModule();
+        if (module.moduleName() == null) {
+            tempModule.moduleName = module.getClass().getSimpleName();
+        } else {
+            tempModule.moduleName = module.moduleName();
+        }
+        tempModule.isPlugin = false;
+        tempModule.basePackage = module.getClass().getPackageName();
+        tempModule.moduleClass = module.getClass();
+        tempModule.classList = getClassList(module.getClass());
+        tempModule.moduleRootPath = getModuleRootPath(module.getClass());
+        return tempModule;
+    }
+
+    private static List<Class<?>> getClassListByFile(URL url) throws URISyntaxException, IOException {
+        var classList = new ArrayList<Class<?>>();
+        var rootFilePath = Path.of(url.toURI());
+        Files.walkFileTree(rootFilePath, new FileVisitor<>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes attrs) {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
+                var classRealPath = rootFilePath.relativize(path).toString();
+                if (classRealPath.endsWith(".class")) {
+                    var className = classRealPath.replace(".class", "").replaceAll("\\\\", ".").replaceAll("/", ".");
+                    classList.add(getClassByName(className));
+                }
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return classList;
+    }
+
+    /**
+     * <p>scanPackageByJar.</p>
+     *
+     * @param jarFileUrl a {@link java.net.URL} object.
+     * @return a {@link java.util.List} object.
+     * @throws java.io.IOException if any.
+     */
+    public static List<Class<?>> getClassListByJar(URL jarFileUrl) throws IOException {
+        var classList = new ArrayList<Class<?>>();
+        var entries = new JarFile(jarFileUrl.getFile()).entries();
+        var jarClassLoader = new URLClassLoader(new URL[]{jarFileUrl});//获得类加载器
+        while (entries.hasMoreElements()) {
+            var jarEntry = entries.nextElement();
+            String jarName = jarEntry.getRealName();
+            if (!jarEntry.isDirectory() && jarName.endsWith(".class")) {
+                var className = jarName.replace(".class", "").replaceAll("/", ".");
+                classList.add(getClassByName(className, jarClassLoader));
+            }
+        }
+        return classList;
+    }
+
+    private static Class<?> getClassByName(String className) {
+        try {
+            return Class.forName(className, false, ScxModuleHandler.class.getClassLoader());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Class<?> getClassByName(String className, ClassLoader classLoader) {
+        try {
+            return Class.forName(className, false, ScxModuleHandler.class.getClassLoader());
+        } catch (ClassNotFoundException e) {
+            try {
+                return classLoader.loadClass(className);
+            } catch (ClassNotFoundException classNotFoundException) {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * 根据 moduleClass 获取所有的 Class
+     *
+     * @param moduleClass a {@link java.util.function.Consumer} object.
+     */
+    public static List<Class<?>> getClassList(Class<?> moduleClass) {
+        URL moduleClassUrl = getClassSourceRealPath(moduleClass);
+        try {
+            if (moduleClassUrl.toString().endsWith(".jar")) {
+                return getClassListByJar(moduleClassUrl);
+            } else {
+                return getClassListByFile(moduleClassUrl);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * <p>getClassSourceRealPath.</p>
+     *
+     * @param source a {@link java.lang.Class} object.
+     * @return a {@link java.net.URL} object.
+     */
+    public static URL getClassSourceRealPath(Class<?> source) {
+        return source.getProtectionDomain().getCodeSource().getLocation();
+    }
+
+    /**
+     * <p>getAppRoot.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
+    private static File getModuleRootPath(Class<?> modelClass) {
+        var file = new File(getClassSourceRealPath(modelClass).getFile());
+        return file.getPath().endsWith(".jar") ? file.getParentFile() : file;
+    }
+
+
+    /**
+     * <p>getBasePackages.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     */
+    public static String[] getAllModuleBasePackages() {
+        return SCX_MODULE_LIST.stream().map(m -> m.basePackage).toArray(String[]::new);
+    }
+
+    public static void iterateClass(Function<Class<?>, Boolean> fun) {
+        for (ScxModule scxModule : SCX_MODULE_LIST) {
+            for (Class<?> clazz : scxModule.classList) {
+                var s = fun.apply(clazz);
+                if (!s) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * 项目根模块 这里使用 initModules 里的最后一项
+     *
+     * @return
+     */
+    public static ScxModule getRootModule() {
+        return ROOT_SCX_MODULE;
+    }
+
+    /**
+     * 所有模块
+     *
+     * @return
+     */
+    public static List<ScxModule> getAllModule() {
+        return SCX_MODULE_LIST;
+    }
+
+
+    /**
+     * 所有插件 模块
+     *
+     * @return
+     */
+    public static List<ScxModule> getAllPluginModule() {
+        return SCX_MODULE_LIST.stream().filter(scxModule -> scxModule.isPlugin).collect(Collectors.toList());
+    }
+}

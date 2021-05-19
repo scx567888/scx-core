@@ -4,14 +4,15 @@ import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Method;
-import cool.scx.util.file.FileUtils;
+import cool.scx.util.FileUtils;
 import cool.scx.vo.Json;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class TemplateController {
      */
     @ScxMapping(method = {Method.GET, Method.POST})
     public Json Index() throws IOException {
-        var fileList = FileUtils.getFileList(ScxConfig.cmsRoot().getPath());
+        var fileList = getFileList(ScxConfig.cmsRoot().getPath());
         var collect = fileList.stream().filter(fileInfo -> "Directory".equals(fileInfo.type)).collect(Collectors.toList());
         var collect1 = fileList.stream().filter(fileInfo -> "File".equals(fileInfo.type)).collect(Collectors.toList());
         collect.addAll(collect1);
@@ -119,6 +120,61 @@ public class TemplateController {
         String parent = path.getParent().toFile().getPath();
         path.toFile().renameTo(new File(parent + "\\" + newFilePath));
         return Json.ok();
+    }
+
+    /**
+     * 获取文件夹下的文件列表
+     *
+     * @param filePath 文件路径
+     * @return 文件列表
+     * @throws java.io.IOException if any.
+     */
+    private static List<FileInfo> getFileList(String filePath) throws IOException {
+        var fileList = new LinkedList<FileInfo>();
+        var path = Paths.get(filePath);
+        Files.walkFileTree(path, new FileVisitor<>() {
+            //访问文件夹之前自动调用此方法
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+                var fileInfo = new FileInfo();
+                fileInfo.type = "Directory";
+                return getFileVisitResult(dir, fileInfo, path, fileList);
+            }
+
+            //访问文件时自动调用此方法
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                var fileInfo = new FileInfo();
+                fileInfo.type = "File";
+                return getFileVisitResult(file, fileInfo, path, fileList);
+            }
+
+            //访问文件失败时自动调用此方法
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                return FileVisitResult.CONTINUE;
+            }
+
+            //访问文件夹之后自动调用此方法
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return fileList;
+    }
+
+    private static FileVisitResult getFileVisitResult(Path file, FileInfo fileInfo, Path path, LinkedList<FileInfo> fileList) {
+        fileInfo.id = file.getFileName().toString();
+        fileInfo.parentId = file.getParent().toFile().getPath();
+        if (path.toString().equals(fileInfo.parentId)) {
+            fileInfo.parentId = "0";
+        } else {
+            fileInfo.parentId = file.getParent().getFileName().toString();
+        }
+        fileInfo.filePath = file.toFile().getPath();
+        fileList.add(fileInfo);
+        return FileVisitResult.CONTINUE;
     }
 
 }

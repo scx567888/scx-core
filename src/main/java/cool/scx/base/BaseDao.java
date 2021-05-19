@@ -167,7 +167,7 @@ public final class BaseDao<Entity extends BaseModel> {
      */
     public List<Map<String, Object>> getFieldList(String fieldName) {
         if (Arrays.stream(table.allFields).filter(field -> field.getName().equals(fieldName)).count() == 1) {
-            var sql = SQLBuilder.Select(table.tableName).SelectColumns(new String[]{StringUtils.camel2Underscore(fieldName) + " As value "})
+            var sql = SQLBuilder.Select(table.tableName).SelectColumns(new String[]{StringUtils.camelToUnderscore(fieldName) + " As value "})
                     .WhereSql(ScxConfig.realDelete() ? "" : " is_deleted = FALSE").GroupBy(new HashSet<>() {{
                         add("value");
                     }}).GetSQL();
@@ -180,11 +180,11 @@ public final class BaseDao<Entity extends BaseModel> {
     private String[] getWhereColumns(Entity entity, boolean ignoreLike) {
         if (ignoreLike) {
             return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
-                    .map(field -> StringUtils.camel2Underscore(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
+                    .map(field -> StringUtils.camelToUnderscore(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
         } else {
             return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
                     .map(field -> {
-                        var columnName = StringUtils.camel2Underscore(field.getName());
+                        var columnName = StringUtils.camelToUnderscore(field.getName());
                         var column = field.getAnnotation(Column.class);
                         if (column != null && column.useLike()) {
                             return columnName + " LIKE  CONCAT('%',:" + field.getName() + ",'%')";

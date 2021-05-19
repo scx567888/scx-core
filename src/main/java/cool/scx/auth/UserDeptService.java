@@ -11,4 +11,5 @@ import cool.scx.base.BaseService;
  */
 @ScxService
 public class UserDeptService extends BaseService<UserDept> {
+
 }

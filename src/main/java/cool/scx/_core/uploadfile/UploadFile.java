@@ -4,7 +4,7 @@ import cool.scx.annotation.Column;
 import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 import cool.scx.util.StringUtils;
-import cool.scx.util.file.FileUtils;
+import cool.scx.util.FileUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

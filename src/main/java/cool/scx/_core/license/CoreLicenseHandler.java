@@ -2,7 +2,7 @@ package cool.scx._core.license;
 
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
-import cool.scx.boot.ScxLicense;
+import cool.scx.base.BaseLicenseHandler;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
 import cool.scx.util.CryptoUtils;
@@ -18,7 +18,7 @@ import java.util.Date;
  * @version 0.3.6
  */
 @ScxService
-public class LicenseService extends BaseService<License> implements ScxLicense {
+public class CoreLicenseHandler extends BaseService<License> implements BaseLicenseHandler {
 
     /**
      * 加密时间

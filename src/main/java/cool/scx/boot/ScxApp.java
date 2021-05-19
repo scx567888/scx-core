@@ -1,10 +1,15 @@
 package cool.scx.boot;
 
+import cool.scx.auth.AuthModule;
+import cool.scx.base.BaseLicenseHandler;
+import cool.scx.base.BaseModule;
 import cool.scx.config.ScxCmsConfig;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.plugin.ScxPlugins;
 import cool.scx.web.ScxServer;
+
+import java.util.List;
 
 /**
  * 启动类
@@ -14,20 +19,22 @@ import cool.scx.web.ScxServer;
  */
 public final class ScxApp {
 
-    public static <T extends ScxModule> void run(T source, String... args) {
-        run(new ScxModule[]{source}, args);
+    public static <T extends BaseModule> void run(T module, String... args) {
+        run(new BaseModule[]{module}, args);
     }
 
     /**
      * 运行项目
      *
-     * @param source 启动的 class
+     * @param modules 需要挂载的 module
      * @param args   外部参数
      */
-    public static <T extends ScxModule> void run(T[] source, String... args) {
+    public static <T extends BaseModule> void run(T[] modules, String... args) {
         //此处每个初始化方法都依赖上一个的初始化方法 所以顺序不要打乱
-        ScxTimer.timerStart();
-        ScxParameters.initParameters(source, args);
+        ScxTimer.timerStart("ScxApp");
+        ScxParameters.initParameters(args);
+        ScxModuleHandler.addModule(new AuthModule());
+        ScxModuleHandler.initModules(modules);
         ScxBanner.show();
         ScxConfig.initConfig();
         ScxPlugins.initPlugins();
@@ -36,7 +43,7 @@ public final class ScxApp {
         ScxListener.initListener();
         ScxServer.initServer();
         ScxServer.startServer();
-        ScxContext.getBean(ScxLicense.class).checkLicense();
+        ScxContext.getBean(BaseLicenseHandler.class).checkLicense();
     }
 
 }

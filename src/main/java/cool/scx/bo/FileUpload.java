@@ -3,7 +3,7 @@ package cool.scx.bo;
 import io.vertx.core.buffer.Buffer;
 
 /**
- * 文件上传前台接受类
+ * 文件上传后台接受容器类
  *
  * @author 司昌旭
  * @version 1.0.10
@@ -31,7 +31,7 @@ public class FileUpload {
     public Buffer buffer;
 
     /**
-     * <p>Constructor for FileUpload.</p>
+     * 构造函数
      *
      * @param name     a {@link java.lang.String} object.
      * @param fileName a {@link java.lang.String} object.

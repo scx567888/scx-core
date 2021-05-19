@@ -1,5 +1,6 @@
 package cool.scx.util;
 
+import cool.scx.base.BaseLogHandler;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 
@@ -9,8 +10,9 @@ import cool.scx.context.ScxContext;
  * @author 司昌旭
  * @version 1.0.10
  */
-public class LogUtils {
+public final class LogUtils {
 
+    private final static BaseLogHandler baseLogHandler = ScxContext.getBean(BaseLogHandler.class);
 
     /**
      * 记录日志到数据库
@@ -22,6 +24,7 @@ public class LogUtils {
         if (ScxConfig.showLog()) {
             Ansi.OUT.print(title).ln();
         }
+        baseLogHandler.recordLog(title, content, "system", "", 0);
     }
 
     /**

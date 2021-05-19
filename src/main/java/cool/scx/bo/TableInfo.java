@@ -75,7 +75,7 @@ public class TableInfo {
 
     private static String[] getSelectColumns(Field[] allFields) {
         return Stream.of(allFields).filter(field -> ScxConfig.realDelete() || !"isDeleted".equals(field.getName())).map(field -> {
-            var underscore = StringUtils.camel2Underscore(field.getName());
+            var underscore = StringUtils.camelToUnderscore(field.getName());
             return underscore.contains("_") ? underscore + " AS " + field.getName() : underscore;
         }).toArray(String[]::new);
     }
@@ -86,8 +86,8 @@ public class TableInfo {
             return scxModel.tableName();
         }
         if (scxModel != null && StringUtils.isNotEmpty(scxModel.tablePrefix())) {
-            return scxModel.tablePrefix() + "_" + StringUtils.camel2Underscore(clazz.getSimpleName());
+            return scxModel.tablePrefix() + "_" + StringUtils.camelToUnderscore(clazz.getSimpleName());
         }
-        return "scx_" + StringUtils.camel2Underscore(clazz.getSimpleName());
+        return "scx_" + StringUtils.camelToUnderscore(clazz.getSimpleName());
     }
 }

@@ -1,15 +1,8 @@
 package cool.scx.auth;
 
-import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseService;
-import cool.scx.bo.Param;
-import cool.scx.context.ScxContext;
-import cool.scx.util.StringUtils;
+import cool.scx.annotation.NeedImpl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>DeptService class.</p>
@@ -17,40 +10,16 @@ import java.util.stream.Collectors;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxService
-public class DeptService extends BaseService<Dept> {
-
-    private final UserDeptService userDeptService;
-
-    /**
-     * <p>Constructor for DeptService.</p>
-     *
-     * @param userDeptService a {@link UserDeptService} object.
-     */
-    public DeptService(UserDeptService userDeptService) {
-        this.userDeptService = userDeptService;
-    }
+@NeedImpl
+public interface DeptService {
 
     /**
      * <p>getDeptListByUser.</p>
      *
-     * @param user a {@link cool.scx.auth.User} object.
+     * @param user a {@link User} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Dept> getDeptListByUser(User user) {
-        var userDeptParam = new Param<>(new UserDept());
-        userDeptParam.queryObject.userId = user.id;
-
-        var collect = userDeptService.list(userDeptParam).stream().map(UserDept -> UserDept.deptId.toString()).collect(Collectors.joining(","));
-        if (!"".equals(collect)) {
-            var deptParam = new Param<>(ScxContext.getBean(Dept.class));
-            deptParam.whereSql = " id in (" + collect + ")";
-            return list(deptParam);
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
+    List<? extends Dept> getDeptListByUser(User user);
 
     /**
      * <p>saveDeptListWithUserId.</p>
@@ -58,29 +27,14 @@ public class DeptService extends BaseService<Dept> {
      * @param userId  a {@link java.lang.Long} object.
      * @param deptIds a {@link java.lang.String} object.
      */
-    public void saveDeptListWithUserId(Long userId, String deptIds) {
-        if (!StringUtils.isEmpty(deptIds)) {
-            var idArr = Arrays.stream(deptIds.split(",")).filter(id -> !StringUtils.isEmpty(id)).map(id -> {
-                        var userDept = new UserDept();
-                        userDept.userId = userId;
-                        userDept.deptId = Long.parseLong(id);
-                        return userDept;
-                    }
-            ).collect(Collectors.toList());
-            userDeptService.saveList(idArr);
-        }
-    }
+    void saveDeptListWithUserId(Long userId, String deptIds);
 
     /**
      * <p>deleteByUserId.</p>
      *
      * @param id a {@link java.lang.Long} object.
      */
-    public void deleteByUserId(Long id) {
-        var userDept = new Param<>(new UserDept());
-        userDept.queryObject.userId = id;
-        userDeptService.delete(userDept);
-    }
+    void deleteByUserId(Long id);
 
     /**
      * <p>findDeptByUserId.</p>
@@ -88,12 +42,6 @@ public class DeptService extends BaseService<Dept> {
      * @param userId a {@link java.lang.Long} object.
      * @return a {@link java.util.List} object.
      */
-    public List<UserDept> findDeptByUserId(Long userId) {
-        if (StringUtils.isNotEmpty(userId)) {
-            var ud = new Param<>(new UserDept());
-            ud.queryObject.userId = userId;
-            return userDeptService.list(ud);
-        }
-        return new ArrayList<>();
-    }
+    List<UserDept> findDeptByUserId(Long userId);
+
 }

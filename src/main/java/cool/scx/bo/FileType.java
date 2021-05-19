@@ -1,15 +1,31 @@
-package cool.scx.util.file;
+package cool.scx.bo;
 
 /**
- * <p>FileType class.</p>
+ * 文件类型 存储常用文件的基本信息 主要用途是作为一个索引表对文件进行判断
  *
  * @author 司昌旭
  * @version 1.0.10
  */
 public class FileType {
+
+    /**
+     * 文件头
+     */
     public final String head;
+
+    /**
+     * 文件后缀
+     */
     public final String suffix;
+
+    /**
+     * 此种文件类型在 浏览器中默认对应的  contentType
+     */
     public final String contentType;
+
+    /**
+     * 文件说明
+     */
     public final String description;
 
     /**

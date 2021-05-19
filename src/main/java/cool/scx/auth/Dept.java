@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.annotation.Column;
 import cool.scx.annotation.NeedImpl;
 import cool.scx.annotation.NoColumn;
-import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
 import java.util.List;
@@ -15,21 +14,31 @@ import java.util.List;
  * @author 司昌旭
  * @version 0.3.6
  */
-@NeedImpl()
+@NeedImpl
 public abstract class Dept extends BaseModel {
 
-    public String deptName;//部门名称
+    /**
+     * 部门名称
+     */
+    public String deptName;
 
-    public List<String> perm;//部门权限
+    /**
+     * 部门权限
+     */
+    @Column(type = "TEXT")
+    public List<String> perms;
 
-    public Integer level;//部门级别
-
+    /**
+     * 排序
+     */
     @Column(notNull = true, defaultValue = "0", needIndex = true)
     @JsonIgnore
-    public Integer modelOrder;//排序
+    public Integer deptOrder;
 
+    /**
+     * 父id 用作构建树形结构
+     */
     @NoColumn
-    public Long parentId = 0L;//父id 用作构建树形结构
+    public Long parentId = 0L;
 
-    public String parentStr;//父字符串
 }

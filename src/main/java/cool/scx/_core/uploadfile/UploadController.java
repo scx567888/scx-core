@@ -8,15 +8,16 @@ import cool.scx.bo.Param;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Method;
 import cool.scx.exception.HttpResponseException;
+import cool.scx.util.FileUtils;
 import cool.scx.util.LogUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.util.file.FileUtils;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
 import cool.scx.vo.Json;
 
-import java.io.File;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -147,10 +148,10 @@ public class UploadController {
                 return Json.ok().data("type", "uploadFail");
             }
         } else {
-            var lastUploadChunk = FileUtils.getLastUploadChunk(uploadConfigFile, chunkLength);
+            var lastUploadChunk = getLastUploadChunk(uploadConfigFile, chunkLength);
             if (nowChunkIndex - lastUploadChunk == 1) {
                 FileUtils.fileAppend(uploadTempFile, fileData.buffer.getBytes());
-                FileUtils.changeLastUploadChunk(uploadConfigFile, nowChunkIndex, chunkLength);
+                changeLastUploadChunk(uploadConfigFile, nowChunkIndex, chunkLength);
                 return Json.ok().data("type", "needMore").items(nowChunkIndex);
             } else {
                 return Json.ok().data("type", "needMore").items(lastUploadChunk);
@@ -215,5 +216,42 @@ public class UploadController {
         return Json.ok("deleteSuccess");
     }
 
+    /**
+     * <p>getLastUploadChunk.</p>
+     *
+     * @param uploadConfigFile a {@link java.io.File} object.
+     * @param chunkLength      a {@link java.lang.Integer} object.
+     * @return a {@link java.lang.Integer} object.
+     */
+    private static Integer getLastUploadChunk(File uploadConfigFile, Integer chunkLength) {
+        try (var fr = new FileReader(uploadConfigFile); var br = new BufferedReader(fr)) {
+            return Integer.parseInt(br.readLine().split("-")[0]);
+        } catch (Exception e) {
+            changeLastUploadChunk(uploadConfigFile, 0, chunkLength);
+            return 0;
+        }
+    }
+
+
+    /**
+     * <p>changeLastUploadChunk.</p>
+     *
+     * @param uploadConfigFile a {@link java.io.File} object.
+     * @param nowChunkIndex    a {@link java.lang.Integer} object.
+     * @param chunkLength      a {@link java.lang.Integer} object.
+     */
+    private static void changeLastUploadChunk(File uploadConfigFile, Integer nowChunkIndex, Integer chunkLength) {
+        try {
+            Files.createDirectories(Path.of(uploadConfigFile.getParent()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (var fw = new FileWriter(uploadConfigFile, false); var bw = new BufferedWriter(fw)) {
+            bw.write(nowChunkIndex + "-" + chunkLength);
+            bw.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

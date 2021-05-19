@@ -1,26 +1,19 @@
 package cool.scx.plugin;
 
+import cool.scx.boot.ScxModule;
+import cool.scx.boot.ScxModuleHandler;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
-import cool.scx.util.PackageUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
- * todo 插件加载需要重构
- * <p>ScxPlugins class.</p>
+ * ScxPlugins 插件
  *
  * @author 司昌旭
- * @version 0.3.6
+ * @version 1.1.0
  */
 public final class ScxPlugins {
-
-    /**
-     * Constant <code>pluginsClassList</code>
-     */
-    public static List<Class<?>> pluginsClassList = new ArrayList<>();
 
     /**
      * <p>reloadPlugins.</p>
@@ -53,17 +46,15 @@ public final class ScxPlugins {
                 }
                 return !f;
             }).forEach(file -> {
-                        try {
-                            PackageUtils.scanPackage(clazz -> {
-                                pluginsClassList.add(clazz);
-                                return true;
-                            }, file.toURI().toURL());
-                            Ansi.OUT.yellow("找到插件 名称 [" + file.getName() + "] 已加载!!!").ln();
-                        } catch (Exception e) {
-                            Ansi.OUT.red("找到插件 名称 [" + file.getName() + "] 已损坏!!!").ln();
-                        }
-                    }
-            );
+                try {
+                    ScxModule moduleByFile = ScxModuleHandler.getModuleByFile(file);
+                    moduleByFile.isPlugin = true;
+                    ScxModuleHandler.addModule(moduleByFile);
+                    Ansi.OUT.yellow("找到插件 文件名称 [" + file.getName() + "] 插件名称 [" + moduleByFile.moduleName + "] 已加载!!!").ln();
+                } catch (Exception e) {
+                    Ansi.OUT.red("找到插件 文件名称 [" + file.getName() + "] 已损坏!!!").ln();
+                }
+            });
         }
     }
 }

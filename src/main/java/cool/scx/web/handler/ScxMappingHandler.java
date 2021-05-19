@@ -2,15 +2,14 @@ package cool.scx.web.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.annotation.*;
+import cool.scx.auth.AuthHandler;
 import cool.scx.auth.User;
 import cool.scx.base.BaseVo;
 import cool.scx.bo.FileUpload;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
 import cool.scx.exception.HttpResponseException;
-import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
-import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
 import io.vertx.core.Handler;
@@ -39,30 +38,10 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * Constant <code>LOGIN_AND_PERMS_HANDLER</code>
      */
-    public final static LoginAndPermsHandler LOGIN_AND_PERMS_HANDLER;
+    public final static AuthHandler AUTH_HANDLER;
 
     static {
-        var t = new LoginAndPermsHandler[1];
-        new DefaultLoginAndPermsHandler();
-        PackageUtils.scanPackageIncludePlugins(clazz -> {
-            if (!clazz.isInterface() && LoginAndPermsHandler.class.isAssignableFrom(clazz) && clazz != DefaultLoginAndPermsHandler.class) {
-                try {
-                    Ansi.OUT.blue("已加载自定义 LoginAndPermsHandler 处理器 -> [" + clazz.getName() + "]").ln();
-                    var myLoginAndPermsHandler = (LoginAndPermsHandler) clazz.getDeclaredConstructor().newInstance();
-                    t[0] = myLoginAndPermsHandler;
-                    return false;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return true;
-        });
-        if (t[0] == null) {
-            Ansi.OUT.brightYellow("已加载默认的 LoginAndPermsHandler 处理器 -> [" + DefaultLoginAndPermsHandler.class.getName() + "]").ln();
-            t[0] = new DefaultLoginAndPermsHandler();
-        }
-
-        LOGIN_AND_PERMS_HANDLER = t[0];
+        AUTH_HANDLER = ScxContext.GetImpl(AuthHandler.class);
     }
 
     public final Method method;
@@ -180,7 +159,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             User currentUser = ScxContext.getLoginUser();
             //session 中没有用户证明没有登录 返回 false
             if (currentUser == null) {
-                LOGIN_AND_PERMS_HANDLER.noLogin(ScxContext.device(), context);
+                AUTH_HANDLER.noLogin(ScxContext.device(), context);
                 return false;
             } else {
                 //这里就是 需要登录 并且 能够获取到当前登录用户的
@@ -197,7 +176,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                         if (permStrByUser.contains(permStr)) {
                             return true;
                         } else {
-                            LOGIN_AND_PERMS_HANDLER.noPerms(ScxContext.device(), context);
+                            AUTH_HANDLER.noPerms(ScxContext.device(), context);
                             return false;
                         }
                     }

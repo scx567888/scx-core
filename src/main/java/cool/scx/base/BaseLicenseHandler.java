@@ -1,4 +1,4 @@
-package cool.scx.boot;
+package cool.scx.base;
 
 /**
  * 校验 license 的工具类
@@ -7,11 +7,13 @@ package cool.scx.boot;
  * @author 司昌旭
  * @version 0.5.0
  */
-public interface ScxLicense {
+public interface BaseLicenseHandler {
 
     /**
      * 初始化 license
      */
-    void checkLicense();
+    default void checkLicense(){
+
+    }
 
 }

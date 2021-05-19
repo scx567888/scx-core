@@ -14,14 +14,14 @@ import cool.scx.vo.Html;
 @ScxController("/license")
 public class LicenseController {
 
-    private final LicenseService licenseService;
+    private final CoreLicenseHandler licenseService;
 
     /**
      * <p>Constructor for LicenseController.</p>
      *
-     * @param licenseService a {@link LicenseService} object.
+     * @param licenseService a {@link CoreLicenseHandler} object.
      */
-    public LicenseController(LicenseService licenseService) {
+    public LicenseController(CoreLicenseHandler licenseService) {
         this.licenseService = licenseService;
     }
 

@@ -18,5 +18,5 @@ public abstract class Role extends BaseModel {
     public String roleName;//角色名称
 
     @Column(type = "TEXT")
-    public List<String> perm;//权限
+    public List<String> perms;//权限
 }

@@ -1,15 +1,14 @@
-package cool.scx.web.handler;
+package cool.scx.auth;
 
+import cool.scx.annotation.NeedImpl;
 import cool.scx.enumeration.Device;
+import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
-/**
- * <p>LoginAndPermsHandler interface.</p>
- *
- * @author 司昌旭
- * @version 1.0.10
- */
-public interface LoginAndPermsHandler {
+import java.util.Map;
+
+@NeedImpl
+public interface AuthHandler {
 
     /**
      * 未登录 handler
@@ -19,7 +18,6 @@ public interface LoginAndPermsHandler {
      */
     void noLogin(Device device, RoutingContext context);
 
-
     /**
      * 无权限 handler
      *
@@ -28,4 +26,15 @@ public interface LoginAndPermsHandler {
      */
     void noPerms(Device device, RoutingContext context);
 
+    Json login(String username, String password, RoutingContext context);
+
+    Json info();
+
+    Json infoUpdate(Map<String, Object> params);
+
+    Json findByUsername(String username);
+
+    Json logout();
+
+    Json register(String username, String password);
 }

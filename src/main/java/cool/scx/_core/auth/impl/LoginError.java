@@ -1,4 +1,4 @@
-package cool.scx.auth;
+package cool.scx._core.auth.impl;
 
 import java.time.LocalDateTime;
 

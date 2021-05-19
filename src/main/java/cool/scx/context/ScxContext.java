@@ -5,15 +5,14 @@ import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
 import cool.scx.auth.User;
 import cool.scx.auth.UserService;
+import cool.scx.boot.ScxModuleHandler;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Device;
 import cool.scx.enumeration.FixTableResult;
 import cool.scx.exception.handler.SQLRunnerExceptionHandler;
-import cool.scx.plugin.ScxPlugins;
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.Ansi;
-import cool.scx.util.PackageUtils;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.ServerWebSocket;
@@ -61,8 +60,8 @@ public final class ScxContext {
 
     static {
         Ansi.OUT.magenta("ScxContext 初始化中...").ln();
-        APPLICATION_CONTEXT = new AnnotationConfigApplicationContext(PackageUtils.getBasePackages());
-        ScxPlugins.pluginsClassList.forEach(APPLICATION_CONTEXT::register);
+        APPLICATION_CONTEXT = new AnnotationConfigApplicationContext(ScxModuleHandler.getAllModuleBasePackages());
+        ScxModuleHandler.getAllPluginModule().forEach(m -> m.classList.forEach(APPLICATION_CONTEXT::register));
         initScxContext();
         fixTable();
         USER_SERVICE = getBean(UserService.class);
@@ -79,7 +78,7 @@ public final class ScxContext {
     }
 
     private static void initScxContext() {
-        PackageUtils.scanPackageIncludePlugins(clazz -> {
+        ScxModuleHandler.iterateClass(clazz -> {
             if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class) || clazz.isAnnotationPresent(ScxModel.class)) {
                 String className = clazz.getSimpleName().toLowerCase();
                 Class<?> aClass = SCX_BEAN_CLASS_NAME_MAPPING.get(className);
@@ -201,7 +200,7 @@ public final class ScxContext {
      *
      * @param token  a {@link java.lang.String} object.
      * @param device a {@link cool.scx.enumeration.Device} object.
-     * @return a {@link cool.scx.base.BaseUser} object.
+     * @return a {@link cool.scx.auth.User} object.
      */
     public static User getLoginUserByToken(Device device, String token) {
         var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token) && u.device == device).findAny().orElse(null);
@@ -216,7 +215,7 @@ public final class ScxContext {
     /**
      * <p>getLoginUserByHeader.</p>
      *
-     * @return a {@link cool.scx.base.BaseUser} object.
+     * @return a {@link cool.scx.auth.User} object.
      */
     public static User getLoginUser() {
         if (device() == Device.WEBSITE) {

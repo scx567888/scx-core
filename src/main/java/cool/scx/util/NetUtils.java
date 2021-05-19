@@ -20,7 +20,7 @@ import java.util.Enumeration;
 public final class NetUtils {
 
     /**
-     * <p>isLocalePortUsing.</p>
+     * 端口号是否被占用
      *
      * @param port a int.
      * @return a boolean.
@@ -35,7 +35,7 @@ public final class NetUtils {
     }
 
     /**
-     * <p>isPortUsing.</p>
+     * 端口号是否被占用
      *
      * @param host a {@link java.lang.String} object.
      * @param port a int.
@@ -56,16 +56,10 @@ public final class NetUtils {
     }
 
     /**
-     * <p>text.</p>
-     */
-    public static void text() {
-        String url = "https://www.baidu.com";
-        String s = sendHttpRequest(url, "GET");
-        Ansi.OUT.print(s).ln();
-    }
-
-    /**
-     * <p>sendHttpRequest.</p>
+     * 向 url 发送请求并获取响应值
+     * 示例 :
+     * String url = "https://www.baidu.com";
+     * String s = sendHttpRequest(url, "GET");
      *
      * @param urlParam      url
      * @param requestMethod 请求方式
@@ -74,32 +68,23 @@ public final class NetUtils {
     public static String sendHttpRequest(String urlParam, String requestMethod) {
         HttpURLConnection con;
         BufferedReader buffer;
-        StringBuffer resultBuffer;
+        StringBuilder resultBuffer;
         InputStream ins = null;
         try {
             URL url = new URL(urlParam);
             //得到连接对象
             con = (HttpURLConnection) url.openConnection();
-
-            //设置请求类型
-
-
             con.setRequestMethod(requestMethod);
-
-            //据说post请求必须设置这两条,暂时不知道
             con.setDoOutput(true);  //允许写出
             con.setDoInput(true);   //允许读入
-
             con.setUseCaches(false);    //不使用缓存
-
             //得到响应码
             int responseCode = con.getResponseCode();
-
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 //请求成功，得到响应流
                 ins = con.getInputStream();
                 //转化为字符串
-                resultBuffer = new StringBuffer();
+                resultBuffer = new StringBuilder();
                 String line;
                 //注意响应体的编码格式，可能会有乱码
                 buffer = new BufferedReader(new InputStreamReader(ins, "GBK"));
@@ -110,7 +95,6 @@ public final class NetUtils {
                 //将resultBuffer返回即可
                 return resultBuffer.toString();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -122,7 +106,6 @@ public final class NetUtils {
                 }
             }
         }
-
         return null;
     }
 

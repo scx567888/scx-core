@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
+import cool.scx.util.FileUtils;
 import cool.scx.util.NetUtils;
-import cool.scx.util.PackageUtils;
 import cool.scx.util.Tidy;
-import cool.scx.util.file.FileUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -127,13 +126,13 @@ public class Scx {
         scx.plugin = Plugin.from(needFixConfig);
 
         scx.uploadFilePath = ScxConfig.value("scx.upload-file-path", "/scxUploadFile/",
-                s -> Ansi.OUT.green("Y 文件上传目录                         \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
+                s -> Ansi.OUT.green("Y 文件上传目录                         \t -->\t " + FileUtils.getFileByRootModulePath(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.upload-file-path        \t -->\t 已采用默认值 : " + f).ln();
                 });
 
-        scx.uploadFilePathValue = PackageUtils.getFileByAppRoot(scx.uploadFilePath);
+        scx.uploadFilePathValue = FileUtils.getFileByRootModulePath(scx.uploadFilePath);
 
         scx.bodyLimit = ScxConfig.value("scx.body-limit", "16384KB",
                 s -> Ansi.OUT.green("Y 请求体大小限制                       \t -->\t " + FileUtils.longToDisplaySize(FileUtils.displaySizeToLong(s))).ln(),

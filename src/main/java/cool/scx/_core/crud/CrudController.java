@@ -56,7 +56,15 @@ public class CrudController {
     @SuppressWarnings("unchecked")
     private <T extends BaseModel> Param<T> getParam(String modelName, Integer limit, Integer page, String orderByColumn, String sortType, Map<String, Object> queryObject) {
         var modelClass = (Class<T>) ScxContext.getClassByName(modelName);
-        var p = new Param<>(ObjectUtils.mapToBeanNotNull(queryObject, modelClass));
+        T o = ObjectUtils.mapToBean(queryObject, modelClass);
+        if (o == null) {
+            try {
+                o = modelClass.getDeclaredConstructor().newInstance();
+            } catch (Exception ignored) {
+
+            }
+        }
+        var p = new Param<>(o);
         if (limit != null && limit != -1) {
             p.setPagination(page, limit);
         }

@@ -8,7 +8,7 @@ import cool.scx.config.example.DataSource;
 import cool.scx.config.example.Scx;
 import cool.scx.exception.ConfigFileMissingException;
 import cool.scx.util.Ansi;
-import cool.scx.util.PackageUtils;
+import cool.scx.util.FileUtils;
 import cool.scx.util.Tidy;
 
 import java.io.File;
@@ -174,7 +174,7 @@ public final class ScxConfig {
      * 加载 配置文件
      */
     private static void loadConfig() {
-        var scxConfigJson = new File(PackageUtils.getAppRoot(), "scx-config.json");
+        var scxConfigJson = FileUtils.getFileByRootModulePath("scx-config.json");
         var mapper = new ObjectMapper();
         var rootNode = mapper.nullNode();
         try {
