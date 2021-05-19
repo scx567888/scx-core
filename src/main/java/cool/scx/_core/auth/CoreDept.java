@@ -9,6 +9,6 @@ import cool.scx.auth.Dept;
  * @author scx56
  * @version $Id: $Id
  */
-@ScxModel(tablePrefix = "core")
+@ScxModel(tableName = "core_dept")
 public class CoreDept extends Dept {
 }
