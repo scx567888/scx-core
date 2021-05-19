@@ -19,10 +19,10 @@ public interface UserService {
     /**
      * <p>login.</p>
      *
-     * @param username a {@link String} object.
-     * @param password a {@link String} object.
+     * @param username a {@link java.lang.String} object.
+     * @param password a {@link java.lang.String} object.
      * @return a {@link cool.scx.auth.User} object.
-     * @throws AuthException if any.
+     * @throws cool.scx.exception.AuthException if any.
      */
     User login(String username, String password) throws AuthException;
 
@@ -56,6 +56,9 @@ public interface UserService {
     /**
      * 加密密码 返回加密后的密码 和盐值
      * 用于新建用户
+     *
+     * @param password a {@link java.lang.String} object.
+     * @return an array of {@link java.lang.String} objects.
      */
     String[] encryptPassword(String password);
 
@@ -113,7 +116,7 @@ public interface UserService {
     /**
      * <p>updateUserAndDept.</p>
      *
-     * @param id a {@link Long} object.
+     * @param id a {@link java.lang.Long} object.
      * @param b  a boolean.
      * @return a {@link cool.scx.auth.User} object.
      */

@@ -19,7 +19,7 @@ public class LicenseController {
     /**
      * <p>Constructor for LicenseController.</p>
      *
-     * @param licenseService a {@link CoreLicenseHandler} object.
+     * @param licenseService a {@link cool.scx._core.license.CoreLicenseHandler} object.
      */
     public LicenseController(CoreLicenseHandler licenseService) {
         this.licenseService = licenseService;
@@ -37,8 +37,8 @@ public class LicenseController {
     /**
      * <p>getHtml.</p>
      *
-     * @param s a {@link String} object.
-     * @return a {@link String} object.
+     * @param s a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
      */
     public String getHtml(String s) {
         return "<!DOCTYPE html>\n" +

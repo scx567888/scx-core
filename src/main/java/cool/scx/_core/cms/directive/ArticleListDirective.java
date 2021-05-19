@@ -1,9 +1,9 @@
 package cool.scx._core.cms.directive;
 
 
+import cool.scx._core.cms.ArticleService;
 import cool.scx.annotation.ScxTemplateDirective;
 import cool.scx.base.BaseTemplateDirective;
-import cool.scx._core.cms.ArticleService;
 
 import java.util.Map;
 
@@ -22,7 +22,7 @@ public class ArticleListDirective extends BaseTemplateDirective {
     /**
      * <p>Constructor for ArticleListDirective.</p>
      *
-     * @param articleService a {@link ArticleService} object.
+     * @param articleService a {@link cool.scx._core.cms.ArticleService} object.
      */
     public ArticleListDirective(ArticleService articleService) {
         this.articleService = articleService;

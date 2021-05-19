@@ -20,6 +20,9 @@ import java.util.stream.Collectors;
 
 /**
  * 模块 Handler
+ *
+ * @author scx56
+ * @version $Id: $Id
  */
 public final class ScxModuleHandler {
 
@@ -27,6 +30,11 @@ public final class ScxModuleHandler {
 
     private static ScxModule ROOT_SCX_MODULE = null;
 
+    /**
+     * <p>initModules.</p>
+     *
+     * @param modules an array of T[] objects.
+     */
     public static <T extends BaseModule> void initModules(T[] modules) {
         for (int i = 0; i < modules.length; i++) {
             var tempScxModule = getModuleByBaseModule(modules[i]);
@@ -38,10 +46,20 @@ public final class ScxModuleHandler {
         }
     }
 
+    /**
+     * <p>addModule.</p>
+     *
+     * @param module a {@link cool.scx.boot.ScxModule} object.
+     */
     public static void addModule(ScxModule module) {
         SCX_MODULE_LIST.add(module);
     }
 
+    /**
+     * <p>addModule.</p>
+     *
+     * @param baseModule a T object.
+     */
     public static <T extends BaseModule> void addModule(T baseModule) {
         SCX_MODULE_LIST.add(getModuleByBaseModule(baseModule));
     }
@@ -49,9 +67,9 @@ public final class ScxModuleHandler {
     /**
      * todo
      *
-     * @param file
-     * @return
-     * @throws Exception
+     * @param file a {@link java.io.File} object.
+     * @return a {@link cool.scx.boot.ScxModule} object.
+     * @throws java.lang.Exception if any.
      */
     public static ScxModule getModuleByFile(File file) throws Exception {
         ScxModule tempModule = new ScxModule();
@@ -154,6 +172,7 @@ public final class ScxModuleHandler {
      * 根据 moduleClass 获取所有的 Class
      *
      * @param moduleClass a {@link java.util.function.Consumer} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Class<?>> getClassList(Class<?> moduleClass) {
         URL moduleClassUrl = getClassSourceRealPath(moduleClass);
@@ -199,6 +218,11 @@ public final class ScxModuleHandler {
         return SCX_MODULE_LIST.stream().map(m -> m.basePackage).toArray(String[]::new);
     }
 
+    /**
+     * <p>iterateClass.</p>
+     *
+     * @param fun a {@link java.util.function.Function} object.
+     */
     public static void iterateClass(Function<Class<?>, Boolean> fun) {
         for (ScxModule scxModule : SCX_MODULE_LIST) {
             for (Class<?> clazz : scxModule.classList) {
@@ -213,7 +237,7 @@ public final class ScxModuleHandler {
     /**
      * 项目根模块 这里使用 initModules 里的最后一项
      *
-     * @return
+     * @return a {@link cool.scx.boot.ScxModule} object.
      */
     public static ScxModule getRootModule() {
         return ROOT_SCX_MODULE;
@@ -222,7 +246,7 @@ public final class ScxModuleHandler {
     /**
      * 所有模块
      *
-     * @return
+     * @return a {@link java.util.List} object.
      */
     public static List<ScxModule> getAllModule() {
         return SCX_MODULE_LIST;
@@ -232,7 +256,7 @@ public final class ScxModuleHandler {
     /**
      * 所有插件 模块
      *
-     * @return
+     * @return a {@link java.util.List} object.
      */
     public static List<ScxModule> getAllPluginModule() {
         return SCX_MODULE_LIST.stream().filter(scxModule -> scxModule.isPlugin).collect(Collectors.toList());

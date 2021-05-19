@@ -33,6 +33,11 @@ public class CoreAuthHandler implements AuthHandler {
 
     private final CoreUserService coreUserService;
 
+    /**
+     * <p>Constructor for CoreAuthHandler.</p>
+     *
+     * @param coreUserService a {@link cool.scx._core.auth.impl.CoreUserService} object.
+     */
     public CoreAuthHandler(CoreUserService coreUserService) {
         this.coreUserService = coreUserService;
     }
@@ -69,6 +74,9 @@ public class CoreAuthHandler implements AuthHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Json login(String username, String password, RoutingContext context) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
@@ -111,6 +119,9 @@ public class CoreAuthHandler implements AuthHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Json info() {
         var user = ScxContext.getLoginUser();
@@ -130,6 +141,9 @@ public class CoreAuthHandler implements AuthHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Json infoUpdate(Map<String, Object> params) {
         var queryUser = ObjectUtils.mapToBean(params, User.class);
@@ -143,6 +157,9 @@ public class CoreAuthHandler implements AuthHandler {
         return Json.ok().data("success", b);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Json findByUsername(String username) {
         var user = coreUserService.findByUsername(username);
@@ -153,12 +170,18 @@ public class CoreAuthHandler implements AuthHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Json logout() {
         ScxContext.removeLoginUser();
         return Json.ok("User Logged Out");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Json register(String username, String password) {
         var newUser = new Param<>(new CoreUser());

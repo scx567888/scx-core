@@ -12,7 +12,7 @@ public interface BaseLicenseHandler {
     /**
      * 初始化 license
      */
-    default void checkLicense(){
+    default void checkLicense() {
 
     }
 

@@ -5,7 +5,6 @@ import cool.scx._core.auth.impl.CoreUserService;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.User;
-import cool.scx.auth.UserService;
 import cool.scx.bo.Param;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
@@ -39,7 +38,7 @@ public class IndexController {
      * 跳转至首页
      * 只是测试!!!
      *
-     * @param user a {@link User} object.
+     * @param user a {@link cool.scx.auth.User} object.
      * @return 页面
      */
 //    @ScxMapping(value = "/", method = Method.GET)

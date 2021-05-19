@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.annotation.Column;
 import cool.scx.annotation.NeedImpl;
 import cool.scx.annotation.NoColumn;
-import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
 import java.time.LocalDateTime;

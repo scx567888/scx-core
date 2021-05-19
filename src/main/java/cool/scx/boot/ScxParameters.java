@@ -1,8 +1,6 @@
 package cool.scx.boot;
 
 
-import cool.scx.base.BaseModule;
-
 /**
  * 最基本的参数处理
  *

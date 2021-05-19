@@ -28,6 +28,7 @@ public class AuthController {
      *
      * @param username 用户 包含用户名和密码
      * @param password 密码
+     * @param context  a {@link io.vertx.ext.web.RoutingContext} object.
      * @return json
      */
     @ScxMapping(method = Method.POST)

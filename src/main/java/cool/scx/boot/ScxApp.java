@@ -9,8 +9,6 @@ import cool.scx.context.ScxContext;
 import cool.scx.plugin.ScxPlugins;
 import cool.scx.web.ScxServer;
 
-import java.util.List;
-
 /**
  * 启动类
  *
@@ -19,6 +17,12 @@ import java.util.List;
  */
 public final class ScxApp {
 
+    /**
+     * <p>run.</p>
+     *
+     * @param module a T object.
+     * @param args   a {@link java.lang.String} object.
+     */
     public static <T extends BaseModule> void run(T module, String... args) {
         run(new BaseModule[]{module}, args);
     }
@@ -27,7 +31,7 @@ public final class ScxApp {
      * 运行项目
      *
      * @param modules 需要挂载的 module
-     * @param args   外部参数
+     * @param args    外部参数
      */
     public static <T extends BaseModule> void run(T[] modules, String... args) {
         //此处每个初始化方法都依赖上一个的初始化方法 所以顺序不要打乱

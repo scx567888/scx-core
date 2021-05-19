@@ -12,8 +12,8 @@ class LoginError {
     /**
      * <p>Constructor for LoginError.</p>
      *
-     * @param lastErrorDate a {@link LocalDateTime} object.
-     * @param errorTimes    a {@link Integer} object.
+     * @param lastErrorDate a {@link java.time.LocalDateTime} object.
+     * @param errorTimes    a {@link java.lang.Integer} object.
      */
     public LoginError(LocalDateTime lastErrorDate, Integer errorTimes) {
         this.lastErrorDate = lastErrorDate;

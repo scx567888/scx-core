@@ -1,8 +1,8 @@
 package cool.scx._core.license;
 
 import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseService;
 import cool.scx.base.BaseLicenseHandler;
+import cool.scx.base.BaseService;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
 import cool.scx.util.CryptoUtils;
@@ -101,6 +101,9 @@ public class CoreLicenseHandler extends BaseService<License> implements BaseLice
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void checkLicense() {
         Ansi.OUT.brightCyan("校验 license 中 ...").ln();

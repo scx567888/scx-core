@@ -22,6 +22,12 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+/**
+ * <p>CoreUserService class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 @ScxService
 public class CoreUserService extends BaseService<CoreUser> implements UserService {
 
@@ -33,6 +39,14 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
     private final UserDeptService userDeptService;
     private final UserRoleService userRoleService;
 
+    /**
+     * <p>Constructor for CoreUserService.</p>
+     *
+     * @param deptService     a {@link cool.scx.auth.DeptService} object.
+     * @param roleService     a {@link cool.scx.auth.RoleService} object.
+     * @param userDeptService a {@link cool.scx.auth.UserDeptService} object.
+     * @param userRoleService a {@link cool.scx.auth.UserRoleService} object.
+     */
     public CoreUserService(DeptService deptService, RoleService roleService, UserDeptService userDeptService, UserRoleService userRoleService) {
         this.deptService = deptService;
         this.roleService = roleService;
@@ -40,6 +54,9 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         this.userRoleService = userRoleService;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User login(String username, String password) throws AuthException {
         var now = LocalDateTime.now();
@@ -70,6 +87,9 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User findByUsername(String username) {
         var param = new Param<>(new CoreUser());
@@ -77,6 +97,9 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         return get(param);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HashSet<String> getPermStrByUser(User user) {
         var permList = new HashSet<String>();
@@ -92,6 +115,9 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         return permList;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User updateUserPassword(User user) {
         var coreUser = new CoreUser();
@@ -105,6 +131,9 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         return update(coreUser);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String[] encryptPassword(String password) {
         var passwordAndSalt = new String[2];
@@ -120,16 +149,25 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         return passwordAndSalt;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void saveUserDeptIds(Long userId, String deptIds) {
         deptService.saveDeptListWithUserId(userId, deptIds);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void saveUserRoleIds(Long userId, String roleIds) {
         roleService.saveRoleListWithUserId(userId, roleIds);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User registeredUser(User user) {
         var deptIds = user.deptIds;
@@ -144,6 +182,9 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         return newUser;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Boolean deleteUser(Long id) {
         deptService.deleteByUserId(id);
@@ -174,6 +215,9 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User updateUser(User user) {
         var coreUser = new CoreUser();
@@ -202,11 +246,17 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         return update;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User revokeDeleteUser(Long id) {
         return updateUserAndDept(id, false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User updateUserAndDept(Long id, boolean b) {
         var user = new CoreUser();

@@ -14,6 +14,8 @@ public final class ScxTimer {
 
     /**
      * 启动计时器
+     *
+     * @param name a {@link java.lang.String} object.
      */
     public static void timerStart(String name) {
         START_TIME_MAP.put(name, System.currentTimeMillis());
@@ -22,6 +24,7 @@ public final class ScxTimer {
     /**
      * 停止计时并返回时间差
      *
+     * @param name a {@link java.lang.String} object.
      * @return 时间差
      */
     public static long timerStop(String name) {

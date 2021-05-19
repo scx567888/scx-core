@@ -2,7 +2,6 @@ package cool.scx.auth;
 
 import cool.scx.annotation.Column;
 import cool.scx.annotation.NeedImpl;
-import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
 import java.util.List;

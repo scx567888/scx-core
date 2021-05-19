@@ -177,7 +177,7 @@ public final class FileUtils {
      *
      * @param file           a {@link java.io.File} object.
      * @param FILE_TYPE_LIST a {@link java.util.List} object.
-     * @return a {@link FileType} object.
+     * @return a {@link cool.scx.bo.FileType} object.
      */
     public static FileType getFileTypeBySuffix(File file, List<FileType> FILE_TYPE_LIST) {
         var fileName = file.getName();
@@ -191,7 +191,7 @@ public final class FileUtils {
      *
      * @param file           a {@link java.io.File} object.
      * @param FILE_TYPE_LIST a {@link java.util.List} object.
-     * @return a {@link FileType} object.
+     * @return a {@link cool.scx.bo.FileType} object.
      */
     public static FileType getFileTypeByHead(File file, List<FileType> FILE_TYPE_LIST) {
         try (var is = new FileInputStream(file)) {
@@ -208,7 +208,7 @@ public final class FileUtils {
      * 根据文件后缀获取文件类型
      *
      * @param file a {@link java.io.File} object.
-     * @return a {@link FileType} object.
+     * @return a {@link cool.scx.bo.FileType} object.
      */
     public static FileType getFileTypeBySuffix(File file) {
         return getFileTypeBySuffix(file, ALL_FILE_TYPE_LIST);
@@ -218,7 +218,7 @@ public final class FileUtils {
      * 根据文件头获取文件类型
      *
      * @param file a {@link java.io.File} object.
-     * @return a {@link FileType} object.
+     * @return a {@link cool.scx.bo.FileType} object.
      */
     public static FileType getFileTypeByHead(File file) {
         return getFileTypeByHead(file, ALL_FILE_TYPE_LIST);
@@ -228,7 +228,7 @@ public final class FileUtils {
      * 根据文件获取图片信息
      *
      * @param file a {@link java.io.File} object.
-     * @return a {@link FileType} object.
+     * @return a {@link cool.scx.bo.FileType} object.
      */
     public static FileType getImageFileType(File file) {
         return getFileTypeBySuffix(file, IMAGE_FILE_TYPE_LIST);

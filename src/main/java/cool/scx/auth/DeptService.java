@@ -16,7 +16,7 @@ public interface DeptService {
     /**
      * <p>getDeptListByUser.</p>
      *
-     * @param user a {@link User} object.
+     * @param user a {@link cool.scx.auth.User} object.
      * @return a {@link java.util.List} object.
      */
     List<? extends Dept> getDeptListByUser(User user);

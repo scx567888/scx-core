@@ -7,19 +7,33 @@ package cool.scx.base;
  * <p>
  * 生命周期起始 onStart
  * 生命周期结束 onEnd
+ *
+ * @author scx56
+ * @version $Id: $Id
  */
 public interface BaseModule {
 
+    /**
+     * <p>onStart.</p>
+     */
     default void onStart() {
         var aClass = this.getClass();
         System.out.println(aClass.getName() + " onStart !!!");
     }
 
+    /**
+     * <p>onEnd.</p>
+     */
     default void onEnd() {
         var aClass = this.getClass();
         System.out.println(aClass.getName() + " onEnd !!!");
     }
 
+    /**
+     * <p>moduleName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     default String moduleName() {
         return null;
     }

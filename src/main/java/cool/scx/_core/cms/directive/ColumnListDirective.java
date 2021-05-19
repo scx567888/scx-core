@@ -1,9 +1,9 @@
 package cool.scx._core.cms.directive;
 
 
+import cool.scx._core.cms.ColumnService;
 import cool.scx.annotation.ScxTemplateDirective;
 import cool.scx.base.BaseTemplateDirective;
-import cool.scx._core.cms.ColumnService;
 
 import java.util.Map;
 
@@ -21,7 +21,7 @@ public class ColumnListDirective extends BaseTemplateDirective {
     /**
      * <p>Constructor for ColumnListDirective.</p>
      *
-     * @param columnService a {@link ColumnService} object.
+     * @param columnService a {@link cool.scx._core.cms.ColumnService} object.
      */
     public ColumnListDirective(ColumnService columnService) {
         this.columnService = columnService;

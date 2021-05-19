@@ -10,6 +10,9 @@ import java.lang.annotation.Target;
 /**
  * 标注此注解的类必须有实现 负责项目无法启动
  * 若有多个实现 根据加载的先后顺序取最后的
+ *
+ * @author scx56
+ * @version $Id: $Id
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

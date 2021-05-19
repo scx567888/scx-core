@@ -21,7 +21,7 @@ public class NoticeController {
     /**
      * <p>getAllOnlineUser.</p>
      *
-     * @return a {@link Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(method = Method.POST)
     public Json getAllOnlineUser() {

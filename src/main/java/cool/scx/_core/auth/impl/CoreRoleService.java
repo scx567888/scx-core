@@ -11,14 +11,28 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * <p>CoreRoleService class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 @ScxService
 public class CoreRoleService extends BaseService<CoreRole> implements RoleService {
     private final UserRoleService userRoleService;
 
+    /**
+     * <p>Constructor for CoreRoleService.</p>
+     *
+     * @param userRoleService a {@link cool.scx.auth.UserRoleService} object.
+     */
     public CoreRoleService(UserRoleService userRoleService) {
         this.userRoleService = userRoleService;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<? extends Role> getRoleListByUser(User user) {
         var userRoleParam = new Param<>(new UserRole());
@@ -34,6 +48,9 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void saveRoleListWithUserId(Long userId, String roleIds) {
         if (!StringUtils.isEmpty(roleIds)) {
@@ -48,6 +65,9 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteByUserId(Long id) {
         var userDept = new Param<>(new UserRole());
@@ -55,6 +75,9 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
         userRoleService.delete(userDept);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<UserRole> findRoleByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {

@@ -11,16 +11,30 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * <p>CoreDeptService class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 @ScxService
 public class CoreDeptService extends BaseService<CoreDept> implements DeptService {
 
     private final UserDeptService userDeptService;
 
 
+    /**
+     * <p>Constructor for CoreDeptService.</p>
+     *
+     * @param userDeptService a {@link cool.scx.auth.UserDeptService} object.
+     */
     public CoreDeptService(UserDeptService userDeptService) {
         this.userDeptService = userDeptService;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<? extends Dept> getDeptListByUser(User user) {
         var userDeptParam = new Param<>(new UserDept());
@@ -36,6 +50,9 @@ public class CoreDeptService extends BaseService<CoreDept> implements DeptServic
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void saveDeptListWithUserId(Long userId, String deptIds) {
         if (!StringUtils.isEmpty(deptIds)) {
@@ -50,6 +67,9 @@ public class CoreDeptService extends BaseService<CoreDept> implements DeptServic
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteByUserId(Long id) {
         var userDept = new Param<>(new UserDept());
@@ -57,6 +77,9 @@ public class CoreDeptService extends BaseService<CoreDept> implements DeptServic
         userDeptService.delete(userDept);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<UserDept> findDeptByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {

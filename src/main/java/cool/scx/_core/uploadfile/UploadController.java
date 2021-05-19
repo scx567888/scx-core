@@ -36,18 +36,55 @@ public class UploadController {
     /**
      * <p>Constructor for UploadController.</p>
      *
-     * @param uploadFileService a {@link UploadFileService} object.
+     * @param uploadFileService a {@link cool.scx._core.uploadfile.UploadFileService} object.
      */
     public UploadController(UploadFileService uploadFileService) {
         this.uploadFileService = uploadFileService;
     }
 
     /**
+     * <p>getLastUploadChunk.</p>
+     *
+     * @param uploadConfigFile a {@link java.io.File} object.
+     * @param chunkLength      a {@link java.lang.Integer} object.
+     * @return a {@link java.lang.Integer} object.
+     */
+    private static Integer getLastUploadChunk(File uploadConfigFile, Integer chunkLength) {
+        try (var fr = new FileReader(uploadConfigFile); var br = new BufferedReader(fr)) {
+            return Integer.parseInt(br.readLine().split("-")[0]);
+        } catch (Exception e) {
+            changeLastUploadChunk(uploadConfigFile, 0, chunkLength);
+            return 0;
+        }
+    }
+
+    /**
+     * <p>changeLastUploadChunk.</p>
+     *
+     * @param uploadConfigFile a {@link java.io.File} object.
+     * @param nowChunkIndex    a {@link java.lang.Integer} object.
+     * @param chunkLength      a {@link java.lang.Integer} object.
+     */
+    private static void changeLastUploadChunk(File uploadConfigFile, Integer nowChunkIndex, Integer chunkLength) {
+        try {
+            Files.createDirectories(Path.of(uploadConfigFile.getParent()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (var fw = new FileWriter(uploadConfigFile, false); var bw = new BufferedWriter(fw)) {
+            bw.write(nowChunkIndex + "-" + chunkLength);
+            bw.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 通用下载资源方法
      *
-     * @param fileId a {@link String} object.
-     * @return a {@link Download} object.
-     * @throws HttpResponseException if any.
+     * @param fileId a {@link java.lang.String} object.
+     * @return a {@link cool.scx.vo.Download} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = "/download/:fileId", method = Method.GET)
     public Download download(String fileId) throws HttpResponseException {
@@ -70,10 +107,10 @@ public class UploadController {
      * 通用查看图片方法
      *
      * @param fileId 文件 id
-     * @param width  a {@link Integer} object.
-     * @param height a {@link Integer} object.
+     * @param width  a {@link java.lang.Integer} object.
+     * @param height a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Binary} object.
-     * @throws HttpResponseException if any.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = "/showPicture/:fileId", method = Method.GET)
     public Image showPicture(String fileId, @FromQuery("w") Integer width, @FromQuery("h") Integer height) throws HttpResponseException {
@@ -159,12 +196,11 @@ public class UploadController {
         }
     }
 
-
     /**
      * <p>listFile.</p>
      *
      * @param fileIds a {@link java.util.Map} object.
-     * @return a {@link Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = "/uploadFile/listFile", method = Method.POST)
     public Json listFile(String fileIds) {
@@ -178,12 +214,11 @@ public class UploadController {
         return Json.ok().items(uploadFileService.list(param));
     }
 
-
     /**
      * <p>deleteFile.</p>
      *
-     * @param fileId a {@link String} object.
-     * @return a {@link Json} object.
+     * @param fileId a {@link java.lang.String} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = "/uploadFile/deleteFile", method = Method.DELETE)
     public Json deleteFile(String fileId) {
@@ -214,44 +249,6 @@ public class UploadController {
         }
 
         return Json.ok("deleteSuccess");
-    }
-
-    /**
-     * <p>getLastUploadChunk.</p>
-     *
-     * @param uploadConfigFile a {@link java.io.File} object.
-     * @param chunkLength      a {@link java.lang.Integer} object.
-     * @return a {@link java.lang.Integer} object.
-     */
-    private static Integer getLastUploadChunk(File uploadConfigFile, Integer chunkLength) {
-        try (var fr = new FileReader(uploadConfigFile); var br = new BufferedReader(fr)) {
-            return Integer.parseInt(br.readLine().split("-")[0]);
-        } catch (Exception e) {
-            changeLastUploadChunk(uploadConfigFile, 0, chunkLength);
-            return 0;
-        }
-    }
-
-
-    /**
-     * <p>changeLastUploadChunk.</p>
-     *
-     * @param uploadConfigFile a {@link java.io.File} object.
-     * @param nowChunkIndex    a {@link java.lang.Integer} object.
-     * @param chunkLength      a {@link java.lang.Integer} object.
-     */
-    private static void changeLastUploadChunk(File uploadConfigFile, Integer nowChunkIndex, Integer chunkLength) {
-        try {
-            Files.createDirectories(Path.of(uploadConfigFile.getParent()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try (var fw = new FileWriter(uploadConfigFile, false); var bw = new BufferedWriter(fw)) {
-            bw.write(nowChunkIndex + "-" + chunkLength);
-            bw.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }

@@ -3,8 +3,8 @@ package cool.scx._core.uploadfile;
 import cool.scx.annotation.Column;
 import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
-import cool.scx.util.StringUtils;
 import cool.scx.util.FileUtils;
+import cool.scx.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,10 +39,10 @@ public class UploadFile extends BaseModel {
     /**
      * <p>getNewUpload.</p>
      *
-     * @param fileName a {@link String} object.
-     * @param fileSize a {@link Long} object.
-     * @param fileMD5  a {@link String} object.
-     * @return a {@link UploadFile} object.
+     * @param fileName a {@link java.lang.String} object.
+     * @param fileSize a {@link java.lang.Long} object.
+     * @param fileMD5  a {@link java.lang.String} object.
+     * @return a {@link cool.scx._core.uploadfile.UploadFile} object.
      */
     public static UploadFile getNewUpload(String fileName, Long fileSize, String fileMD5) {
         var uploadFile = new UploadFile();
@@ -62,9 +62,9 @@ public class UploadFile extends BaseModel {
     /**
      * <p>copyUploadFile.</p>
      *
-     * @param fileName      a {@link String} object.
-     * @param oldUploadFile a {@link UploadFile} object.
-     * @return a {@link UploadFile} object.
+     * @param fileName      a {@link java.lang.String} object.
+     * @param oldUploadFile a {@link cool.scx._core.uploadfile.UploadFile} object.
+     * @return a {@link cool.scx._core.uploadfile.UploadFile} object.
      */
     public static UploadFile copyUploadFile(String fileName, UploadFile oldUploadFile) {
         var uploadFile = new UploadFile();
