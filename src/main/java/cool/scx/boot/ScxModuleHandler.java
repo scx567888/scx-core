@@ -1,5 +1,6 @@
 package cool.scx.boot;
 
+import cool.scx.auth.AuthHandler;
 import cool.scx.base.BaseModule;
 
 import java.io.File;
@@ -30,10 +31,39 @@ public final class ScxModuleHandler {
 
     private static ScxModule ROOT_SCX_MODULE = null;
 
+    static {
+        initInternalModule();
+    }
+
+    /**
+     * 添加核心模块
+     */
+    public static void initInternalModule() {
+        ScxModule internalAuthModule = new ScxModule();
+        internalAuthModule.moduleClass = null;
+        internalAuthModule.moduleName = "内部认证模块";
+        internalAuthModule.isPlugin = false;
+        internalAuthModule.basePackage = AuthHandler.class.getPackageName();
+        internalAuthModule.classList = getClassList(AuthHandler.class, internalAuthModule.basePackage);
+        internalAuthModule.moduleRootPath = getModuleRootPath(AuthHandler.class);
+
+        ScxModule internalBaseModule = new ScxModule();
+        internalBaseModule.moduleClass = null;
+        internalBaseModule.moduleName = "内部基本模块";
+        internalBaseModule.isPlugin = false;
+        internalBaseModule.basePackage = BaseModule.class.getPackageName();
+        internalBaseModule.classList = getClassList(BaseModule.class, internalBaseModule.basePackage);
+        internalBaseModule.moduleRootPath = getModuleRootPath(BaseModule.class);
+
+        addModule(internalAuthModule);
+        addModule(internalBaseModule);
+    }
+
     /**
      * <p>initModules.</p>
      *
      * @param modules an array of T[] objects.
+     * @param <T>     a T object.
      */
     public static <T extends BaseModule> void initModules(T[] modules) {
         for (int i = 0; i < modules.length; i++) {
@@ -59,6 +89,7 @@ public final class ScxModuleHandler {
      * <p>addModule.</p>
      *
      * @param baseModule a T object.
+     * @param <T>        a T object.
      */
     public static <T extends BaseModule> void addModule(T baseModule) {
         SCX_MODULE_LIST.add(getModuleByBaseModule(baseModule));
@@ -79,21 +110,17 @@ public final class ScxModuleHandler {
     }
 
     private static <T extends BaseModule> ScxModule getModuleByBaseModule(T module) {
-        ScxModule tempModule = new ScxModule();
-        if (module.moduleName() == null) {
-            tempModule.moduleName = module.getClass().getSimpleName();
-        } else {
-            tempModule.moduleName = module.moduleName();
-        }
-        tempModule.isPlugin = false;
-        tempModule.basePackage = module.getClass().getPackageName();
-        tempModule.moduleClass = module.getClass();
-        tempModule.classList = getClassList(module.getClass());
-        tempModule.moduleRootPath = getModuleRootPath(module.getClass());
-        return tempModule;
+        ScxModule t = new ScxModule();
+        t.moduleClass = module.getClass();
+        t.moduleName = module.moduleName() != null ? module.moduleName() : t.moduleClass.getSimpleName();
+        t.isPlugin = false;
+        t.basePackage = t.moduleClass.getPackageName();
+        t.classList = getClassList(t.moduleClass, t.basePackage);
+        t.moduleRootPath = getModuleRootPath(t.moduleClass);
+        return t;
     }
 
-    private static List<Class<?>> getClassListByFile(URL url) throws URISyntaxException, IOException {
+    private static ArrayList<Class<?>> getClassListByFile(URL url) throws URISyntaxException, IOException {
         var classList = new ArrayList<Class<?>>();
         var rootFilePath = Path.of(url.toURI());
         Files.walkFileTree(rootFilePath, new FileVisitor<>() {
@@ -132,7 +159,7 @@ public final class ScxModuleHandler {
      * @return a {@link java.util.List} object.
      * @throws java.io.IOException if any.
      */
-    public static List<Class<?>> getClassListByJar(URL jarFileUrl) throws IOException {
+    public static ArrayList<Class<?>> getClassListByJar(URL jarFileUrl) throws IOException {
         var classList = new ArrayList<Class<?>>();
         var entries = new JarFile(jarFileUrl.getFile()).entries();
         var jarClassLoader = new URLClassLoader(new URL[]{jarFileUrl});//获得类加载器
@@ -174,18 +201,19 @@ public final class ScxModuleHandler {
      * @param moduleClass a {@link java.util.function.Consumer} object.
      * @return a {@link java.util.List} object.
      */
-    public static List<Class<?>> getClassList(Class<?> moduleClass) {
+    private static List<Class<?>> getClassList(Class<?> moduleClass, String basePackage) {
         URL moduleClassUrl = getClassSourceRealPath(moduleClass);
+        var tempClassList = new ArrayList<Class<?>>();
         try {
             if (moduleClassUrl.toString().endsWith(".jar")) {
-                return getClassListByJar(moduleClassUrl);
+                tempClassList = getClassListByJar(moduleClassUrl);
             } else {
-                return getClassListByFile(moduleClassUrl);
+                tempClassList = getClassListByFile(moduleClassUrl);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList<>();
         }
+        return tempClassList.stream().filter(c -> c.getPackageName().startsWith(basePackage)).collect(Collectors.toList());
     }
 
     /**

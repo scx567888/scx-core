@@ -1,11 +1,14 @@
 package cool.scx.base;
 
+import cool.scx.annotation.OneAndOnlyOneImpl;
+
 /**
  * <p>BaseLogHandler interface.</p>
  *
  * @author scx56
  * @version $Id: $Id
  */
+@OneAndOnlyOneImpl
 public interface BaseLogHandler {
     /**
      * <p>recordLog.</p>

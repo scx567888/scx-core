@@ -1,6 +1,6 @@
 package cool.scx.auth;
 
-import cool.scx.annotation.NeedImpl;
+import cool.scx.annotation.OneAndOnlyOneImpl;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * @author 司昌旭
  * @version 0.3.6
  */
-@NeedImpl
+@OneAndOnlyOneImpl
 public interface DeptService {
 
     /**

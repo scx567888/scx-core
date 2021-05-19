@@ -1,6 +1,5 @@
 package cool.scx._core.cms.directive;
 
-
 import cool.scx._core.cms.ColumnService;
 import cool.scx.annotation.ScxTemplateDirective;
 import cool.scx.base.BaseTemplateDirective;

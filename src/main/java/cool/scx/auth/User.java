@@ -2,8 +2,8 @@ package cool.scx.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.annotation.Column;
-import cool.scx.annotation.NeedImpl;
 import cool.scx.annotation.NoColumn;
+import cool.scx.annotation.OneAndOnlyOneImpl;
 import cool.scx.base.BaseModel;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * @author 司昌旭
  * @version 0.3.6
  */
-@NeedImpl
+@OneAndOnlyOneImpl
 public abstract class User extends BaseModel {
 
     /**

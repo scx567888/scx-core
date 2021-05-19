@@ -31,7 +31,7 @@ public class TemplateController {
      *
      * @param filePath 文件路径
      * @return 文件列表
-     * @throws java.io.IOException if any.
+     * @throws IOException if any.
      */
     private static List<FileInfo> getFileList(String filePath) throws IOException {
         var fileList = new LinkedList<FileInfo>();

@@ -1,4 +1,4 @@
-package cool.scx._core.auth.impl;
+package cool.scx._core.auth;
 
 import cool.scx.annotation.ScxService;
 import cool.scx.auth.AuthHandler;
@@ -36,7 +36,7 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * <p>Constructor for CoreAuthHandler.</p>
      *
-     * @param coreUserService a {@link cool.scx._core.auth.impl.CoreUserService} object.
+     * @param coreUserService a {@link cool.scx._core.auth.CoreUserService} object.
      */
     public CoreAuthHandler(CoreUserService coreUserService) {
         this.coreUserService = coreUserService;

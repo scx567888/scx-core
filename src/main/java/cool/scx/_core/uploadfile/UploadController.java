@@ -45,9 +45,9 @@ public class UploadController {
     /**
      * <p>getLastUploadChunk.</p>
      *
-     * @param uploadConfigFile a {@link java.io.File} object.
-     * @param chunkLength      a {@link java.lang.Integer} object.
-     * @return a {@link java.lang.Integer} object.
+     * @param uploadConfigFile a {@link File} object.
+     * @param chunkLength      a {@link Integer} object.
+     * @return a {@link Integer} object.
      */
     private static Integer getLastUploadChunk(File uploadConfigFile, Integer chunkLength) {
         try (var fr = new FileReader(uploadConfigFile); var br = new BufferedReader(fr)) {
@@ -61,9 +61,9 @@ public class UploadController {
     /**
      * <p>changeLastUploadChunk.</p>
      *
-     * @param uploadConfigFile a {@link java.io.File} object.
-     * @param nowChunkIndex    a {@link java.lang.Integer} object.
-     * @param chunkLength      a {@link java.lang.Integer} object.
+     * @param uploadConfigFile a {@link File} object.
+     * @param nowChunkIndex    a {@link Integer} object.
+     * @param chunkLength      a {@link Integer} object.
      */
     private static void changeLastUploadChunk(File uploadConfigFile, Integer nowChunkIndex, Integer chunkLength) {
         try {

@@ -1,4 +1,4 @@
-package cool.scx._core.auth.impl;
+package cool.scx._core.auth;
 
 import cool.scx.annotation.ScxService;
 import cool.scx.auth.*;

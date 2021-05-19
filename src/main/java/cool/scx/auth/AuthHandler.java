@@ -1,6 +1,6 @@
 package cool.scx.auth;
 
-import cool.scx.annotation.NeedImpl;
+import cool.scx.annotation.OneAndOnlyOneImpl;
 import cool.scx.enumeration.Device;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @author scx56
  * @version $Id: $Id
  */
-@NeedImpl
+@OneAndOnlyOneImpl
 public interface AuthHandler {
 
     /**

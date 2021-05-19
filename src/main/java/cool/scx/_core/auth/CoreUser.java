@@ -1,4 +1,4 @@
-package cool.scx._core.auth.impl;
+package cool.scx._core.auth;
 
 import cool.scx.annotation.ScxModel;
 import cool.scx.auth.User;
@@ -9,6 +9,6 @@ import cool.scx.auth.User;
  * @author scx56
  * @version $Id: $Id
  */
-@ScxModel(tableName = "core_user")
+@ScxModel(tablePrefix = "core")
 public class CoreUser extends User {
 }

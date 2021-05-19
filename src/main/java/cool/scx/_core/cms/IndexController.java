@@ -1,7 +1,7 @@
 package cool.scx._core.cms;
 
-import cool.scx._core.auth.impl.CoreUser;
-import cool.scx._core.auth.impl.CoreUserService;
+import cool.scx._core.auth.CoreUser;
+import cool.scx._core.auth.CoreUserService;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.User;
@@ -28,7 +28,7 @@ public class IndexController {
     /**
      * <p>Constructor for IndexController.</p>
      *
-     * @param coreUserService a {@link cool.scx._core.auth.impl.CoreUserService} object.
+     * @param coreUserService a {@link cool.scx._core.auth.CoreUserService} object.
      */
     public IndexController(CoreUserService coreUserService) {
         this.coreUserService = coreUserService;

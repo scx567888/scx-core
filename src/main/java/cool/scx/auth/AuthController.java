@@ -19,7 +19,14 @@ import java.util.Map;
 @ScxController("api/auth")
 public class AuthController {
 
-    private final AuthHandler authHandler = ScxContext.getBean(AuthHandler.class);
+    private final AuthHandler authHandler;
+
+    /**
+     * <p>Constructor for AuthController.</p>
+     */
+    public AuthController() {
+        this.authHandler = ScxContext.getBean(AuthHandler.class);
+    }
 
     /**
      * 登录方法

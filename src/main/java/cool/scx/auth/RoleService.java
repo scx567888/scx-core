@@ -1,7 +1,6 @@
 package cool.scx.auth;
 
-import cool.scx.annotation.NeedImpl;
-import cool.scx.annotation.ScxService;
+import cool.scx.annotation.OneAndOnlyOneImpl;
 
 import java.util.List;
 
@@ -11,15 +10,14 @@ import java.util.List;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxService
-@NeedImpl
+@OneAndOnlyOneImpl
 public interface RoleService {
 
 
     /**
      * <p>getRoleListByUser.</p>
      *
-     * @param user a {@link cool.scx.base.BaseUser} object.
+     * @param user a {@link cool.scx.auth.User} object.
      * @return a {@link java.util.List} object.
      */
     List<? extends Role> getRoleListByUser(User user);

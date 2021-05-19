@@ -1,7 +1,6 @@
 package cool.scx.auth;
 
-import cool.scx.annotation.NeedImpl;
-import cool.scx.annotation.ScxService;
+import cool.scx.annotation.OneAndOnlyOneImpl;
 import cool.scx.exception.AuthException;
 
 import java.util.HashSet;
@@ -12,8 +11,7 @@ import java.util.HashSet;
  * @author 司昌旭
  * @version 0.3.6
  */
-@NeedImpl
-@ScxService
+@OneAndOnlyOneImpl
 public interface UserService {
 
     /**

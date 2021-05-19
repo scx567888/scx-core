@@ -1,5 +1,6 @@
 package cool.scx.context;
 
+import cool.scx.annotation.OneAndOnlyOneImpl;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
@@ -54,17 +55,74 @@ public final class ScxContext {
      */
     private static final List<LoginItem> LOGIN_ITEMS = new ArrayList<>();
     private static final Map<String, Class<?>> SCX_BEAN_CLASS_NAME_MAPPING = new HashMap<>();
-    private static final AnnotationConfigApplicationContext APPLICATION_CONTEXT;
+    private static final AnnotationConfigApplicationContext APPLICATION_CONTEXT = new AnnotationConfigApplicationContext();
     private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
     private static final ThreadLocal<Device> DEVICE_THREAD_LOCAL = new ThreadLocal<>();
 
+    /**
+     * ONE_AND_ONLY_ONE 注解的 mapping key 是 父类或接口 value 是唯一实现
+     */
+    private static final Map<Class<?>, Class<?>> ONE_AND_ONLY_ONE_MAPPING = new HashMap<>();
+
     static {
         Ansi.OUT.magenta("ScxContext 初始化中...").ln();
-        APPLICATION_CONTEXT = new AnnotationConfigApplicationContext(ScxModuleHandler.getAllModuleBasePackages());
+        checkOneAndOnlyOneImpl();
+        APPLICATION_CONTEXT.scan(ScxModuleHandler.getAllModuleBasePackages());
+        APPLICATION_CONTEXT.refresh();
         ScxModuleHandler.getAllPluginModule().forEach(m -> m.classList.forEach(APPLICATION_CONTEXT::register));
         initScxContext();
         fixTable();
         USER_SERVICE = getBean(UserService.class);
+    }
+
+    /**
+     * <p>getImplClassOrSelf.</p>
+     *
+     * @param c   a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a {@link java.lang.Class} object.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getImplClassOrSelf(Class<T> c) {
+        var implClass = ONE_AND_ONLY_ONE_MAPPING.get(c);
+        if (implClass == null) {
+            return c;
+        } else {
+            return (Class<T>) implClass;
+        }
+    }
+
+    /**
+     * 检查 OneAndOnlyOne 是否存在实现类
+     */
+    private static void checkOneAndOnlyOneImpl() {
+        var classList = new ArrayList<Class<?>>();
+        ScxModuleHandler.iterateClass(c -> {
+            if (c.isAnnotationPresent(OneAndOnlyOneImpl.class)) {
+                classList.add(c);
+            }
+            return true;
+        });
+
+        for (Class<?> o : classList) {
+            ScxModuleHandler.iterateClass(c -> {
+                if (c != o && !c.isInterface() && o.isAssignableFrom(c)) {
+                    var lastImpl = ONE_AND_ONLY_ONE_MAPPING.get(o);
+                    if (lastImpl == null) {
+                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
+                    } else {
+                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + lastImpl.getName() + "] 已被覆盖").ln();
+                    }
+                    ONE_AND_ONLY_ONE_MAPPING.put(o, c);
+                }
+                return true;
+            });
+            if (ONE_AND_ONLY_ONE_MAPPING.get(o) == null) {
+                Ansi.OUT.brightRed("Class [ " + o.getName() + " ] 必须有一个实现类 !!!").ln();
+                System.exit(0);
+            }
+        }
+
     }
 
     /**
@@ -101,7 +159,7 @@ public final class ScxContext {
      * @return a T object.
      */
     public static <T> T getBean(Class<T> c) {
-        return APPLICATION_CONTEXT.getBean(c);
+        return APPLICATION_CONTEXT.getBean(getImplClassOrSelf(c));
     }
 
     /**
@@ -119,9 +177,20 @@ public final class ScxContext {
             Ansi.OUT.magenta("修复数据表中...").ln();
             var noNeedFix = new AtomicBoolean(true);
             SCX_BEAN_CLASS_NAME_MAPPING.forEach((k, v) -> {
-                if (v.isAnnotationPresent(ScxModel.class)) {
+                if (v.isAnnotationPresent(ScxModel.class) && !v.isInterface()) {
                     try {
-                        if (SQLHelper.fixTable(v) != FixTableResult.NO_NEED_TO_FIX) {
+                        AtomicBoolean mayBeCovered = new AtomicBoolean(false);
+                        Class<?> fixTableClass = v;
+                        for (Map.Entry<Class<?>, Class<?>> entry : ONE_AND_ONLY_ONE_MAPPING.entrySet()) {
+                            Class<?> key = entry.getKey();
+                            Class<?> value = entry.getValue();
+                            if (key.isAssignableFrom(v)) {
+                                mayBeCovered.set(true);
+                                fixTableClass = value;
+                                break;
+                            }
+                        }
+                        if (SQLHelper.fixTable(fixTableClass) != FixTableResult.NO_NEED_TO_FIX) {
                             noNeedFix.set(false);
                         }
                     } catch (Exception ignored) {
@@ -315,17 +384,6 @@ public final class ScxContext {
      */
     public static EventBus eventBus() {
         return VERTX.eventBus();
-    }
-
-    /**
-     * 根据接口获取实现类
-     *
-     * @param clazz c
-     * @param <T>   t
-     * @return c
-     */
-    public static <T, F extends T> F GetImpl(Class<T> clazz) {
-        return null;
     }
 
     /**

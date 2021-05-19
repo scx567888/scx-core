@@ -38,11 +38,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * Constant <code>LOGIN_AND_PERMS_HANDLER</code>
      */
-    public final static AuthHandler AUTH_HANDLER;
-
-    static {
-        AUTH_HANDLER = ScxContext.GetImpl(AuthHandler.class);
-    }
+    public final static AuthHandler AUTH_HANDLER = ScxContext.getBean(AuthHandler.class);
 
     public final Method method;
     public final ScxMapping scxMapping;
