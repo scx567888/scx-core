@@ -1,5 +1,7 @@
 package cool.scx.boot;
 
+import cool.scx.base.BaseLicenseHandler;
+import cool.scx.base.BaseModule;
 import cool.scx.config.ScxCmsConfig;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
@@ -15,34 +17,37 @@ import cool.scx.web.ScxServer;
 public final class ScxApp {
 
     /**
-     * 运行项目
+     * <p>run.</p>
      *
-     * @param source 启动的 class
-     * @param args   外部参数
+     * @param module a T object.
+     * @param args   a {@link java.lang.String} object.
+     * @param <T>    a T object.
      */
-    public static void run(Class<?> source, String... args) {
-        run(new Class[]{source}, args);
+    public static <T extends BaseModule> void run(T module, String... args) {
+        run(new BaseModule[]{module}, args);
     }
 
     /**
      * 运行项目
      *
-     * @param source 启动的 class
-     * @param args   外部参数
+     * @param modules 需要挂载的 module
+     * @param args    外部参数
+     * @param <T>     a T object.
      */
-    private static void run(Class<?>[] source, String... args) {
+    public static <T extends BaseModule> void run(T[] modules, String... args) {
         //此处每个初始化方法都依赖上一个的初始化方法 所以顺序不要打乱
-        ScxTimer.timerStart();
-        ScxParameters.initParameters(source, args);
+        ScxTimer.timerStart("ScxApp");
+        ScxParameters.initParameters(args);
+        ScxModuleHandler.initModules(modules);
         ScxBanner.show();
         ScxConfig.initConfig();
         ScxPlugins.initPlugins();
-        ScxCmsConfig.initCmsConfig();
         ScxContext.initContext();
+        ScxCmsConfig.initCmsConfig();
         ScxListener.initListener();
         ScxServer.initServer();
         ScxServer.startServer();
-        ScxLicense.checkLicense();
+        ScxContext.getBean(BaseLicenseHandler.class).checkLicense();
     }
 
 }

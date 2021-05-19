@@ -1,0 +1,23 @@
+package cool.scx.auth;
+
+import cool.scx.annotation.Column;
+import cool.scx.annotation.OneAndOnlyOneImpl;
+import cool.scx.annotation.ScxModel;
+import cool.scx.base.BaseModel;
+
+import java.util.List;
+
+/**
+ * 角色
+ *
+ * @author 司昌旭
+ * @version 0.3.6
+ */
+@OneAndOnlyOneImpl
+@ScxModel(tableName = "core_role")
+public abstract class Role extends BaseModel {
+    public String roleName;//角色名称
+
+    @Column(type = "TEXT")
+    public List<String> perms;//权限
+}

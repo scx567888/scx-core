@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
+import cool.scx.util.ObjectUtils;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -113,7 +114,9 @@ public final class SQLRunner {
                 for (int i = 1; i <= count; i++) {
                     var field = allField[i];
                     if (field != null) {
-                        field.set(t, rs.getObject(i, field.getType()));
+                        var filedType = field.getType();
+                        var o = SQLHelper.isSupportedType(filedType) ? rs.getObject(i, filedType) : ObjectUtils.JsonToBean(rs.getString(i), filedType);
+                        field.set(t, o);
                     }
                 }
                 list.add(t);
@@ -182,7 +185,12 @@ public final class SQLRunner {
         if (paramMap != null) {
             var matcher = pattern.matcher(sql);
             while (matcher.find()) {
-                preparedStatement.setObject(index, paramMap.get(matcher.group(2)));
+                var tempValue = paramMap.get(matcher.group(2));
+                if (SQLHelper.isSupportedType(tempValue.getClass())) {
+                    preparedStatement.setObject(index, tempValue);
+                } else {
+                    preparedStatement.setString(index, ObjectUtils.beanToJson(tempValue));
+                }
                 index++;
             }
         }

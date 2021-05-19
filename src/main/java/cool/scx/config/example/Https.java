@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
 import cool.scx.util.CryptoUtils;
-import cool.scx.util.PackageUtils;
+import cool.scx.util.FileUtils;
 import cool.scx.util.Tidy;
 
 import java.io.File;
@@ -60,13 +60,13 @@ public class Https {
                 });
 
         https.sslPath = ScxConfig.value("scx.https.ssl-path", "",
-                s -> Ansi.OUT.green("Y 证书路径                            \t -->\t " + PackageUtils.getFileByAppRoot(s)).ln(),
+                s -> Ansi.OUT.green("Y 证书路径                            \t -->\t " + FileUtils.getFileByRootModulePath(s)).ln(),
                 f -> {
                     needFixConfig.set(true);
                     Ansi.OUT.red("N 未检测到 scx.https.ssl-path         \t -->\t 请检查证书路径是否正确").ln();
                 });
 
-        https.sslPathValue = PackageUtils.getFileByAppRoot(https.sslPath);
+        https.sslPathValue = FileUtils.getFileByRootModulePath(https.sslPath);
 
         https.sslPassword = ScxConfig.value("scx.https.ssl-password", "",
                 Tidy::NoCode,

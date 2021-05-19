@@ -8,6 +8,8 @@ import cool.scx.util.Ansi;
 import cool.scx.util.NetUtils;
 import cool.scx.web.handler.ScxRequestHandler;
 import cool.scx.web.handler.ScxWebSocketHandler;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
@@ -62,7 +64,7 @@ public final class ScxServer {
     public static void startServer() {
         server.listen(port, http -> {
             if (http.succeeded()) {
-                Ansi.OUT.green("服务器启动成功... 用时 " + ScxTimer.timerStop() + " ms").ln();
+                Ansi.OUT.green("服务器启动成功... 用时 " + ScxTimer.timerStop("ScxApp") + " ms").ln();
                 var httpOrHttps = ScxConfig.openHttps() ? "https" : "http";
                 Ansi.OUT.green("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/").ln();
                 Ansi.OUT.green("> 本地 : " + httpOrHttps + "://localhost:" + port + "/").ln();
@@ -75,6 +77,28 @@ public final class ScxServer {
                 }
             }
         });
+    }
+
+    /**
+     * 停止服务器
+     */
+    public static void stopServer() {
+        stopServer(c -> {
+            if (c.succeeded()) {
+                Ansi.OUT.brightRed("服务器已停止...").ln();
+            } else {
+                Ansi.OUT.brightRed("服务器停止失败...").ln();
+            }
+        });
+    }
+
+    /**
+     * 停止服务器
+     *
+     * @param resultHandler 回调参数
+     */
+    public static void stopServer(Handler<AsyncResult<Void>> resultHandler) {
+        server.close(resultHandler);
     }
 
 }

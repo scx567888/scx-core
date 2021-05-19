@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * SQLBuilder class 用来构建 sql 语句
+ * 简易 sql 语句构造器
  *
  * @author 司昌旭
  * @version 1.0.10
@@ -21,34 +21,42 @@ public final class SQLBuilder {
      * 当前sql 的类型 有 insert delete update select
      */
     private final SQLType _sqlType;
+
     /**
      * 表名
      */
     private String _tableName;
+
     /**
      * 所有查询列 类似 user_name AS userName
      */
     private String[] _selectColumns;
+
     /**
      * 所有where 条件 类似 id = 1
      */
     private String[] _whereColumns;
+
     /**
      * 所有列名
      */
     private Set<String> _groupBySet = new HashSet<>();
+
     /**
      * 所有列名
      */
     private Map<String, SortType> _orderByMap = new HashMap<>();
+
     /**
      * 起始分页(此值需要进行计算)
      */
     private Integer _page;
+
     /**
      * 分页条数
      */
     private Integer _limit;
+
     /**
      * 自定义的查询语句
      */
@@ -58,6 +66,7 @@ public final class SQLBuilder {
      * 所有列名
      */
     private String[] _columns;
+
     /**
      * 更新的 列名
      */
@@ -73,9 +82,9 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>Insert.</p>
+     * 获取插入语句构造器
      *
-     * @param _tableName a {@link java.lang.String} object.
+     * @param _tableName 表名
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public static SQLBuilder Insert(String _tableName) {
@@ -83,7 +92,7 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>Update.</p>
+     * 获取更新语句构造器
      *
      * @param _tableName a {@link java.lang.String} object.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
@@ -93,7 +102,7 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>Select.</p>
+     * 获取查询语句构造器
      *
      * @param _tableName a {@link java.lang.String} object.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
@@ -103,7 +112,7 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>Delete.</p>
+     * 获取删除语句构造器
      *
      * @param _tableName a {@link java.lang.String} object.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
@@ -113,40 +122,40 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>Table.</p>
+     * 设置表名
      *
      * @param tableName a {@link java.lang.String} object.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
-    public SQLBuilder Table(String tableName) {
+    private SQLBuilder Table(String tableName) {
         _tableName = tableName;
         return this;
     }
 
     /**
-     * <p>UpdateColumns.</p>
+     * 设置更新列
      *
      * @param fields an array of {@link java.lang.reflect.Field} objects.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder UpdateColumns(Field[] fields) {
-        _updateColumns = Stream.of(fields).map(field -> StringUtils.camel2Underscore(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
+        _updateColumns = Stream.of(fields).map(field -> StringUtils.camelToUnderscore(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
         return this;
     }
 
     /**
-     * <p>Columns.</p>
+     * 设置列 一般用于插入
      *
      * @param fields an array of {@link java.lang.reflect.Field} objects.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder Columns(Field[] fields) {
-        _columns = Stream.of(fields).map(o -> StringUtils.camel2Underscore(o.getName())).toArray(String[]::new);
+        _columns = Stream.of(fields).map(o -> StringUtils.camelToUnderscore(o.getName())).toArray(String[]::new);
         return this;
     }
 
     /**
-     * <p>Values.</p>
+     * 设置值 (非批量插入)
      *
      * @param fields an array of {@link java.lang.reflect.Field} objects.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
@@ -158,7 +167,7 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>Values.</p>
+     * 设置值 (批量插入)
      *
      * @param values an array of {@link java.lang.String} objects.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
@@ -169,7 +178,7 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>Where.</p>
+     * 设置 where 语句
      *
      * @param whereColumns an array of {@link java.lang.String} objects.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
@@ -180,7 +189,7 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>GroupBy.</p>
+     * 设置 GroupBy 语句
      *
      * @param groupBy a {@link java.util.Set} object.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
@@ -191,7 +200,7 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>OrderBy.</p>
+     * 设置 OrderBy 语句
      *
      * @param orderBys a {@link java.util.Map} object.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
@@ -202,7 +211,7 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>Pagination.</p>
+     * 设置分页数据
      *
      * @param page  a {@link java.lang.Integer} object.
      * @param limit a {@link java.lang.Integer} object.
@@ -215,7 +224,7 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>WhereSql.</p>
+     * 设置 WhereSql (独立于 Where)
      *
      * @param whereSql a {@link java.lang.String} object.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
@@ -244,7 +253,7 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>SelectColumns.</p>
+     * 设置 查询列
      *
      * @param selectColumns an array of {@link java.lang.String} objects.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
@@ -255,7 +264,7 @@ public final class SQLBuilder {
     }
 
     /**
-     * <p>GetSQL.</p>
+     * 获取 sql
      *
      * @return a {@link java.lang.String} object.
      */
@@ -284,7 +293,6 @@ public final class SQLBuilder {
                 }
 
                 var limitSql = "";
-
                 if (!StringUtils.isEmpty(_limit) && !StringUtils.isEmpty(_page) && _limit > 0 && _page > 0) {
                     limitSql = " LIMIT " + ((_page - 1) * _limit + "," + _limit);
                 }

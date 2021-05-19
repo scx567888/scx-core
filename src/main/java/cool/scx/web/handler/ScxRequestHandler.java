@@ -2,10 +2,10 @@ package cool.scx.web.handler;
 
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
+import cool.scx.boot.ScxModuleHandler;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.util.Ansi;
-import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpMethod;
@@ -114,7 +114,7 @@ public final class ScxRequestHandler extends RouterImpl {
      */
     private void registerScxMappingHandler() {
         var scxMappingHandlers = new ArrayList<ScxMappingHandler>();
-        PackageUtils.scanPackageIncludePlugins(clazz -> {
+        ScxModuleHandler.iterateClass(clazz -> {
             if (clazz.isAnnotationPresent(ScxController.class)) {
                 for (var method : clazz.getMethods()) {
                     method.setAccessible(true);
@@ -146,8 +146,11 @@ public final class ScxRequestHandler extends RouterImpl {
         this.route(ScxConfig.cmsResourceUrl()).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations().getPath()));
     }
 
+    /**
+     * 未匹配 处理器
+     * 当以上所有处理器都无法匹配时 向客户端返回 404
+     */
     private void registerNotFoundHandler() {
-        // 当以上所有处理器都无法匹配时 向客户端返回 404
         this.route().handler(handle -> handle.fail(404));
     }
 

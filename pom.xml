@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
     <name>scx</name>
 
-    <version>1.0.17</version>
+    <version>1.1.0</version>
 
     <description>
         SCX是一个 "Web 开发框架"; 目标是提供简单快速的开发体验。
@@ -20,7 +20,7 @@
         <!-- 项目构建时的字符集 强烈建议采用默认值 UTF-8 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- 构建项目时jar包的默认启动类 在您自己的项目中请覆写此值 -->
-        <scxApp.mainClass>cool.scx.ScxCoreApp</scxApp.mainClass>
+        <scxApp.mainClass>cool.scx._core.CoreModule</scxApp.mainClass>
     </properties>
 
     <dependencies>

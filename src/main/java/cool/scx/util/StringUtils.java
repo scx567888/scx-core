@@ -1,6 +1,5 @@
 package cool.scx.util;
 
-
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -11,7 +10,7 @@ import java.util.stream.Collectors;
  * @author 司昌旭
  * @version 0.3.6
  */
-public class StringUtils {
+public final class StringUtils {
 
     /**
      * 校验字符串是否不为空
@@ -47,13 +46,12 @@ public class StringUtils {
 
     /**
      * 驼峰模式字符串转换为下划线字符串 <br>
-     * 如：camelStr:"UserInfo"    separator:'_' <br>
-     * return "user_info"
+     * 如：UserInfo 结果为 user_info
      *
      * @param camelStr 驼峰字符串
      * @return str
      */
-    public static String camel2Underscore(String camelStr) {
+    public static String camelToUnderscore(String camelStr) {
         if (isEmpty(camelStr)) {
             return camelStr;
         }

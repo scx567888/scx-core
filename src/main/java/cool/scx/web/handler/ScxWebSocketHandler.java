@@ -2,8 +2,8 @@ package cool.scx.web.handler;
 
 import cool.scx.annotation.ScxWebSocketController;
 import cool.scx.base.BaseWebSocketController;
+import cool.scx.boot.ScxModuleHandler;
 import cool.scx.context.ScxContext;
-import cool.scx.util.PackageUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
@@ -25,7 +25,7 @@ public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
      * <p>Constructor for ScxWebSocketHandler.</p>
      */
     public ScxWebSocketHandler() {
-        PackageUtils.scanPackage(c -> {
+        ScxModuleHandler.iterateClass(c -> {
             if (c.isAnnotationPresent(ScxWebSocketController.class) && !c.isInterface() && BaseWebSocketController.class.isAssignableFrom(c)) {
                 var annotation = c.getAnnotation(ScxWebSocketController.class);
                 var path = StringUtils.clearHttpUrl(annotation.value());
