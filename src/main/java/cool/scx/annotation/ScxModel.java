@@ -19,6 +19,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Component
 public @interface ScxModel {
+
     /**
      * 表名称
      *
@@ -32,4 +33,5 @@ public @interface ScxModel {
      * @return 表前缀
      */
     String tablePrefix() default "";
+
 }

@@ -18,6 +18,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Component
 public @interface ScxController {
+
     /**
      * 路径
      * 当和 scxMapping 配合使用时 会将
@@ -26,4 +27,5 @@ public @interface ScxController {
      * @return 路径
      */
     String value() default "";
+
 }

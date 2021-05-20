@@ -17,6 +17,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ScxMapping {
+
     /**
      * 不校验权限
      *
@@ -38,7 +39,6 @@ public @interface ScxMapping {
      */
     String value() default "";
 
-
     /**
      * 是否使用方法名称作为 mapping 名称
      * 如 方法名为  getUserList
@@ -54,4 +54,5 @@ public @interface ScxMapping {
      * @return 方法
      */
     Method[] method() default {Method.GET};
+
 }

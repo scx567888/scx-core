@@ -30,4 +30,5 @@ public @interface FromPath {
      * @return 将 path 聚合为一个对象
      */
     boolean merge() default false;
+
 }

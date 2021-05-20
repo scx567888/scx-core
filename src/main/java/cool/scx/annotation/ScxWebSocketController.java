@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * ScxWebSocketController
  * websocket 映射
- * 设置此注解的方法 必须同时 继承 BaseWebSocketController
+ * 设置此注解的方法 必须同时 继承 BaseWebSocketController 才可以生效
  *
  * @author 司昌旭
  * @version 0.5.0
@@ -19,5 +19,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Component
 public @interface ScxWebSocketController {
+
+    /**
+     * websocket 映射路径
+     *
+     * @return 映射路径
+     */
     String value();
+
 }

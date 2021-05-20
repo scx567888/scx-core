@@ -26,7 +26,8 @@ public @interface FromQuery {
     /**
      * 将 查询参数聚合
      *
-     * @return q
+     * @return 是否聚合
      */
     boolean merge() default false;
+
 }
