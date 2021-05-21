@@ -62,6 +62,7 @@ public final class ScxModuleHandler {
     /**
      * <p>initModules.</p>
      *
+     * @param <T>     BaseModule
      * @param modules an array of T[] objects.
      */
     public static <T extends BaseModule> void initModules(T[] modules) {
@@ -87,6 +88,7 @@ public final class ScxModuleHandler {
     /**
      * <p>addModule.</p>
      *
+     * @param <T>        BaseModule
      * @param baseModule a T object.
      */
     public static <T extends BaseModule> void addModule(T baseModule) {

@@ -22,6 +22,7 @@ public final class ScxApp {
      * <p>run.</p>
      *
      * @param module a T object.
+     * @param <T>    BaseModule
      * @param args   a {@link java.lang.String} object.
      */
     public static <T extends BaseModule> void run(T module, String... args) {
@@ -32,6 +33,7 @@ public final class ScxApp {
      * 运行项目
      *
      * @param modules 需要挂载的 module
+     * @param <T>     BaseModule
      * @param args    外部参数
      */
     public static <T extends BaseModule> void run(T[] modules, String... args) {
