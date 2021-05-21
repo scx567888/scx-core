@@ -22,6 +22,13 @@ public interface BaseModule {
     }
 
     /**
+     * <p>onStartComplete.</p>
+     */
+    default void onStartComplete() {
+
+    }
+
+    /**
      * <p>onEnd.</p>
      */
     default void onEnd() {

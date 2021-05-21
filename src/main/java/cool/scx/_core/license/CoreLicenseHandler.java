@@ -1,7 +1,6 @@
 package cool.scx._core.license;
 
 import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseLicenseHandler;
 import cool.scx.base.BaseService;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
@@ -18,7 +17,7 @@ import java.util.Date;
  * @version 0.3.6
  */
 @ScxService
-public class CoreLicenseHandler extends BaseService<License> implements BaseLicenseHandler {
+public class CoreLicenseHandler extends BaseService<License> {
 
     /**
      * 加密时间
@@ -104,7 +103,6 @@ public class CoreLicenseHandler extends BaseService<License> implements BaseLice
     /**
      * {@inheritDoc}
      */
-    @Override
     public void checkLicense() {
         Ansi.OUT.brightCyan("校验 license 中 ...").ln();
         var licenseRight = passLicense();

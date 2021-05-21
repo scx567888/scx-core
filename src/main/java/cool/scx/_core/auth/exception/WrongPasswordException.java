@@ -1,4 +1,6 @@
-package cool.scx.exception;
+package cool.scx._core.auth.exception;
+
+import cool.scx.exception.AuthException;
 
 /**
  * <p>WrongPasswordException class.</p>

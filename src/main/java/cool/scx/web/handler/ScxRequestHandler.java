@@ -3,8 +3,8 @@ package cool.scx.web.handler;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.boot.ScxModuleHandler;
+import cool.scx.boot.ScxVertx;
 import cool.scx.config.ScxConfig;
-import cool.scx.context.ScxContext;
 import cool.scx.util.Ansi;
 import cool.scx.util.StringUtils;
 import io.vertx.core.http.Cookie;
@@ -33,7 +33,7 @@ public final class ScxRequestHandler extends RouterImpl {
      * <p>Constructor for ScxRequestHandler.</p>
      */
     public ScxRequestHandler() {
-        super(ScxContext.VERTX);
+        super(ScxVertx.vertx());
         registerFaviconHandler();
         registerCookieHandler();
         registerCorsHandler();
@@ -70,7 +70,7 @@ public final class ScxRequestHandler extends RouterImpl {
      * 注册 FaviconIco 图标 handler
      */
     private void registerFaviconHandler() {
-        this.route().handler(FaviconHandler.create(ScxContext.VERTX, new File(ScxConfig.cmsRoot(), "favicon.ico").getPath()));
+        this.route().handler(FaviconHandler.create(ScxVertx.vertx(), new File(ScxConfig.cmsRoot(), "favicon.ico").getPath()));
     }
 
     /**

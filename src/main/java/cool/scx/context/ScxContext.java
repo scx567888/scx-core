@@ -1,6 +1,6 @@
 package cool.scx.context;
 
-import cool.scx.annotation.OneAndOnlyOneImpl;
+import cool.scx.annotation.MustHaveImpl;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
@@ -14,8 +14,6 @@ import cool.scx.exception.handler.SQLRunnerExceptionHandler;
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.Ansi;
-import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -38,10 +36,7 @@ public final class ScxContext {
      */
     public static final UserService USER_SERVICE;
 
-    /**
-     * 全局 vert.x
-     */
-    public static final Vertx VERTX = Vertx.vertx();
+
     /**
      * 存储所有在线的 连接
      */
@@ -98,7 +93,7 @@ public final class ScxContext {
     private static void checkOneAndOnlyOneImpl() {
         var classList = new ArrayList<Class<?>>();
         ScxModuleHandler.iterateClass(c -> {
-            if (c.isAnnotationPresent(OneAndOnlyOneImpl.class)) {
+            if (c.isAnnotationPresent(MustHaveImpl.class)) {
                 classList.add(c);
             }
             return true;
@@ -377,14 +372,6 @@ public final class ScxContext {
         return ONLINE_ITEMS;
     }
 
-    /**
-     * 获取全局的事件总线
-     *
-     * @return 全局的事件总线
-     */
-    public static EventBus eventBus() {
-        return VERTX.eventBus();
-    }
 
     /**
      * 获取当前线程的 RoutingContext (只限在 scx mapping 注解的方法及其调用链上)

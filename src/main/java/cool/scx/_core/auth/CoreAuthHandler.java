@@ -1,5 +1,6 @@
 package cool.scx._core.auth;
 
+import cool.scx._core.auth.exception.*;
 import cool.scx.annotation.ScxService;
 import cool.scx.auth.AuthHandler;
 import cool.scx.auth.User;
@@ -9,16 +10,13 @@ import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
 import cool.scx.enumeration.SortType;
 import cool.scx.exception.AuthException;
-import cool.scx.exception.TooManyErrorsException;
-import cool.scx.exception.UnknownUserException;
-import cool.scx.exception.WrongPasswordException;
-import cool.scx.util.Ansi;
-import cool.scx.util.LogUtils;
-import cool.scx.util.ObjectUtils;
-import cool.scx.util.StringUtils;
+import cool.scx.util.*;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,6 +29,7 @@ import java.util.Map;
 @ScxService
 public class CoreAuthHandler implements AuthHandler {
 
+    private static final HashMap<String, LoginError> loginErrorMap = new HashMap<>();
     private final CoreUserService coreUserService;
 
     /**
@@ -74,50 +73,6 @@ public class CoreAuthHandler implements AuthHandler {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Json login(String username, String password, RoutingContext context) {
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            return Json.fail(StringUtils.isEmpty(username) ? "用户名不能为空" : "密码不能为空");
-        }
-        //此处验证需要使用拦截器进行处理
-//        if (!licenseService.passLicense()) {
-//            return Json.fail(Json.FAIL_CODE, "licenseError");
-//        }
-        try {
-            var device = ScxContext.device();
-            //登录
-            var loginUser = coreUserService.login(username, password);
-            if (device == Device.ADMIN || device == Device.APPLE || device == Device.ANDROID) {
-                var token = StringUtils.getUUID();
-                ScxContext.addLoginItem(device, token, loginUser.username);
-                //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
-                return Json.ok().data("token", token);
-            } else if (device == Device.WEBSITE) {
-                String value = ScxContext.routingContext().getCookie(ScxConfig.tokenKey()).getValue();
-                ScxContext.addLoginItem(device, value, loginUser.username);
-                return Json.ok("登录成功");
-            } else {
-                return Json.ok("登录设备未知 !!!");
-            }
-        } catch (UnknownUserException uue) {
-            return Json.fail(ScxConfig.confusionLoginError() ? "usernameOrPasswordError" : "userNotFound");
-        } catch (WrongPasswordException wpe) {
-            //这里和用户密码错误   可以使用相同的 提示信息 防止恶意破解
-            return Json.fail(ScxConfig.confusionLoginError() ? "usernameOrPasswordError" : "passwordError");
-        } catch (TooManyErrorsException tee) {
-            //密码错误次数过多
-            return Json.fail("tooManyErrors").data("remainingTime", tee.remainingTime);
-        } catch (AuthException ae) {
-            LogUtils.recordLog("登录出错 : " + ae.getMessage(), "");
-            return Json.fail("logonFailure");
-        } catch (Exception e) {
-            LogUtils.recordLog("密码加密校验出错 : " + e.getMessage(), "");
-            return Json.fail("logonFailure");
-        }
-    }
 
     /**
      * {@inheritDoc}
@@ -161,19 +116,6 @@ public class CoreAuthHandler implements AuthHandler {
      * {@inheritDoc}
      */
     @Override
-    public Json findByUsername(String username) {
-        var user = coreUserService.findByUsername(username);
-        if (user == null) {
-            return Json.ok().data("success", true);
-        } else {
-            return Json.ok().data("success", false);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Json logout() {
         ScxContext.removeLoginUser();
         return Json.ok("User Logged Out");
@@ -183,7 +125,32 @@ public class CoreAuthHandler implements AuthHandler {
      * {@inheritDoc}
      */
     @Override
-    public Json register(String username, String password) {
+    public Json authExceptionHandler(AuthException e) {
+        if (e instanceof EmptyUsernameException) {
+            return Json.fail("用户名不能为空");
+        } else if (e instanceof EmptyPasswordException) {
+            return Json.fail("密码不能为空");
+        } else if (e instanceof UnknownUserException) {
+            return Json.fail(ScxConfig.confusionLoginError() ? "usernameOrPasswordError" : "userNotFound");
+        } else if (e instanceof WrongPasswordException) {
+            //这里和用户密码错误   可以使用相同的 提示信息 防止恶意破解
+            return Json.fail(ScxConfig.confusionLoginError() ? "usernameOrPasswordError" : "passwordError");
+        } else if (e instanceof TooManyErrorsException) {
+            //密码错误次数过多
+            return Json.fail("tooManyErrors").data("remainingTime", ((TooManyErrorsException) e).remainingTime);
+        } else {
+            LogUtils.recordLog("登录出错 : " + e.getMessage(), "");
+            return Json.fail("logonFailure");
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Json signup(Map<String, Object> params) {
+        var username = params.get("username").toString();
+        var password = params.get("password").toString();
         var newUser = new Param<>(new CoreUser());
 
         newUser.addOrderBy("id", SortType.ASC).queryObject.username = username;
@@ -197,6 +164,82 @@ public class CoreAuthHandler implements AuthHandler {
             coreUserService.registeredUser(newUser.queryObject);
             return Json.ok("registerSuccess");
         }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User login(Map<String, Object> params) throws AuthException {
+        //license 失效时不允许登录
+//        if (!licenseService.passLicense()) {
+//            return Json.fail(Json.FAIL_CODE, "licenseError");
+//        }
+        var username = params.get("username");
+        var password = params.get("password");
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+            if (StringUtils.isEmpty(username)) {
+                throw new EmptyUsernameException();
+            } else {
+                throw new EmptyPasswordException();
+            }
+        }
+        var now = LocalDateTime.now();
+        var ip = NetUtils.getIpAddr();
+        var loginError = loginErrorMap.get(ip);
+        if (loginError == null) {
+            var le = new LoginError(LocalDateTime.now(), 0);
+            loginErrorMap.put(ip, le);
+            loginError = le;
+        }
+        if (notHaveLoginError(ip, loginError)) {
+            var user = coreUserService.findByUsername(username.toString());
+            if (user == null) {
+                var le = new LoginError(now, loginError.errorTimes + 1);
+                loginErrorMap.put(ip, le);
+                throw new UnknownUserException();
+            }
+            if (!verifyPassword(user, password.toString())) {
+                var le = new LoginError(now, loginError.errorTimes + 1);
+                loginErrorMap.put(ip, le);
+                throw new WrongPasswordException();
+            }
+            return user;
+        } else {
+            LogUtils.recordLog(ip + " : 错误登录次数过多");
+            var duration = Duration.between(now, loginError.lastErrorDate).toSeconds();
+            throw new TooManyErrorsException(duration);
+        }
+    }
+
+
+    private boolean notHaveLoginError(String ip, LoginError loginError) {
+        if (LocalDateTime.now().isBefore(loginError.lastErrorDate)) {
+            return false;
+        } else if (loginError.errorTimes >= ScxConfig.loginErrorLockTimes()) {
+            LoginError le = new LoginError(LocalDateTime.now().plusSeconds(ScxConfig.loginErrorLockSecond()), 0);
+            loginErrorMap.put(ip, le);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 校验密码是否正确
+     *
+     * @param user     用户包括密码和盐
+     * @param password 前台传过来密码
+     * @return 是否相同
+     */
+    private boolean verifyPassword(User user, String password) {
+        try {
+            var decryptPassword = CryptoUtils.decryptPassword(user.password, user.salt);
+            return password.equals(decryptPassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

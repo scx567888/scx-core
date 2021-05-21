@@ -2,8 +2,8 @@ package cool.scx.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.annotation.Column;
+import cool.scx.annotation.MustHaveImpl;
 import cool.scx.annotation.NoColumn;
-import cool.scx.annotation.OneAndOnlyOneImpl;
 import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * @author 司昌旭
  * @version 0.3.6
  */
-@OneAndOnlyOneImpl
+@MustHaveImpl
 @ScxModel(tableName = "core_dept")
 public abstract class Dept extends BaseModel {
 

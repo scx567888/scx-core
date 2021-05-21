@@ -1,19 +1,20 @@
 package cool.scx.auth;
 
-import cool.scx.annotation.OneAndOnlyOneImpl;
+import cool.scx.annotation.MustHaveImpl;
 import cool.scx.enumeration.Device;
+import cool.scx.exception.AuthException;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.Map;
 
 /**
- * <p>AuthHandler interface.</p>
+ * 权限认证处理器
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.0
  */
-@OneAndOnlyOneImpl
+@MustHaveImpl
 public interface AuthHandler {
 
     /**
@@ -33,24 +34,24 @@ public interface AuthHandler {
     void noPerms(Device device, RoutingContext context);
 
     /**
-     * <p>login.</p>
+     * 登录接口 成功需要返回一个 登录成功的用户
+     * 登录失败请抛出异常
      *
-     * @param username a {@link java.lang.String} object.
-     * @param password a {@link java.lang.String} object.
-     * @param context  a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param params 前台发送过来的登录参数
      * @return a {@link cool.scx.vo.Json} object.
+     * @throws cool.scx.exception.AuthException if any.
      */
-    Json login(String username, String password, RoutingContext context);
+    User login(Map<String, Object> params) throws AuthException;
 
     /**
-     * <p>info.</p>
+     * 拉取用户信息
      *
      * @return a {@link cool.scx.vo.Json} object.
      */
     Json info();
 
     /**
-     * <p>infoUpdate.</p>
+     * 更新信息
      *
      * @param params a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
@@ -58,26 +59,25 @@ public interface AuthHandler {
     Json infoUpdate(Map<String, Object> params);
 
     /**
-     * <p>findByUsername.</p>
-     *
-     * @param username a {@link java.lang.String} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     */
-    Json findByUsername(String username);
-
-    /**
-     * <p>logout.</p>
+     * 退出登录
      *
      * @return a {@link cool.scx.vo.Json} object.
      */
     Json logout();
 
     /**
-     * <p>register.</p>
+     * 登录错误异常处理器
      *
-     * @param username a {@link java.lang.String} object.
-     * @param password a {@link java.lang.String} object.
+     * @param exception e
+     * @return Json
+     */
+    Json authExceptionHandler(AuthException exception);
+
+    /**
+     * 注册用户
+     *
+     * @param params 注册参数
      * @return a {@link cool.scx.vo.Json} object.
      */
-    Json register(String username, String password);
+    Json signup(Map<String, Object> params);
 }

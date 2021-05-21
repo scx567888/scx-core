@@ -4,19 +4,9 @@ import cool.scx.annotation.ScxService;
 import cool.scx.auth.*;
 import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
-import cool.scx.config.ScxConfig;
-import cool.scx.exception.AuthException;
-import cool.scx.exception.TooManyErrorsException;
-import cool.scx.exception.UnknownUserException;
-import cool.scx.exception.WrongPasswordException;
 import cool.scx.util.CryptoUtils;
-import cool.scx.util.LogUtils;
-import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -31,7 +21,6 @@ import java.util.stream.Collectors;
 @ScxService
 public class CoreUserService extends BaseService<CoreUser> implements UserService {
 
-    private static final HashMap<String, LoginError> loginErrorMap = new HashMap<>();
 
     private final DeptService deptService;
     private final RoleService roleService;
@@ -54,38 +43,6 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         this.userRoleService = userRoleService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public User login(String username, String password) throws AuthException {
-        var now = LocalDateTime.now();
-        var ip = NetUtils.getIpAddr();
-        var loginError = loginErrorMap.get(ip);
-        if (loginError == null) {
-            var le = new LoginError(LocalDateTime.now(), 0);
-            loginErrorMap.put(ip, le);
-            loginError = le;
-        }
-        if (notHaveLoginError(ip, loginError)) {
-            var user = findByUsername(username);
-            if (user == null) {
-                var le = new LoginError(now, loginError.errorTimes + 1);
-                loginErrorMap.put(ip, le);
-                throw new UnknownUserException();
-            }
-            if (!verifyPassword(user, password)) {
-                var le = new LoginError(now, loginError.errorTimes + 1);
-                loginErrorMap.put(ip, le);
-                throw new WrongPasswordException();
-            }
-            return user;
-        } else {
-            LogUtils.recordLog(ip + " : 错误登录次数过多");
-            var duration = Duration.between(now, loginError.lastErrorDate).toSeconds();
-            throw new TooManyErrorsException(duration);
-        }
-    }
 
     /**
      * {@inheritDoc}
@@ -280,31 +237,5 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         return update(user);
     }
 
-    private boolean notHaveLoginError(String ip, LoginError loginError) {
-        if (LocalDateTime.now().isBefore(loginError.lastErrorDate)) {
-            return false;
-        } else if (loginError.errorTimes >= ScxConfig.loginErrorLockTimes()) {
-            LoginError le = new LoginError(LocalDateTime.now().plusSeconds(ScxConfig.loginErrorLockSecond()), 0);
-            loginErrorMap.put(ip, le);
-            return false;
-        }
-        return true;
-    }
 
-    /**
-     * 校验密码是否正确
-     *
-     * @param user     用户包括密码和盐
-     * @param password 前台传过来密码
-     * @return 是否相同
-     */
-    private boolean verifyPassword(User user, String password) {
-        try {
-            var decryptPassword = CryptoUtils.decryptPassword(user.password, user.salt);
-            return password.equals(decryptPassword);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 }

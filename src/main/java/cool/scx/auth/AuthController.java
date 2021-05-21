@@ -1,72 +1,73 @@
 package cool.scx.auth;
 
-import cool.scx.annotation.FromBody;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
+import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
+import cool.scx.enumeration.Device;
 import cool.scx.enumeration.Method;
+import cool.scx.exception.AuthException;
+import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
-import io.vertx.ext.web.RoutingContext;
 
 import java.util.Map;
 
 /**
- * <p>UserController class.</p>
+ * 默认认证 api 推荐使用
+ * 也可以不用此 api 但需要将 自定义 AuthHandler 的实现中的方法清空
  *
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxController("api/auth")
+@ScxController
 public class AuthController {
 
-    private final AuthHandler authHandler;
-
     /**
-     * <p>Constructor for AuthController.</p>
+     * 认证 handler
      */
-    public AuthController() {
-        this.authHandler = ScxContext.getBean(AuthHandler.class);
-    }
+    private final AuthHandler authHandler = ScxContext.getBean(AuthHandler.class);
 
     /**
      * 登录方法
-     * 此处有一个限制 若数据库中没有任何用户 为了防止
-     * 系统无法登录 此处新建一个用户 名为 admin 密码为 password 的超级管理员用户
      *
-     * @param username 用户 包含用户名和密码
-     * @param password 密码
-     * @param context  a {@link io.vertx.ext.web.RoutingContext} object.
+     * @param params 前台发送的登录数据
      * @return json
      */
     @ScxMapping(method = Method.POST)
-    public Json login(@FromBody("username") String username, @FromBody("password") String password, RoutingContext context) {
-        return authHandler.login(username, password, context);
+    public Json login(Map<String, Object> params) {
+        try {
+            var device = ScxContext.device();
+            var token = StringUtils.getUUID();
+            var loginUser = authHandler.login(params);
+            if (device == Device.ADMIN || device == Device.APPLE || device == Device.ANDROID) {
+                ScxContext.addLoginItem(device, token, loginUser.username);
+                //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
+                return Json.ok().data("token", token);
+            } else if (device == Device.WEBSITE) {
+                String value = ScxContext.routingContext().getCookie(ScxConfig.tokenKey()).getValue();
+                ScxContext.addLoginItem(device, value, loginUser.username);
+                return Json.ok("login-successful");
+            } else {
+                return Json.ok("unknown-device");
+            }
+        } catch (AuthException authException) {
+            return authHandler.authExceptionHandler(authException);
+        }
     }
 
     /**
-     * 拉取用户信息
+     * 注册方法
      *
-     * @return a {@link cool.scx.vo.Json} object.
-     */
-    @ScxMapping(value = "info", method = Method.GET)
-    public Json info() {
-        return authHandler.info();
-    }
-
-    /**
-     * <p>register.</p>
-     *
-     * @param username a {@link java.util.Map} object.
-     * @param password a {@link java.lang.String} object.
+     * @param params 前台发送的注册信息
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(method = Method.POST)
-    public Json register(String username, String password) {
-        return authHandler.register(username, password);
+    public Json signup(Map<String, Object> params) {
+        return authHandler.signup(params);
     }
 
     /**
-     * 退出登录方法 清空 session 里的登录数据
+     * 退出登录方法 同时清空 session 里的登录数据
      *
      * @return 是否成功退出
      */
@@ -75,24 +76,24 @@ public class AuthController {
         return authHandler.logout();
     }
 
+
     /**
-     * 根据用户名查找用户
+     * 拉取当前登录用户的信息 (包括权限)
      *
-     * @param username 查询的用户名
-     * @return 是否查找到
+     * @return Json
      */
-    @ScxMapping(useMethodNameAsUrl = true)
-    public Json findByUsername(String username) {
-        return authHandler.findByUsername(username);
+    @ScxMapping(method = Method.GET)
+    public Json info() {
+        return authHandler.info();
     }
 
     /**
-     * 用户自己更新的信息
+     * 用户自己更新的信息 (不包括权限)
      *
      * @param params 用户信息
-     * @return 通知
+     * @return Json
      */
-    @ScxMapping(useMethodNameAsUrl = true)
+    @ScxMapping(method = Method.POST)
     public Json infoUpdate(Map<String, Object> params) {
         return authHandler.infoUpdate(params);
     }

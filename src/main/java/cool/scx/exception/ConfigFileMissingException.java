@@ -7,4 +7,5 @@ package cool.scx.exception;
  * @version 1.0.10
  */
 public class ConfigFileMissingException extends Exception {
+
 }

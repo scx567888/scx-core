@@ -1,11 +1,9 @@
 package cool.scx.web;
 
-import cool.scx.boot.ScxTimer;
+import cool.scx.boot.ScxVertx;
 import cool.scx.config.ScxConfig;
-import cool.scx.context.ScxContext;
 import cool.scx.exception.handler.ScxServerExceptionHandler;
 import cool.scx.util.Ansi;
-import cool.scx.util.NetUtils;
 import cool.scx.web.handler.ScxRequestHandler;
 import cool.scx.web.handler.ScxWebSocketHandler;
 import io.vertx.core.AsyncResult;
@@ -54,7 +52,7 @@ public final class ScxServer {
                             .setPath(ScxConfig.sslPath().getPath())
                             .setPassword(ScxConfig.sslPassword()));
         }
-        server = ScxContext.VERTX.createHttpServer(httpServerOptions);
+        server = ScxVertx.vertx().createHttpServer(httpServerOptions);
         server.requestHandler(requestHandler).webSocketHandler(webSocketHandler);
     }
 
@@ -64,10 +62,7 @@ public final class ScxServer {
     public static void startServer() {
         server.listen(port, http -> {
             if (http.succeeded()) {
-                Ansi.OUT.green("服务器启动成功... 用时 " + ScxTimer.timerStop("ScxApp") + " ms").ln();
-                var httpOrHttps = ScxConfig.openHttps() ? "https" : "http";
-                Ansi.OUT.green("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/").ln();
-                Ansi.OUT.green("> 本地 : " + httpOrHttps + "://localhost:" + port + "/").ln();
+                ScxVertx.eventBus().publish("startVertxServer", port);
             } else {
                 var cause = http.cause();
                 if (cause instanceof BindException) {

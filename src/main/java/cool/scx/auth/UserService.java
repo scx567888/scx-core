@@ -1,7 +1,6 @@
 package cool.scx.auth;
 
-import cool.scx.annotation.OneAndOnlyOneImpl;
-import cool.scx.exception.AuthException;
+import cool.scx.annotation.MustHaveImpl;
 
 import java.util.HashSet;
 
@@ -11,19 +10,8 @@ import java.util.HashSet;
  * @author 司昌旭
  * @version 0.3.6
  */
-@OneAndOnlyOneImpl
+@MustHaveImpl
 public interface UserService {
-
-    /**
-     * <p>login.</p>
-     *
-     * @param username a {@link java.lang.String} object.
-     * @param password a {@link java.lang.String} object.
-     * @return a {@link cool.scx.auth.User} object.
-     * @throws cool.scx.exception.AuthException if any.
-     */
-    User login(String username, String password) throws AuthException;
-
 
     /**
      * 解密密码 返回加密后的密码 和盐值
