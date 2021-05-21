@@ -8,7 +8,7 @@
 - [Naming Rule](./NamingRule.md)
 - [Built In Annotation](./annotation/index.md)
 - [Built In Feature](./feature/index.md)
-- 部署
+- Deploy
     - [Default Deployment Mode](./deploy/DefaultDeploymentMode.md)
     - [Plugin Deployment Mode](./deploy/PluginDeploymentMode.md)
 - [CHANGELOG](./CHANGELOG.md)
