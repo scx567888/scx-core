@@ -38,7 +38,7 @@
 
 > 基于 Vert.x 的 后台 Web 快速开发框架
 
-### 使用方法
+### 快速开始
 
 1. 将此项目引入到您自己的项目中 。
 
@@ -72,5 +72,5 @@ public class YourModule implements BaseModule {
 
 3. 运行 main 方法 。
 
-[更多信息请查看文档](https://github.com/scx567888/scx/wiki) <br/>
-[更新日志](https://github.com/scx567888/scx/wiki/CHANGELOG)
+中文 : [查看文档](./docs/zh-cn/index.md)   
+English :[DOCS](./docs/en/index.md)
