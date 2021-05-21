@@ -57,7 +57,7 @@ public final class ScxContext {
     /**
      * ONE_AND_ONLY_ONE 注解的 mapping key 是 父类或接口 value 是唯一实现
      */
-    private static final Map<Class<?>, Class<?>> ONE_AND_ONLY_ONE_MAPPING = new HashMap<>();
+    private static final Map<Class<?>, Class<?>> MUST_HAVE_IMPL_MAPPING = new HashMap<>();
 
     static {
         Ansi.OUT.magenta("ScxContext 初始化中...").ln();
@@ -79,7 +79,7 @@ public final class ScxContext {
      */
     @SuppressWarnings("unchecked")
     public static <T> Class<T> getImplClassOrSelf(Class<T> c) {
-        var implClass = ONE_AND_ONLY_ONE_MAPPING.get(c);
+        var implClass = MUST_HAVE_IMPL_MAPPING.get(c);
         if (implClass == null) {
             return c;
         } else {
@@ -102,17 +102,17 @@ public final class ScxContext {
         for (Class<?> o : classList) {
             ScxModuleHandler.iterateClass(c -> {
                 if (c != o && !c.isInterface() && o.isAssignableFrom(c)) {
-                    var lastImpl = ONE_AND_ONLY_ONE_MAPPING.get(o);
+                    var lastImpl = MUST_HAVE_IMPL_MAPPING.get(o);
                     if (lastImpl == null) {
                         Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
                     } else {
                         Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + lastImpl.getName() + "] 已被覆盖").ln();
                     }
-                    ONE_AND_ONLY_ONE_MAPPING.put(o, c);
+                    MUST_HAVE_IMPL_MAPPING.put(o, c);
                 }
                 return true;
             });
-            if (ONE_AND_ONLY_ONE_MAPPING.get(o) == null) {
+            if (MUST_HAVE_IMPL_MAPPING.get(o) == null) {
                 Ansi.OUT.brightRed("Class [ " + o.getName() + " ] 必须有一个实现类 !!!").ln();
                 System.exit(0);
             }
@@ -176,7 +176,7 @@ public final class ScxContext {
                     try {
                         AtomicBoolean mayBeCovered = new AtomicBoolean(false);
                         Class<?> fixTableClass = v;
-                        for (Map.Entry<Class<?>, Class<?>> entry : ONE_AND_ONLY_ONE_MAPPING.entrySet()) {
+                        for (Map.Entry<Class<?>, Class<?>> entry : MUST_HAVE_IMPL_MAPPING.entrySet()) {
                             Class<?> key = entry.getKey();
                             Class<?> value = entry.getValue();
                             if (key.isAssignableFrom(v)) {
