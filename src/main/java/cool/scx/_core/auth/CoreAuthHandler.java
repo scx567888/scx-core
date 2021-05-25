@@ -141,7 +141,7 @@ public class CoreAuthHandler implements AuthHandler {
      */
     @Override
     public User findByUsername(String username) {
-        return null;
+        return coreUserService.findByUsername(username);
     }
 
     /**
@@ -149,7 +149,7 @@ public class CoreAuthHandler implements AuthHandler {
      */
     @Override
     public HashSet<String> getPerms(User user) {
-        return null;
+        return coreUserService.getPermStrByUser(user);
     }
 
 
