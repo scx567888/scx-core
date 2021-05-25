@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 /**
  * <p>CoreDeptService class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.2
  */
 @ScxService
 public class CoreDeptService extends BaseService<CoreDept> implements DeptService {
@@ -26,7 +26,7 @@ public class CoreDeptService extends BaseService<CoreDept> implements DeptServic
     /**
      * <p>Constructor for CoreDeptService.</p>
      *
-     * @param userDeptService a {@link UserDeptService} object.
+     * @param userDeptService a {@link cool.scx._core.auth.UserDeptService} object.
      */
     public CoreDeptService(UserDeptService userDeptService) {
         this.userDeptService = userDeptService;

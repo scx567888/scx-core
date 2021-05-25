@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 /**
  * 模块 Handler
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.2
  */
 public final class ScxModule {
 
@@ -85,7 +85,7 @@ public final class ScxModule {
     /**
      * <p>addModule.</p>
      *
-     * @param module a {@link ModuleItem} object.
+     * @param module a {@link cool.scx.module.ModuleItem} object.
      */
     public static void addModule(ModuleItem module) {
         MODULE_ITEM_LIST.add(module);
@@ -94,8 +94,8 @@ public final class ScxModule {
     /**
      * <p>addModule.</p>
      *
-     * @param <T>        BaseModule
      * @param baseModule a T object.
+     * @param <T>        a T object.
      */
     public static <T extends BaseModule> void addModule(T baseModule) {
         MODULE_ITEM_LIST.add(getModuleByBaseModule(baseModule));
@@ -105,7 +105,7 @@ public final class ScxModule {
      * todo
      *
      * @param file a {@link java.io.File} object.
-     * @return a {@link ModuleItem} object.
+     * @return a {@link cool.scx.module.ModuleItem} object.
      * @throws java.lang.Exception if any.
      */
     public static ModuleItem getModuleByFile(File file) throws Exception {
@@ -288,6 +288,9 @@ public final class ScxModule {
 
     /**
      * 装载模块 并初始化项目所在目录(APP_ROOT_PATH)
+     *
+     * @param modules an array of T[] objects.
+     * @param <T>     a T object.
      */
     public static <T extends BaseModule> void loadModules(T[] modules) {
         BASE_MODULE_ARRAY = modules;
@@ -295,6 +298,11 @@ public final class ScxModule {
         APP_ROOT_PATH = getModuleRootPath(lastModule.getClass());
     }
 
+    /**
+     * <p>appRootPath.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public static File appRootPath() {
         return APP_ROOT_PATH;
     }

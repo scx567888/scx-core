@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 /**
  * <p>CoreUser class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.2
  */
 @ScxModel(tableName = "core_user")
 public class CoreUser extends User {

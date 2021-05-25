@@ -25,6 +25,9 @@ public final class ScxBanner {
         Ansi.OUT.red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(ScxConfig.scxVersion()).ln();
     }
 
+    /**
+     * <p>initBanner.</p>
+     */
     public static void initBanner() {
         show();
     }

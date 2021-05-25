@@ -8,30 +8,66 @@ import cool.scx.util.Tidy;
 import java.io.File;
 import java.util.Map;
 
+/**
+ * <p>CoreConfig class.</p>
+ *
+ * @author 司昌旭
+ * @version 1.1.2
+ */
 public class CoreConfig {
 
     private static CoreEasyToUse coreEasyToUse;
 
+    /**
+     * <p>initConfig.</p>
+     *
+     * @param configMap a {@link java.util.Map} object.
+     */
     public static void initConfig(Map<String, Object> configMap) {
         coreEasyToUse = new CoreEasyToUse();
     }
 
+    /**
+     * <p>license.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String license() {
         return coreEasyToUse.license;
     }
 
+    /**
+     * <p>uploadFilePath.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public static File uploadFilePath() {
         return coreEasyToUse.uploadFilePath;
     }
 
+    /**
+     * <p>loginErrorLockTimes.</p>
+     *
+     * @return a int.
+     */
     public static int loginErrorLockTimes() {
         return coreEasyToUse.loginErrorLockTimes;
     }
 
+    /**
+     * <p>loginErrorLockSecond.</p>
+     *
+     * @return a int.
+     */
     public static int loginErrorLockSecond() {
         return coreEasyToUse.loginErrorLockSecond;
     }
 
+    /**
+     * <p>confusionLoginError.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean confusionLoginError() {
         return coreEasyToUse.confusionLoginError;
     }

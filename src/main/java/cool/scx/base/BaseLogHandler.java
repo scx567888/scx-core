@@ -5,8 +5,8 @@ import cool.scx.annotation.MustHaveImpl;
 /**
  * <p>BaseLogHandler interface.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.2
  */
 @MustHaveImpl
 public interface BaseLogHandler {

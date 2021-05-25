@@ -43,6 +43,9 @@ public final class ScxServer {
         Ansi.OUT.brightYellow("服务器初始化完毕...").ln();
     }
 
+    /**
+     * <p>initServerStartSuccessHandler.</p>
+     */
     public static void initServerStartSuccessHandler() {
         ScxVertx.eventBus().consumer("startVertxServer", (message) -> {
             var port = message.body().toString();

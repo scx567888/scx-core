@@ -6,8 +6,8 @@ import cool.scx.base.BaseLogHandler;
 /**
  * <p>CoreLogHandler class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.2
  */
 @ScxService
 public class CoreLogHandler implements BaseLogHandler {

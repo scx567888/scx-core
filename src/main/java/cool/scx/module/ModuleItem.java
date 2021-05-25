@@ -8,8 +8,8 @@ import java.util.List;
 /**
  * 模块实体
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.2
  */
 public class ModuleItem {
 

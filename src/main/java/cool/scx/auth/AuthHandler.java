@@ -83,6 +83,8 @@ public interface AuthHandler {
     Json signup(Map<String, Object> params);
 
     /**
+     * <p>findByUsername.</p>
+     *
      * @param username 根据用户名获取 用户
      * @return 用户
      */

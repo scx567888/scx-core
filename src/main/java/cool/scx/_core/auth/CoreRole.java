@@ -5,8 +5,8 @@ import cool.scx.annotation.ScxModel;
 /**
  * <p>CoreRole class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.2
  */
 @ScxModel(tableName = "core_role")
 public class CoreRole extends Role {

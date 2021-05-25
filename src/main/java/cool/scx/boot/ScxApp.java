@@ -21,8 +21,8 @@ public final class ScxApp {
      * 运行项目
      *
      * @param module 需要挂载的 module.
-     * @param <T>    BaseModule
      * @param args   外部参数
+     * @param <T>    a T object.
      */
     public static <T extends BaseModule> void run(T module, String... args) {
         run(new BaseModule[]{module}, args);
@@ -32,8 +32,8 @@ public final class ScxApp {
      * 运行项目
      *
      * @param modules 需要挂载的 module
-     * @param <T>     BaseModule
      * @param args    外部参数
+     * @param <T>     a T object.
      */
     public static <T extends BaseModule> void run(T[] modules, String... args) {
         // 启动 核心计时器

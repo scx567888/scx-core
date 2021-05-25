@@ -10,13 +10,15 @@ import java.util.Map;
  * 生命周期起始 onStart
  * 生命周期结束 onEnd
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.2
  */
 public interface BaseModule {
 
     /**
      * <p>onStart.</p>
+     *
+     * @param configMap a {@link java.util.Map} object.
      */
     default void onStart(Map<String, Object> configMap) {
         System.out.println(" onStart !!!");

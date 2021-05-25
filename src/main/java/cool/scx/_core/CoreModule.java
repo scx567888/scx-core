@@ -24,6 +24,9 @@ public class CoreModule implements BaseModule {
         ScxApp.run(new CoreModule(), args);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onStart(Map<String, Object> configMap) {
         CoreConfig.initConfig(configMap);

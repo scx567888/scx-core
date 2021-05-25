@@ -75,6 +75,12 @@ public final class ScxCms {
         freemarkerConfig = initFreemarkerConfig();
     }
 
+    /**
+     * <p>getTemplateByPath.</p>
+     *
+     * @param pagePath a {@link java.lang.String} object.
+     * @return a {@link freemarker.template.Template} object.
+     */
     public static Template getTemplateByPath(String pagePath) {
         try {
             return freemarkerConfig.getTemplate(pagePath + ScxConfig.cmsTemplateSuffix());

@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 /**
  * <p>CoreRoleService class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.2
  */
 @ScxService
 public class CoreRoleService extends BaseService<CoreRole> implements RoleService {
@@ -24,7 +24,7 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
     /**
      * <p>Constructor for CoreRoleService.</p>
      *
-     * @param userRoleService a {@link UserRoleService} object.
+     * @param userRoleService a {@link cool.scx._core.auth.UserRoleService} object.
      */
     public CoreRoleService(UserRoleService userRoleService) {
         this.userRoleService = userRoleService;

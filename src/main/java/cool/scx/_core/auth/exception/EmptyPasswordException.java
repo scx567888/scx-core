@@ -5,8 +5,8 @@ import cool.scx.exception.AuthException;
 /**
  * <p>EmptyPasswordException class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.2
  */
 public class EmptyPasswordException extends AuthException {
 }

@@ -136,17 +136,26 @@ public class CoreAuthHandler implements AuthHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User findByUsername(String username) {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HashSet<String> getPerms(User user) {
         return null;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void noLoginHandler(Device device, RoutingContext context) {
         if (device == Device.ADMIN) {
@@ -160,6 +169,9 @@ public class CoreAuthHandler implements AuthHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void noPermsHandler(Device device, RoutingContext context) {
         if (device == Device.ADMIN) {

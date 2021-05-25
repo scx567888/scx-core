@@ -42,6 +42,8 @@ public final class ScxConfig {
 
     /**
      * 初始化 配置文件
+     *
+     * @param params a {@link java.lang.String} object.
      */
     public static void initConfig(String... params) {
         Ansi.OUT.brightBlue("ScxConfig 初始化中...").ln();
@@ -149,26 +151,56 @@ public final class ScxConfig {
         }
     }
 
+    /**
+     * <p>dataSourceHost.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String dataSourceHost() {
         return easyToUseConfig.dataSourceHost;
     }
 
+    /**
+     * <p>dataSourcePort.</p>
+     *
+     * @return a int.
+     */
     public static int dataSourcePort() {
         return easyToUseConfig.dataSourcePort;
     }
 
+    /**
+     * <p>dataSourceDatabase.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String dataSourceDatabase() {
         return easyToUseConfig.dataSourceDatabase;
     }
 
+    /**
+     * <p>dataSourceParameters.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public static Set<String> dataSourceParameters() {
         return easyToUseConfig.dataSourceParameters;
     }
 
+    /**
+     * <p>dataSourceUsername.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String dataSourceUsername() {
         return easyToUseConfig.dataSourceUsername;
     }
 
+    /**
+     * <p>dataSourcePassword.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String dataSourcePassword() {
         return easyToUseConfig.dataSourcePassword;
     }
@@ -334,7 +366,7 @@ public final class ScxConfig {
      * @return a {@link java.lang.String} object.
      */
     public static String scxVersion() {
-        return "1.1.1";
+        return "1.1.2";
     }
 
     /**
@@ -364,6 +396,11 @@ public final class ScxConfig {
         return ORIGINAL_PARAMS;
     }
 
+    /**
+     * <p>getConfigExample.</p>
+     *
+     * @return a {@link java.util.Map} object.
+     */
     public static Map<String, Object> getConfigExample() {
         return CONFIG_EXAMPLE;
     }
