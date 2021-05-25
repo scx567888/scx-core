@@ -18,9 +18,9 @@
 
     <properties>
         <!-- 项目构建时的字符集 强烈建议采用默认值 UTF-8 -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <scx.encoding>UTF-8</scx.encoding>
         <!-- 构建项目时jar包的默认启动类 在您自己的项目中请覆写此值 -->
-        <scxApp.mainClass>cool.scx._core.CoreModule</scxApp.mainClass>
+        <scx.mainClass>cool.scx._core.CoreModule</scx.mainClass>
     </properties>
 
     <dependencies>
@@ -131,73 +131,6 @@
     <build>
         <plugins>
 
-            <!-- 此插件用于打包 java doc -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <charset>${project.build.sourceEncoding}</charset>
-                    <docencoding>${project.build.sourceEncoding}</docencoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- 此插件用于打包源码 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- 对 jar 包等文件进行 gpg 签名 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- 此插件用于设置 java 程序编译时的参数 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <compilerArgs>
-                        <!-- 使编译后 class 文件携带参数名称 -->
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                    <!-- 指定编译时的jdk 版本 -->
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
-
             <!-- 此插件用于设置 java 程序的依赖项 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -207,8 +140,7 @@
                 <executions>
                     <execution>
                         <!-- 如不想生成 依赖或加快打包速度 请注释掉此标签 -->
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
+                        <id>scx:dependency:copy-dependencies</id>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
@@ -223,6 +155,36 @@
                 </executions>
             </plugin>
 
+            <!-- 资源插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <!-- 编码 -->
+                    <encoding>${scx.encoding}</encoding>
+                    <propertiesEncoding>${scx.encoding}</propertiesEncoding>
+                </configuration>
+            </plugin>
+
+            <!-- 此插件用于设置 java 程序编译时的参数 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <compilerArgs>
+                        <!-- 通知 JDK 使编译后 class 文件携带参数名称 -->
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                    <!-- 编码 -->
+                    <encoding>${scx.encoding}</encoding>
+                    <!-- 指定编译时的 JDK 版本 -->
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+
             <!-- 此插件用于将项目打包为 可执行 jar 包-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -234,7 +196,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
-                            <mainClass>${scxApp.mainClass}</mainClass>
+                            <mainClass>${scx.mainClass}</mainClass>
                         </manifest>
                     </archive>
                     <!-- 在打包时排除不需要的文件 具体文件说明见下方 -->
@@ -253,13 +215,63 @@
                 </configuration>
             </plugin>
 
+            <!-- 此插件用于打包源码 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>scx:source:jar-no-fork</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 此插件用于打包 java doc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <encoding>${scx.encoding}</encoding>
+                    <charset>${scx.encoding}</charset>
+                    <docencoding>${scx.encoding}</docencoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>scx:javadoc:jar</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 对 jar 包等文件进行 gpg 签名 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>scx:gpg:sign</id>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- 此插件用于 运行项目 -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <mainClass>${scxApp.mainClass}</mainClass>
+                    <mainClass>${scx.mainClass}</mainClass>
                 </configuration>
             </plugin>
 

@@ -16,6 +16,18 @@ import java.util.List;
  */
 public final class ScxListener {
     static {
+        addListener();
+    }
+
+    /**
+     * 初始化 事件监听
+     */
+    public static void initListener() {
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void addListener() {
         try {
             var fis = new FileInputStream(FileUtils.getFileByRootModulePath("scx-session.cache"));
             ObjectInputStream objectInputStream = new ObjectInputStream(fis);
@@ -39,12 +51,5 @@ public final class ScxListener {
 
             }
         }));
-    }
-
-    /**
-     * 初始化 事件监听
-     */
-    public static void initListener() {
-
     }
 }
