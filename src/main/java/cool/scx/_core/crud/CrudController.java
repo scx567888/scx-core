@@ -34,7 +34,6 @@ public class CrudController {
      * @throws HttpResponseException service 未找到
      */
     @SuppressWarnings("unchecked")
-    @SuppressWarnings("unchecked")
     private static <T extends BaseModel> BaseService<T> getBaseService(String modelName) throws HttpResponseException {
         try {
             var o = ScxContext.getBean(ScxContext.getClassByName(modelName.toLowerCase() + "service"));
