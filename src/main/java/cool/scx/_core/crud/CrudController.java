@@ -80,7 +80,7 @@ public class CrudController {
 
 
     /**
-     * <p>list.</p>
+     * 列表查询
      *
      * @param modelName     a {@link java.lang.String} object.
      * @param limit         a {@link java.lang.Integer} object.
@@ -108,7 +108,7 @@ public class CrudController {
 
 
     /**
-     * <p>info.</p>
+     * 获取详细信息
      *
      * @param modelName a {@link java.lang.String} object.
      * @param id        a {@link java.lang.Long} object.
@@ -123,7 +123,7 @@ public class CrudController {
     }
 
     /**
-     * <p>save.</p>
+     * 保存
      *
      * @param modelName a {@link java.lang.String} object.
      * @param entityMap a {@link java.util.Map} object.
@@ -138,7 +138,7 @@ public class CrudController {
     }
 
     /**
-     * <p>update.</p>
+     * 更新
      *
      * @param modelName a {@link java.lang.String} object.
      * @param entityMap a {@link java.util.Map} object.
@@ -153,7 +153,7 @@ public class CrudController {
     }
 
     /**
-     * <p>delete.</p>
+     * 删除
      *
      * @param modelName a {@link java.lang.String} object.
      * @param id        a {@link java.lang.Integer} object.
@@ -168,7 +168,7 @@ public class CrudController {
     }
 
     /**
-     * <p>batchDelete.</p>
+     * 批量删除
      *
      * @param modelName a {@link java.lang.String} object.
      * @param deleteIds a {@link java.util.Map} object.
@@ -183,7 +183,7 @@ public class CrudController {
     }
 
     /**
-     * <p>revokeDelete.</p>
+     * 撤销删除
      *
      * @param modelName a {@link java.lang.String} object.
      * @param id        a {@link java.lang.Integer} object.
@@ -198,7 +198,7 @@ public class CrudController {
     }
 
     /**
-     * <p>getAutoComplete.</p>
+     * 获取自动完成字段
      *
      * @param modelName a {@link java.lang.String} object.
      * @param fieldName a {@link java.lang.String} object.
@@ -213,7 +213,7 @@ public class CrudController {
     }
 
     /**
-     * <p>checkUnique.</p>
+     * 校验唯一性
      *
      * @param modelName a {@link java.lang.String} object.
      * @param params    a {@link java.util.Map} object.

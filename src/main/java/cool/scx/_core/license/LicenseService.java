@@ -1,8 +1,8 @@
 package cool.scx._core.license;
 
+import cool.scx._core.config.CoreConfig;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
-import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
 import cool.scx.util.CryptoUtils;
 import cool.scx.util.LogUtils;
@@ -17,7 +17,7 @@ import java.util.Date;
  * @version 0.3.6
  */
 @ScxService
-public class CoreLicenseHandler extends BaseService<License> {
+public class LicenseService extends BaseService<License> {
 
     /**
      * 加密时间
@@ -54,7 +54,7 @@ public class CoreLicenseHandler extends BaseService<License> {
             return false;
         }
         //如果当前时间 大于 license 时间 证明 license 已过期
-        var date = decryptTime(ScxConfig.license());
+        var date = decryptTime(CoreConfig.license());
         //如果密钥 不符合规则 直接 返回错误
         if (date == null) {
             myLicense.flag = false;

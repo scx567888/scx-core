@@ -1,7 +1,7 @@
 package cool.scx.util;
 
 import cool.scx.bo.FileType;
-import cool.scx.boot.ScxModuleHandler;
+import cool.scx.module.ScxModule;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -389,7 +389,7 @@ public final class FileUtils {
      * @return a {@link java.io.File} object.
      */
     public static File getFileByRootModulePath(String path) {
-        return path.startsWith("absPath:") ? new File(path.replaceAll("absPath:", "")) : new File(ScxModuleHandler.getRootModule().moduleRootPath, path);
+        return path.startsWith("absPath:") ? new File(path.replaceAll("absPath:", "")) : new File(ScxModule.appRootPath(), path);
     }
 
     /**

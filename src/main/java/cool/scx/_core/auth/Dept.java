@@ -1,10 +1,9 @@
-package cool.scx.auth;
+package cool.scx._core.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.annotation.Column;
 import cool.scx.annotation.MustHaveImpl;
 import cool.scx.annotation.NoColumn;
-import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.List;
  * @version 0.3.6
  */
 @MustHaveImpl
-@ScxModel(tableName = "core_dept")
 public abstract class Dept extends BaseModel {
 
     /**
@@ -27,7 +25,6 @@ public abstract class Dept extends BaseModel {
     /**
      * 部门权限
      */
-    @Column(type = "TEXT")
     public List<String> perms;
 
     /**

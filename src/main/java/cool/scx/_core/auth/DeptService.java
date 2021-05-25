@@ -1,34 +1,34 @@
-package cool.scx.auth;
+package cool.scx._core.auth;
 
 import cool.scx.annotation.MustHaveImpl;
+import cool.scx.auth.User;
 
 import java.util.List;
 
 /**
- * <p>RoleService class.</p>
+ * <p>DeptService class.</p>
  *
  * @author 司昌旭
  * @version 0.3.6
  */
 @MustHaveImpl
-public interface RoleService {
-
+public interface DeptService {
 
     /**
-     * <p>getRoleListByUser.</p>
+     * <p>getDeptListByUser.</p>
      *
      * @param user a {@link cool.scx.auth.User} object.
      * @return a {@link java.util.List} object.
      */
-    List<? extends Role> getRoleListByUser(User user);
+    List<? extends Dept> getDeptListByUser(User user);
 
     /**
-     * <p>saveRoleListWithUserId.</p>
+     * <p>saveDeptListWithUserId.</p>
      *
      * @param userId  a {@link java.lang.Long} object.
-     * @param roleIds a {@link java.lang.String} object.
+     * @param deptIds a {@link java.lang.String} object.
      */
-    void saveRoleListWithUserId(Long userId, String roleIds);
+    void saveDeptListWithUserId(Long userId, String deptIds);
 
     /**
      * <p>deleteByUserId.</p>
@@ -38,11 +38,11 @@ public interface RoleService {
     void deleteByUserId(Long id);
 
     /**
-     * <p>findRoleByUserId.</p>
+     * <p>findDeptByUserId.</p>
      *
      * @param userId a {@link java.lang.Long} object.
      * @return a {@link java.util.List} object.
      */
-    List<UserRole> findRoleByUserId(Long userId);
+    List<UserDept> findDeptByUserId(Long userId);
 
 }

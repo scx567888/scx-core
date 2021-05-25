@@ -1,7 +1,7 @@
 package cool.scx._core.auth;
 
 import cool.scx.annotation.ScxService;
-import cool.scx.auth.*;
+import cool.scx.auth.User;
 import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
 import cool.scx.util.CryptoUtils;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @version $Id: $Id
  */
 @ScxService
-public class CoreUserService extends BaseService<CoreUser> implements UserService {
+public class CoreUserService extends BaseService<CoreUser> {
 
 
     private final DeptService deptService;
@@ -31,10 +31,10 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
     /**
      * <p>Constructor for CoreUserService.</p>
      *
-     * @param deptService     a {@link cool.scx.auth.DeptService} object.
-     * @param roleService     a {@link cool.scx.auth.RoleService} object.
-     * @param userDeptService a {@link cool.scx.auth.UserDeptService} object.
-     * @param userRoleService a {@link cool.scx.auth.UserRoleService} object.
+     * @param deptService     a {@link DeptService} object.
+     * @param roleService     a {@link RoleService} object.
+     * @param userDeptService a {@link UserDeptService} object.
+     * @param userRoleService a {@link UserRoleService} object.
      */
     public CoreUserService(DeptService deptService, RoleService roleService, UserDeptService userDeptService, UserRoleService userRoleService) {
         this.deptService = deptService;
@@ -47,7 +47,6 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
     /**
      * {@inheritDoc}
      */
-    @Override
     public User findByUsername(String username) {
         var param = new Param<>(new CoreUser());
         param.queryObject.username = username;
@@ -57,7 +56,6 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
     /**
      * {@inheritDoc}
      */
-    @Override
     public HashSet<String> getPermStrByUser(User user) {
         var permList = new HashSet<String>();
         //如果是超级管理员或管理员 直接设置为 *
@@ -75,7 +73,6 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
     /**
      * {@inheritDoc}
      */
-    @Override
     public User updateUserPassword(User user) {
         var coreUser = new CoreUser();
         if (!StringUtils.isEmpty(user.password)) {
@@ -88,10 +85,7 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         return update(coreUser);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+
     public String[] encryptPassword(String password) {
         var passwordAndSalt = new String[2];
         var uuid = StringUtils.getUUID();
@@ -106,10 +100,10 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
         return passwordAndSalt;
     }
 
+
     /**
      * {@inheritDoc}
      */
-    @Override
     public void saveUserDeptIds(Long userId, String deptIds) {
         deptService.saveDeptListWithUserId(userId, deptIds);
     }
@@ -117,7 +111,6 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
     /**
      * {@inheritDoc}
      */
-    @Override
     public void saveUserRoleIds(Long userId, String roleIds) {
         roleService.saveRoleListWithUserId(userId, roleIds);
     }
@@ -125,8 +118,7 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
     /**
      * {@inheritDoc}
      */
-    @Override
-    public User registeredUser(User user) {
+    public User registeredUser(CoreUser user) {
         var deptIds = user.deptIds;
         var roleIds = user.roleIds;
         var passwordAndSalt = encryptPassword(user.password);
@@ -142,7 +134,7 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
     /**
      * {@inheritDoc}
      */
-    @Override
+
     public Boolean deleteUser(Long id) {
         deptService.deleteByUserId(id);
         roleService.deleteByUserId(id);
@@ -175,8 +167,7 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
     /**
      * {@inheritDoc}
      */
-    @Override
-    public User updateUser(User user) {
+    public User updateUser(CoreUser user) {
         var coreUser = new CoreUser();
         var deptIds = user.deptIds;
         var roleIds = user.roleIds;
@@ -206,7 +197,6 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
     /**
      * {@inheritDoc}
      */
-    @Override
     public User revokeDeleteUser(Long id) {
         return updateUserAndDept(id, false);
     }
@@ -214,7 +204,7 @@ public class CoreUserService extends BaseService<CoreUser> implements UserServic
     /**
      * {@inheritDoc}
      */
-    @Override
+
     public User updateUserAndDept(Long id, boolean b) {
         var user = new CoreUser();
         var userRole = new Param<>(new UserRole());

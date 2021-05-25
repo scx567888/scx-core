@@ -5,12 +5,12 @@ import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
 
 /**
- * <p>ScxVertx class.</p>
+ * ScxVertx
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.1
  */
-public class ScxVertx {
+public final class ScxVertx {
 
     /**
      * 全局 vert.x
@@ -36,7 +36,6 @@ public class ScxVertx {
         return GLOBAL_VERTX.eventBus();
     }
 
-
     /**
      * 获取全局的 vertx
      *
@@ -45,4 +44,5 @@ public class ScxVertx {
     public static Vertx vertx() {
         return GLOBAL_VERTX;
     }
+
 }

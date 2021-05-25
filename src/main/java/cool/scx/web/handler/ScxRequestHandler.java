@@ -2,9 +2,9 @@ package cool.scx.web.handler;
 
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
-import cool.scx.boot.ScxModuleHandler;
 import cool.scx.boot.ScxVertx;
 import cool.scx.config.ScxConfig;
+import cool.scx.module.ScxModule;
 import cool.scx.util.Ansi;
 import cool.scx.util.StringUtils;
 import io.vertx.core.http.Cookie;
@@ -114,7 +114,7 @@ public final class ScxRequestHandler extends RouterImpl {
      */
     private void registerScxMappingHandler() {
         var scxMappingHandlers = new ArrayList<ScxMappingHandler>();
-        ScxModuleHandler.iterateClass(clazz -> {
+        ScxModule.iterateClass(clazz -> {
             if (clazz.isAnnotationPresent(ScxController.class)) {
                 for (var method : clazz.getMethods()) {
                     method.setAccessible(true);
@@ -143,7 +143,7 @@ public final class ScxRequestHandler extends RouterImpl {
      * 静态文件 处理器
      */
     private void registerStaticHandler() {
-        this.route(ScxConfig.cmsResourceUrl()).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations().getPath()));
+        this.route(ScxConfig.cmsResourceHttpUrl()).handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(ScxConfig.cmsResourceLocations().getPath()));
     }
 
     /**

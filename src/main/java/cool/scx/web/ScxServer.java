@@ -4,6 +4,8 @@ import cool.scx.boot.ScxVertx;
 import cool.scx.config.ScxConfig;
 import cool.scx.exception.handler.ScxServerExceptionHandler;
 import cool.scx.util.Ansi;
+import cool.scx.util.NetUtils;
+import cool.scx.util.Timer;
 import cool.scx.web.handler.ScxRequestHandler;
 import cool.scx.web.handler.ScxWebSocketHandler;
 import io.vertx.core.AsyncResult;
@@ -36,8 +38,19 @@ public final class ScxServer {
      */
     public static void initServer() {
         Ansi.OUT.brightYellow("正在初始化服务器...").ln();
+        initServerStartSuccessHandler();
         loadServer();
         Ansi.OUT.brightYellow("服务器初始化完毕...").ln();
+    }
+
+    public static void initServerStartSuccessHandler() {
+        ScxVertx.eventBus().consumer("startVertxServer", (message) -> {
+            var port = message.body().toString();
+            Ansi.OUT.green("服务器启动成功... 用时 " + Timer.stopToMillis("ScxApp") + " ms").ln();
+            var httpOrHttps = ScxConfig.isOpenHttps() ? "https" : "http";
+            Ansi.OUT.green("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/").ln();
+            Ansi.OUT.green("> 本地 : " + httpOrHttps + "://localhost:" + port + "/").ln();
+        });
     }
 
     private static void loadServer() {
@@ -46,7 +59,7 @@ public final class ScxServer {
         ScxWebSocketHandler webSocketHandler = new ScxWebSocketHandler();
         //创建服务器端配置文件
         var httpServerOptions = new HttpServerOptions();
-        if (ScxConfig.openHttps()) {
+        if (ScxConfig.isOpenHttps()) {
             httpServerOptions.setSsl(true)
                     .setKeyStoreOptions(new JksOptions()
                             .setPath(ScxConfig.sslPath().getPath())

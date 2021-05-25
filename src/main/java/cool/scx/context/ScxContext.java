@@ -4,13 +4,13 @@ import cool.scx.annotation.MustHaveImpl;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
+import cool.scx.auth.AuthHandler;
 import cool.scx.auth.User;
-import cool.scx.auth.UserService;
-import cool.scx.boot.ScxModuleHandler;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Device;
 import cool.scx.enumeration.FixTableResult;
 import cool.scx.exception.handler.SQLRunnerExceptionHandler;
+import cool.scx.module.ScxModule;
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.Ansi;
@@ -34,7 +34,7 @@ public final class ScxContext {
     /**
      * userService 实例 主要用来 获取登录用户的 权限等信息
      */
-    public static final UserService USER_SERVICE;
+    public static final AuthHandler USER_SERVICE;
 
 
     /**
@@ -62,12 +62,12 @@ public final class ScxContext {
     static {
         Ansi.OUT.magenta("ScxContext 初始化中...").ln();
         checkOneAndOnlyOneImpl();
-        APPLICATION_CONTEXT.scan(ScxModuleHandler.getAllModuleBasePackages());
+        APPLICATION_CONTEXT.scan(ScxModule.getAllModuleBasePackages());
         APPLICATION_CONTEXT.refresh();
-        ScxModuleHandler.getAllPluginModule().forEach(m -> m.classList.forEach(APPLICATION_CONTEXT::register));
+        ScxModule.getAllPluginModule().forEach(m -> m.classList.forEach(APPLICATION_CONTEXT::register));
         initScxContext();
         fixTable();
-        USER_SERVICE = getBean(UserService.class);
+        USER_SERVICE = getBean(AuthHandler.class);
     }
 
     /**
@@ -92,7 +92,7 @@ public final class ScxContext {
      */
     private static void checkOneAndOnlyOneImpl() {
         var classList = new ArrayList<Class<?>>();
-        ScxModuleHandler.iterateClass(c -> {
+        ScxModule.iterateClass(c -> {
             if (c.isAnnotationPresent(MustHaveImpl.class)) {
                 classList.add(c);
             }
@@ -100,7 +100,7 @@ public final class ScxContext {
         });
 
         for (Class<?> o : classList) {
-            ScxModuleHandler.iterateClass(c -> {
+            ScxModule.iterateClass(c -> {
                 if (c != o && !c.isInterface() && o.isAssignableFrom(c)) {
                     var lastImpl = MUST_HAVE_IMPL_MAPPING.get(o);
                     if (lastImpl == null) {
@@ -131,7 +131,7 @@ public final class ScxContext {
     }
 
     private static void initScxContext() {
-        ScxModuleHandler.iterateClass(clazz -> {
+        ScxModule.iterateClass(clazz -> {
             if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class) || clazz.isAnnotationPresent(ScxModel.class)) {
                 String className = clazz.getSimpleName().toLowerCase();
                 Class<?> aClass = SCX_BEAN_CLASS_NAME_MAPPING.get(className);

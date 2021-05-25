@@ -1,7 +1,7 @@
 package cool.scx._core.auth;
 
 import cool.scx.annotation.ScxService;
-import cool.scx.auth.*;
+import cool.scx.auth.User;
 import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
 import cool.scx.util.StringUtils;
@@ -26,7 +26,7 @@ public class CoreDeptService extends BaseService<CoreDept> implements DeptServic
     /**
      * <p>Constructor for CoreDeptService.</p>
      *
-     * @param userDeptService a {@link cool.scx.auth.UserDeptService} object.
+     * @param userDeptService a {@link UserDeptService} object.
      */
     public CoreDeptService(UserDeptService userDeptService) {
         this.userDeptService = userDeptService;

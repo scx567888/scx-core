@@ -1,6 +1,7 @@
 package cool.scx._core.auth;
 
 import cool.scx._core.auth.exception.*;
+import cool.scx._core.config.CoreConfig;
 import cool.scx.annotation.ScxService;
 import cool.scx.auth.AuthHandler;
 import cool.scx.auth.User;
@@ -17,6 +18,7 @@ import io.vertx.ext.web.RoutingContext;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -30,6 +32,7 @@ import java.util.Map;
 public class CoreAuthHandler implements AuthHandler {
 
     private static final HashMap<String, LoginError> loginErrorMap = new HashMap<>();
+
     private final CoreUserService coreUserService;
 
     /**
@@ -41,45 +44,13 @@ public class CoreAuthHandler implements AuthHandler {
         this.coreUserService = coreUserService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void noLogin(Device device, RoutingContext context) {
-        if (device == Device.ADMIN) {
-            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
-        } else if (device == Device.ANDROID) {
-            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
-        } else if (device == Device.APPLE) {
-            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
-        } else if (device == Device.WEBSITE) {
-            Ansi.OUT.red("未登录").ln();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void noPerms(Device device, RoutingContext context) {
-        if (device == Device.ADMIN) {
-            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
-        } else if (device == Device.ANDROID) {
-            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
-        } else if (device == Device.APPLE) {
-            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
-        } else if (device == Device.WEBSITE) {
-            Ansi.OUT.red("没有权限").ln();
-        }
-    }
-
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Json info() {
-        var user = ScxContext.getLoginUser();
+        var user = (CoreUser) ScxContext.getLoginUser();
         //从session取出用户信息
         if (user == null) {
             return Json.fail(Json.ILLEGAL_TOKEN, "登录已失效");
@@ -101,10 +72,9 @@ public class CoreAuthHandler implements AuthHandler {
      */
     @Override
     public Json infoUpdate(Map<String, Object> params) {
-        var queryUser = ObjectUtils.mapToBean(params, User.class);
+        var queryUser = ObjectUtils.mapToBean(params, CoreUser.class);
         var currentUser = ScxContext.getLoginUser();
-        currentUser.nickName = queryUser.nickName;
-        currentUser.phone = queryUser.phone;
+        queryUser.id = currentUser.id;
         currentUser.password = queryUser.password;
         currentUser.salt = null;
         var b = coreUserService.updateUserPassword(currentUser) != null;
@@ -131,10 +101,10 @@ public class CoreAuthHandler implements AuthHandler {
         } else if (e instanceof EmptyPasswordException) {
             return Json.fail("密码不能为空");
         } else if (e instanceof UnknownUserException) {
-            return Json.fail(ScxConfig.confusionLoginError() ? "usernameOrPasswordError" : "userNotFound");
+            return Json.fail(CoreConfig.confusionLoginError() ? "usernameOrPasswordError" : "userNotFound");
         } else if (e instanceof WrongPasswordException) {
             //这里和用户密码错误   可以使用相同的 提示信息 防止恶意破解
-            return Json.fail(ScxConfig.confusionLoginError() ? "usernameOrPasswordError" : "passwordError");
+            return Json.fail(CoreConfig.confusionLoginError() ? "usernameOrPasswordError" : "passwordError");
         } else if (e instanceof TooManyErrorsException) {
             //密码错误次数过多
             return Json.fail("tooManyErrors").data("remainingTime", ((TooManyErrorsException) e).remainingTime);
@@ -166,6 +136,42 @@ public class CoreAuthHandler implements AuthHandler {
         }
     }
 
+    @Override
+    public User findByUsername(String username) {
+        return null;
+    }
+
+    @Override
+    public HashSet<String> getPerms(User user) {
+        return null;
+    }
+
+
+    @Override
+    public void noLoginHandler(Device device, RoutingContext context) {
+        if (device == Device.ADMIN) {
+            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
+        } else if (device == Device.ANDROID) {
+            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
+        } else if (device == Device.APPLE) {
+            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
+        } else if (device == Device.WEBSITE) {
+            Ansi.OUT.red("未登录").ln();
+        }
+    }
+
+    @Override
+    public void noPermsHandler(Device device, RoutingContext context) {
+        if (device == Device.ADMIN) {
+            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
+        } else if (device == Device.ANDROID) {
+            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
+        } else if (device == Device.APPLE) {
+            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
+        } else if (device == Device.WEBSITE) {
+            Ansi.OUT.red("没有权限").ln();
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -217,8 +223,8 @@ public class CoreAuthHandler implements AuthHandler {
     private boolean notHaveLoginError(String ip, LoginError loginError) {
         if (LocalDateTime.now().isBefore(loginError.lastErrorDate)) {
             return false;
-        } else if (loginError.errorTimes >= ScxConfig.loginErrorLockTimes()) {
-            LoginError le = new LoginError(LocalDateTime.now().plusSeconds(ScxConfig.loginErrorLockSecond()), 0);
+        } else if (loginError.errorTimes >= CoreConfig.loginErrorLockTimes()) {
+            LoginError le = new LoginError(LocalDateTime.now().plusSeconds(CoreConfig.loginErrorLockSecond()), 0);
             loginErrorMap.put(ip, le);
             return false;
         }

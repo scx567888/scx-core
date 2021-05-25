@@ -1,33 +1,36 @@
-package cool.scx.config;
+package cool.scx.cms;
 
 import cool.scx.annotation.ScxTemplateDirective;
 import cool.scx.base.BaseTemplateDirective;
-import cool.scx.boot.ScxModuleHandler;
+import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
+import cool.scx.module.ScxModule;
 import cool.scx.util.Ansi;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
+import freemarker.template.Template;
 import freemarker.template.Version;
 
+import java.io.IOException;
+
 /**
- * <p>ScxCmsConfig class.</p>
+ * ScxCms
  *
  * @author 司昌旭
  * @version 0.3.6
  */
-public final class ScxCmsConfig {
+public final class ScxCms {
+
     /**
-     * Constant <code>freemarkerConfig</code>
-     */
-    public static final Configuration freemarkerConfig;
-    /**
-     * 默认引擎版本
+     * Freemarker 默认引擎版本
      */
     private static final Version VERSION = Configuration.VERSION_2_3_31;
 
-    static {
-        freemarkerConfig = initFreemarkerConfig();
-    }
+    /**
+     * Constant <code>freemarkerConfig</code>
+     */
+    private static Configuration freemarkerConfig;
+
 
     private static Configuration initFreemarkerConfig() {
         // freemarker 配置文件版本
@@ -49,7 +52,7 @@ public final class ScxCmsConfig {
         configuration.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
         //自定义的指令就在这里添加
 
-        ScxModuleHandler.iterateClass(clazz -> {
+        ScxModule.iterateClass(clazz -> {
             if (clazz.isAnnotationPresent(ScxTemplateDirective.class) && BaseTemplateDirective.class.isAssignableFrom(clazz)) {
                 try {
                     var myDirective = (BaseTemplateDirective) ScxContext.getBean(clazz);
@@ -64,10 +67,21 @@ public final class ScxCmsConfig {
         return configuration;
     }
 
+
     /**
      * 初始化 cms 配置文件
      */
-    public static void initCmsConfig() {
-
+    public static void initCms() {
+        freemarkerConfig = initFreemarkerConfig();
     }
+
+    public static Template getTemplateByPath(String pagePath) {
+        try {
+            return freemarkerConfig.getTemplate(pagePath + ScxConfig.cmsTemplateSuffix());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

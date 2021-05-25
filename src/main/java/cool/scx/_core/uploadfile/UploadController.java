@@ -1,11 +1,11 @@
 package cool.scx._core.uploadfile;
 
+import cool.scx._core.config.CoreConfig;
 import cool.scx.annotation.FromQuery;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.FileUpload;
 import cool.scx.bo.Param;
-import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Method;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.FileUtils;
@@ -19,6 +19,9 @@ import cool.scx.vo.Json;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -80,6 +83,47 @@ public class UploadController {
     }
 
     /**
+     * <p>getNewUpload.</p>
+     *
+     * @param fileName a {@link java.lang.String} object.
+     * @param fileSize a {@link java.lang.Long} object.
+     * @param fileMD5  a {@link java.lang.String} object.
+     * @return a {@link cool.scx._core.uploadfile.UploadFile} object.
+     */
+    private static UploadFile getNewUpload(String fileName, Long fileSize, String fileMD5) {
+        var uploadFile = new UploadFile();
+        String datePath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy\\MM\\dd"));
+        uploadFile.fileId = StringUtils.getUUID();
+        uploadFile.fileName = fileName;
+        uploadFile.uploadTime = LocalDateTime.now();
+        uploadFile.fileSizeDisplay = FileUtils.longToDisplaySize(fileSize);
+        uploadFile.fileSize = fileSize;
+        uploadFile.fileMD5 = fileMD5;
+        uploadFile.filePath = datePath + "\\" + uploadFile.fileId + "\\" + fileName;
+        return uploadFile;
+    }
+
+
+    /**
+     * <p>copyUploadFile.</p>
+     *
+     * @param fileName      a {@link java.lang.String} object.
+     * @param oldUploadFile a {@link cool.scx._core.uploadfile.UploadFile} object.
+     * @return a {@link cool.scx._core.uploadfile.UploadFile} object.
+     */
+    private static UploadFile copyUploadFile(String fileName, UploadFile oldUploadFile) {
+        var uploadFile = new UploadFile();
+        uploadFile.fileId = StringUtils.getUUID();
+        uploadFile.fileName = fileName;
+        uploadFile.uploadTime = LocalDateTime.now();
+        uploadFile.filePath = oldUploadFile.filePath;
+        uploadFile.fileSizeDisplay = oldUploadFile.fileSizeDisplay;
+        uploadFile.fileSize = oldUploadFile.fileSize;
+        uploadFile.fileMD5 = oldUploadFile.fileMD5;
+        return uploadFile;
+    }
+
+    /**
      * 通用下载资源方法
      *
      * @param fileId a {@link java.lang.String} object.
@@ -94,7 +138,7 @@ public class UploadController {
         if (uploadFile == null) {
             throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
         }
-        var file = new File(ScxConfig.uploadFilePath() + "\\" + uploadFile.filePath);
+        var file = new File(CoreConfig.uploadFilePath() + "\\" + uploadFile.filePath);
         if (!file.exists()) {
             throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
         }
@@ -120,7 +164,7 @@ public class UploadController {
         if (uploadFile == null) {
             throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
         } else {
-            return new Image(new File(ScxConfig.uploadFilePath() + "\\" + uploadFile.filePath), width, height);
+            return new Image(new File(CoreConfig.uploadFilePath() + "\\" + uploadFile.filePath), width, height);
         }
 
     }
@@ -138,16 +182,16 @@ public class UploadController {
      */
     @ScxMapping(value = "/upload", method = Method.POST)
     public Json upload(String fileName, Long fileSize, String fileMD5, Integer chunkLength, Integer nowChunkIndex, FileUpload fileData) {
-        var uploadTempFile = ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "_" + fileName + "\\.scxTemp";
-        var uploadConfigFile = new File(ScxConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "_" + fileName + "\\.scxUpload");
+        var uploadTempFile = CoreConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "_" + fileName + "\\.scxTemp";
+        var uploadConfigFile = new File(CoreConfig.uploadFilePath().getPath() + "\\TEMP\\" + fileMD5 + "_" + fileName + "\\.scxUpload");
         //先判断 文件是否已经上传过
         if (StringUtils.isNotEmpty(fileMD5)) {
             UploadFile fileByMd5 = uploadFileService.findFileByMd5(fileMD5);
             //证明有其他人上传过此文件 就不上传了 直接 返回文件上传成功的信息给用户
             if (fileByMd5 != null) {
-                File file = new File(ScxConfig.uploadFilePath() + "\\" + fileByMd5.filePath);
+                File file = new File(CoreConfig.uploadFilePath() + "\\" + fileByMd5.filePath);
                 if (file.exists()) {
-                    var save = uploadFileService.save(UploadFile.copyUploadFile(fileName, fileByMd5));
+                    var save = uploadFileService.save(copyUploadFile(fileName, fileByMd5));
                     //有可能有之前的残留临时文件 再次一并清楚
                     FileUtils.deleteFiles(Path.of(uploadTempFile).getParent());
                     return Json.ok().data("type", "alreadyExists").items(save);
@@ -160,9 +204,9 @@ public class UploadController {
             //先将数据写入临时文件中
             FileUtils.fileAppend(uploadTempFile, fileData.buffer.getBytes());
             //获取文件信息描述对象
-            var uploadFile = UploadFile.getNewUpload(fileName, fileSize, fileMD5);
+            var uploadFile = getNewUpload(fileName, fileSize, fileMD5);
             //获取文件真实的存储路径
-            var fileStoragePath = ScxConfig.uploadFilePath().getPath() + "\\" + uploadFile.filePath;
+            var fileStoragePath = CoreConfig.uploadFilePath().getPath() + "\\" + uploadFile.filePath;
             //计算 md5 只有前后台 md5 相同文件才算 正确
             var serverMd5Str = FileUtils.fileMD5(uploadTempFile);
             if (!fileMD5.equalsIgnoreCase(serverMd5Str)) {
@@ -235,10 +279,10 @@ public class UploadController {
 
             //没有被其他人引用过 可以删除物理文件
             if (count == 1) {
-                var filePath = ScxConfig.uploadFilePath() + "\\" + needDeleteFile.filePath;
+                var filePath = CoreConfig.uploadFilePath() + "\\" + needDeleteFile.filePath;
                 var file = new File(filePath);
                 if (file.exists()) {
-                    boolean b = FileUtils.deleteFiles(Path.of(ScxConfig.uploadFilePath() + "\\" + needDeleteFile.filePath).getParent());
+                    boolean b = FileUtils.deleteFiles(Path.of(CoreConfig.uploadFilePath() + "\\" + needDeleteFile.filePath).getParent());
                     if (!b) {
                         return Json.ok("deleteFail");
                     }

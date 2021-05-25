@@ -1,8 +1,8 @@
 package cool.scx.plugin;
 
-import cool.scx.boot.ScxModule;
-import cool.scx.boot.ScxModuleHandler;
 import cool.scx.config.ScxConfig;
+import cool.scx.module.ModuleItem;
+import cool.scx.module.ScxModule;
 import cool.scx.util.Ansi;
 
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.Arrays;
  * @author 司昌旭
  * @version 1.1.0
  */
-public final class ScxPlugins {
+public final class ScxPlugin {
 
     /**
      * <p>reloadPlugins.</p>
@@ -40,16 +40,16 @@ public final class ScxPlugins {
         var pluginsRoot = ScxConfig.pluginRoot();
         if (pluginsRoot.exists()) {
             Arrays.stream(pluginsRoot.listFiles()).filter(file -> file.getName().endsWith(".jar")).filter(file -> {
-                var f = ScxConfig.pluginDisabledList().contains(file.getName());
+                var f = ScxConfig.disabledPluginList().contains(file.getName());
                 if (f) {
                     Ansi.OUT.brightRed("找到插件 名称 [" + file.getName() + "] 已禁用!!!").ln();
                 }
                 return !f;
             }).forEach(file -> {
                 try {
-                    ScxModule moduleByFile = ScxModuleHandler.getModuleByFile(file);
+                    ModuleItem moduleByFile = ScxModule.getModuleByFile(file);
                     moduleByFile.isPlugin = true;
-                    ScxModuleHandler.addModule(moduleByFile);
+                    ScxModule.addModule(moduleByFile);
                     Ansi.OUT.yellow("找到插件 文件名称 [" + file.getName() + "] 插件名称 [" + moduleByFile.moduleName + "] 已加载!!!").ln();
                 } catch (Exception e) {
                     Ansi.OUT.red("找到插件 文件名称 [" + file.getName() + "] 已损坏!!!").ln();

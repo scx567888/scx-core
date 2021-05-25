@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class NoticeController {
 
     /**
-     * <p>getAllOnlineUser.</p>
+     * 获取所有在线用户列表
      *
      * @return a {@link cool.scx.vo.Json} object.
      */
@@ -28,4 +28,5 @@ public class NoticeController {
         var s = ScxContext.getOnlineItemList().stream().filter(u -> u.username != null).map(u -> u.username).collect(Collectors.toList());
         return Json.ok().data("onlineUserList", s);
     }
+
 }

@@ -4,7 +4,7 @@ import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
 
 /**
- * <p>ScxLogService class.</p>
+ * ScxLogService
  *
  * @author 司昌旭
  * @version 0.3.6

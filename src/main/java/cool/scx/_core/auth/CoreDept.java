@@ -1,7 +1,6 @@
 package cool.scx._core.auth;
 
 import cool.scx.annotation.ScxModel;
-import cool.scx.auth.Dept;
 
 /**
  * <p>CoreDept class.</p>

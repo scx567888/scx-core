@@ -11,7 +11,16 @@ import cool.scx.base.BaseModel;
  */
 @ScxModel(tablePrefix = "core")
 public class License extends BaseModel {
-    public Boolean flag;//表示是否被强制禁用
 
-    public String lastTime;//最后一次license 正确校验的时间
+    /**
+     * 表示是否被强制禁用
+     */
+    public Boolean flag;
+
+    /**
+     * 最后一次license 正确校验的时间
+     * 防止时间篡改
+     */
+    public String lastTime;
+
 }

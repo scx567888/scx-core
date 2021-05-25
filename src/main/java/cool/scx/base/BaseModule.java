@@ -1,5 +1,7 @@
 package cool.scx.base;
 
+import java.util.Map;
+
 /**
  * 模块接口 所有需要加载的模块都应该实现此接口
  * 当自定义的模块继承此接口之后
@@ -16,16 +18,8 @@ public interface BaseModule {
     /**
      * <p>onStart.</p>
      */
-    default void onStart() {
-        var aClass = this.getClass();
-        System.out.println(aClass.getName() + " onStart !!!");
-    }
-
-    /**
-     * <p>onStartComplete.</p>
-     */
-    default void onStartComplete() {
-
+    default void onStart(Map<String, Object> configMap) {
+        System.out.println(" onStart !!!");
     }
 
     /**
@@ -36,12 +30,4 @@ public interface BaseModule {
         System.out.println(aClass.getName() + " onEnd !!!");
     }
 
-    /**
-     * <p>moduleName.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    default String moduleName() {
-        return null;
-    }
 }

@@ -1,7 +1,7 @@
 package cool.scx._core.auth;
 
 import cool.scx.annotation.ScxService;
-import cool.scx.auth.*;
+import cool.scx.auth.User;
 import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
 import cool.scx.util.StringUtils;
@@ -24,7 +24,7 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
     /**
      * <p>Constructor for CoreRoleService.</p>
      *
-     * @param userRoleService a {@link cool.scx.auth.UserRoleService} object.
+     * @param userRoleService a {@link UserRoleService} object.
      */
     public CoreRoleService(UserRoleService userRoleService) {
         this.userRoleService = userRoleService;

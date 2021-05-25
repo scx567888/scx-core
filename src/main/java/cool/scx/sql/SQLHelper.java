@@ -37,7 +37,7 @@ public final class SQLHelper {
     /**
      * 数据库实例
      */
-    private static final String database = ScxConfig.dataSource().database;
+    private static final String database = ScxConfig.dataSourceDatabase();
 
     /**
      * 根据 class 通过反射获取 对应的 TableInfo (表结构)

@@ -1,6 +1,5 @@
 package cool.scx.util;
 
-import cool.scx.boot.ScxParameters;
 import cool.scx.enumeration.AnsiColor;
 
 /**
@@ -21,10 +20,6 @@ public final class Ansi {
      */
     private static final AnsiColor[] printColor = AnsiColor.values();
 
-    /**
-     * 是否支持彩色打印 todo 此处的检测机制需要重新研究
-     */
-    private static final boolean supportAnsiColor = isSupportAnsiColor();
 
     /**
      * 下一个颜色 做内部索引使用
@@ -41,29 +36,7 @@ public final class Ansi {
      * @param ansiColor 颜色枚举
      */
     private static void print(Object o, AnsiColor ansiColor) {
-        if (supportAnsiColor) {
-            System.out.print("\u001B[" + ansiColor.code + "m" + o.toString() + "\u001B[0m");
-        } else {
-            System.out.print(o.toString());
-        }
-    }
-
-    /**
-     * 判断当前环境是否支持彩色打印 以避免输出无用的拼接转义符
-     * 但此方法 获取方式过于局限 需要修改
-     *
-     * @return 是否支持
-     */
-    private static boolean isSupportAnsiColor() {
-        for (String parameter : ScxParameters.parameters()) {
-            if (parameter.startsWith("--supportAnsiColor=")) {
-                String[] split = parameter.split("=");
-                if (split.length == 2) {
-                    return "true".equals(split[1]);
-                }
-            }
-        }
-        return true;
+        System.out.print("\u001B[" + ansiColor.code + "m" + o.toString() + "\u001B[0m");
     }
 
     /**

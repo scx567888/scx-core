@@ -1,7 +1,8 @@
-package cool.scx.boot;
+package cool.scx.module;
 
 import cool.scx.auth.AuthHandler;
 import cool.scx.base.BaseModule;
+import cool.scx.config.ScxConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,11 +26,22 @@ import java.util.stream.Collectors;
  * @author scx56
  * @version $Id: $Id
  */
-public final class ScxModuleHandler {
+public final class ScxModule {
 
-    private static final List<ScxModule> SCX_MODULE_LIST = new ArrayList<>();
-
-    private static ScxModule ROOT_SCX_MODULE = null;
+    /**
+     * 将 BASE_MODULE_ARRAY 进行初始化之后的 ModuleItem 集合
+     * plugin (插件模块) 也会注册到这里
+     */
+    private static final List<ModuleItem> MODULE_ITEM_LIST = new ArrayList<>();
+    /**
+     * 原始模块 数组
+     */
+    private static BaseModule[] BASE_MODULE_ARRAY;
+    /**
+     * 项目根模块 所在路径
+     * 默认取 所有自定义模块的最后一个 所在的文件根目录
+     */
+    private static File APP_ROOT_PATH;
 
     static {
         initInternalModule();
@@ -39,7 +51,7 @@ public final class ScxModuleHandler {
      * 添加核心模块
      */
     public static void initInternalModule() {
-        ScxModule internalAuthModule = new ScxModule();
+        ModuleItem internalAuthModule = new ModuleItem();
         internalAuthModule.moduleClass = null;
         internalAuthModule.moduleName = "内部认证模块";
         internalAuthModule.isPlugin = false;
@@ -47,7 +59,7 @@ public final class ScxModuleHandler {
         internalAuthModule.classList = getClassList(AuthHandler.class, internalAuthModule.basePackage);
         internalAuthModule.moduleRootPath = getModuleRootPath(AuthHandler.class);
 
-        ScxModule internalBaseModule = new ScxModule();
+        ModuleItem internalBaseModule = new ModuleItem();
         internalBaseModule.moduleClass = null;
         internalBaseModule.moduleName = "内部基本模块";
         internalBaseModule.isPlugin = false;
@@ -61,17 +73,11 @@ public final class ScxModuleHandler {
 
     /**
      * <p>initModules.</p>
-     *
-     * @param <T>     BaseModule
-     * @param modules an array of T[] objects.
      */
-    public static <T extends BaseModule> void initModules(T[] modules) {
-        for (int i = 0; i < modules.length; i++) {
-            var tempScxModule = getModuleByBaseModule(modules[i]);
-            // 最后一个通过代码注入的模块
-            if (i == modules.length - 1) {
-                ROOT_SCX_MODULE = tempScxModule;
-            }
+    public static void initModules() {
+        for (BaseModule baseModule : BASE_MODULE_ARRAY) {
+            baseModule.onStart(ScxConfig.getConfigExample());
+            var tempScxModule = getModuleByBaseModule(baseModule);
             addModule(tempScxModule);
         }
     }
@@ -79,10 +85,10 @@ public final class ScxModuleHandler {
     /**
      * <p>addModule.</p>
      *
-     * @param module a {@link cool.scx.boot.ScxModule} object.
+     * @param module a {@link ModuleItem} object.
      */
-    public static void addModule(ScxModule module) {
-        SCX_MODULE_LIST.add(module);
+    public static void addModule(ModuleItem module) {
+        MODULE_ITEM_LIST.add(module);
     }
 
     /**
@@ -92,27 +98,27 @@ public final class ScxModuleHandler {
      * @param baseModule a T object.
      */
     public static <T extends BaseModule> void addModule(T baseModule) {
-        SCX_MODULE_LIST.add(getModuleByBaseModule(baseModule));
+        MODULE_ITEM_LIST.add(getModuleByBaseModule(baseModule));
     }
 
     /**
      * todo
      *
      * @param file a {@link java.io.File} object.
-     * @return a {@link cool.scx.boot.ScxModule} object.
+     * @return a {@link ModuleItem} object.
      * @throws java.lang.Exception if any.
      */
-    public static ScxModule getModuleByFile(File file) throws Exception {
-        ScxModule tempModule = new ScxModule();
+    public static ModuleItem getModuleByFile(File file) throws Exception {
+        ModuleItem tempModule = new ModuleItem();
         tempModule.moduleName = "";
         tempModule.isPlugin = false;
         return tempModule;
     }
 
-    private static <T extends BaseModule> ScxModule getModuleByBaseModule(T module) {
-        ScxModule t = new ScxModule();
+    private static <T extends BaseModule> ModuleItem getModuleByBaseModule(T module) {
+        ModuleItem t = new ModuleItem();
         t.moduleClass = module.getClass();
-        t.moduleName = module.moduleName() != null ? module.moduleName() : t.moduleClass.getSimpleName();
+        t.moduleName = t.moduleClass.getSimpleName();
         t.isPlugin = false;
         t.basePackage = t.moduleClass.getPackageName();
         t.classList = getClassList(t.moduleClass, t.basePackage);
@@ -176,7 +182,7 @@ public final class ScxModuleHandler {
 
     private static Class<?> getClassByName(String className) {
         try {
-            return Class.forName(className, false, ScxModuleHandler.class.getClassLoader());
+            return Class.forName(className, false, ScxModule.class.getClassLoader());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -185,7 +191,7 @@ public final class ScxModuleHandler {
 
     private static Class<?> getClassByName(String className, ClassLoader classLoader) {
         try {
-            return Class.forName(className, false, ScxModuleHandler.class.getClassLoader());
+            return Class.forName(className, false, ScxModule.class.getClassLoader());
         } catch (ClassNotFoundException e) {
             try {
                 return classLoader.loadClass(className);
@@ -243,7 +249,7 @@ public final class ScxModuleHandler {
      * @return an array of {@link java.lang.String} objects.
      */
     public static String[] getAllModuleBasePackages() {
-        return SCX_MODULE_LIST.stream().map(m -> m.basePackage).toArray(String[]::new);
+        return MODULE_ITEM_LIST.stream().map(m -> m.basePackage).toArray(String[]::new);
     }
 
     /**
@@ -252,7 +258,7 @@ public final class ScxModuleHandler {
      * @param fun a {@link java.util.function.Function} object.
      */
     public static void iterateClass(Function<Class<?>, Boolean> fun) {
-        for (ScxModule scxModule : SCX_MODULE_LIST) {
+        for (ModuleItem scxModule : MODULE_ITEM_LIST) {
             for (Class<?> clazz : scxModule.classList) {
                 var s = fun.apply(clazz);
                 if (!s) {
@@ -263,30 +269,34 @@ public final class ScxModuleHandler {
     }
 
     /**
-     * 项目根模块 这里使用 initModules 里的最后一项
-     *
-     * @return a {@link cool.scx.boot.ScxModule} object.
-     */
-    public static ScxModule getRootModule() {
-        return ROOT_SCX_MODULE;
-    }
-
-    /**
      * 所有模块
      *
      * @return a {@link java.util.List} object.
      */
-    public static List<ScxModule> getAllModule() {
-        return SCX_MODULE_LIST;
+    public static List<ModuleItem> getAllModule() {
+        return MODULE_ITEM_LIST;
     }
-
 
     /**
      * 所有插件 模块
      *
      * @return a {@link java.util.List} object.
      */
-    public static List<ScxModule> getAllPluginModule() {
-        return SCX_MODULE_LIST.stream().filter(scxModule -> scxModule.isPlugin).collect(Collectors.toList());
+    public static List<ModuleItem> getAllPluginModule() {
+        return MODULE_ITEM_LIST.stream().filter(scxModule -> scxModule.isPlugin).collect(Collectors.toList());
     }
+
+    /**
+     * 装载模块 并初始化项目所在目录(APP_ROOT_PATH)
+     */
+    public static <T extends BaseModule> void loadModules(T[] modules) {
+        BASE_MODULE_ARRAY = modules;
+        var lastModule = BASE_MODULE_ARRAY[BASE_MODULE_ARRAY.length - 1];
+        APP_ROOT_PATH = getModuleRootPath(lastModule.getClass());
+    }
+
+    public static File appRootPath() {
+        return APP_ROOT_PATH;
+    }
+
 }

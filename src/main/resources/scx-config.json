@@ -2,13 +2,8 @@
   "scx": {
     "port": 8080,
     "allowed-origin": "*",
-    "upload-file-path": "absPath:C:\\Users\\scx56\\Documents\\scxFiles",
-    "confusion-login-error": false,
-    "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
     "show-log": true,
     "real-delete": false,
-    "login-error-lock-times": 3,
-    "login-error-lock-second": 60,
     "fix-table": true,
     "date-time-pattern": "yyyy-MM-dd HH:mm:ss",
     "body-limit": "16384KB",
@@ -40,5 +35,12 @@
       "resource-locations": "absPath:C:/Users/scx56/Projects/scx/src/main/resources/c/static/",
       "template-suffix": ".html"
     }
+  },
+  "core": {
+    "upload-file-path": "absPath:C:\\Users\\scx56\\Documents\\scxFiles",
+    "confusion-login-error": false,
+    "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
+    "login-error-lock-times": 3,
+    "login-error-lock-second": 60
   }
 }

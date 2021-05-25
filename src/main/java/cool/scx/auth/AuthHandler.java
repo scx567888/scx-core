@@ -6,6 +6,7 @@ import cool.scx.exception.AuthException;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -23,7 +24,7 @@ public interface AuthHandler {
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
      * @param device  a {@link cool.scx.enumeration.Device} object.
      */
-    void noLogin(Device device, RoutingContext context);
+    void noLoginHandler(Device device, RoutingContext context);
 
     /**
      * 无权限 handler
@@ -31,7 +32,7 @@ public interface AuthHandler {
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
      * @param device  a {@link cool.scx.enumeration.Device} object.
      */
-    void noPerms(Device device, RoutingContext context);
+    void noPermsHandler(Device device, RoutingContext context);
 
     /**
      * 登录接口 成功需要返回一个 登录成功的用户
@@ -80,4 +81,18 @@ public interface AuthHandler {
      * @return a {@link cool.scx.vo.Json} object.
      */
     Json signup(Map<String, Object> params);
+
+    /**
+     * @param username 根据用户名获取 用户
+     * @return 用户
+     */
+    User findByUsername(String username);
+
+    /**
+     * 根据用户获取 权限串
+     *
+     * @param user 用户
+     * @return s
+     */
+    HashSet<String> getPerms(User user);
 }

@@ -155,7 +155,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             User currentUser = ScxContext.getLoginUser();
             //session 中没有用户证明没有登录 返回 false
             if (currentUser == null) {
-                AUTH_HANDLER.noLogin(ScxContext.device(), context);
+                AUTH_HANDLER.noLoginHandler(ScxContext.device(), context);
                 return false;
             } else {
                 //这里就是 需要登录 并且 能够获取到当前登录用户的
@@ -168,11 +168,11 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                         return true;
                     } else {
                         //获取用户全部的权限字符串
-                        var permStrByUser = ScxContext.USER_SERVICE.getPermStrByUser(currentUser);
+                        var permStrByUser = ScxContext.USER_SERVICE.getPerms(currentUser);
                         if (permStrByUser.contains(permStr)) {
                             return true;
                         } else {
-                            AUTH_HANDLER.noPerms(ScxContext.device(), context);
+                            AUTH_HANDLER.noPermsHandler(ScxContext.device(), context);
                             return false;
                         }
                     }

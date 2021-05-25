@@ -1,14 +1,12 @@
 package cool.scx.vo;
 
 import cool.scx.base.BaseVo;
-import cool.scx.config.ScxCmsConfig;
-import cool.scx.config.ScxConfig;
+import cool.scx.cms.ScxCms;
 import cool.scx.context.ScxContext;
 import freemarker.template.Template;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.RoutingContext;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,16 +29,7 @@ public final class Html implements BaseVo {
      * @param pagePath 模板的路径
      */
     public Html(String pagePath) {
-        template = getTemplateByPath(pagePath);
-    }
-
-    private static Template getTemplateByPath(String pagePath) {
-        try {
-            return ScxCmsConfig.freemarkerConfig.getTemplate(pagePath + ScxConfig.cmsTemplateSuffix());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        template = ScxCms.getTemplateByPath(pagePath);
     }
 
     /**

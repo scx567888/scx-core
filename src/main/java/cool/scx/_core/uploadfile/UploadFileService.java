@@ -6,7 +6,7 @@ import cool.scx.bo.Param;
 import cool.scx.enumeration.SortType;
 
 /**
- * <p>UploadFileService class.</p>
+ * UploadFileService
  *
  * @author 司昌旭
  * @version 0.3.6
@@ -14,7 +14,7 @@ import cool.scx.enumeration.SortType;
 @ScxService
 public class UploadFileService extends BaseService<UploadFile> {
     /**
-     * <p>findFileByMd5.</p>
+     * 根据 md5 查找文件
      *
      * @param fileMD5 a {@link java.lang.String} object.
      * @return a {@link cool.scx._core.uploadfile.UploadFile} object.

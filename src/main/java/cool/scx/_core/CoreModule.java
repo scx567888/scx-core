@@ -1,7 +1,10 @@
 package cool.scx._core;
 
+import cool.scx._core.config.CoreConfig;
 import cool.scx.base.BaseModule;
 import cool.scx.boot.ScxApp;
+
+import java.util.Map;
 
 /**
  * 核心模块启动类
@@ -19,5 +22,10 @@ public class CoreModule implements BaseModule {
      */
     public static void main(String[] args) {
         ScxApp.run(new CoreModule(), args);
+    }
+
+    @Override
+    public void onStart(Map<String, Object> configMap) {
+        CoreConfig.initConfig(configMap);
     }
 }

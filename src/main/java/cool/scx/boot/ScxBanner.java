@@ -14,7 +14,7 @@ public final class ScxBanner {
     /**
      * 在控制台上打印 banner
      */
-    public static void show() {
+    private static void show() {
         Ansi.OUT.red("   ▄████████ ").green(" ▄████████ ").blue("▀████    ▐████▀ ").ln();
         Ansi.OUT.red("  ███    ███ ").green("███    ███ ").blue("  ███▌   ████▀  ").ln();
         Ansi.OUT.red("  ███    █▀  ").green("███    █▀  ").blue("   ███  ▐███    ").ln();
@@ -25,4 +25,7 @@ public final class ScxBanner {
         Ansi.OUT.red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(ScxConfig.scxVersion()).ln();
     }
 
+    public static void initBanner() {
+        show();
+    }
 }

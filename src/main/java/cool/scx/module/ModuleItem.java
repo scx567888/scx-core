@@ -1,4 +1,4 @@
-package cool.scx.boot;
+package cool.scx.module;
 
 import cool.scx.base.BaseModule;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @author scx56
  * @version $Id: $Id
  */
-public class ScxModule {
+public class ModuleItem {
 
     /**
      * 模块名称
