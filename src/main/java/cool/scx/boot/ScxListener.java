@@ -26,6 +26,9 @@ public final class ScxListener {
 
     }
 
+    /**
+     * <p>addListener.</p>
+     */
     @SuppressWarnings("unchecked")
     public static void addListener() {
         try {
