@@ -5,7 +5,6 @@
         </filter>
     </defs>
     <g>
-        <title>Layer 1</title>
         <path stroke-width="0" filter="url(#svg_2_blur)" fill="#377cd3" id="svg_1"
               d="m1021.205863,71.579152l-538.39917,541.17442l141.53793,0l396.86124,-541.17442zm135.98742,463.46732l-546.72493,538.39917l396.86124,-538.39917l149.86369,0z"/>
         <path stroke-width="0" fill="#377cd3" id="svg_2"
