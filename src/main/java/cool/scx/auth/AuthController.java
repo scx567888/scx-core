@@ -23,11 +23,6 @@ import java.util.Map;
 public class AuthController {
 
     /**
-     * 认证 handler
-     */
-    private final AuthHandler authHandler = ScxContext.getBean(AuthHandler.class);
-
-    /**
      * 登录方法
      *
      * @param params 前台发送的登录数据
@@ -38,7 +33,7 @@ public class AuthController {
         try {
             var device = ScxContext.device();
             var token = StringUtils.getUUID();
-            var loginUser = authHandler.login(params);
+            var loginUser = ScxContext.authHandler().login(params);
             if (device == Device.ADMIN || device == Device.APPLE || device == Device.ANDROID) {
                 ScxContext.addLoginItem(device, token, loginUser.username);
                 //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
@@ -51,7 +46,7 @@ public class AuthController {
                 return Json.ok("unknown-device");
             }
         } catch (AuthException authException) {
-            return authHandler.authExceptionHandler(authException);
+            return ScxContext.authHandler().authExceptionHandler(authException);
         }
     }
 
@@ -63,7 +58,7 @@ public class AuthController {
      */
     @ScxMapping(method = Method.POST)
     public Json signup(Map<String, Object> params) {
-        return authHandler.signup(params);
+        return ScxContext.authHandler().signup(params);
     }
 
     /**
@@ -73,7 +68,7 @@ public class AuthController {
      */
     @ScxMapping(method = Method.POST)
     public Json logout() {
-        return authHandler.logout();
+        return ScxContext.authHandler().logout();
     }
 
 
@@ -84,7 +79,7 @@ public class AuthController {
      */
     @ScxMapping(method = Method.GET)
     public Json info() {
-        return authHandler.info();
+        return ScxContext.authHandler().info();
     }
 
     /**
@@ -95,7 +90,7 @@ public class AuthController {
      */
     @ScxMapping(method = Method.POST)
     public Json infoUpdate(Map<String, Object> params) {
-        return authHandler.infoUpdate(params);
+        return ScxContext.authHandler().infoUpdate(params);
     }
 
 }

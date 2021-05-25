@@ -1,5 +1,13 @@
 package cool.scx.boot;
 
+import cool.scx.context.LoginItem;
+import cool.scx.context.ScxContext;
+import cool.scx.util.Ansi;
+import cool.scx.util.FileUtils;
+
+import java.io.*;
+import java.util.List;
+
 /**
  * <p>ScxListener class.</p>
  *
@@ -8,28 +16,29 @@ package cool.scx.boot;
  */
 public final class ScxListener {
     static {
-//        try {
-//            var fis = new FileInputStream(PackageUtils.getFileByAppRoot("\\session.cache"));
-//            ObjectInputStream objectInputStream = new ObjectInputStream(fis);
-//            var o = (ConcurrentHashMap<String, String>) objectInputStream.readObject();
+        try {
+            var fis = new FileInputStream(FileUtils.getFileByRootModulePath("scx-session.cache"));
+            ObjectInputStream objectInputStream = new ObjectInputStream(fis);
+            var o = (List<LoginItem>) objectInputStream.readObject();
 //            for (var entry : o.entrySet()) {
-//                ScxContext.addUserToSession(entry.getKey(), entry.getValue());
+////                ScxContext.addLoginItem(entry.getKey(), entry.getValue());
 //            }
-//            objectInputStream.close();
-//        } catch (Exception ignored) {
-//
-//        }
-//        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-//            try {
-//                var fos = new FileOutputStream(PackageUtils.getFileByAppRoot("\\session.cache"));
-//                var objectOutputStream = new ObjectOutputStream(fos);
-////                objectOutputStream.writeObject(ScxContext.session);
-//                objectOutputStream.close();
-//
-//            } catch (IOException ignored) {
-//
-//            }
-//        }));
+            objectInputStream.close();
+        } catch (Exception ignored) {
+
+        }
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                Ansi.OUT.red("项目停止!!!");
+                var fos = new FileOutputStream(FileUtils.getFileByRootModulePath("scx-session.cache"));
+                var objectOutputStream = new ObjectOutputStream(fos);
+                objectOutputStream.writeObject(ScxContext.getAllLoginItem());
+                objectOutputStream.close();
+
+            } catch (IOException ignored) {
+
+            }
+        }));
     }
 
     /**

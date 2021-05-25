@@ -25,49 +25,65 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * <p>ScxContext class.</p>
+ * ScxContext 上下文
  *
  * @author 司昌旭
  * @version 0.3.6
  */
 public final class ScxContext {
+
     /**
      * userService 实例 主要用来 获取登录用户的 权限等信息
      */
-    public static final AuthHandler USER_SERVICE;
-
+    private static final AuthHandler AUTH_HANDLER;
 
     /**
      * 存储所有在线的 连接
      */
     private static final List<OnlineItem> ONLINE_ITEMS = new ArrayList<>();
+
     /**
      * 存储所有 已登录 的用户信息
-     * todo 这里需要 格外存储 用户登录的 来源 比如  后端  或 cms 或 安卓 或 ios
-     * todo 还有 需要在 scxconfig中 添加 一个配置项 标识用户多端登录 处理方式
+     * todo 需要在 scxConfig中 添加 一个配置项 标识用户多端登录 处理方式
      * todo 比如 允许用户同时登录多个 不同的 客户端(来源一致) 或者只允许用户 在同一时间登录 (无论已经在哪里登录了)
      * todo 或者 不对登录做限制 同时允许 任意客户端(来源可以不一致) 登录任意数量的 同一用户
      */
     private static final List<LoginItem> LOGIN_ITEMS = new ArrayList<>();
+
+    /**
+     * scx bean 名称 和 class 对应映射
+     */
     private static final Map<String, Class<?>> SCX_BEAN_CLASS_NAME_MAPPING = new HashMap<>();
+
+    /**
+     * spring 的 APPLICATION_CONTEXT
+     */
     private static final AnnotationConfigApplicationContext APPLICATION_CONTEXT = new AnnotationConfigApplicationContext();
+
+    /**
+     * 路由上下文 THREAD_LOCAL
+     */
     private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
+
+    /**
+     * 设备 THREAD_LOCAL
+     */
     private static final ThreadLocal<Device> DEVICE_THREAD_LOCAL = new ThreadLocal<>();
 
     /**
-     * ONE_AND_ONLY_ONE 注解的 mapping key 是 父类或接口 value 是唯一实现
+     * MUST_HAVE_IMPL 注解的 mapping  , key 是 父类或接口 value 是唯一实现类
      */
     private static final Map<Class<?>, Class<?>> MUST_HAVE_IMPL_MAPPING = new HashMap<>();
 
     static {
         Ansi.OUT.magenta("ScxContext 初始化中...").ln();
-        checkOneAndOnlyOneImpl();
+        checkMustHaveImpl();
         APPLICATION_CONTEXT.scan(ScxModule.getAllModuleBasePackages());
-        APPLICATION_CONTEXT.refresh();
         ScxModule.getAllPluginModule().forEach(m -> m.classList.forEach(APPLICATION_CONTEXT::register));
+        APPLICATION_CONTEXT.refresh();
         initScxContext();
         fixTable();
-        USER_SERVICE = getBean(AuthHandler.class);
+        AUTH_HANDLER = getBean(AuthHandler.class);
     }
 
     /**
@@ -90,7 +106,7 @@ public final class ScxContext {
     /**
      * 检查 OneAndOnlyOne 是否存在实现类
      */
-    private static void checkOneAndOnlyOneImpl() {
+    private static void checkMustHaveImpl() {
         var classList = new ArrayList<Class<?>>();
         ScxModule.iterateClass(c -> {
             if (c.isAnnotationPresent(MustHaveImpl.class)) {
@@ -139,7 +155,7 @@ public final class ScxContext {
                     SCX_BEAN_CLASS_NAME_MAPPING.put(clazz.getSimpleName().toLowerCase(), clazz);
                 } else {
                     SCX_BEAN_CLASS_NAME_MAPPING.put(clazz.getName(), clazz);
-                    Ansi.OUT.brightRed("检测到重复名称的 class ").brightYellow("[" + aClass.getName() + "] ").blue("[" + clazz.getName() + "]").brightRed(" 可能会导致 baseController 调用时意义不明确 !!! 建议修改 !!!").ln();
+                    Ansi.OUT.brightRed("检测到重复名称的 class ").brightYellow("[" + aClass.getName() + "] ").blue("[" + clazz.getName() + "]").brightRed(" 可能会导致根据名称调用时意义不明确 !!! 建议修改 !!!").ln();
                 }
             }
             return true;
@@ -272,9 +288,17 @@ public final class ScxContext {
             return null;
         }
         //每次都从数据库中获取用户 保证 权限设置的及时性 但是为了 性能 此处应该做缓存 todo
-        return USER_SERVICE.findByUsername(sessionItem.username);
+        return AUTH_HANDLER.findByUsername(sessionItem.username);
     }
 
+    /**
+     * <p>authHandler.</p>
+     *
+     * @return a {@link cool.scx.auth.AuthHandler} object
+     */
+    public static AuthHandler authHandler() {
+        return AUTH_HANDLER;
+    }
 
     /**
      * <p>getLoginUserByHeader.</p>
@@ -419,6 +443,15 @@ public final class ScxContext {
         } else {
             return Device.UNKNOWN;
         }
+    }
+
+    /**
+     * <p>getAllLoginItem.</p>
+     *
+     * @return a {@link java.util.List} object
+     */
+    public static List<LoginItem> getAllLoginItem() {
+        return LOGIN_ITEMS;
     }
 
 }
