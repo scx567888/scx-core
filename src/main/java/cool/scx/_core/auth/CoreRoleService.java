@@ -1,8 +1,8 @@
 package cool.scx._core.auth;
 
 import cool.scx.annotation.ScxService;
-import cool.scx.auth.User;
 import cool.scx.base.BaseService;
+import cool.scx.base.BaseUser;
 import cool.scx.bo.Param;
 import cool.scx.util.StringUtils;
 
@@ -34,7 +34,7 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
      * {@inheritDoc}
      */
     @Override
-    public List<? extends Role> getRoleListByUser(User user) {
+    public List<? extends Role> getRoleListByUser(BaseUser user) {
         var userRoleParam = new Param<>(new UserRole());
         userRoleParam.queryObject.userId = user.id;
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.annotation.Column;
 import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;
-import cool.scx.auth.User;
+import cool.scx.base.BaseUser;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * @version 1.1.2
  */
 @ScxModel(tableName = "core_user")
-public class CoreUser extends User {
+public class CoreUser extends BaseUser {
     /**
      * 性别
      */

@@ -24,6 +24,13 @@ import java.util.function.Consumer;
  */
 public final class ScxConfig {
 
+    public static final String SCX_VERSION = "1.1.3";
+
+    public static final String SCX_APP_KEY = "H8QS91GcuNGP9735";
+
+    public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+
     /**
      * 当前 默认配置文件的实例
      * 注意!!! 如果未执行 init 或 loadConfig 方法 nowScxExample 可能为空
@@ -279,15 +286,6 @@ public final class ScxConfig {
     }
 
     /**
-     * <p>pluginRoot.</p>
-     *
-     * @return a {@link java.io.File} object.
-     */
-    public static File pluginRoot() {
-        return easyToUseConfig.pluginRoot;
-    }
-
-    /**
      * <p>pluginDisabledList.</p>
      *
      * @return a {@link java.util.Set} object.
@@ -296,14 +294,6 @@ public final class ScxConfig {
         return easyToUseConfig.disabledPluginList;
     }
 
-    /**
-     * <p>bodyLimit.</p>
-     *
-     * @return a long.
-     */
-    public static long bodyLimit() {
-        return easyToUseConfig.bodyLimit;
-    }
 
     /**
      * <p>allowedOrigin.</p>
@@ -334,15 +324,6 @@ public final class ScxConfig {
 
 
     /**
-     * <p>dateTimeFormatter.</p>
-     *
-     * @return a {@link java.time.format.DateTimeFormatter} object.
-     */
-    public static DateTimeFormatter dateTimeFormatter() {
-        return easyToUseConfig.dateTimeFormatter;
-    }
-
-    /**
      * <p>cmsResourceSuffix.</p>
      *
      * @return a {@link java.lang.String} object.
@@ -351,41 +332,6 @@ public final class ScxConfig {
         return easyToUseConfig.cmsTemplateSuffix;
     }
 
-    /**
-     * 获取 AppKey
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public static String AppKey() {
-        return "H8QS91GcuNGP9735";
-    }
-
-    /**
-     * 获取 scxVersion
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public static String scxVersion() {
-        return "1.1.2";
-    }
-
-    /**
-     * 获取 tokenKey
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public static String tokenKey() {
-        return "S-Token";
-    }
-
-    /**
-     * 获取 deviceKey
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public static String deviceKey() {
-        return "S-Device";
-    }
 
     /**
      * 获取 从外部传来的参数 (java -jar scx.jar  xxx)

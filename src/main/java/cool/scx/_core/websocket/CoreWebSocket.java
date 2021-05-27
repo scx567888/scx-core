@@ -1,8 +1,9 @@
 package cool.scx._core.websocket;
 
 import cool.scx.annotation.ScxWebSocketController;
+import cool.scx.auth.OnlineItem;
+import cool.scx.auth.ScxAuth;
 import cool.scx.base.BaseWebSocketController;
-import cool.scx.context.OnlineItem;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
 import cool.scx.util.Ansi;
@@ -53,7 +54,7 @@ public class CoreWebSocket implements BaseWebSocketController {
             Object token = map.get("token");
             if (token != null) {
                 Device device = Device.ADMIN;//todo 此处获取不正确
-                var nowLoginUser = ScxContext.getLoginUserByToken(device, token.toString());
+                var nowLoginUser = ScxAuth.getLoginUserByToken(device, token.toString());
                 //这条websocket 连接验证通过
                 if (nowLoginUser != null) {
                     ScxContext.addOnlineItem(webSocket, nowLoginUser.username);

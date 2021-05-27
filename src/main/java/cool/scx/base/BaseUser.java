@@ -1,9 +1,7 @@
-package cool.scx.auth;
+package cool.scx.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.annotation.Column;
-import cool.scx.annotation.MustHaveImpl;
-import cool.scx.base.BaseModel;
 
 /**
  * 用户类 包含所有人员信息 通过 level 进行区分人员类型 如 学生 教师 等
@@ -11,8 +9,7 @@ import cool.scx.base.BaseModel;
  * @author 司昌旭
  * @version 0.3.6
  */
-@MustHaveImpl
-public abstract class User extends BaseModel {
+public abstract class BaseUser extends BaseModel {
 
     /**
      * 登录名，创建后不可改

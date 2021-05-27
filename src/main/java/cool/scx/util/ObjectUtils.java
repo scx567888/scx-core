@@ -55,8 +55,8 @@ public final class ObjectUtils {
      */
     private static ObjectMapper getObjectMapper() {
         var timeModule = new JavaTimeModule();
-        timeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(ScxConfig.dateTimeFormatter()));
-        timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(ScxConfig.dateTimeFormatter()));
+        timeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(ScxConfig.DATETIME_FORMATTER));
+        timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(ScxConfig.DATETIME_FORMATTER));
         var o = new ObjectMapper();
         //初始化正常的 objectMap
         o.registerModule(timeModule);

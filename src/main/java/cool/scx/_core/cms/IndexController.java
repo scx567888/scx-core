@@ -4,7 +4,7 @@ import cool.scx._core.auth.CoreUser;
 import cool.scx._core.auth.CoreUserService;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
-import cool.scx.auth.User;
+import cool.scx.base.BaseUser;
 import cool.scx.bo.Param;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
@@ -38,12 +38,12 @@ public class IndexController {
      * 跳转至首页
      * 只是测试!!!
      *
-     * @param user a {@link cool.scx.auth.User} object.
+     * @param user a {@link BaseUser} object.
      * @return 页面
      */
 //    @ScxMapping(value = "/", method = Method.GET)
     @ScxMapping(value = "/rfuhuiqdbcszqwhuiashanksjnqs", method = Method.GET)
-    public Html Index(User user) {
+    public Html Index(BaseUser user) {
         Integer count = coreUserService.count(new Param<>(new CoreUser()));
         if (count < 50) {
             var s1 = new ArrayList<CoreUser>();

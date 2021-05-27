@@ -2,7 +2,6 @@ package cool.scx.auth;
 
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
-import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
 import cool.scx.enumeration.Method;
@@ -32,21 +31,21 @@ public class AuthController {
     public Json login(Map<String, Object> params) {
         try {
             var device = ScxContext.device();
-            var token = StringUtils.getUUID();
-            var loginUser = ScxContext.authHandler().login(params);
+            var loginUser = ScxAuth.authHandler().login(params);
             if (device == Device.ADMIN || device == Device.APPLE || device == Device.ANDROID) {
-                ScxContext.addLoginItem(device, token, loginUser.username);
+                var token = StringUtils.getUUID();
+                ScxAuth.addLoginItem(device, token, loginUser.username);
                 //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
                 return Json.ok().data("token", token);
             } else if (device == Device.WEBSITE) {
-                String value = ScxContext.routingContext().getCookie(ScxConfig.tokenKey()).getValue();
-                ScxContext.addLoginItem(device, value, loginUser.username);
+                String token = ScxAuth.getTokenByCookie();
+                ScxAuth.addLoginItem(device, token, loginUser.username);
                 return Json.ok("login-successful");
             } else {
                 return Json.ok("unknown-device");
             }
         } catch (AuthException authException) {
-            return ScxContext.authHandler().authExceptionHandler(authException);
+            return ScxAuth.authHandler().authExceptionHandler(authException);
         }
     }
 
@@ -58,7 +57,7 @@ public class AuthController {
      */
     @ScxMapping(method = Method.POST)
     public Json signup(Map<String, Object> params) {
-        return ScxContext.authHandler().signup(params);
+        return ScxAuth.authHandler().signup(params);
     }
 
     /**
@@ -68,7 +67,7 @@ public class AuthController {
      */
     @ScxMapping(method = Method.POST)
     public Json logout() {
-        return ScxContext.authHandler().logout();
+        return ScxAuth.authHandler().logout();
     }
 
 
@@ -79,7 +78,7 @@ public class AuthController {
      */
     @ScxMapping(method = Method.GET)
     public Json info() {
-        return ScxContext.authHandler().info();
+        return ScxAuth.authHandler().info();
     }
 
     /**
@@ -90,7 +89,7 @@ public class AuthController {
      */
     @ScxMapping(method = Method.POST)
     public Json infoUpdate(Map<String, Object> params) {
-        return ScxContext.authHandler().infoUpdate(params);
+        return ScxAuth.authHandler().infoUpdate(params);
     }
 
 }

@@ -1,8 +1,8 @@
 package cool.scx._core.auth;
 
 import cool.scx.annotation.ScxService;
-import cool.scx.auth.User;
 import cool.scx.base.BaseService;
+import cool.scx.base.BaseUser;
 import cool.scx.bo.Param;
 import cool.scx.util.CryptoUtils;
 import cool.scx.util.StringUtils;
@@ -48,9 +48,9 @@ public class CoreUserService extends BaseService<CoreUser> {
      * {@inheritDoc}
      *
      * @param username a {@link java.lang.String} object.
-     * @return a {@link cool.scx.auth.User} object.
+     * @return a {@link BaseUser} object.
      */
-    public User findByUsername(String username) {
+    public BaseUser findByUsername(String username) {
         var param = new Param<>(new CoreUser());
         param.queryObject.username = username;
         return get(param);
@@ -59,10 +59,10 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param user a {@link cool.scx.auth.User} object.
+     * @param user a {@link BaseUser} object.
      * @return a {@link java.util.HashSet} object.
      */
-    public HashSet<String> getPermStrByUser(User user) {
+    public HashSet<String> getPermStrByUser(BaseUser user) {
         var permList = new HashSet<String>();
         //如果是超级管理员或管理员 直接设置为 *
         if (user.level < 5) {
@@ -79,10 +79,10 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param user a {@link cool.scx.auth.User} object.
-     * @return a {@link cool.scx.auth.User} object.
+     * @param user a {@link BaseUser} object.
+     * @return a {@link BaseUser} object.
      */
-    public User updateUserPassword(User user) {
+    public BaseUser updateUserPassword(BaseUser user) {
         var coreUser = new CoreUser();
         if (!StringUtils.isEmpty(user.password)) {
             var passwordAndSalt = encryptPassword(user.password);
@@ -140,9 +140,9 @@ public class CoreUserService extends BaseService<CoreUser> {
      * {@inheritDoc}
      *
      * @param user a {@link cool.scx._core.auth.CoreUser} object.
-     * @return a {@link cool.scx.auth.User} object.
+     * @return a {@link BaseUser} object.
      */
-    public User registeredUser(CoreUser user) {
+    public BaseUser registeredUser(CoreUser user) {
         var deptIds = user.deptIds;
         var roleIds = user.roleIds;
         var passwordAndSalt = encryptPassword(user.password);
@@ -194,9 +194,9 @@ public class CoreUserService extends BaseService<CoreUser> {
      * {@inheritDoc}
      *
      * @param user a {@link cool.scx._core.auth.CoreUser} object.
-     * @return a {@link cool.scx.auth.User} object.
+     * @return a {@link BaseUser} object.
      */
-    public User updateUser(CoreUser user) {
+    public BaseUser updateUser(CoreUser user) {
         var coreUser = new CoreUser();
         var deptIds = user.deptIds;
         var roleIds = user.roleIds;
@@ -227,9 +227,9 @@ public class CoreUserService extends BaseService<CoreUser> {
      * {@inheritDoc}
      *
      * @param id a {@link java.lang.Long} object.
-     * @return a {@link cool.scx.auth.User} object.
+     * @return a {@link BaseUser} object.
      */
-    public User revokeDeleteUser(Long id) {
+    public BaseUser revokeDeleteUser(Long id) {
         return updateUserAndDept(id, false);
     }
 
@@ -238,9 +238,9 @@ public class CoreUserService extends BaseService<CoreUser> {
      *
      * @param id a {@link java.lang.Long} object.
      * @param b  a boolean.
-     * @return a {@link cool.scx.auth.User} object.
+     * @return a {@link BaseUser} object.
      */
-    public User updateUserAndDept(Long id, boolean b) {
+    public BaseUser updateUserAndDept(Long id, boolean b) {
         var user = new CoreUser();
         var userRole = new Param<>(new UserRole());
         var userDept = new Param<>(new UserDept());

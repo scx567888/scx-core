@@ -1,7 +1,7 @@
 package cool.scx.web.handler;
 
 import cool.scx.bo.FileUpload;
-import cool.scx.config.ScxConfig;
+import cool.scx.util.FileUtils;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.Handler;
@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class BHandler implements Handler<Buffer> {
+
+    private static final long BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
     final RoutingContext context;
     final long contentLength;
     final boolean isMultipart;
@@ -56,7 +58,7 @@ class BHandler implements Handler<Buffer> {
                 uploadFiles.add(new FileUpload(upload.name(), upload.filename(), (long) tempBuffer.length(), tempBuffer));
                 if (upload.isSizeAvailable()) {
                     long size = this.uploadSize + upload.size();
-                    if (size > ScxConfig.bodyLimit()) {
+                    if (size > BODY_LIMIT) {
                         this.failed = true;
                         context.fail(413);
                         return;
@@ -93,7 +95,7 @@ class BHandler implements Handler<Buffer> {
             initialBodyBufferSize = (int) this.contentLength;
         }
 
-        initialBodyBufferSize = (int) Math.min(initialBodyBufferSize, ScxConfig.bodyLimit());
+        initialBodyBufferSize = (int) Math.min(initialBodyBufferSize, BODY_LIMIT);
 
         this.body = Buffer.buffer(initialBodyBufferSize);
     }
@@ -107,7 +109,7 @@ class BHandler implements Handler<Buffer> {
     public void handle(Buffer buff) {
         if (!this.failed) {
             this.uploadSize += buff.length();
-            if (this.uploadSize > ScxConfig.bodyLimit()) {
+            if (this.uploadSize > BODY_LIMIT) {
                 this.failed = true;
                 this.context.fail(413);
             } else if (!this.isMultipart) {

@@ -1,7 +1,7 @@
 package cool.scx.boot;
 
-import cool.scx.context.LoginItem;
-import cool.scx.context.ScxContext;
+import cool.scx.auth.LoginItem;
+import cool.scx.auth.ScxAuth;
 import cool.scx.util.Ansi;
 import cool.scx.util.FileUtils;
 
@@ -47,7 +47,7 @@ public final class ScxListener {
                 Ansi.OUT.red("项目停止!!!");
                 var fos = new FileOutputStream(FileUtils.getFileByRootModulePath("scx-session.cache"));
                 var objectOutputStream = new ObjectOutputStream(fos);
-                objectOutputStream.writeObject(ScxContext.getAllLoginItem());
+                objectOutputStream.writeObject(ScxAuth.getAllLoginItem());
                 objectOutputStream.close();
 
             } catch (IOException ignored) {

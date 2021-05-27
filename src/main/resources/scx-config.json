@@ -5,15 +5,10 @@
     "show-log": true,
     "real-delete": false,
     "fix-table": true,
-    "date-time-pattern": "yyyy-MM-dd HH:mm:ss",
-    "body-limit": "16384KB",
-    "plugin": {
-      "root": "/plugins/",
-      "disabled-list": [
-        "scx-bole-0.0.1.jar",
-        "scx-cms-0.0.1.jar"
-      ]
-    },
+    "plugin-disabled-list": [
+      "scx-bole-0.0.1.jar",
+      "scx-cms-0.0.1.jar"
+    ],
     "data-source": {
       "host": "127.0.0.1",
       "port": 3306,

@@ -1,7 +1,6 @@
 package cool.scx._core.auth;
 
-import cool.scx.annotation.MustHaveImpl;
-import cool.scx.auth.User;
+import cool.scx.base.BaseUser;
 
 import java.util.List;
 
@@ -11,16 +10,15 @@ import java.util.List;
  * @author 司昌旭
  * @version 0.3.6
  */
-@MustHaveImpl
 public interface DeptService {
 
     /**
      * <p>getDeptListByUser.</p>
      *
-     * @param user a {@link cool.scx.auth.User} object.
+     * @param user a {@link BaseUser} object.
      * @return a {@link java.util.List} object.
      */
-    List<? extends Dept> getDeptListByUser(User user);
+    List<? extends Dept> getDeptListByUser(BaseUser user);
 
     /**
      * <p>saveDeptListWithUserId.</p>

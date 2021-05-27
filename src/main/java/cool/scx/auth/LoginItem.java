@@ -1,4 +1,4 @@
-package cool.scx.context;
+package cool.scx.auth;
 
 
 import cool.scx.enumeration.Device;

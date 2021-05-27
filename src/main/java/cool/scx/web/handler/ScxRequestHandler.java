@@ -2,6 +2,7 @@ package cool.scx.web.handler;
 
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
+import cool.scx.auth.ScxAuth;
 import cool.scx.boot.ScxVertx;
 import cool.scx.config.ScxConfig;
 import cool.scx.module.ScxModule;
@@ -78,8 +79,8 @@ public final class ScxRequestHandler extends RouterImpl {
      */
     private void registerCookieHandler() {
         this.route().handler(c -> {
-            if (c.getCookie(ScxConfig.tokenKey()) == null) {
-                Cookie cookie = new CookieImpl(ScxConfig.tokenKey(), StringUtils.getUUID());
+            if (c.getCookie(ScxAuth.TOKEN_KEY) == null) {
+                Cookie cookie = new CookieImpl(ScxAuth.TOKEN_KEY, StringUtils.getUUID());
                 cookie.setMaxAge(60 * 60 * 24 * 7);
                 c.addCookie(cookie);
             }
@@ -92,7 +93,7 @@ public final class ScxRequestHandler extends RouterImpl {
      */
     private void registerCorsHandler() {
         var allowedHeaders = Set.of("x-requested-with", "Access-Control-Allow-Origin",
-                "origin", "Content-Type", "accept", "X-PINGARUNER", ScxConfig.tokenKey(), ScxConfig.deviceKey());
+                "origin", "Content-Type", "accept", "X-PINGARUNER", ScxAuth.TOKEN_KEY, ScxAuth.DEVICE_KEY);
 
         var allowedMethods = Set.of(HttpMethod.GET, HttpMethod.POST,
                 HttpMethod.OPTIONS, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT);

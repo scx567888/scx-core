@@ -1,7 +1,6 @@
 package cool.scx._core.log;
 
 import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseLogHandler;
 
 /**
  * <p>CoreLogHandler class.</p>
@@ -10,12 +9,11 @@ import cool.scx.base.BaseLogHandler;
  * @version 1.1.2
  */
 @ScxService
-public class CoreLogHandler implements BaseLogHandler {
+public class CoreLogHandler {
 
     /**
      * {@inheritDoc}
      */
-    @Override
     public void recordLog(String title, String content, String username, String userIp, Integer type) {
 
     }

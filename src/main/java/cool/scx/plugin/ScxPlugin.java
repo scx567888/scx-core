@@ -4,7 +4,9 @@ import cool.scx.config.ScxConfig;
 import cool.scx.module.ModuleItem;
 import cool.scx.module.ScxModule;
 import cool.scx.util.Ansi;
+import cool.scx.util.FileUtils;
 
+import java.io.File;
 import java.util.Arrays;
 
 /**
@@ -14,6 +16,8 @@ import java.util.Arrays;
  * @version 1.1.0
  */
 public final class ScxPlugin {
+
+    public static final File PLUGIN_ROOT = FileUtils.getFileByRootModulePath("plugins");
 
     /**
      * <p>reloadPlugins.</p>
@@ -37,9 +41,8 @@ public final class ScxPlugin {
      * <p>init.</p>
      */
     private static void loadPlugins() {
-        var pluginsRoot = ScxConfig.pluginRoot();
-        if (pluginsRoot.exists()) {
-            Arrays.stream(pluginsRoot.listFiles()).filter(file -> file.getName().endsWith(".jar")).filter(file -> {
+        if (PLUGIN_ROOT.exists()) {
+            Arrays.stream(PLUGIN_ROOT.listFiles()).filter(file -> file.getName().endsWith(".jar")).filter(file -> {
                 var f = ScxConfig.disabledPluginList().contains(file.getName());
                 if (f) {
                     Ansi.OUT.brightRed("找到插件 名称 [" + file.getName() + "] 已禁用!!!").ln();

@@ -3,7 +3,6 @@ package cool.scx.config;
 import cool.scx.util.*;
 
 import java.io.File;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,21 +33,6 @@ class EasyToUseConfig {
      * 修复表格
      */
     final boolean fixTable;
-
-    /**
-     * 日期格式化格式
-     */
-    final DateTimeFormatter dateTimeFormatter;
-
-    /**
-     * request body 大小限制 字符串值
-     */
-    final long bodyLimit;
-
-    /**
-     * 插件根目录
-     */
-    final File pluginRoot;
 
 
     /**
@@ -132,12 +116,6 @@ class EasyToUseConfig {
                 },
                 f -> Ansi.OUT.red("N 未检测到 scx.port                   \t -->\t 已采用默认值 : " + f).ln());
 
-        var tempBodyLimit = ScxConfig.get("scx.body-limit", "16384KB",
-                s -> Ansi.OUT.green("Y 请求体大小限制                       \t -->\t " + FileUtils.longToDisplaySize(FileUtils.displaySizeToLong(s))).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.body-limit             \t -->\t 已采用默认值 : " + FileUtils.longToDisplaySize(FileUtils.displaySizeToLong(f))).ln());
-
-        bodyLimit = FileUtils.displaySizeToLong(tempBodyLimit);
-
         showLog = ScxConfig.get("scx.show-log", true,
                 s -> Ansi.OUT.green("Y 是否打印日志                         \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> Ansi.OUT.red("N 未检测到 scx.show-log               \t -->\t 已采用默认值 : " + f).ln());
@@ -146,11 +124,6 @@ class EasyToUseConfig {
                 s -> Ansi.OUT.green("Y 数据库删除方式为                     \t -->\t " + (s ? "物理删除" : "逻辑删除")).ln(),
                 f -> Ansi.OUT.red("N 未检测到 scx.real-delete            \t -->\t 已采用默认值 : " + f).ln());
 
-        String tempDateTimePattern = ScxConfig.get("scx.date-time-pattern", "yyyy-MM-dd HH:mm:ss",
-                s -> Ansi.OUT.green("Y 日期格式为                          \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.date-time-pattern       \t -->\t 已采用默认值 : " + f).ln());
-
-        dateTimeFormatter = DateTimeFormatter.ofPattern(tempDateTimePattern);
 
         allowedOrigin = ScxConfig.get("scx.allowed-origin", "*",
                 s -> Ansi.OUT.green("Y 允许的请求源                         \t -->\t " + s).ln(),
@@ -160,11 +133,6 @@ class EasyToUseConfig {
                 s -> Ansi.OUT.green("Y 修复数据表                          \t -->\t " + (s ? "是" : "否")).ln(),
                 f -> Ansi.OUT.red("N 未检测到 scx.fix-table               \t -->\t 已采用默认值 : " + f).ln());
 
-        String tempPluginRoot = ScxConfig.get("scx.plugin.root", "/plugins/",
-                s -> Ansi.OUT.green("Y 插件根目录                           \t -->\t " + FileUtils.getFileByRootModulePath(s)).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.plugin.root             \t -->\t 已采用默认值 : " + f).ln());
-
-        pluginRoot = FileUtils.getFileByRootModulePath(tempPluginRoot);
 
         var tempDisabledPluginList = ScxConfig.get("scx.plugin.disabled-list", new ArrayList<String>(),
                 s -> Ansi.OUT.green("Y 禁用插件列表                         \t -->\t " + s).ln(),

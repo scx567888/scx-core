@@ -199,7 +199,7 @@ public final class SQLRunner {
         }
         if (ScxConfig.showLog()) {
             var s = preparedStatement.toString();
-            Ansi.OUT.print(ScxConfig.dateTimeFormatter().format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":"))).ln();
+            Ansi.OUT.print(ScxConfig.DATETIME_FORMATTER.format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":"))).ln();
         }
         return preparedStatement;
     }

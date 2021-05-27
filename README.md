@@ -36,7 +36,7 @@
     </a>
 </p>
 
-> 基于 Vert.x 的 后台 Web 快速开发框架
+> 一个 Web 后台快速开发框架
 
 ### 快速开始
 
@@ -46,31 +46,31 @@
 <dependency>
     <groupId>cool.scx</groupId>
     <artifactId>scx</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
 </dependency>
 ```
 
-2-1. 编写并使用自己的模块
+2. 编写您自己的模块 。
 
 ``` java
 public class YourModule implements BaseModule {
-    public static void main(String[] args) {
-        ScxApp.run(new YourModule(), args);
-    }
-}
-```
 
-2-2. 同时使用内置的模块
-
-``` java
-public class YourModule implements BaseModule {
-    public static void main(String[] args) {
-        ScxApp.run(new BaseModule[]{new CoreModule(),new YourModule()}, args);
-    }
 }
 ```
 
 3. 运行 main 方法 。
 
-中文 : [查看文档](./docs/zh-cn/index.md)   
-English :[DOCS](./docs/en/index.md)
+``` java
+//只使用自己的模块
+public static void main(String[] args) {
+    ScxApp.run(new YourModule(), args);
+}
+//同时使用内置的模块
+public static void main(String[] args) {
+    ScxApp.run(new BaseModule[]{new CoreModule(),new YourModule()}, args);
+}
+```
+
+更多信息请查看文档 (DOCS)
+
+[中文](./docs/zh-cn/index.md) | [English](./docs/en/index.md)

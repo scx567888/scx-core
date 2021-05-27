@@ -1,8 +1,8 @@
 package cool.scx._core.auth;
 
 import cool.scx.annotation.ScxService;
-import cool.scx.auth.User;
 import cool.scx.base.BaseService;
+import cool.scx.base.BaseUser;
 import cool.scx.bo.Param;
 import cool.scx.util.StringUtils;
 
@@ -36,7 +36,7 @@ public class CoreDeptService extends BaseService<CoreDept> implements DeptServic
      * {@inheritDoc}
      */
     @Override
-    public List<? extends Dept> getDeptListByUser(User user) {
+    public List<? extends Dept> getDeptListByUser(BaseUser user) {
         var userDeptParam = new Param<>(new UserDept());
         userDeptParam.queryObject.userId = user.id;
 

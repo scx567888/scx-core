@@ -1,11 +1,9 @@
 package cool.scx.context;
 
-import cool.scx.annotation.MustHaveImpl;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
-import cool.scx.auth.AuthHandler;
-import cool.scx.auth.User;
+import cool.scx.auth.OnlineItem;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Device;
 import cool.scx.enumeration.FixTableResult;
@@ -32,23 +30,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public final class ScxContext {
 
-    /**
-     * userService 实例 主要用来 获取登录用户的 权限等信息
-     */
-    private static final AuthHandler AUTH_HANDLER;
 
     /**
      * 存储所有在线的 连接
      */
     private static final List<OnlineItem> ONLINE_ITEMS = new ArrayList<>();
 
-    /**
-     * 存储所有 已登录 的用户信息
-     * todo 需要在 scxConfig中 添加 一个配置项 标识用户多端登录 处理方式
-     * todo 比如 允许用户同时登录多个 不同的 客户端(来源一致) 或者只允许用户 在同一时间登录 (无论已经在哪里登录了)
-     * todo 或者 不对登录做限制 同时允许 任意客户端(来源可以不一致) 登录任意数量的 同一用户
-     */
-    private static final List<LoginItem> LOGIN_ITEMS = new ArrayList<>();
 
     /**
      * scx bean 名称 和 class 对应映射
@@ -65,15 +52,16 @@ public final class ScxContext {
      */
     private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
-    /**
-     * 设备 THREAD_LOCAL
-     */
-    private static final ThreadLocal<Device> DEVICE_THREAD_LOCAL = new ThreadLocal<>();
 
     /**
      * MUST_HAVE_IMPL 注解的 mapping  , key 是 父类或接口 value 是唯一实现类
      */
     private static final Map<Class<?>, Class<?>> MUST_HAVE_IMPL_MAPPING = new HashMap<>();
+
+    /**
+     * 设备 THREAD_LOCAL
+     */
+    private static final ThreadLocal<Device> DEVICE_THREAD_LOCAL = new ThreadLocal<>();
 
     static {
         Ansi.OUT.magenta("ScxContext 初始化中...").ln();
@@ -83,7 +71,15 @@ public final class ScxContext {
         APPLICATION_CONTEXT.refresh();
         initScxContext();
         fixTable();
-        AUTH_HANDLER = getBean(AuthHandler.class);
+    }
+
+    /**
+     * <p>device.</p>
+     *
+     * @return a {@link cool.scx.enumeration.Device} object.
+     */
+    public static Device device() {
+        return DEVICE_THREAD_LOCAL.get();
     }
 
     /**
@@ -107,32 +103,32 @@ public final class ScxContext {
      * 检查 OneAndOnlyOne 是否存在实现类
      */
     private static void checkMustHaveImpl() {
-        var classList = new ArrayList<Class<?>>();
-        ScxModule.iterateClass(c -> {
-            if (c.isAnnotationPresent(MustHaveImpl.class)) {
-                classList.add(c);
-            }
-            return true;
-        });
-
-        for (Class<?> o : classList) {
-            ScxModule.iterateClass(c -> {
-                if (c != o && !c.isInterface() && o.isAssignableFrom(c)) {
-                    var lastImpl = MUST_HAVE_IMPL_MAPPING.get(o);
-                    if (lastImpl == null) {
-                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
-                    } else {
-                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + lastImpl.getName() + "] 已被覆盖").ln();
-                    }
-                    MUST_HAVE_IMPL_MAPPING.put(o, c);
-                }
-                return true;
-            });
-            if (MUST_HAVE_IMPL_MAPPING.get(o) == null) {
-                Ansi.OUT.brightRed("Class [ " + o.getName() + " ] 必须有一个实现类 !!!").ln();
-                System.exit(0);
-            }
-        }
+//        var classList = new ArrayList<Class<?>>();
+//        ScxModule.iterateClass(c -> {
+//            if (c.isAnnotationPresent(MustHaveImpl.class)) {
+//                classList.add(c);
+//            }
+//            return true;
+//        });
+//
+//        for (Class<?> o : classList) {
+//            ScxModule.iterateClass(c -> {
+//                if (c != o && !c.isInterface() && o.isAssignableFrom(c)) {
+//                    var lastImpl = MUST_HAVE_IMPL_MAPPING.get(o);
+//                    if (lastImpl == null) {
+//                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
+//                    } else {
+//                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + lastImpl.getName() + "] 已被覆盖").ln();
+//                    }
+//                    MUST_HAVE_IMPL_MAPPING.put(o, c);
+//                }
+//                return true;
+//            });
+//            if (MUST_HAVE_IMPL_MAPPING.get(o) == null) {
+//                Ansi.OUT.brightRed("Class [ " + o.getName() + " ] 必须有一个实现类 !!!").ln();
+//                System.exit(0);
+//            }
+//        }
 
     }
 
@@ -222,108 +218,6 @@ public final class ScxContext {
         Ansi.OUT.magenta("ScxContext 初始化完成...").ln();
     }
 
-    /**
-     * <p>logoutUser.</p>
-     *
-     * @return a boolean.
-     */
-    public static boolean removeLoginUser() {
-        if (device() == Device.WEBSITE) {
-            var token = routingContext().getCookie(ScxConfig.tokenKey()).getValue();
-            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-            return b;
-        }
-        if (device() == Device.ADMIN) {
-            var token = routingContext().request().getHeader(ScxConfig.tokenKey());
-            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-            return b;
-        }
-        if (device() == Device.APPLE) {
-            var token = routingContext().request().getHeader(ScxConfig.tokenKey());
-            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-            return b;
-        }
-        if (device() == Device.ANDROID) {
-            var token = routingContext().request().getHeader(ScxConfig.tokenKey());
-            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-            return b;
-        }
-        return false;
-
-    }
-
-
-    /**
-     * <p>addUserToSession.</p>
-     *
-     * @param token    a {@link java.lang.String} object.
-     * @param username a {@link java.lang.String} object.
-     * @param device   a {@link cool.scx.enumeration.Device} object.
-     */
-    public static void addLoginItem(Device device, String token, String username) {
-        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.username.equals(username) && device == u.device).findAny().orElse(null);
-        if (sessionItem == null) {
-            LOGIN_ITEMS.add(new LoginItem(device, token, username));
-        } else {
-            sessionItem.token = token;
-            sessionItem.device = device;
-        }
-        Ansi.OUT.print(username + " 登录了 , 登录设备 [" + device.toString() + "] , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-    }
-
-    /**
-     * <p>getUserFromSessionByToken.</p>
-     *
-     * @param token  a {@link java.lang.String} object.
-     * @param device a {@link cool.scx.enumeration.Device} object.
-     * @return a {@link cool.scx.auth.User} object.
-     */
-    public static User getLoginUserByToken(Device device, String token) {
-        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token) && u.device == device).findAny().orElse(null);
-        if (sessionItem == null) {
-            return null;
-        }
-        //每次都从数据库中获取用户 保证 权限设置的及时性 但是为了 性能 此处应该做缓存 todo
-        return AUTH_HANDLER.findByUsername(sessionItem.username);
-    }
-
-    /**
-     * <p>authHandler.</p>
-     *
-     * @return a {@link cool.scx.auth.AuthHandler} object
-     */
-    public static AuthHandler authHandler() {
-        return AUTH_HANDLER;
-    }
-
-    /**
-     * <p>getLoginUserByHeader.</p>
-     *
-     * @return a {@link cool.scx.auth.User} object.
-     */
-    public static User getLoginUser() {
-        if (device() == Device.WEBSITE) {
-            String token = routingContext().getCookie(ScxConfig.tokenKey()).getValue();
-            return getLoginUserByToken(device(), token);
-        }
-        if (device() == Device.ADMIN) {
-            String token = routingContext().request().getHeader(ScxConfig.tokenKey());
-            return getLoginUserByToken(device(), token);
-        }
-        if (device() == Device.APPLE) {
-            String token = routingContext().request().getHeader(ScxConfig.tokenKey());
-            return getLoginUserByToken(device(), token);
-        }
-        if (device() == Device.ANDROID) {
-            String token = routingContext().request().getHeader(ScxConfig.tokenKey());
-            return getLoginUserByToken(device(), token);
-        }
-        return null;
-    }
 
     /**
      * <p>addOnlineItem.</p>
@@ -370,7 +264,7 @@ public final class ScxContext {
      * <p>getOnlineItemByWebSocket.</p>
      *
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
-     * @return a {@link cool.scx.context.OnlineItem} object.
+     * @return a {@link OnlineItem} object.
      */
     public static OnlineItem getOnlineItemByWebSocket(ServerWebSocket webSocket) {
         var binaryHandlerID = webSocket.binaryHandlerID();
@@ -381,7 +275,7 @@ public final class ScxContext {
      * 根据用户名获取所有的在线对象
      *
      * @param username a {@link java.lang.String} object.
-     * @return a {@link cool.scx.context.OnlineItem} object.
+     * @return a {@link OnlineItem} object.
      */
     public static OnlineItem getOnlineItemByUserName(String username) {
         return ONLINE_ITEMS.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);
@@ -415,43 +309,7 @@ public final class ScxContext {
      */
     public static void routingContext(RoutingContext routingContext) {
         ROUTING_CONTEXT_THREAD_LOCAL.set(routingContext);
-        DEVICE_THREAD_LOCAL.set(getDevice(routingContext));
     }
 
-    /**
-     * <p>device.</p>
-     *
-     * @return a {@link cool.scx.enumeration.Device} object.
-     */
-    public static Device device() {
-        return DEVICE_THREAD_LOCAL.get();
-    }
-
-    private static Device getDevice(RoutingContext routingContext) {
-        String device = routingContext.request().getHeader(ScxConfig.deviceKey());
-        if (device == null || device.equalsIgnoreCase("WEBSITE")) {
-            return Device.WEBSITE;
-        }
-        if (device.equalsIgnoreCase("APPLE")) {
-            return Device.APPLE;
-        }
-        if (device.equalsIgnoreCase("ADMIN")) {
-            return Device.ADMIN;
-        }
-        if (device.equalsIgnoreCase("ANDROID")) {
-            return Device.ANDROID;
-        } else {
-            return Device.UNKNOWN;
-        }
-    }
-
-    /**
-     * <p>getAllLoginItem.</p>
-     *
-     * @return a {@link java.util.List} object
-     */
-    public static List<LoginItem> getAllLoginItem() {
-        return LOGIN_ITEMS;
-    }
 
 }

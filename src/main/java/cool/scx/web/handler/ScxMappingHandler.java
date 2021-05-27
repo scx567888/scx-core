@@ -2,7 +2,8 @@ package cool.scx.web.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.annotation.*;
-import cool.scx.auth.User;
+import cool.scx.auth.ScxAuth;
+import cool.scx.base.BaseUser;
 import cool.scx.base.BaseVo;
 import cool.scx.bo.FileUpload;
 import cool.scx.context.ScxContext;
@@ -145,10 +146,10 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             return true;
         } else {
             //当前登录的用户
-            User currentUser = ScxContext.getLoginUser();
+            BaseUser currentUser = ScxAuth.getLoginUser();
             //session 中没有用户证明没有登录 返回 false
             if (currentUser == null) {
-                ScxContext.authHandler().noLoginHandler(ScxContext.device(), context);
+                ScxAuth.authHandler().noLoginHandler(ScxContext.device(), context);
                 return false;
             } else {
                 //这里就是 需要登录 并且 能够获取到当前登录用户的
@@ -161,11 +162,11 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                         return true;
                     } else {
                         //获取用户全部的权限字符串
-                        var permStrByUser = ScxContext.authHandler().getPerms(currentUser);
+                        var permStrByUser = ScxAuth.authHandler().getPerms(currentUser);
                         if (permStrByUser.contains(permStr)) {
                             return true;
                         } else {
-                            ScxContext.authHandler().noPermsHandler(ScxContext.device(), context);
+                            ScxAuth.authHandler().noPermsHandler(ScxContext.device(), context);
                             return false;
                         }
                     }

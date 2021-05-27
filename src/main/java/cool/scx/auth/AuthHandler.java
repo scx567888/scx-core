@@ -1,6 +1,6 @@
 package cool.scx.auth;
 
-import cool.scx.annotation.MustHaveImpl;
+import cool.scx.base.BaseUser;
 import cool.scx.enumeration.Device;
 import cool.scx.exception.AuthException;
 import cool.scx.vo.Json;
@@ -15,7 +15,6 @@ import java.util.Map;
  * @author 司昌旭
  * @version 1.1.0
  */
-@MustHaveImpl
 public interface AuthHandler {
 
     /**
@@ -42,7 +41,7 @@ public interface AuthHandler {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws cool.scx.exception.AuthException if any.
      */
-    User login(Map<String, Object> params) throws AuthException;
+    BaseUser login(Map<String, Object> params) throws AuthException;
 
     /**
      * 拉取用户信息
@@ -88,7 +87,7 @@ public interface AuthHandler {
      * @param username 根据用户名获取 用户
      * @return 用户
      */
-    User findByUsername(String username);
+    BaseUser findByUsername(String username);
 
     /**
      * 根据用户获取 权限串
@@ -96,5 +95,5 @@ public interface AuthHandler {
      * @param user 用户
      * @return s
      */
-    HashSet<String> getPerms(User user);
+    HashSet<String> getPerms(BaseUser user);
 }
