@@ -53,7 +53,7 @@
             <version>5.3.7</version>
         </dependency>
 
-        <!-- mysql 驱动 注意 : 驱动版本应与数据库版本 [8.0.25] 对应 除非必要不要修改版本!!! -->
+        <!-- mysql 驱动 注意 : 驱动版本应与当前开发使用数据库版本 [8.0.25] 对应 除非必要不要修改版本!!! -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -219,35 +219,11 @@
                 <executions>
                     <execution>
                         <id>scx-javadoc-jar</id>
+                        <!-- 这里之所以将生命周期延后到 verify 验证阶段是因为目前只有 install 和 deploy 时才需要 javadoc -->
+                        <phase>verify</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- 此插件用于设置 java 程序的依赖项 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.2</version>
-                <!-- 复制所需依赖的 jar 包到 lib 文件夹下 , 部署时如果有新增的依赖项记得更新部署项目的 lib 文件夹 -->
-                <executions>
-                    <execution>
-                        <!-- 如不想生成 依赖或加快打包速度 请注释掉此标签 -->
-                        <id>scx-dependency-copy-dependencies</id>
-                        <!-- 这里将生命周期设置为 package 是因为通常只在打包时才会复制依赖项 -->
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <!-- 只包含运行依赖项 -->
-                            <includeScope>compile</includeScope>
-                            <!-- 排除 test 依赖 -->
-                            <excludeScope>test</excludeScope>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -265,6 +241,21 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- 此插件用于设置 java 程序的依赖项 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+                <!-- 复制所需依赖的 jar 包到 lib 文件夹下 , 部署时如果有新增的依赖项记得更新部署项目的 lib 文件夹 -->
+                <configuration>
+                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                    <!-- 只包含运行依赖项 -->
+                    <includeScope>compile</includeScope>
+                    <!-- 排除 test 依赖 -->
+                    <excludeScope>test</excludeScope>
+                </configuration>
             </plugin>
 
             <!-- 此插件用于 运行项目 -->

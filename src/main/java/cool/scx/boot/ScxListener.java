@@ -44,7 +44,8 @@ public final class ScxListener {
         }
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                Ansi.OUT.red("项目停止!!!");
+                Ansi.OUT.red("项目停止!!!").ln();
+                Ansi.OUT.red("保存 session 中!!!").ln();
                 var fos = new FileOutputStream(FileUtils.getFileByRootModulePath("scx-session.cache"));
                 var objectOutputStream = new ObjectOutputStream(fos);
                 objectOutputStream.writeObject(ScxAuth.getAllLoginItem());

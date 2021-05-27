@@ -100,10 +100,14 @@ function RunProject()
     mvn compile exec:java
 }
 
-function ShowSuccess(){
-    Write-Host '打包成功'
-    Write-Host "后台项目是$OUTPUT_URL\$PROJECT_NAME-$PROJECT_VERSION.jar"
-    Write-Host "启动脚本是$OUTPUT_URL\startup.bat"
+function ShowSuccess()
+{
+    SetTitle "打包成功!!!"
+    Write-Host '清理残余文件' -ForegroundColor Red
+    mvn clean
+    Write-Host '打包成功'  -ForegroundColor Green
+    Write-Host "后台项目是$OUTPUT_URL\$PROJECT_NAME-$PROJECT_VERSION.jar" -ForegroundColor Green
+    Write-Host "启动脚本是$OUTPUT_URL\startup.bat" -ForegroundColor Green
     pause
     explorer $OUTPUT_URL
 }
@@ -111,31 +115,33 @@ function ShowSuccess(){
 #构建项目并复制 lib
 function BuildProjectWithLib()
 {
+    SetTitle "构建 $PROJECT_NAME 项目 (包括依赖项) 中..."
     BuildProject
+    mvn dependency:copy-dependencies
+    Move-Item  ".\target\lib" "$OUTPUT_URL\lib"
     ShowSuccess
 }
 
 #构建项目但不复制 lib
 function BuildProjectWithoutLib()
 {
+    SetTitle "构建 $PROJECT_NAME 项目 (不包括依赖项) 中..."
     BuildProject
     ShowSuccess
 }
 
-function BuildProject(){
+function BuildProject()
+{
     SetOutputUrl
     Write-Host "开始打包 $PROJECT_NAME 版本为: $PROJECT_VERSION" -ForegroundColor Green
     mvn clean package
-    Move-Item "target\$PROJECT_NAME-$PROJECT_VERSION.jar" $OUTPUT_URL
-    Move-Item  "target\lib" "$OUTPUT_URL\lib"
-    Copy-Item "src\main\resources\c\*" $OUTPUT_URL
-    Copy-Item "src\main\resources\scx-config.json" $OUTPUT_URL
-    Write-Output "@echo off" > "$OUTPUT_URL\startup.bat"
-    Write-Output "chcp 65001" >> "$OUTPUT_URL\startup.bat"
-    Write-Output "set JAVA_TOOL_OPTIONS = -Dfile.encoding = UTF-8 -Duser.language = zh" >> "$OUTPUT_URL\startup.bat"
-    Write-Output "java -jar scx-%scxVersion%.jar --supportAnsiColor = false" >> "$OUTPUT_URL\startup.bat"
-    Write-Host '清理残余文件'
-    call mvn clean
+    Move-Item ".\target\$PROJECT_NAME-$PROJECT_VERSION.jar" $OUTPUT_URL
+    Copy-Item ".\src\main\resources\c" $OUTPUT_URL -recurse
+    Copy-Item ".\src\main\resources\scx-config.json" $OUTPUT_URL
+    "@echo off" | Out-File  -Encoding utf8 "$OUTPUT_URL\startup.bat"
+    "chcp 65001" | Out-File -Append -Encoding utf8 "$OUTPUT_URL\startup.bat"
+    "set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Duser.language=zh" | Out-File -Append -Encoding utf8 "$OUTPUT_URL\startup.bat"
+    "java -jar $PROJECT_NAME-$PROJECT_VERSION.jar --supportAnsiColor = false" | Out-File -Append -Encoding utf8 "$OUTPUT_URL\startup.bat"
 }
 
 #检查项目 并设置基本变量
@@ -164,7 +170,6 @@ function DisplayChoice()
     }
     elseif ($choiceNumber -eq '0')
     {
-        Write-Host '已退出脚本!!!' -ForegroundColor red
         exit
     }
     else
