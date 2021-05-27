@@ -100,22 +100,7 @@ function RunProject()
     mvn compile exec:java
 }
 
-#构建项目并复制 lib
-function BuildProjectWithLib()
-{
-    SetOutputUrl
-    Write-Host "开始打包 $PROJECT_NAME 版本为: $PROJECT_VERSION" -ForegroundColor Green
-    call mvn clean package
-    Move-Item "target\$PROJECT_NAME-$PROJECT_VERSION.jar" $OUTPUT_URL
-    Move-Item  "target\lib" "$OUTPUT_URL\lib"
-    Copy-Item "src\main\resources\c\*" $OUTPUT_URL
-    Copy-Item "src\main\resources\scx-config.json" $OUTPUT_URL
-    Write-Output "@echo off" > "$OUTPUT_URL\startup.bat"
-    Write-Output "chcp 65001" >> "$OUTPUT_URL\startup.bat"
-    Write-Output "set JAVA_TOOL_OPTIONS = -Dfile.encoding = UTF-8 -Duser.language = zh" >> "$OUTPUT_URL\startup.bat"
-    Write-Output "java -jar scx-%scxVersion%.jar --supportAnsiColor = false" >> "$OUTPUT_URL\startup.bat"
-    Write-Host '清理残余文件'
-    call mvn clean
+function ShowSuccess(){
     Write-Host '打包成功'
     Write-Host "后台项目是$OUTPUT_URL\$PROJECT_NAME-$PROJECT_VERSION.jar"
     Write-Host "启动脚本是$OUTPUT_URL\startup.bat"
@@ -123,12 +108,24 @@ function BuildProjectWithLib()
     explorer $OUTPUT_URL
 }
 
+#构建项目并复制 lib
+function BuildProjectWithLib()
+{
+    BuildProject
+    ShowSuccess
+}
+
 #构建项目但不复制 lib
 function BuildProjectWithoutLib()
 {
+    BuildProject
+    ShowSuccess
+}
+
+function BuildProject(){
     SetOutputUrl
     Write-Host "开始打包 $PROJECT_NAME 版本为: $PROJECT_VERSION" -ForegroundColor Green
-    call mvn clean package
+    mvn clean package
     Move-Item "target\$PROJECT_NAME-$PROJECT_VERSION.jar" $OUTPUT_URL
     Move-Item  "target\lib" "$OUTPUT_URL\lib"
     Copy-Item "src\main\resources\c\*" $OUTPUT_URL
@@ -139,11 +136,6 @@ function BuildProjectWithoutLib()
     Write-Output "java -jar scx-%scxVersion%.jar --supportAnsiColor = false" >> "$OUTPUT_URL\startup.bat"
     Write-Host '清理残余文件'
     call mvn clean
-    Write-Host '打包成功'
-    Write-Host "后台项目是$OUTPUT_URL\$PROJECT_NAME-$PROJECT_VERSION.jar"
-    Write-Host "启动脚本是$OUTPUT_URL\startup.bat"
-    pause
-    explorer $OUTPUT_URL
 }
 
 #检查项目 并设置基本变量
