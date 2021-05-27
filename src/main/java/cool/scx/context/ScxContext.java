@@ -264,7 +264,7 @@ public final class ScxContext {
      * <p>getOnlineItemByWebSocket.</p>
      *
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
-     * @return a {@link OnlineItem} object.
+     * @return a {@link cool.scx.auth.OnlineItem} object.
      */
     public static OnlineItem getOnlineItemByWebSocket(ServerWebSocket webSocket) {
         var binaryHandlerID = webSocket.binaryHandlerID();
@@ -275,7 +275,7 @@ public final class ScxContext {
      * 根据用户名获取所有的在线对象
      *
      * @param username a {@link java.lang.String} object.
-     * @return a {@link OnlineItem} object.
+     * @return a {@link cool.scx.auth.OnlineItem} object.
      */
     public static OnlineItem getOnlineItemByUserName(String username) {
         return ONLINE_ITEMS.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);

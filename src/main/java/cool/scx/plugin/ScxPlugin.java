@@ -17,6 +17,9 @@ import java.util.Arrays;
  */
 public final class ScxPlugin {
 
+    /**
+     * Constant <code>PLUGIN_ROOT</code>
+     */
     public static final File PLUGIN_ROOT = FileUtils.getFileByRootModulePath("plugins");
 
     /**

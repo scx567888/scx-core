@@ -24,10 +24,19 @@ import java.util.function.Consumer;
  */
 public final class ScxConfig {
 
+    /**
+     * Constant <code>SCX_VERSION="1.1.3"</code>
+     */
     public static final String SCX_VERSION = "1.1.3";
 
+    /**
+     * Constant <code>SCX_APP_KEY="H8QS91GcuNGP9735"</code>
+     */
     public static final String SCX_APP_KEY = "H8QS91GcuNGP9735";
 
+    /**
+     * Constant <code>DATETIME_FORMATTER</code>
+     */
     public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 

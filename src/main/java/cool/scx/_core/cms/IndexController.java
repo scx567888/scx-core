@@ -38,7 +38,7 @@ public class IndexController {
      * 跳转至首页
      * 只是测试!!!
      *
-     * @param user a {@link BaseUser} object.
+     * @param user a {@link cool.scx.base.BaseUser} object.
      * @return 页面
      */
 //    @ScxMapping(value = "/", method = Method.GET)

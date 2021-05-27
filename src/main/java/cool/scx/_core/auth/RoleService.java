@@ -16,7 +16,7 @@ public interface RoleService {
     /**
      * <p>getRoleListByUser.</p>
      *
-     * @param user a {@link BaseUser} object.
+     * @param user a {@link cool.scx.base.BaseUser} object.
      * @return a {@link java.util.List} object.
      */
     List<? extends Role> getRoleListByUser(BaseUser user);

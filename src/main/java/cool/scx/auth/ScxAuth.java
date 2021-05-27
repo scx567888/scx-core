@@ -9,9 +9,21 @@ import io.vertx.ext.web.RoutingContext;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>ScxAuth class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public class ScxAuth {
 
+    /**
+     * Constant <code>TOKEN_KEY="S-Token"</code>
+     */
     public static final String TOKEN_KEY = "S-Token";
+    /**
+     * Constant <code>DEVICE_KEY="S-Device"</code>
+     */
     public static final String DEVICE_KEY = "S-Device";
 
     /**
@@ -98,7 +110,7 @@ public class ScxAuth {
      *
      * @param token  a {@link java.lang.String} object.
      * @param device a {@link cool.scx.enumeration.Device} object.
-     * @return a {@link BaseUser} object.
+     * @return a {@link cool.scx.base.BaseUser} object.
      */
     public static BaseUser getLoginUserByToken(Device device, String token) {
         var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token) && u.device == device).findAny().orElse(null);
@@ -113,7 +125,7 @@ public class ScxAuth {
     /**
      * <p>getLoginUserByHeader.</p>
      *
-     * @return a {@link BaseUser} object.
+     * @return a {@link cool.scx.base.BaseUser} object.
      */
     public static BaseUser getLoginUser() {
         if (ScxContext.device() == Device.WEBSITE) {
@@ -153,6 +165,11 @@ public class ScxAuth {
         }
     }
 
+    /**
+     * <p>getTokenByCookie.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public static String getTokenByCookie() {
         return ScxContext.routingContext().getCookie(ScxAuth.TOKEN_KEY).getValue();
     }

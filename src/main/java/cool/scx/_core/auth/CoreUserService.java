@@ -48,7 +48,7 @@ public class CoreUserService extends BaseService<CoreUser> {
      * {@inheritDoc}
      *
      * @param username a {@link java.lang.String} object.
-     * @return a {@link BaseUser} object.
+     * @return a {@link cool.scx.base.BaseUser} object.
      */
     public BaseUser findByUsername(String username) {
         var param = new Param<>(new CoreUser());
@@ -59,7 +59,7 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param user a {@link BaseUser} object.
+     * @param user a {@link cool.scx.base.BaseUser} object.
      * @return a {@link java.util.HashSet} object.
      */
     public HashSet<String> getPermStrByUser(BaseUser user) {
@@ -79,8 +79,8 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param user a {@link BaseUser} object.
-     * @return a {@link BaseUser} object.
+     * @param user a {@link cool.scx.base.BaseUser} object.
+     * @return a {@link cool.scx.base.BaseUser} object.
      */
     public BaseUser updateUserPassword(BaseUser user) {
         var coreUser = new CoreUser();
@@ -140,7 +140,7 @@ public class CoreUserService extends BaseService<CoreUser> {
      * {@inheritDoc}
      *
      * @param user a {@link cool.scx._core.auth.CoreUser} object.
-     * @return a {@link BaseUser} object.
+     * @return a {@link cool.scx.base.BaseUser} object.
      */
     public BaseUser registeredUser(CoreUser user) {
         var deptIds = user.deptIds;
@@ -194,7 +194,7 @@ public class CoreUserService extends BaseService<CoreUser> {
      * {@inheritDoc}
      *
      * @param user a {@link cool.scx._core.auth.CoreUser} object.
-     * @return a {@link BaseUser} object.
+     * @return a {@link cool.scx.base.BaseUser} object.
      */
     public BaseUser updateUser(CoreUser user) {
         var coreUser = new CoreUser();
@@ -227,7 +227,7 @@ public class CoreUserService extends BaseService<CoreUser> {
      * {@inheritDoc}
      *
      * @param id a {@link java.lang.Long} object.
-     * @return a {@link BaseUser} object.
+     * @return a {@link cool.scx.base.BaseUser} object.
      */
     public BaseUser revokeDeleteUser(Long id) {
         return updateUserAndDept(id, false);
@@ -238,7 +238,7 @@ public class CoreUserService extends BaseService<CoreUser> {
      *
      * @param id a {@link java.lang.Long} object.
      * @param b  a boolean.
-     * @return a {@link BaseUser} object.
+     * @return a {@link cool.scx.base.BaseUser} object.
      */
     public BaseUser updateUserAndDept(Long id, boolean b) {
         var user = new CoreUser();
