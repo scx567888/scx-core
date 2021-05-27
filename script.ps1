@@ -83,6 +83,7 @@ function SetTempEnvironmentVariables()
 {
     $PathVariables = $JAVA_HOME + '\bin;' + $GIT_HOME + ';' + $MAVEN_HOME
     $env:Path = $env:Path + $PathVariables
+    $env:JAVA_TOOL_OPTIONS = '-Dfile.encoding=UTF-8 -Duser.language=zh'
     $env:JAVA_HOME = $JAVA_HOME
 }
 
