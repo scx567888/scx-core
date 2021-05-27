@@ -72,12 +72,12 @@ function DisplayInfo()
     Write-Host '  0. 退出' -ForegroundColor Yellow
 }
 
-
 #设置
 function SetPageCode()
 {
     $null = chcp.com(65001)
 }
+
 #设置 临时环境变量
 function SetTempEnvironmentVariables()
 {
@@ -91,17 +91,6 @@ function ToZip($from, $to)
     Compress-Archive -Path $from  -DestinationPath $to -Force
 }
 
-# 输出带颜色的文字 colorCode 参照表如下
-#
-function aaa($string, $colorCode)
-{
-    #    $color=36m
-    Write-Output  $string "[36m此 Build 脚本,用于 $PROJECT_NAME 项目[0m"
-    Write-Host "Red on white text." -ForegroundColor red -BackgroundColor white
-    Write-Output  $string "[36m此 Build 脚本,用于 $PROJECT_NAME 项目[0m"
-}
-
-
 #运行项目
 function RunProject()
 {
@@ -113,7 +102,24 @@ function RunProject()
 #构建项目并复制 lib
 function BuildProjectWithLib()
 {
-
+    SetOutputUrl
+    Write-Host "开始打包 $PROJECT_NAME 版本为: $PROJECT_VERSION" -ForegroundColor Green
+    call mvn clean package
+    Move-Item "target\$PROJECT_NAME-$PROJECT_VERSION.jar" $OUTPUT_URL
+    Move-Item  "target\lib" "$OUTPUT_URL\lib"
+    Copy-Item "src\main\resources\c\*" $OUTPUT_URL
+    Copy-Item "src\main\resources\scx-config.json" $OUTPUT_URL
+    Write-Output "@echo off" > "$OUTPUT_URL\startup.bat"
+    Write-Output "chcp 65001" >> "$OUTPUT_URL\startup.bat"
+    Write-Output "set JAVA_TOOL_OPTIONS = -Dfile.encoding = UTF-8 -Duser.language = zh" >> "$OUTPUT_URL\startup.bat"
+    Write-Output "java -jar scx-%scxVersion%.jar --supportAnsiColor = false" >> "$OUTPUT_URL\startup.bat"
+    Write-Host '清理残余文件'
+    call mvn clean
+    Write-Host '打包成功'
+    Write-Host "后台项目是$OUTPUT_URL\$PROJECT_NAME-$PROJECT_VERSION.jar"
+    Write-Host "启动脚本是$OUTPUT_URL\startup.bat"
+    pause
+    explorer $OUTPUT_URL
 }
 
 #构建项目但不复制 lib
@@ -138,22 +144,7 @@ function BuildProjectWithoutLib()
     pause
     explorer $OUTPUT_URL
 }
-#分析 项目版本 版本
-function GetProjectVersion()
-{
 
-}
-
-function aaaa()
-{
-    foreach ($color1 in (0..15))
-    {
-
-        Write-Host -BackgroundColor ([ConsoleColor]$color1) -Object ([ConsoleColor]$color1) -NoNewline
-        Write-Host
-    }
-
-}
 #检查项目 并设置基本变量
 function CheckProject()
 {
@@ -162,28 +153,7 @@ function CheckProject()
     $script:PROJECT_VERSION = $xmlfile.project.version
 }
 
-function Select-FolderDialog
-{
-    param([string]$Directory, [string]$Description, [boolean]$ShowNewFolderButton)
-    [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
-    $objForm = New-Object System.Windows.Forms.FolderBrowserDialog
-    $objForm.RootFolder = $Directory
-    $objForm.Description = $Description
-    $objForm.ShowNewFolderButton = $ShowNewFolderButton
-    $Show = $objForm.ShowDialog()
-    if ($Show -eq "OK")
-    {
-        return $objForm.SelectedPath
-    }
-    else
-    {
-        #需要输出错误信息的话可以取消下一行的注释
-        #Write-Error "error information here"
-    }
-}
-
-
-
+#显示选项
 function DisplayChoice()
 {
     $choiceNumber = Read-Host '请选择要进行的操作数字 , 然后按回车'
@@ -210,8 +180,6 @@ function DisplayChoice()
         DisplayChoice
     }
 }
-
-
 
 #主函数
 function Main()
