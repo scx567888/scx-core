@@ -37,7 +37,7 @@ public class ColumnListDirective extends BaseTemplateDirective {
     }
 
     /**
-     * {@inheritDoc}
+     * directiveName
      */
     @Override
     public String directiveName() {
@@ -45,7 +45,7 @@ public class ColumnListDirective extends BaseTemplateDirective {
     }
 
     /**
-     * {@inheritDoc}
+     * directiveName
      */
     @Override
     public String variableName() {

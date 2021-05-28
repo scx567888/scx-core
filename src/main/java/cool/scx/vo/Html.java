@@ -56,7 +56,7 @@ public final class Html implements BaseVo {
     }
 
     /**
-     * {@inheritDoc}
+     * sendToClient
      */
     @Override
     public void sendToClient(RoutingContext context) {

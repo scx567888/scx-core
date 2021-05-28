@@ -27,7 +27,7 @@ public class LimitedMap<K, V> extends LinkedHashMap<K, V> {
     }
 
     /**
-     * {@inheritDoc}
+     * removeEldestEntry
      */
     @Override
     protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {

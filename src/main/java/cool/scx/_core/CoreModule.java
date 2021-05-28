@@ -23,7 +23,7 @@ public class CoreModule implements BaseModule {
     }
 
     /**
-     * {@inheritDoc}
+     * start
      */
     @Override
     public void start() {

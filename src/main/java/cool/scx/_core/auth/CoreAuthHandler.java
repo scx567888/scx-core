@@ -46,7 +46,7 @@ public class CoreAuthHandler implements AuthHandler {
 
 
     /**
-     * {@inheritDoc}
+     * info
      */
     @Override
     public Json info() {
@@ -83,7 +83,7 @@ public class CoreAuthHandler implements AuthHandler {
     }
 
     /**
-     * {@inheritDoc}
+     * logout
      */
     @Override
     public Json logout() {
@@ -92,7 +92,7 @@ public class CoreAuthHandler implements AuthHandler {
     }
 
     /**
-     * {@inheritDoc}
+     * authExceptionHandler
      */
     @Override
     public Json authExceptionHandler(AuthException e) {
@@ -115,7 +115,7 @@ public class CoreAuthHandler implements AuthHandler {
     }
 
     /**
-     * {@inheritDoc}
+     * signup
      */
     @Override
     public Json signup(Map<String, Object> params) {
@@ -145,7 +145,7 @@ public class CoreAuthHandler implements AuthHandler {
     }
 
     /**
-     * {@inheritDoc}
+     * getPerms
      */
     @Override
     public HashSet<String> getPerms(BaseUser user) {

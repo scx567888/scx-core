@@ -37,7 +37,7 @@ public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
     }
 
     /**
-     * {@inheritDoc}
+     * handle
      */
     @Override
     public void handle(ServerWebSocket webSocket) {

@@ -139,7 +139,7 @@ public final class Json implements BaseVo {
     }
 
     /**
-     * {@inheritDoc}
+     * sendToClient
      */
     @Override
     public void sendToClient(RoutingContext context) {

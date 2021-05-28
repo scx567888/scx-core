@@ -30,9 +30,7 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
         this.userRoleService = userRoleService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** getRoleListByUser */
     @Override
     public List<? extends Role> getRoleListByUser(BaseUser user) {
         var userRoleParam = new Param<>(new UserRole());
@@ -48,9 +46,7 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** saveRoleListWithUserId */
     @Override
     public void saveRoleListWithUserId(Long userId, String roleIds) {
         if (!StringUtils.isEmpty(roleIds)) {
@@ -65,9 +61,7 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void deleteByUserId(Long id) {
         var userDept = new Param<>(new UserRole());
@@ -75,9 +69,7 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
         userRoleService.delete(userDept);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public List<UserRole> findRoleByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {

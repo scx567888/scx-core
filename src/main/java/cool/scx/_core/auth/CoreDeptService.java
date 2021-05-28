@@ -33,7 +33,7 @@ public class CoreDeptService extends BaseService<CoreDept> implements DeptServic
     }
 
     /**
-     * {@inheritDoc}
+     * getDeptListByUser
      */
     @Override
     public List<? extends Dept> getDeptListByUser(BaseUser user) {
@@ -51,7 +51,7 @@ public class CoreDeptService extends BaseService<CoreDept> implements DeptServic
     }
 
     /**
-     * {@inheritDoc}
+     * saveDeptListWithUserId
      */
     @Override
     public void saveDeptListWithUserId(Long userId, String deptIds) {

@@ -23,7 +23,7 @@ import io.vertx.core.http.WebSocketFrame;
 public class CoreWebSocket implements BaseWebSocketController {
 
     /**
-     * {@inheritDoc}
+     * onOpen
      */
     @Override
     public void onOpen(ServerWebSocket webSocket) {
@@ -31,7 +31,7 @@ public class CoreWebSocket implements BaseWebSocketController {
     }
 
     /**
-     * {@inheritDoc}
+     * onClose
      */
     @Override
     public void onClose(ServerWebSocket webSocket) {
