@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * <p>ScxAuth class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.1.4
  */
 public class ScxAuth {
 

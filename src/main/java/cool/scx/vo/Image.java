@@ -1,7 +1,7 @@
 package cool.scx.vo;
 
 import cool.scx.base.BaseVo;
-import cool.scx.util.FileUtils;
+import cool.scx.util.FileTypeUtils;
 import cool.scx.util.LimitedMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerResponse;
@@ -103,12 +103,12 @@ public class Image implements BaseVo {
             notFound(response);
             return;
         }
-        var imageFileType = FileUtils.getImageFileType(file);
+        var imageFileType = FileTypeUtils.getFileTypeForFile(file);
         if (imageFileType == null) {
             response.putHeader("content-type", "image/png");
             sendSystemIcon(response);
         } else {
-            response.putHeader("content-type", imageFileType.contentType);
+            response.putHeader("content-type", imageFileType.mimeType);
             if (height == null && width == null) {
                 sendRawPicture(response);
             } else {

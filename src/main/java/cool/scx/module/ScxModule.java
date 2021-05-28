@@ -2,7 +2,6 @@ package cool.scx.module;
 
 import cool.scx.auth.AuthHandler;
 import cool.scx.base.BaseModule;
-import cool.scx.config.ScxConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,7 +75,7 @@ public final class ScxModule {
      */
     public static void initModules() {
         for (BaseModule baseModule : BASE_MODULE_ARRAY) {
-            baseModule.onStart(ScxConfig.getConfigExample());
+            baseModule.start();
             var tempScxModule = getModuleByBaseModule(baseModule);
             addModule(tempScxModule);
         }

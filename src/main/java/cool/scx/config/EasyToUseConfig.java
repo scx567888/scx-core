@@ -134,9 +134,9 @@ class EasyToUseConfig {
                 f -> Ansi.OUT.red("N 未检测到 scx.fix-table               \t -->\t 已采用默认值 : " + f).ln());
 
 
-        var tempDisabledPluginList = ScxConfig.get("scx.plugin.disabled-list", new ArrayList<String>(),
+        var tempDisabledPluginList = ScxConfig.get("scx.plugin-disabled-list", new ArrayList<String>(),
                 s -> Ansi.OUT.green("Y 禁用插件列表                         \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.plugin.disabled-list    \t -->\t 已采用默认值 : " + f).ln());
+                f -> Ansi.OUT.red("N 未检测到 scx.plugin-disabled-list    \t -->\t 已采用默认值 : " + f).ln());
 
         disabledPluginList = new HashSet<>(tempDisabledPluginList);
 

@@ -6,7 +6,6 @@ import cool.scx.util.FileUtils;
 import cool.scx.util.Tidy;
 
 import java.io.File;
-import java.util.Map;
 
 /**
  * <p>CoreConfig class.</p>
@@ -20,10 +19,8 @@ public class CoreConfig {
 
     /**
      * <p>initConfig.</p>
-     *
-     * @param configMap a {@link java.util.Map} object.
      */
-    public static void initConfig(Map<String, Object> configMap) {
+    public static void initConfig() {
         coreEasyToUse = new CoreEasyToUse();
     }
 

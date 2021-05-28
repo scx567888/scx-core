@@ -2,7 +2,7 @@ package cool.scx.vo;
 
 import cool.scx.base.BaseVo;
 import cool.scx.util.ByteUtils;
-import cool.scx.util.FileUtils;
+import cool.scx.util.FileTypeUtils;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.ext.web.RoutingContext;
@@ -139,14 +139,21 @@ public class Download implements BaseVo {
         }
     }
 
+    /**
+     * todo 需要用 request 的 sendFile 进行改造 (零拷贝)
+     *
+     * @param context
+     * @throws UnsupportedEncodingException
+     * @throws InterruptedException
+     */
     private void sendFile(RoutingContext context) throws UnsupportedEncodingException, InterruptedException {
         var request = context.request();
         var response = context.response();
-        var fileType = FileUtils.getFileTypeByHead(file);
+        var mimeType = FileTypeUtils.getMimeTypeForFile(file);
         //通知 客户端 服务端支持断点续传
         response.putHeader("Accept-Ranges", "bytes");
         //通知客户端服务器端 文件的类型 如果未知就返回流
-        response.putHeader("Content-Type", fileType != null ? fileType.contentType : "application/octet-stream");
+        response.putHeader("Content-Type", mimeType != null ? mimeType : "application/octet-stream");
         //通知客户端 类型为下载
         response.putHeader("Content-Disposition", "attachment;filename=" + new String(downloadName.getBytes(StandardCharsets.UTF_8), "ISO8859-1"));
         //文件的真实大小

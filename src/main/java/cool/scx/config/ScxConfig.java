@@ -25,9 +25,9 @@ import java.util.function.Consumer;
 public final class ScxConfig {
 
     /**
-     * Constant <code>SCX_VERSION="1.1.3"</code>
+     * Constant <code>SCX_VERSION </code>
      */
-    public static final String SCX_VERSION = "1.1.3";
+    public static final String SCX_VERSION = "1.1.4";
 
     /**
      * Constant <code>SCX_APP_KEY="H8QS91GcuNGP9735"</code>

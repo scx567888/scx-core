@@ -4,8 +4,6 @@ import cool.scx._core.config.CoreConfig;
 import cool.scx.base.BaseModule;
 import cool.scx.boot.ScxApp;
 
-import java.util.Map;
-
 /**
  * 核心模块启动类
  * 提供功能 : [ 基本认证逻辑, 通用 crud , 测试 website ,基本license 校验 , 基本文件上传]
@@ -28,7 +26,7 @@ public class CoreModule implements BaseModule {
      * {@inheritDoc}
      */
     @Override
-    public void onStart(Map<String, Object> configMap) {
-        CoreConfig.initConfig(configMap);
+    public void start() {
+        CoreConfig.initConfig();
     }
 }
