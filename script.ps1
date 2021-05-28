@@ -30,7 +30,7 @@ function SetOutputUrl()
         if (-not$urlCanUse)
         {
             Write-Host "$OUTPUT_URL 不存在,已自动创建!!!" -ForegroundColor Yellow
-            $null = mkdir $OUTPUT_URL
+            $null = mkdir "$OUTPUT_URL"
             break
         }
         else
@@ -38,8 +38,15 @@ function SetOutputUrl()
             $isNotEmptyFolder = Test-Path (Join-Path $OUTPUT_URL '*')
             if ($isNotEmptyFolder)
             {
-                $choiceNumber = Read-Host "输出目录文件夹不为空 , 强制覆盖(yes) | 重新输入(AnyKey) "
-                if ($choiceNumber -eq 'yes')
+                $choiceNumber = Read-Host "输出目录文件夹不为空 , 添加时间戳(1) | 强制覆盖(0) | 重新输入(AnyKey) "
+                if ($choiceNumber -eq '1')
+                {
+                    $nowTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
+                    $script:OUTPUT_URL = "$OUTPUT_URL $nowTime"
+                    $null = mkdir "$OUTPUT_URL"
+                    break
+                }
+                elseif ($choiceNumber -eq '0')
                 {
                     $Files = Get-ChildItem $OUTPUT_URL -Force
                     foreach ($File in $Files)
@@ -69,6 +76,7 @@ function DisplayInfo()
     Write-Host '  1. 运行项目' -ForegroundColor Green
     Write-Host '  2. 构建项目 (不包括依赖项)' -ForegroundColor Magenta
     Write-Host '  3. 构建项目 (包括依赖项)' -ForegroundColor Magenta
+    Write-Host '  4. 仅复制依赖项' -ForegroundColor Blue
     Write-Host '  0. 退出' -ForegroundColor Yellow
 }
 
@@ -122,6 +130,22 @@ function BuildProjectWithLib()
     ShowSuccess
 }
 
+#复制 lib
+function CopyLib()
+{
+    SetTitle " $PROJECT_NAME 项目 (仅复制依赖项) 中..."
+    SetOutputUrl
+    mvn dependency:copy-dependencies
+    Move-Item  ".\target\lib" "$OUTPUT_URL\lib"
+    SetTitle "复制依赖项成功!!!"
+    Write-Host '清理残余文件' -ForegroundColor Red
+    mvn clean
+    Write-Host '复制依赖项成功'  -ForegroundColor Green
+    Write-Host "依赖项所在目录$OUTPUT_URL\lib" -ForegroundColor Green
+    pause
+    explorer "$OUTPUT_URL\lib"
+}
+
 #构建项目但不复制 lib
 function BuildProjectWithoutLib()
 {
@@ -167,6 +191,10 @@ function DisplayChoice()
     elseif ($choiceNumber -eq '3')
     {
         BuildProjectWithLib
+    }
+    elseif ($choiceNumber -eq '4')
+    {
+        CopyLib
     }
     elseif ($choiceNumber -eq '0')
     {
