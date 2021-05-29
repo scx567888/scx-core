@@ -84,8 +84,8 @@ public class TemplateController {
     /**
      * <p>Index.</p>
      *
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws java.io.IOException if any.
+     * @return a {@link Json} object.
+     * @throws IOException if any.
      */
     @ScxMapping(method = {Method.GET, Method.POST})
     public Json Index() throws IOException {
@@ -100,8 +100,8 @@ public class TemplateController {
     /**
      * <p>getFileContent.</p>
      *
-     * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @param params a {@link Map} object.
+     * @return a {@link Json} object.
      */
     @ScxMapping("getFileContent")
     public Json getFileContent(Map<String, String> params) {
@@ -117,8 +117,8 @@ public class TemplateController {
     /**
      * <p>setFileContent.</p>
      *
-     * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @param params a {@link Map} object.
+     * @return a {@link Json} object.
      */
     @ScxMapping("setFileContent")
     public Json setFileContent(Map<String, String> params) {
@@ -132,9 +132,9 @@ public class TemplateController {
     /**
      * <p>delete.</p>
      *
-     * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws java.io.IOException if any.
+     * @param params a {@link Map} object.
+     * @return a {@link Json} object.
+     * @throws IOException if any.
      */
     @ScxMapping("file/delete")
     public Json delete(Map<String, String> params) throws IOException {
@@ -147,10 +147,10 @@ public class TemplateController {
     /**
      * <p>upload.</p>
      *
-     * @param file     a {@link java.io.File} object.
-     * @param filePath a {@link java.lang.String} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws java.io.IOException if any.
+     * @param file     a {@link File} object.
+     * @param filePath a {@link String} object.
+     * @return a {@link Json} object.
+     * @throws IOException if any.
      */
     @ScxMapping(value = "upload")
     public Json upload(File file, String filePath) throws IOException {
@@ -162,9 +162,9 @@ public class TemplateController {
     /**
      * <p>rename.</p>
      *
-     * @param params a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws java.io.IOException if any.
+     * @param params a {@link Map} object.
+     * @return a {@link Json} object.
+     * @throws IOException if any.
      */
     @ScxMapping("file/rename")
     public Json rename(Map<String, String> params) throws IOException {

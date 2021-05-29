@@ -2,10 +2,13 @@ package cool.scx._core.auth;
 
 import cool.scx._core.auth.exception.*;
 import cool.scx._core.config.CoreConfig;
+import cool.scx._core.user.User;
+import cool.scx._core.user.UserService;
 import cool.scx.annotation.ScxService;
 import cool.scx.auth.AuthHandler;
+import cool.scx.auth.AuthUser;
 import cool.scx.auth.ScxAuth;
-import cool.scx.base.BaseUser;
+import cool.scx.auth.exception.UnknownDeviceException;
 import cool.scx.bo.Param;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Device;
@@ -33,14 +36,14 @@ public class CoreAuthHandler implements AuthHandler {
 
     private static final HashMap<String, LoginError> loginErrorMap = new HashMap<>();
 
-    private final CoreUserService coreUserService;
+    private final UserService coreUserService;
 
     /**
      * <p>Constructor for CoreAuthHandler.</p>
      *
-     * @param coreUserService a {@link cool.scx._core.auth.CoreUserService} object.
+     * @param coreUserService a {@link UserService} object.
      */
-    public CoreAuthHandler(CoreUserService coreUserService) {
+    public CoreAuthHandler(UserService coreUserService) {
         this.coreUserService = coreUserService;
     }
 
@@ -48,9 +51,8 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * info
      */
-    @Override
     public Json info() {
-        var user = (CoreUser) ScxAuth.getLoginUser();
+        var user = (User) ScxAuth.getLoginUser();
         //从session取出用户信息
         if (user == null) {
             return Json.fail(Json.ILLEGAL_TOKEN, "登录已失效");
@@ -70,10 +72,9 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * {@inheritDoc}
      */
-    @Override
     public Json infoUpdate(Map<String, Object> params) {
-        var queryUser = ObjectUtils.mapToBean(params, CoreUser.class);
-        var currentUser = ScxAuth.getLoginUser();
+        var queryUser = ObjectUtils.mapToBean(params, User.class);
+        var currentUser = (User) ScxAuth.getLoginUser();
         queryUser.id = currentUser.id;
         currentUser.password = queryUser.password;
         currentUser.salt = null;
@@ -85,18 +86,22 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * logout
      */
-    @Override
     public Json logout() {
-        ScxAuth.removeLoginUser();
-        return Json.ok("User Logged Out");
+        var b = ScxAuth.removeAuthUser();
+        if (b) {
+            return Json.ok("User Logged Out");
+        } else {
+            return Json.fail("User Logged Out Fail");
+        }
     }
 
     /**
      * authExceptionHandler
      */
-    @Override
     public Json authExceptionHandler(AuthException e) {
-        if (e instanceof EmptyUsernameException) {
+        if (e instanceof UnknownDeviceException) {
+            return Json.fail("未知设备");
+        } else if (e instanceof EmptyUsernameException) {
             return Json.fail("用户名不能为空");
         } else if (e instanceof EmptyPasswordException) {
             return Json.fail("密码不能为空");
@@ -117,15 +122,14 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * signup
      */
-    @Override
     public Json signup(Map<String, Object> params) {
         var username = params.get("username").toString();
         var password = params.get("password").toString();
-        var newUser = new Param<>(new CoreUser());
+        var newUser = new Param<>(new User());
 
         newUser.addOrderBy("id", SortType.ASC).queryObject.username = username;
 
-        BaseUser user = coreUserService.get(newUser);
+        AuthUser user = coreUserService.get(newUser);
         if (user != null) {
             return Json.ok("userAlreadyExists");
         } else {
@@ -139,19 +143,14 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public BaseUser findByUsername(String username) {
+    public AuthUser findByUsername(String username) {
         return coreUserService.findByUsername(username);
     }
 
-    /**
-     * getPerms
-     */
     @Override
-    public HashSet<String> getPerms(BaseUser user) {
-        return coreUserService.getPermStrByUser(user);
+    public HashSet<String> getPerms(AuthUser user) {
+        return coreUserService.getPermStrByUser((User) user);
     }
-
 
     /**
      * {@inheritDoc}
@@ -185,11 +184,15 @@ public class CoreAuthHandler implements AuthHandler {
         }
     }
 
+    @Override
+    public AuthUser getAuthUser(String username) {
+        return null;
+    }
+
     /**
      * {@inheritDoc}
      */
-    @Override
-    public BaseUser login(Map<String, Object> params) throws AuthException {
+    public AuthUser login(Map<String, Object> params) throws AuthException {
         //license 失效时不允许登录
 //        if (!licenseService.passLicense()) {
 //            return Json.fail(Json.FAIL_CODE, "licenseError");
@@ -212,7 +215,7 @@ public class CoreAuthHandler implements AuthHandler {
             loginError = le;
         }
         if (notHaveLoginError(ip, loginError)) {
-            var user = coreUserService.findByUsername(username.toString());
+            var user = (User) coreUserService.findByUsername(username.toString());
             if (user == null) {
                 var le = new LoginError(now, loginError.errorTimes + 1);
                 loginErrorMap.put(ip, le);
@@ -250,7 +253,7 @@ public class CoreAuthHandler implements AuthHandler {
      * @param password 前台传过来密码
      * @return 是否相同
      */
-    private boolean verifyPassword(BaseUser user, String password) {
+    private boolean verifyPassword(User user, String password) {
         try {
             var decryptPassword = CryptoUtils.decryptPassword(user.password, user.salt);
             return password.equals(decryptPassword);

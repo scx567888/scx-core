@@ -1,8 +1,9 @@
-package cool.scx._core.auth;
+package cool.scx._core.dept;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.annotation.Column;
 import cool.scx.annotation.NoColumn;
+import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
 
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.List;
  * @author 司昌旭
  * @version 0.3.6
  */
-public abstract class Dept extends BaseModel {
+@ScxModel(tablePrefix = "core")
+public class Dept extends BaseModel {
 
     /**
      * 部门名称

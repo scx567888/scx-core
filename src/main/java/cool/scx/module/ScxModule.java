@@ -1,6 +1,5 @@
 package cool.scx.module;
 
-import cool.scx.auth.AuthHandler;
 import cool.scx.base.BaseModule;
 
 import java.io.File;
@@ -41,34 +40,6 @@ public final class ScxModule {
      * 默认取 所有自定义模块的最后一个 所在的文件根目录
      */
     private static File APP_ROOT_PATH;
-
-    static {
-        initInternalModule();
-    }
-
-    /**
-     * 添加核心模块
-     */
-    public static void initInternalModule() {
-        ModuleItem internalAuthModule = new ModuleItem();
-        internalAuthModule.moduleClass = null;
-        internalAuthModule.moduleName = "内部认证模块";
-        internalAuthModule.isPlugin = false;
-        internalAuthModule.basePackage = AuthHandler.class.getPackageName();
-        internalAuthModule.classList = getClassList(AuthHandler.class, internalAuthModule.basePackage);
-        internalAuthModule.moduleRootPath = getModuleRootPath(AuthHandler.class);
-
-        ModuleItem internalBaseModule = new ModuleItem();
-        internalBaseModule.moduleClass = null;
-        internalBaseModule.moduleName = "内部基本模块";
-        internalBaseModule.isPlugin = false;
-        internalBaseModule.basePackage = BaseModule.class.getPackageName();
-        internalBaseModule.classList = getClassList(BaseModule.class, internalBaseModule.basePackage);
-        internalBaseModule.moduleRootPath = getModuleRootPath(BaseModule.class);
-
-        addModule(internalAuthModule);
-        addModule(internalBaseModule);
-    }
 
     /**
      * <p>initModules.</p>

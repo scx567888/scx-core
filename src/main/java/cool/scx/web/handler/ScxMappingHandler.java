@@ -2,8 +2,8 @@ package cool.scx.web.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.annotation.*;
+import cool.scx.auth.AuthUser;
 import cool.scx.auth.ScxAuth;
-import cool.scx.base.BaseUser;
 import cool.scx.base.BaseVo;
 import cool.scx.bo.FileUpload;
 import cool.scx.context.ScxContext;
@@ -146,10 +146,10 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
             return true;
         } else {
             //当前登录的用户
-            BaseUser currentUser = ScxAuth.getLoginUser();
+            AuthUser currentUser = ScxAuth.getLoginUser();
             //session 中没有用户证明没有登录 返回 false
             if (currentUser == null) {
-                ScxAuth.authHandler().noLoginHandler(ScxContext.device(), context);
+                ScxAuth.authHandler().noLoginHandler(ScxAuth.getDevice(context), context);
                 return false;
             } else {
                 //这里就是 需要登录 并且 能够获取到当前登录用户的
@@ -158,7 +158,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                     return true;
                 } else {
                     //这里就是 管理员级别  不受权限验证
-                    if (currentUser.level < 5) {
+                    if (currentUser.isAdmin()) {
                         return true;
                     } else {
                         //获取用户全部的权限字符串
@@ -166,7 +166,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                         if (permStrByUser.contains(permStr)) {
                             return true;
                         } else {
-                            ScxAuth.authHandler().noPermsHandler(ScxContext.device(), context);
+                            ScxAuth.authHandler().noPermsHandler(ScxAuth.getDevice(context), context);
                             return false;
                         }
                     }
@@ -221,7 +221,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                 continue;
             }
             if (nowType == Device.class) {
-                finalHandlerParams[i] = ScxContext.device();
+                finalHandlerParams[i] = ScxAuth.getDevice(ctx);
                 continue;
             }
             if (nowType == FileUpload.class) {

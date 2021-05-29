@@ -1,8 +1,8 @@
-package cool.scx._core.auth;
+package cool.scx._core.role;
 
+import cool.scx._core.user.User;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
-import cool.scx.base.BaseUser;
 import cool.scx.bo.Param;
 import cool.scx.util.StringUtils;
 
@@ -18,27 +18,28 @@ import java.util.stream.Collectors;
  * @version 1.1.2
  */
 @ScxService
-public class CoreRoleService extends BaseService<CoreRole> implements RoleService {
+public class RoleService extends BaseService<Role> {
     private final UserRoleService userRoleService;
 
     /**
      * <p>Constructor for CoreRoleService.</p>
      *
-     * @param userRoleService a {@link cool.scx._core.auth.UserRoleService} object.
+     * @param userRoleService a {@link UserRoleService} object.
      */
-    public CoreRoleService(UserRoleService userRoleService) {
+    public RoleService(UserRoleService userRoleService) {
         this.userRoleService = userRoleService;
     }
 
-    /** getRoleListByUser */
-    @Override
-    public List<? extends Role> getRoleListByUser(BaseUser user) {
+    /**
+     * getRoleListByUser
+     */
+    public List<Role> getRoleListByUser(User user) {
         var userRoleParam = new Param<>(new UserRole());
         userRoleParam.queryObject.userId = user.id;
 
         var collect = userRoleService.list(userRoleParam).stream().map(userRole -> userRole.roleId.toString()).collect(Collectors.joining(","));
         if (!"".equals(collect)) {
-            var roleParam = new Param<>(new CoreRole());
+            var roleParam = new Param<>(new Role());
             roleParam.whereSql = " id in (" + collect + ")";
             return list(roleParam);
         } else {
@@ -46,8 +47,9 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
         }
     }
 
-    /** saveRoleListWithUserId */
-    @Override
+    /**
+     * saveRoleListWithUserId
+     */
     public void saveRoleListWithUserId(Long userId, String roleIds) {
         if (!StringUtils.isEmpty(roleIds)) {
             var idArr = Arrays.stream(roleIds.split(",")).filter(id -> !StringUtils.isEmpty(id)).map(id -> {
@@ -61,16 +63,18 @@ public class CoreRoleService extends BaseService<CoreRole> implements RoleServic
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public void deleteByUserId(Long id) {
         var userDept = new Param<>(new UserRole());
         userDept.queryObject.userId = id;
         userRoleService.delete(userDept);
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public List<UserRole> findRoleByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {
             var userRole = new Param<>(new UserRole());

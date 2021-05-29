@@ -1,8 +1,14 @@
-package cool.scx._core.auth;
+package cool.scx._core.user;
 
+import cool.scx._core.dept.DeptService;
+import cool.scx._core.dept.UserDept;
+import cool.scx._core.dept.UserDeptService;
+import cool.scx._core.role.RoleService;
+import cool.scx._core.role.UserRole;
+import cool.scx._core.role.UserRoleService;
 import cool.scx.annotation.ScxService;
+import cool.scx.auth.AuthUser;
 import cool.scx.base.BaseService;
-import cool.scx.base.BaseUser;
 import cool.scx.bo.Param;
 import cool.scx.util.CryptoUtils;
 import cool.scx.util.StringUtils;
@@ -19,7 +25,7 @@ import java.util.stream.Collectors;
  * @version 1.1.2
  */
 @ScxService
-public class CoreUserService extends BaseService<CoreUser> {
+public class UserService extends BaseService<User> {
 
 
     private final DeptService deptService;
@@ -31,12 +37,12 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * <p>Constructor for CoreUserService.</p>
      *
-     * @param deptService     a {@link cool.scx._core.auth.DeptService} object.
-     * @param roleService     a {@link cool.scx._core.auth.RoleService} object.
-     * @param userDeptService a {@link cool.scx._core.auth.UserDeptService} object.
-     * @param userRoleService a {@link cool.scx._core.auth.UserRoleService} object.
+     * @param deptService     a {@link DeptService} object.
+     * @param roleService     a {@link RoleService} object.
+     * @param userDeptService a {@link UserDeptService} object.
+     * @param userRoleService a {@link UserRoleService} object.
      */
-    public CoreUserService(DeptService deptService, RoleService roleService, UserDeptService userDeptService, UserRoleService userRoleService) {
+    public UserService(DeptService deptService, RoleService roleService, UserDeptService userDeptService, UserRoleService userRoleService) {
         this.deptService = deptService;
         this.roleService = roleService;
         this.userDeptService = userDeptService;
@@ -47,11 +53,11 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param username a {@link java.lang.String} object.
-     * @return a {@link cool.scx.base.BaseUser} object.
+     * @param username a {@link String} object.
+     * @return a {@link AuthUser} object.
      */
-    public BaseUser findByUsername(String username) {
-        var param = new Param<>(new CoreUser());
+    public AuthUser findByUsername(String username) {
+        var param = new Param<>(new User());
         param.queryObject.username = username;
         return get(param);
     }
@@ -59,10 +65,10 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param user a {@link cool.scx.base.BaseUser} object.
-     * @return a {@link java.util.HashSet} object.
+     * @param user a {@link AuthUser} object.
+     * @return a {@link HashSet} object.
      */
-    public HashSet<String> getPermStrByUser(BaseUser user) {
+    public HashSet<String> getPermStrByUser(User user) {
         var permList = new HashSet<String>();
         //如果是超级管理员或管理员 直接设置为 *
         if (user.level < 5) {
@@ -79,11 +85,11 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param user a {@link cool.scx.base.BaseUser} object.
-     * @return a {@link cool.scx.base.BaseUser} object.
+     * @param user a {@link AuthUser} object.
+     * @return a {@link AuthUser} object.
      */
-    public BaseUser updateUserPassword(BaseUser user) {
-        var coreUser = new CoreUser();
+    public AuthUser updateUserPassword(User user) {
+        var coreUser = new User();
         if (!StringUtils.isEmpty(user.password)) {
             var passwordAndSalt = encryptPassword(user.password);
             coreUser.password = passwordAndSalt[0];
@@ -98,8 +104,8 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * <p>encryptPassword.</p>
      *
-     * @param password a {@link java.lang.String} object.
-     * @return an array of {@link java.lang.String} objects.
+     * @param password a {@link String} object.
+     * @return an array of {@link String} objects.
      */
     public String[] encryptPassword(String password) {
         var passwordAndSalt = new String[2];
@@ -119,8 +125,8 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param userId  a {@link java.lang.Long} object.
-     * @param deptIds a {@link java.lang.String} object.
+     * @param userId  a {@link Long} object.
+     * @param deptIds a {@link String} object.
      */
     public void saveUserDeptIds(Long userId, String deptIds) {
         deptService.saveDeptListWithUserId(userId, deptIds);
@@ -129,8 +135,8 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param userId  a {@link java.lang.Long} object.
-     * @param roleIds a {@link java.lang.String} object.
+     * @param userId  a {@link Long} object.
+     * @param roleIds a {@link String} object.
      */
     public void saveUserRoleIds(Long userId, String roleIds) {
         roleService.saveRoleListWithUserId(userId, roleIds);
@@ -139,14 +145,14 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param user a {@link cool.scx._core.auth.CoreUser} object.
-     * @return a {@link cool.scx.base.BaseUser} object.
+     * @param user a {@link User} object.
+     * @return a {@link AuthUser} object.
      */
-    public BaseUser registeredUser(CoreUser user) {
+    public AuthUser registeredUser(User user) {
         var deptIds = user.deptIds;
         var roleIds = user.roleIds;
         var passwordAndSalt = encryptPassword(user.password);
-        var coreUser = new CoreUser();
+        var coreUser = new User();
         coreUser.password = passwordAndSalt[0];
         coreUser.salt = passwordAndSalt[1];
         var newUser = save(coreUser);
@@ -158,8 +164,8 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param id a {@link java.lang.Long} object.
-     * @return a {@link java.lang.Boolean} object.
+     * @param id a {@link Long} object.
+     * @return a {@link Boolean} object.
      */
     public Boolean deleteUser(Long id) {
         deptService.deleteByUserId(id);
@@ -173,7 +179,7 @@ public class CoreUserService extends BaseService<CoreUser> {
      * 重写方法
      */
     @Override
-    public List<CoreUser> listAll() {
+    public List<User> listAll() {
         var userDeptListFuture = CompletableFuture.supplyAsync(userDeptService::listAll);
         var userRoleListFuture = CompletableFuture.supplyAsync(userRoleService::listAll);
         var userListFuture = CompletableFuture.supplyAsync(super::listAll);
@@ -193,11 +199,11 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param user a {@link cool.scx._core.auth.CoreUser} object.
-     * @return a {@link cool.scx.base.BaseUser} object.
+     * @param user a {@link User} object.
+     * @return a {@link AuthUser} object.
      */
-    public BaseUser updateUser(CoreUser user) {
-        var coreUser = new CoreUser();
+    public AuthUser updateUser(User user) {
+        var coreUser = new User();
         var deptIds = user.deptIds;
         var roleIds = user.roleIds;
         if (!StringUtils.isEmpty(user.password)) {
@@ -226,22 +232,22 @@ public class CoreUserService extends BaseService<CoreUser> {
     /**
      * {@inheritDoc}
      *
-     * @param id a {@link java.lang.Long} object.
-     * @return a {@link cool.scx.base.BaseUser} object.
+     * @param id a {@link Long} object.
+     * @return a {@link AuthUser} object.
      */
-    public BaseUser revokeDeleteUser(Long id) {
+    public AuthUser revokeDeleteUser(Long id) {
         return updateUserAndDept(id, false);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @param id a {@link java.lang.Long} object.
+     * @param id a {@link Long} object.
      * @param b  a boolean.
-     * @return a {@link cool.scx.base.BaseUser} object.
+     * @return a {@link AuthUser} object.
      */
-    public BaseUser updateUserAndDept(Long id, boolean b) {
-        var user = new CoreUser();
+    public AuthUser updateUserAndDept(Long id, boolean b) {
+        var user = new User();
         var userRole = new Param<>(new UserRole());
         var userDept = new Param<>(new UserDept());
 

@@ -37,7 +37,7 @@ public final class SQLHelper {
     /**
      * 数据库实例
      */
-    private static final String database = ScxConfig.dataSourceDatabase();
+    private static final String databaseName = ScxConfig.dataSourceDatabase();
 
     /**
      * 根据 class 通过反射获取 对应的 TableInfo (表结构)
@@ -67,10 +67,10 @@ public final class SQLHelper {
             //获取当前连接对象的 MetaData
             var dbMetaData = connection.getMetaData();
             //根据表名称获取表
-            var nowTable = dbMetaData.getTables(database, database, table.tableName, new String[]{"TABLE"});
+            var nowTable = dbMetaData.getTables(databaseName, databaseName, table.tableName, new String[]{"TABLE"});
             //获取到表
             if (nowTable.next()) {
-                var nowColumns = dbMetaData.getColumns(database, database, nowTable.getString("TABLE_NAME"), null);
+                var nowColumns = dbMetaData.getColumns(databaseName, databaseName, nowTable.getString("TABLE_NAME"), null);
                 var stringArrayList = new ArrayList<>();
                 while (nowColumns.next()) {
                     stringArrayList.add(nowColumns.getString("COLUMN_NAME"));

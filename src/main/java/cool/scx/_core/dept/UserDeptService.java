@@ -1,15 +1,15 @@
-package cool.scx._core.auth;
+package cool.scx._core.dept;
 
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
 
 /**
- * UserRoleService
+ * UserDeptService class
  *
  * @author 司昌旭
  * @version 0.3.6
  */
 @ScxService
-public class UserRoleService extends BaseService<UserRole> {
+public class UserDeptService extends BaseService<UserDept> {
 
 }

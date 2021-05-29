@@ -25,9 +25,9 @@ public class LoginItem {
     public String username;
 
     /**
-     *
+     * 登陆的设备类型
      */
-    public Device device;
+    public Device loginDevice;
 
     /**
      * 构造函数
@@ -36,9 +36,9 @@ public class LoginItem {
      * @param _username _username
      * @param _device   a {@link cool.scx.enumeration.Device} object.
      */
-    public LoginItem(Device _device, String _token, String _username) {
-        this.device = _device;
-        this.token = _token;
-        this.username = _username;
+    public LoginItem(Device loginDevice, String token, String username) {
+        this.loginDevice = loginDevice;
+        this.token = token;
+        this.username = username;
     }
 }

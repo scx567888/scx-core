@@ -4,13 +4,7 @@ import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
 import cool.scx.auth.OnlineItem;
-import cool.scx.config.ScxConfig;
-import cool.scx.enumeration.Device;
-import cool.scx.enumeration.FixTableResult;
-import cool.scx.exception.handler.SQLRunnerExceptionHandler;
 import cool.scx.module.ScxModule;
-import cool.scx.sql.SQLHelper;
-import cool.scx.sql.SQLRunner;
 import cool.scx.util.Ansi;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.ext.web.RoutingContext;
@@ -20,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * ScxContext 上下文
@@ -30,12 +23,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public final class ScxContext {
 
-
     /**
      * 存储所有在线的 连接
      */
     private static final List<OnlineItem> ONLINE_ITEMS = new ArrayList<>();
-
 
     /**
      * scx bean 名称 和 class 对应映射
@@ -52,84 +43,12 @@ public final class ScxContext {
      */
     private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
-
-    /**
-     * MUST_HAVE_IMPL 注解的 mapping  , key 是 父类或接口 value 是唯一实现类
-     */
-    private static final Map<Class<?>, Class<?>> MUST_HAVE_IMPL_MAPPING = new HashMap<>();
-
-    /**
-     * 设备 THREAD_LOCAL
-     */
-    private static final ThreadLocal<Device> DEVICE_THREAD_LOCAL = new ThreadLocal<>();
-
     static {
         Ansi.OUT.magenta("ScxContext 初始化中...").ln();
-        checkMustHaveImpl();
         APPLICATION_CONTEXT.scan(ScxModule.getAllModuleBasePackages());
         ScxModule.getAllPluginModule().forEach(m -> m.classList.forEach(APPLICATION_CONTEXT::register));
         APPLICATION_CONTEXT.refresh();
-        initScxContext();
-        fixTable();
-    }
-
-    /**
-     * <p>device.</p>
-     *
-     * @return a {@link cool.scx.enumeration.Device} object.
-     */
-    public static Device device() {
-        return DEVICE_THREAD_LOCAL.get();
-    }
-
-    /**
-     * <p>getImplClassOrSelf.</p>
-     *
-     * @param c   a {@link java.lang.Class} object.
-     * @param <T> a T object.
-     * @return a {@link java.lang.Class} object.
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> Class<T> getImplClassOrSelf(Class<T> c) {
-        var implClass = MUST_HAVE_IMPL_MAPPING.get(c);
-        if (implClass == null) {
-            return c;
-        } else {
-            return (Class<T>) implClass;
-        }
-    }
-
-    /**
-     * 检查 OneAndOnlyOne 是否存在实现类
-     */
-    private static void checkMustHaveImpl() {
-//        var classList = new ArrayList<Class<?>>();
-//        ScxModule.iterateClass(c -> {
-//            if (c.isAnnotationPresent(MustHaveImpl.class)) {
-//                classList.add(c);
-//            }
-//            return true;
-//        });
-//
-//        for (Class<?> o : classList) {
-//            ScxModule.iterateClass(c -> {
-//                if (c != o && !c.isInterface() && o.isAssignableFrom(c)) {
-//                    var lastImpl = MUST_HAVE_IMPL_MAPPING.get(o);
-//                    if (lastImpl == null) {
-//                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
-//                    } else {
-//                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + lastImpl.getName() + "] 已被覆盖").ln();
-//                    }
-//                    MUST_HAVE_IMPL_MAPPING.put(o, c);
-//                }
-//                return true;
-//            });
-//            if (MUST_HAVE_IMPL_MAPPING.get(o) == null) {
-//                Ansi.OUT.brightRed("Class [ " + o.getName() + " ] 必须有一个实现类 !!!").ln();
-//                System.exit(0);
-//            }
-//        }
-
+        initScxAnnotationBean();
     }
 
     /**
@@ -142,7 +61,7 @@ public final class ScxContext {
         return SCX_BEAN_CLASS_NAME_MAPPING.get(str.toLowerCase());
     }
 
-    private static void initScxContext() {
+    private static void initScxAnnotationBean() {
         ScxModule.iterateClass(clazz -> {
             if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class) || clazz.isAnnotationPresent(ScxModel.class)) {
                 String className = clazz.getSimpleName().toLowerCase();
@@ -158,6 +77,10 @@ public final class ScxContext {
         });
     }
 
+    public static Map<String, Class<?>> scxBeanClassNameMapping() {
+        return SCX_BEAN_CLASS_NAME_MAPPING;
+    }
+
     /**
      * <p>getBean.</p>
      *
@@ -166,49 +89,7 @@ public final class ScxContext {
      * @return a T object.
      */
     public static <T> T getBean(Class<T> c) {
-        return APPLICATION_CONTEXT.getBean(getImplClassOrSelf(c));
-    }
-
-    /**
-     * <p>fixTable.</p>
-     */
-    public static void fixTable() {
-        try (var conn = SQLRunner.getConnection()) {
-            var dm = conn.getMetaData();
-            Ansi.OUT.magenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").ln();
-        } catch (Exception e) {
-            SQLRunnerExceptionHandler.sqlExceptionHandler(e);
-            return;
-        }
-        if (ScxConfig.fixTable()) {
-            Ansi.OUT.magenta("修复数据表中...").ln();
-            var noNeedFix = new AtomicBoolean(true);
-            SCX_BEAN_CLASS_NAME_MAPPING.forEach((k, v) -> {
-                if (v.isAnnotationPresent(ScxModel.class) && !v.isInterface()) {
-                    try {
-                        AtomicBoolean mayBeCovered = new AtomicBoolean(false);
-                        Class<?> fixTableClass = v;
-                        for (Map.Entry<Class<?>, Class<?>> entry : MUST_HAVE_IMPL_MAPPING.entrySet()) {
-                            Class<?> key = entry.getKey();
-                            Class<?> value = entry.getValue();
-                            if (key.isAssignableFrom(v)) {
-                                mayBeCovered.set(true);
-                                fixTableClass = value;
-                                break;
-                            }
-                        }
-                        if (SQLHelper.fixTable(fixTableClass) != FixTableResult.NO_NEED_TO_FIX) {
-                            noNeedFix.set(false);
-                        }
-                    } catch (Exception ignored) {
-
-                    }
-                }
-            });
-            if (noNeedFix.get()) {
-                Ansi.OUT.magenta("没有表需要修复...").ln();
-            }
-        }
+        return APPLICATION_CONTEXT.getBean(c);
     }
 
     /**
@@ -217,7 +98,6 @@ public final class ScxContext {
     public static void initContext() {
         Ansi.OUT.magenta("ScxContext 初始化完成...").ln();
     }
-
 
     /**
      * <p>addOnlineItem.</p>
@@ -290,7 +170,6 @@ public final class ScxContext {
         return ONLINE_ITEMS;
     }
 
-
     /**
      * 获取当前线程的 RoutingContext (只限在 scx mapping 注解的方法及其调用链上)
      *
@@ -310,6 +189,5 @@ public final class ScxContext {
     public static void routingContext(RoutingContext routingContext) {
         ROUTING_CONTEXT_THREAD_LOCAL.set(routingContext);
     }
-
 
 }

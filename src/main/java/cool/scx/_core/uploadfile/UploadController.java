@@ -9,8 +9,6 @@ import cool.scx.bo.Param;
 import cool.scx.enumeration.Method;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.FileUtils;
-import cool.scx.util.LogUtils;
-import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
@@ -39,7 +37,7 @@ public class UploadController {
     /**
      * <p>Constructor for UploadController.</p>
      *
-     * @param uploadFileService a {@link cool.scx._core.uploadfile.UploadFileService} object.
+     * @param uploadFileService a {@link UploadFileService} object.
      */
     public UploadController(UploadFileService uploadFileService) {
         this.uploadFileService = uploadFileService;
@@ -85,10 +83,10 @@ public class UploadController {
     /**
      * <p>getNewUpload.</p>
      *
-     * @param fileName a {@link java.lang.String} object.
-     * @param fileSize a {@link java.lang.Long} object.
-     * @param fileMD5  a {@link java.lang.String} object.
-     * @return a {@link cool.scx._core.uploadfile.UploadFile} object.
+     * @param fileName a {@link String} object.
+     * @param fileSize a {@link Long} object.
+     * @param fileMD5  a {@link String} object.
+     * @return a {@link UploadFile} object.
      */
     private static UploadFile getNewUpload(String fileName, Long fileSize, String fileMD5) {
         var uploadFile = new UploadFile();
@@ -107,9 +105,9 @@ public class UploadController {
     /**
      * <p>copyUploadFile.</p>
      *
-     * @param fileName      a {@link java.lang.String} object.
-     * @param oldUploadFile a {@link cool.scx._core.uploadfile.UploadFile} object.
-     * @return a {@link cool.scx._core.uploadfile.UploadFile} object.
+     * @param fileName      a {@link String} object.
+     * @param oldUploadFile a {@link UploadFile} object.
+     * @return a {@link UploadFile} object.
      */
     private static UploadFile copyUploadFile(String fileName, UploadFile oldUploadFile) {
         var uploadFile = new UploadFile();
@@ -126,23 +124,25 @@ public class UploadController {
     /**
      * 通用下载资源方法
      *
-     * @param fileId a {@link java.lang.String} object.
-     * @return a {@link cool.scx.vo.Download} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @param fileId a {@link String} object.
+     * @return a {@link Download} object.
+     * @throws HttpResponseException if any.
      */
     @ScxMapping(value = "/download/:fileId", method = Method.GET)
     public Download download(String fileId) throws HttpResponseException {
         var param = new Param<>(new UploadFile());
         param.queryObject.fileId = fileId;
-        UploadFile uploadFile = uploadFileService.get(param);
-        if (uploadFile == null) {
-            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
-        }
-        var file = new File(CoreConfig.uploadFilePath() + "\\" + uploadFile.filePath);
-        if (!file.exists()) {
-            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
-        }
-        LogUtils.recordLog("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + uploadFile.fileName);
+//        UploadFile uploadFile = uploadFileService.get(param);
+        UploadFile uploadFile = new UploadFile();
+//        uploadFile.filePath="";
+//        if (uploadFile == null) {
+//            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
+//        }
+        var file = new File("D:\\Apps\\Windows 10\\windows_10_21H1_x64.iso");
+//        if (!file.exists()) {
+//            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
+//        }
+//        LogUtils.recordLog("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + uploadFile.fileName);
         //  这里让文件限速到 500 kb
         return new Download(file, uploadFile.fileName);
     }
@@ -151,10 +151,10 @@ public class UploadController {
      * 通用查看图片方法
      *
      * @param fileId 文件 id
-     * @param width  a {@link java.lang.Integer} object.
-     * @param height a {@link java.lang.Integer} object.
+     * @param width  a {@link Integer} object.
+     * @param height a {@link Integer} object.
      * @return a {@link cool.scx.vo.Binary} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws HttpResponseException if any.
      */
     @ScxMapping(value = "/showPicture/:fileId", method = Method.GET)
     public Image showPicture(String fileId, @FromQuery("w") Integer width, @FromQuery("h") Integer height) throws HttpResponseException {
@@ -244,7 +244,7 @@ public class UploadController {
      * <p>listFile.</p>
      *
      * @param fileIds a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link Json} object.
      */
     @ScxMapping(value = "/uploadFile/listFile", method = Method.POST)
     public Json listFile(String fileIds) {
@@ -261,8 +261,8 @@ public class UploadController {
     /**
      * <p>deleteFile.</p>
      *
-     * @param fileId a {@link java.lang.String} object.
-     * @return a {@link cool.scx.vo.Json} object.
+     * @param fileId a {@link String} object.
+     * @return a {@link Json} object.
      */
     @ScxMapping(value = "/uploadFile/deleteFile", method = Method.DELETE)
     public Json deleteFile(String fileId) {

@@ -14,11 +14,11 @@ public class CoreLogHandler {
     /**
      * {@inheritDoc}
      *
-     * @param title    a {@link java.lang.String} object
-     * @param content  a {@link java.lang.String} object
-     * @param username a {@link java.lang.String} object
-     * @param userIp   a {@link java.lang.String} object
-     * @param type     a {@link java.lang.Integer} object
+     * @param title    a {@link String} object
+     * @param content  a {@link String} object
+     * @param username a {@link String} object
+     * @param userIp   a {@link String} object
+     * @param type     a {@link Integer} object
      */
     public void recordLog(String title, String content, String username, String userIp, Integer type) {
 

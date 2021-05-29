@@ -1,6 +1,5 @@
 package cool.scx.sql;
 
-import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
@@ -25,29 +24,12 @@ import java.util.regex.Pattern;
  */
 public final class SQLRunner {
 
-    /**
-     * 数据源
-     */
-    private static final HikariDataSource dataSource = new HikariDataSource();
 
     /**
      * 参数过滤正则表达式
      */
     private static final Pattern pattern = Pattern.compile("(:([\\w.]+))");
 
-    static {
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        var jdbcUrl = "jdbc:mysql://" + ScxConfig.dataSourceHost() + ":" + ScxConfig.dataSourcePort() + "/" + ScxConfig.dataSourceDatabase();
-        for (String parameter : ScxConfig.dataSourceParameters()) {
-            var p = parameter.split("=");
-            if (p.length == 2) {
-                dataSource.addDataSourceProperty(p[0], p[1]);
-            }
-        }
-        dataSource.setJdbcUrl(jdbcUrl);
-        dataSource.setUsername(ScxConfig.dataSourceUsername());
-        dataSource.setPassword(ScxConfig.dataSourcePassword());
-    }
 
     /**
      * 获取 JDBC 连接
@@ -56,7 +38,7 @@ public final class SQLRunner {
      * @throws java.lang.Exception if any.
      */
     public static Connection getConnection() throws Exception {
-        return dataSource.getConnection();
+        return ScxDBContext.dataSource().getConnection();
     }
 
     /**

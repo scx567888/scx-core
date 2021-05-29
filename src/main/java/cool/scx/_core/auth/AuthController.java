@@ -1,13 +1,14 @@
-package cool.scx.auth;
+package cool.scx._core.auth;
 
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
+import cool.scx.auth.ScxAuth;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
 import cool.scx.enumeration.Method;
 import cool.scx.exception.AuthException;
-import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
+import io.vertx.ext.web.RoutingContext;
 
 import java.util.Map;
 
@@ -21,6 +22,12 @@ import java.util.Map;
 @ScxController
 public class AuthController {
 
+    private final CoreAuthHandler coreAuthHandler;
+
+    public AuthController(CoreAuthHandler coreAuthHandler) {
+        this.coreAuthHandler = coreAuthHandler;
+    }
+
     /**
      * 登录方法
      *
@@ -28,24 +35,18 @@ public class AuthController {
      * @return json
      */
     @ScxMapping(method = Method.POST)
-    public Json login(Map<String, Object> params) {
+    public Json login(Map<String, Object> params, RoutingContext routingContext) {
         try {
-            var device = ScxContext.device();
-            var loginUser = ScxAuth.authHandler().login(params);
-            if (device == Device.ADMIN || device == Device.APPLE || device == Device.ANDROID) {
-                var token = StringUtils.getUUID();
-                ScxAuth.addLoginItem(device, token, loginUser.username);
-                //返回登录用户的 Token 给前台，角色和权限信息通过 auth/info 获取
-                return Json.ok().data("token", token);
-            } else if (device == Device.WEBSITE) {
-                String token = ScxAuth.getTokenByCookie();
-                ScxAuth.addLoginItem(device, token, loginUser.username);
+            var loginUser = coreAuthHandler.login(params);
+            var loginDevice = ScxAuth.getDevice(ScxContext.routingContext());
+            String token = ScxAuth.addAuthUser(routingContext, loginUser);
+            if (loginDevice == Device.WEBSITE) {
                 return Json.ok("login-successful");
             } else {
-                return Json.ok("unknown-device");
+                return Json.ok().data("token", token);
             }
         } catch (AuthException authException) {
-            return ScxAuth.authHandler().authExceptionHandler(authException);
+            return coreAuthHandler.authExceptionHandler(authException);
         }
     }
 
@@ -53,11 +54,11 @@ public class AuthController {
      * 注册方法
      *
      * @param params 前台发送的注册信息
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link Json} object.
      */
     @ScxMapping(method = Method.POST)
     public Json signup(Map<String, Object> params) {
-        return ScxAuth.authHandler().signup(params);
+        return coreAuthHandler.signup(params);
     }
 
     /**
@@ -67,7 +68,7 @@ public class AuthController {
      */
     @ScxMapping(method = Method.POST)
     public Json logout() {
-        return ScxAuth.authHandler().logout();
+        return coreAuthHandler.logout();
     }
 
 
@@ -78,7 +79,7 @@ public class AuthController {
      */
     @ScxMapping(method = Method.GET)
     public Json info() {
-        return ScxAuth.authHandler().info();
+        return coreAuthHandler.info();
     }
 
     /**
@@ -89,7 +90,7 @@ public class AuthController {
      */
     @ScxMapping(method = Method.POST)
     public Json infoUpdate(Map<String, Object> params) {
-        return ScxAuth.authHandler().infoUpdate(params);
+        return coreAuthHandler.infoUpdate(params);
     }
 
 }

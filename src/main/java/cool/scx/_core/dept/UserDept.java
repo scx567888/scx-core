@@ -1,4 +1,4 @@
-package cool.scx._core.auth;
+package cool.scx._core.dept;
 
 import cool.scx.annotation.Column;
 import cool.scx.annotation.ScxModel;

@@ -27,7 +27,7 @@ public class CoreConfig {
     /**
      * <p>license.</p>
      *
-     * @return a {@link java.lang.String} object.
+     * @return a {@link String} object.
      */
     public static String license() {
         return coreEasyToUse.license;
@@ -36,7 +36,7 @@ public class CoreConfig {
     /**
      * <p>uploadFilePath.</p>
      *
-     * @return a {@link java.io.File} object.
+     * @return a {@link File} object.
      */
     public static File uploadFilePath() {
         return coreEasyToUse.uploadFilePath;

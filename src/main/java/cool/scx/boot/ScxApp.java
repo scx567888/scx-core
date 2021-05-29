@@ -1,11 +1,13 @@
 package cool.scx.boot;
 
+import cool.scx.auth.ScxAuth;
 import cool.scx.base.BaseModule;
 import cool.scx.cms.ScxCms;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.module.ScxModule;
 import cool.scx.plugin.ScxPlugin;
+import cool.scx.sql.ScxDBContext;
 import cool.scx.util.Timer;
 import cool.scx.web.ScxServer;
 
@@ -50,6 +52,10 @@ public final class ScxApp {
         ScxPlugin.initPlugins();
         // 初始化 上下文
         ScxContext.initContext();
+        // 初始化数据库 上下文
+        ScxDBContext.initDB();
+        // 初始化 认证
+        ScxAuth.initAuth();
         // 初始化 cms
         ScxCms.initCms();
         // 初始化 监听器

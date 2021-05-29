@@ -1,9 +1,11 @@
 package cool.scx.auth;
 
-import cool.scx.base.BaseUser;
+import cool.scx.auth.exception.UnknownDeviceException;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
+import cool.scx.exception.AuthException;
 import cool.scx.util.Ansi;
+import cool.scx.util.StringUtils;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.ArrayList;
@@ -25,11 +27,6 @@ public class ScxAuth {
      * Constant <code>DEVICE_KEY="S-Device"</code>
      */
     public static final String DEVICE_KEY = "S-Device";
-
-    /**
-     * userService 实例 主要用来 获取登录用户的 权限等信息
-     */
-    private static final AuthHandler AUTH_HANDLER;
     /**
      * 存储所有 已登录 的用户信息
      * todo 需要在 scxConfig中 添加 一个配置项 标识用户多端登录 处理方式
@@ -37,10 +34,10 @@ public class ScxAuth {
      * todo 或者 不对登录做限制 同时允许 任意客户端(来源可以不一致) 登录任意数量的 同一用户
      */
     private static final List<LoginItem> LOGIN_ITEMS = new ArrayList<>();
-
-    static {
-        AUTH_HANDLER = ScxContext.getBean(AuthHandler.class);
-    }
+    /**
+     * userService 实例 主要用来 获取登录用户的 权限等信息
+     */
+    private static AuthHandler AUTH_HANDLER;
 
     /**
      * <p>authHandler.</p>
@@ -56,52 +53,38 @@ public class ScxAuth {
      *
      * @return a boolean.
      */
-    public static boolean removeLoginUser() {
-        if (ScxContext.device() == Device.WEBSITE) {
-            var token = ScxContext.routingContext().getCookie(TOKEN_KEY).getValue();
-            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-            return b;
-        }
-        if (ScxContext.device() == Device.ADMIN) {
-            var token = ScxContext.routingContext().request().getHeader(TOKEN_KEY);
-            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-            return b;
-        }
-        if (ScxContext.device() == Device.APPLE) {
-            var token = ScxContext.routingContext().request().getHeader(TOKEN_KEY);
-            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-            return b;
-        }
-        if (ScxContext.device() == Device.ANDROID) {
-            var token = ScxContext.routingContext().request().getHeader(TOKEN_KEY);
-            boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-            Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-            return b;
-        }
-        return false;
-
+    public static boolean removeAuthUser() {
+        var ctx = ScxContext.routingContext();
+        String token = getTokenByDevice(ctx);
+        boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
+        Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+        return b;
     }
 
 
     /**
      * <p>addUserToSession.</p>
-     *
-     * @param token    a {@link java.lang.String} object.
-     * @param username a {@link java.lang.String} object.
-     * @param device   a {@link cool.scx.enumeration.Device} object.
      */
-    public static void addLoginItem(Device device, String token, String username) {
-        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.username.equals(username) && device == u.device).findAny().orElse(null);
+    public static String addAuthUser(RoutingContext ctx, AuthUser authUser) throws AuthException {
+        String token;
+        var loginDevice = getDevice(ctx);
+        var username = authUser.username();
+        //先判断登录用户的来源
+        if (loginDevice == Device.ADMIN || loginDevice == Device.APPLE || loginDevice == Device.ANDROID) {
+            token = StringUtils.getUUID();
+        } else if (loginDevice == Device.WEBSITE) {
+            token = getTokenByCookie(ctx);
+        } else {
+            throw new UnknownDeviceException();
+        }
+        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.username.equals(username) && loginDevice == u.loginDevice).findAny().orElse(null);
         if (sessionItem == null) {
-            LOGIN_ITEMS.add(new LoginItem(device, token, username));
+            LOGIN_ITEMS.add(new LoginItem(loginDevice, token, username));
         } else {
             sessionItem.token = token;
-            sessionItem.device = device;
         }
-        Ansi.OUT.print(username + " 登录了 , 登录设备 [" + device.toString() + "] , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+        Ansi.OUT.print(username + " 登录了 , 登录设备 [" + loginDevice.toString() + "] , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+        return token;
     }
 
 
@@ -110,44 +93,28 @@ public class ScxAuth {
      *
      * @param token  a {@link java.lang.String} object.
      * @param device a {@link cool.scx.enumeration.Device} object.
-     * @return a {@link cool.scx.base.BaseUser} object.
+     * @return a {@link AuthUser} object.
      */
-    public static BaseUser getLoginUserByToken(Device device, String token) {
-        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token) && u.device == device).findAny().orElse(null);
+    public static AuthUser getLoginUserByToken(Device device, String token) {
+        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token) && u.loginDevice == device).findAny().orElse(null);
         if (sessionItem == null) {
             return null;
         }
         //每次都从数据库中获取用户 保证 权限设置的及时性 但是为了 性能 此处应该做缓存 todo
-        return AUTH_HANDLER.findByUsername(sessionItem.username);
+        return AUTH_HANDLER.getAuthUser(sessionItem.username);
     }
-
 
     /**
      * <p>getLoginUserByHeader.</p>
      *
-     * @return a {@link cool.scx.base.BaseUser} object.
+     * @return a {@link AuthUser} object.
      */
-    public static BaseUser getLoginUser() {
-        if (ScxContext.device() == Device.WEBSITE) {
-            String token = ScxContext.routingContext().getCookie(ScxAuth.TOKEN_KEY).getValue();
-            return getLoginUserByToken(ScxContext.device(), token);
-        }
-        if (ScxContext.device() == Device.ADMIN) {
-            String token = ScxContext.routingContext().request().getHeader(ScxAuth.TOKEN_KEY);
-            return getLoginUserByToken(ScxContext.device(), token);
-        }
-        if (ScxContext.device() == Device.APPLE) {
-            String token = ScxContext.routingContext().request().getHeader(ScxAuth.TOKEN_KEY);
-            return getLoginUserByToken(ScxContext.device(), token);
-        }
-        if (ScxContext.device() == Device.ANDROID) {
-            String token = ScxContext.routingContext().request().getHeader(ScxAuth.TOKEN_KEY);
-            return getLoginUserByToken(ScxContext.device(), token);
-        }
-        return null;
+    public static AuthUser getLoginUser() {
+        var ctx = ScxContext.routingContext();
+        return getLoginUserByToken(getDevice(ctx), getTokenByDevice(ctx));
     }
 
-    private static Device getDevice(RoutingContext routingContext) {
+    public static Device getDevice(RoutingContext routingContext) {
         String device = routingContext.request().getHeader(DEVICE_KEY);
         if (device == null || device.equalsIgnoreCase("WEBSITE")) {
             return Device.WEBSITE;
@@ -166,16 +133,7 @@ public class ScxAuth {
     }
 
     /**
-     * <p>getTokenByCookie.</p>
-     *
-     * @return a {@link java.lang.String} object
-     */
-    public static String getTokenByCookie() {
-        return ScxContext.routingContext().getCookie(ScxAuth.TOKEN_KEY).getValue();
-    }
-
-    /**
-     * <p>getAllLoginItem.</p>
+     * 获取所有登录的用户
      *
      * @return a {@link java.util.List} object
      */
@@ -183,5 +141,85 @@ public class ScxAuth {
         return LOGIN_ITEMS;
     }
 
+    /**
+     * 根据 设备类型自行判断 获取 token
+     *
+     * @return a {@link java.lang.String} object
+     */
+    private static String getTokenByDevice(RoutingContext ctx) {
+        var device = getDevice(ctx);
+        switch (device) {
+            case WEBSITE:
+                return getTokenByCookie(ctx);
+            case ADMIN:
+                return getTokenByHeader(ctx);
+            case APPLE:
+                return getTokenByHeader(ctx);
+            case ANDROID:
+                return getTokenByHeader(ctx);
+            default:
+                return null;
+        }
+    }
 
+    /**
+     * 根据 cookie 获取 token
+     *
+     * @return a {@link java.lang.String} object
+     */
+    private static String getTokenByCookie(RoutingContext routingContext) {
+        return routingContext.getCookie(ScxAuth.TOKEN_KEY).getValue();
+    }
+
+    /**
+     * 根据 Header 获取 token
+     *
+     * @return a {@link java.lang.String} object
+     */
+    private static String getTokenByHeader(RoutingContext routingContext) {
+        return routingContext.request().getHeader(TOKEN_KEY);
+    }
+
+    /**
+     * 初始化认证需要的数据
+     * todo a
+     */
+    public static void initAuth() {
+        AUTH_HANDLER = ScxContext.getBean(AuthHandler.class);
+
+
+    }
+
+    /**
+     * 检查 OneAndOnlyOne 是否存在实现类
+     */
+    private static void checkMustHaveImpl() {
+//        var classList = new ArrayList<Class<?>>();
+//        ScxModule.iterateClass(c -> {
+//            if (c.isAnnotationPresent(MustHaveImpl.class)) {
+//                classList.add(c);
+//            }
+//            return true;
+//        });
+//
+//        for (Class<?> o : classList) {
+//            ScxModule.iterateClass(c -> {
+//                if (c != o && !c.isInterface() && o.isAssignableFrom(c)) {
+//                    var lastImpl = MUST_HAVE_IMPL_MAPPING.get(o);
+//                    if (lastImpl == null) {
+//                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
+//                    } else {
+//                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + lastImpl.getName() + "] 已被覆盖").ln();
+//                    }
+//                    MUST_HAVE_IMPL_MAPPING.put(o, c);
+//                }
+//                return true;
+//            });
+//            if (MUST_HAVE_IMPL_MAPPING.get(o) == null) {
+//                Ansi.OUT.brightRed("Class [ " + o.getName() + " ] 必须有一个实现类 !!!").ln();
+//                System.exit(0);
+//            }
+//        }
+
+    }
 }
