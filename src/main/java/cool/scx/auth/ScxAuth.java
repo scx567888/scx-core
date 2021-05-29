@@ -197,8 +197,6 @@ public class ScxAuth {
      */
     public static void initAuth() {
         AUTH_HANDLER = ScxContext.getBean(AuthHandler.class);
-
-
     }
 
     /**

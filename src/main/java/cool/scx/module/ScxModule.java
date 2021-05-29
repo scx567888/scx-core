@@ -46,6 +46,7 @@ public final class ScxModule {
      */
     public static void initModules() {
         for (BaseModule baseModule : BASE_MODULE_ARRAY) {
+            baseModule.configLoaded();
             var tempScxModule = getModuleByBaseModule(baseModule);
             addModule(tempScxModule);
         }
@@ -278,4 +279,18 @@ public final class ScxModule {
         return APP_ROOT_PATH;
     }
 
+    /**
+     * 启动模块的生命周期
+     */
+    public static void startModules() {
+        for (BaseModule baseModule : BASE_MODULE_ARRAY) {
+            baseModule.start();
+        }
+    }
+
+    public static void stopModules() {
+        for (BaseModule baseModule : BASE_MODULE_ARRAY) {
+            baseModule.stop();
+        }
+    }
 }

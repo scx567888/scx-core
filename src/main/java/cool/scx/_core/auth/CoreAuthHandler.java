@@ -36,15 +36,15 @@ public class CoreAuthHandler implements AuthHandler {
 
     private static final HashMap<String, LoginError> loginErrorMap = new HashMap<>();
 
-    private final UserService coreUserService;
+    private final UserService userService;
 
     /**
      * <p>Constructor for CoreAuthHandler.</p>
      *
-     * @param coreUserService a {@link cool.scx._core.user.UserService} object.
+     * @param userService a {@link cool.scx._core.user.UserService} object.
      */
-    public CoreAuthHandler(UserService coreUserService) {
-        this.coreUserService = coreUserService;
+    public CoreAuthHandler(UserService userService) {
+        this.userService = userService;
     }
 
 
@@ -60,7 +60,7 @@ public class CoreAuthHandler implements AuthHandler {
             return Json.fail(Json.ILLEGAL_TOKEN, "登录已失效");
         } else {
             //返回登录用户的信息给前台 含用户的所有角色和权限
-            var permList = coreUserService.getPermStrByUser(user);
+            var permList = userService.getPermStrByUser(user);
             return Json.ok()
                     .data("id", user.id)
                     .data("username", user.username)
@@ -83,7 +83,7 @@ public class CoreAuthHandler implements AuthHandler {
         queryUser.id = currentUser.id;
         currentUser.password = queryUser.password;
         currentUser.salt = null;
-        var b = coreUserService.updateUserPassword(currentUser) != null;
+        var b = userService.updateUserPassword(currentUser) != null;
         LogUtils.recordLog("更新了自己的信息", "用户名是 :" + currentUser.username);
         return Json.ok().data("success", b);
     }
@@ -142,25 +142,15 @@ public class CoreAuthHandler implements AuthHandler {
 
         newUser.addOrderBy("id", SortType.ASC).queryObject.username = username;
 
-        AuthUser user = coreUserService.get(newUser);
+        AuthUser user = userService.get(newUser);
         if (user != null) {
             return Json.ok("userAlreadyExists");
         } else {
             newUser.queryObject.level = 4;
             newUser.queryObject.password = password;
-            coreUserService.registeredUser(newUser.queryObject);
+            userService.registeredUser(newUser.queryObject);
             return Json.ok("registerSuccess");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param username a {@link java.lang.String} object
-     * @return a {@link cool.scx.auth.AuthUser} object
-     */
-    public AuthUser findByUsername(String username) {
-        return coreUserService.findByUsername(username);
     }
 
     /**
@@ -168,7 +158,7 @@ public class CoreAuthHandler implements AuthHandler {
      */
     @Override
     public HashSet<String> getPerms(AuthUser user) {
-        return coreUserService.getPermStrByUser((User) user);
+        return userService.getPermStrByUser((User) user);
     }
 
     /**
@@ -208,7 +198,7 @@ public class CoreAuthHandler implements AuthHandler {
      */
     @Override
     public AuthUser getAuthUser(String username) {
-        return null;
+        return userService.findByUsername(username);
     }
 
     /**
@@ -241,7 +231,7 @@ public class CoreAuthHandler implements AuthHandler {
             loginError = le;
         }
         if (notHaveLoginError(ip, loginError)) {
-            var user = (User) coreUserService.findByUsername(username.toString());
+            var user = (User) userService.findByUsername(username.toString());
             if (user == null) {
                 var le = new LoginError(now, loginError.errorTimes + 1);
                 loginErrorMap.put(ip, le);

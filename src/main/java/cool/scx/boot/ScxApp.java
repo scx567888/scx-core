@@ -62,6 +62,8 @@ public final class ScxApp {
         ScxListener.initListener();
         // 初始化 web 服务器
         ScxServer.initServer();
+        // 初始化 模块的 start 生命周期
+        ScxModule.startModules();
         // 启动 web 服务器
         ScxServer.startServer();
     }

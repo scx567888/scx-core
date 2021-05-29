@@ -14,18 +14,24 @@ package cool.scx.base;
 public interface BaseModule {
 
     /**
-     * <p>onStart.</p>
+     * 配置文件加载完成调用
      */
-    default void start() {
-        System.out.println(" onStart !!!");
+    default void configLoaded() {
+
     }
 
     /**
-     * <p>onEnd.</p>
+     * 所有核心模块初始化完成调用
+     */
+    default void start() {
+
+    }
+
+    /**
+     * 结束调用
      */
     default void stop() {
-        var aClass = this.getClass();
-        System.out.println(aClass.getName() + " onEnd !!!");
+
     }
 
 }

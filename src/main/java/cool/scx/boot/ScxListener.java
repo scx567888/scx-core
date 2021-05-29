@@ -2,6 +2,7 @@ package cool.scx.boot;
 
 import cool.scx.auth.LoginItem;
 import cool.scx.auth.ScxAuth;
+import cool.scx.module.ScxModule;
 import cool.scx.util.Ansi;
 import cool.scx.util.FileUtils;
 
@@ -44,6 +45,8 @@ public final class ScxListener {
         }
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
+                // 初始化 模块的 start 生命周期
+                ScxModule.stopModules();
                 Ansi.OUT.red("项目停止!!!").ln();
                 Ansi.OUT.red("保存 session 中!!!").ln();
                 var fos = new FileOutputStream(FileUtils.getFileByRootModulePath("scx-session.cache"));

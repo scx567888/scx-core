@@ -1,8 +1,10 @@
 package cool.scx._core;
 
 import cool.scx._core.config.CoreConfig;
+import cool.scx._core.license.LicenseService;
 import cool.scx.base.BaseModule;
 import cool.scx.boot.ScxApp;
+import cool.scx.context.ScxContext;
 
 /**
  * 核心模块启动类
@@ -28,7 +30,13 @@ public class CoreModule implements BaseModule {
      * start
      */
     @Override
-    public void start() {
+    public void configLoaded() {
         CoreConfig.initConfig();
+    }
+
+    @Override
+    public void start() {
+        var licenseService = ScxContext.getBean(LicenseService.class);
+        licenseService.checkLicense();
     }
 }
