@@ -62,12 +62,12 @@ public final class ScxConfig {
      * @param params a {@link java.lang.String} object.
      */
     public static void initConfig(String... params) {
-        Ansi.OUT.brightBlue("ScxConfig 初始化中...").ln();
+        Ansi.OUT.green("ScxConfig 初始化中...").ln();
         ORIGINAL_PARAMS = params;
         loadJsonConfig();
         loadParamsConfig();
         loadEasyToUseConfig();
-        Ansi.OUT.brightBlue("ScxConfig 初始化完成...").ln();
+        Ansi.OUT.green("ScxConfig 初始化完成...").ln();
     }
 
     /**

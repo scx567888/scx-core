@@ -158,7 +158,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                     return true;
                 } else {
                     //这里就是 管理员级别  不受权限验证
-                    if (currentUser.isAdmin()) {
+                    if (currentUser._isAdmin()) {
                         return true;
                     } else {
                         //获取用户全部的权限字符串

@@ -72,7 +72,9 @@ public final class ScxCms {
      * 初始化 cms 配置文件
      */
     public static void initCms() {
+        Ansi.OUT.blue("ScxCms 初始化中...").ln();
         freemarkerConfig = initFreemarkerConfig();
+        Ansi.OUT.blue("ScxCms 初始化完成...").ln();
     }
 
     /**

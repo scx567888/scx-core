@@ -98,7 +98,7 @@ public class User extends BaseModel implements AuthUser {
      * {@inheritDoc}
      */
     @Override
-    public String username() {
+    public String _username() {
         return username;
     }
 
@@ -106,7 +106,7 @@ public class User extends BaseModel implements AuthUser {
      * {@inheritDoc}
      */
     @Override
-    public boolean isAdmin() {
+    public boolean _isAdmin() {
         return level != null && level < 5;
     }
 }

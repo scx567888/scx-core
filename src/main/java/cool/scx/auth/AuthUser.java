@@ -14,7 +14,7 @@ public interface AuthUser {
      *
      * @return 用户名
      */
-    String username();
+    String _username();
 
     /**
      * 是否为管理员
@@ -22,6 +22,6 @@ public interface AuthUser {
      *
      * @return 是否为管理员
      */
-    boolean isAdmin();
+    boolean _isAdmin();
 
 }

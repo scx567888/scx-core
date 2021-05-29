@@ -28,7 +28,7 @@ public class ScxDBContext {
      * <p>fixTable.</p>
      */
     public static void fixTable() {
-        Ansi.OUT.magenta("修复数据表中...").ln();
+        Ansi.OUT.brightMagenta("修复数据表中...").ln();
         var noNeedFix = new AtomicBoolean(true);
         ScxContext.scxBeanClassNameMapping().forEach((k, v) -> {
             if (v.isAnnotationPresent(ScxModel.class) && !v.isInterface()) {
@@ -42,7 +42,7 @@ public class ScxDBContext {
             }
         });
         if (noNeedFix.get()) {
-            Ansi.OUT.magenta("没有表需要修复...").ln();
+            Ansi.OUT.brightMagenta("没有表需要修复...").ln();
         }
     }
 
@@ -50,17 +50,19 @@ public class ScxDBContext {
      * <p>initDB.</p>
      */
     public static void initDB() {
+        Ansi.OUT.brightMagenta("ScxDBContext 初始化中...").ln();
         var dataSourceCanUse = checkDataSource();
         if (dataSourceCanUse && ScxConfig.fixTable()) {
             fixTable();
         }
+        Ansi.OUT.brightMagenta("ScxDBContext 初始化完成...").ln();
     }
 
     private static boolean checkDataSource() {
         DataSource ds = getDataSourceByConfig();
         try (var conn = ds.getConnection()) {
             var dm = conn.getMetaData();
-            Ansi.OUT.magenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").ln();
+            Ansi.OUT.brightMagenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").ln();
             dataSource = ds;
             return true;
         } catch (Exception e) {

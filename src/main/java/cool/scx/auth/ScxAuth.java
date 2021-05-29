@@ -73,7 +73,7 @@ public class ScxAuth {
     public static String addAuthUser(RoutingContext ctx, AuthUser authUser) throws AuthException {
         String token;
         var loginDevice = getDevice(ctx);
-        var username = authUser.username();
+        var username = authUser._username();
         //先判断登录用户的来源
         if (loginDevice == Device.ADMIN || loginDevice == Device.APPLE || loginDevice == Device.ANDROID) {
             token = StringUtils.getUUID();

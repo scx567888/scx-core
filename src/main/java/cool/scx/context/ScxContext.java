@@ -10,10 +10,7 @@ import io.vertx.core.http.ServerWebSocket;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ScxContext 上下文
@@ -44,11 +41,14 @@ public final class ScxContext {
     private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
     static {
-        Ansi.OUT.magenta("ScxContext 初始化中...").ln();
+        Ansi.OUT.brightBlue("ScxContext 初始化中...").ln();
         APPLICATION_CONTEXT.scan(ScxModule.getAllModuleBasePackages());
         ScxModule.getAllPluginModule().forEach(m -> m.classList.forEach(APPLICATION_CONTEXT::register));
         APPLICATION_CONTEXT.refresh();
         initScxAnnotationBean();
+        var allBean = APPLICATION_CONTEXT.getBeanDefinitionNames();
+        var beanNumber = Arrays.stream(allBean).filter(s -> !s.startsWith("org.springframework")).count();
+        Ansi.OUT.brightBlue("共加载 " + beanNumber + " 个Bean...").ln();
     }
 
     /**
@@ -101,7 +101,7 @@ public final class ScxContext {
      * 初始化 context
      */
     public static void initContext() {
-        Ansi.OUT.magenta("ScxContext 初始化完成...").ln();
+        Ansi.OUT.brightBlue("ScxContext 初始化完成...").ln();
     }
 
     /**

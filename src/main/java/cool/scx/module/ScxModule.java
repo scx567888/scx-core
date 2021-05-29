@@ -46,7 +46,6 @@ public final class ScxModule {
      */
     public static void initModules() {
         for (BaseModule baseModule : BASE_MODULE_ARRAY) {
-            baseModule.start();
             var tempScxModule = getModuleByBaseModule(baseModule);
             addModule(tempScxModule);
         }
@@ -80,8 +79,10 @@ public final class ScxModule {
      */
     public static ModuleItem getModuleByFile(File file) throws Exception {
         ModuleItem tempModule = new ModuleItem();
-        tempModule.moduleName = "";
+        tempModule.moduleName = file.getName();
         tempModule.isPlugin = false;
+        tempModule.classList = getClassListByJar(file.toURI().toURL());
+        tempModule.moduleRootPath = file.getParentFile();
         return tempModule;
     }
 
