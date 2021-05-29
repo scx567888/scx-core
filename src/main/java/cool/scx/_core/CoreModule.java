@@ -34,6 +34,9 @@ public class CoreModule implements BaseModule {
         CoreConfig.initConfig();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void start() {
         var licenseService = ScxContext.getBean(LicenseService.class);

@@ -288,6 +288,9 @@ public final class ScxModule {
         }
     }
 
+    /**
+     * <p>stopModules.</p>
+     */
     public static void stopModules() {
         for (BaseModule baseModule : BASE_MODULE_ARRAY) {
             baseModule.stop();
