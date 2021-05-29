@@ -11,6 +11,12 @@ import cool.scx.util.Ansi;
 import javax.sql.DataSource;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * <p>ScxDBContext class.</p>
+ *
+ * @author 司昌旭
+ * @version 1.1.5
+ */
 public class ScxDBContext {
 
     /**
@@ -18,6 +24,9 @@ public class ScxDBContext {
      */
     private static DataSource dataSource;
 
+    /**
+     * <p>fixTable.</p>
+     */
     public static void fixTable() {
         Ansi.OUT.magenta("修复数据表中...").ln();
         var noNeedFix = new AtomicBoolean(true);
@@ -37,6 +46,9 @@ public class ScxDBContext {
         }
     }
 
+    /**
+     * <p>initDB.</p>
+     */
     public static void initDB() {
         var dataSourceCanUse = checkDataSource();
         if (dataSourceCanUse && ScxConfig.fixTable()) {
@@ -73,6 +85,11 @@ public class ScxDBContext {
         return ds;
     }
 
+    /**
+     * <p>dataSource.</p>
+     *
+     * @return a DataSource object
+     */
     public static DataSource dataSource() {
         return dataSource;
     }

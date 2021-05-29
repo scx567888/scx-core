@@ -64,6 +64,11 @@ public class ScxAuth {
 
     /**
      * <p>addUserToSession.</p>
+     *
+     * @param ctx      a {@link io.vertx.ext.web.RoutingContext} object
+     * @param authUser a {@link cool.scx.auth.AuthUser} object
+     * @return a {@link java.lang.String} object
+     * @throws cool.scx.exception.AuthException if any.
      */
     public static String addAuthUser(RoutingContext ctx, AuthUser authUser) throws AuthException {
         String token;
@@ -93,7 +98,7 @@ public class ScxAuth {
      *
      * @param token  a {@link java.lang.String} object.
      * @param device a {@link cool.scx.enumeration.Device} object.
-     * @return a {@link AuthUser} object.
+     * @return a {@link cool.scx.auth.AuthUser} object.
      */
     public static AuthUser getLoginUserByToken(Device device, String token) {
         var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token) && u.loginDevice == device).findAny().orElse(null);
@@ -107,13 +112,19 @@ public class ScxAuth {
     /**
      * <p>getLoginUserByHeader.</p>
      *
-     * @return a {@link AuthUser} object.
+     * @return a {@link cool.scx.auth.AuthUser} object.
      */
     public static AuthUser getLoginUser() {
         var ctx = ScxContext.routingContext();
         return getLoginUserByToken(getDevice(ctx), getTokenByDevice(ctx));
     }
 
+    /**
+     * <p>getDevice.</p>
+     *
+     * @param routingContext a {@link io.vertx.ext.web.RoutingContext} object
+     * @return a {@link cool.scx.enumeration.Device} object
+     */
     public static Device getDevice(RoutingContext routingContext) {
         String device = routingContext.request().getHeader(DEVICE_KEY);
         if (device == null || device.equalsIgnoreCase("WEBSITE")) {

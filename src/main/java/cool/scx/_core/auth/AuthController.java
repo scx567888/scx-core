@@ -24,6 +24,11 @@ public class AuthController {
 
     private final CoreAuthHandler coreAuthHandler;
 
+    /**
+     * <p>Constructor for AuthController.</p>
+     *
+     * @param coreAuthHandler a {@link cool.scx._core.auth.CoreAuthHandler} object
+     */
     public AuthController(CoreAuthHandler coreAuthHandler) {
         this.coreAuthHandler = coreAuthHandler;
     }
@@ -31,7 +36,8 @@ public class AuthController {
     /**
      * 登录方法
      *
-     * @param params 前台发送的登录数据
+     * @param params         前台发送的登录数据
+     * @param routingContext a {@link io.vertx.ext.web.RoutingContext} object
      * @return json
      */
     @ScxMapping(method = Method.POST)
@@ -54,7 +60,7 @@ public class AuthController {
      * 注册方法
      *
      * @param params 前台发送的注册信息
-     * @return a {@link Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(method = Method.POST)
     public Json signup(Map<String, Object> params) {

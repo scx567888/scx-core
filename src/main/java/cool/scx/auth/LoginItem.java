@@ -32,9 +32,9 @@ public class LoginItem {
     /**
      * 构造函数
      *
-     * @param _token    _token
-     * @param _username _username
-     * @param _device   a {@link cool.scx.enumeration.Device} object.
+     * @param loginDevice a {@link cool.scx.enumeration.Device} object
+     * @param token       a {@link java.lang.String} object
+     * @param username    a {@link java.lang.String} object
      */
     public LoginItem(Device loginDevice, String token, String username) {
         this.loginDevice = loginDevice;

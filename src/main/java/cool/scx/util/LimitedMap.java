@@ -27,6 +27,8 @@ public class LimitedMap<K, V> extends LinkedHashMap<K, V> {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * removeEldestEntry
      */
     @Override

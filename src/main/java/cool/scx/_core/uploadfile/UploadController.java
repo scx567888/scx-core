@@ -37,7 +37,7 @@ public class UploadController {
     /**
      * <p>Constructor for UploadController.</p>
      *
-     * @param uploadFileService a {@link UploadFileService} object.
+     * @param uploadFileService a {@link cool.scx._core.uploadfile.UploadFileService} object.
      */
     public UploadController(UploadFileService uploadFileService) {
         this.uploadFileService = uploadFileService;
@@ -124,9 +124,9 @@ public class UploadController {
     /**
      * 通用下载资源方法
      *
-     * @param fileId a {@link String} object.
-     * @return a {@link Download} object.
-     * @throws HttpResponseException if any.
+     * @param fileId a {@link java.lang.String} object.
+     * @return a {@link cool.scx.vo.Download} object.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = "/download/:fileId", method = Method.GET)
     public Download download(String fileId) throws HttpResponseException {
@@ -151,10 +151,10 @@ public class UploadController {
      * 通用查看图片方法
      *
      * @param fileId 文件 id
-     * @param width  a {@link Integer} object.
-     * @param height a {@link Integer} object.
+     * @param width  a {@link java.lang.Integer} object.
+     * @param height a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Binary} object.
-     * @throws HttpResponseException if any.
+     * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = "/showPicture/:fileId", method = Method.GET)
     public Image showPicture(String fileId, @FromQuery("w") Integer width, @FromQuery("h") Integer height) throws HttpResponseException {
@@ -244,7 +244,7 @@ public class UploadController {
      * <p>listFile.</p>
      *
      * @param fileIds a {@link java.util.Map} object.
-     * @return a {@link Json} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = "/uploadFile/listFile", method = Method.POST)
     public Json listFile(String fileIds) {
@@ -261,8 +261,8 @@ public class UploadController {
     /**
      * <p>deleteFile.</p>
      *
-     * @param fileId a {@link String} object.
-     * @return a {@link Json} object.
+     * @param fileId a {@link java.lang.String} object.
+     * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = "/uploadFile/deleteFile", method = Method.DELETE)
     public Json deleteFile(String fileId) {

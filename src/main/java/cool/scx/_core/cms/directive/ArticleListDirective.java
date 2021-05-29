@@ -22,13 +22,15 @@ public class ArticleListDirective extends BaseTemplateDirective {
     /**
      * <p>Constructor for ArticleListDirective.</p>
      *
-     * @param articleService a {@link ArticleService} object.
+     * @param articleService a {@link cool.scx._core.cms.ArticleService} object.
      */
     public ArticleListDirective(ArticleService articleService) {
         this.articleService = articleService;
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * getResults
      */
     @Override
@@ -37,6 +39,8 @@ public class ArticleListDirective extends BaseTemplateDirective {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * getResults
      */
     @Override

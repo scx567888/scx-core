@@ -94,11 +94,17 @@ public class User extends BaseModel implements AuthUser {
     @JsonIgnore
     public Byte level;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String username() {
         return username;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isAdmin() {
         return level != null && level < 5;

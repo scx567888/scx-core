@@ -20,7 +20,7 @@ public class ColumnListDirective extends BaseTemplateDirective {
     /**
      * <p>Constructor for ColumnListDirective.</p>
      *
-     * @param columnService a {@link ColumnService} object.
+     * @param columnService a {@link cool.scx._core.cms.ColumnService} object.
      */
     public ColumnListDirective(ColumnService columnService) {
         this.columnService = columnService;
@@ -37,6 +37,8 @@ public class ColumnListDirective extends BaseTemplateDirective {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * directiveName
      */
     @Override
@@ -45,6 +47,8 @@ public class ColumnListDirective extends BaseTemplateDirective {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * directiveName
      */
     @Override

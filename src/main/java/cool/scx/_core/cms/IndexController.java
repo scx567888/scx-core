@@ -28,7 +28,7 @@ public class IndexController {
     /**
      * <p>Constructor for IndexController.</p>
      *
-     * @param coreUserService a {@link UserService} object.
+     * @param coreUserService a {@link cool.scx._core.user.UserService} object.
      */
     public IndexController(UserService coreUserService) {
         this.coreUserService = coreUserService;
@@ -38,7 +38,7 @@ public class IndexController {
      * 跳转至首页
      * 只是测试!!!
      *
-     * @param user a {@link AuthUser} object.
+     * @param user a {@link cool.scx.auth.AuthUser} object.
      * @return 页面
      */
 //    @ScxMapping(value = "/", method = Method.GET)

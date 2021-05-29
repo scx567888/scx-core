@@ -41,7 +41,7 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * <p>Constructor for CoreAuthHandler.</p>
      *
-     * @param coreUserService a {@link UserService} object.
+     * @param coreUserService a {@link cool.scx._core.user.UserService} object.
      */
     public CoreAuthHandler(UserService coreUserService) {
         this.coreUserService = coreUserService;
@@ -50,6 +50,8 @@ public class CoreAuthHandler implements AuthHandler {
 
     /**
      * info
+     *
+     * @return a {@link cool.scx.vo.Json} object
      */
     public Json info() {
         var user = (User) ScxAuth.getLoginUser();
@@ -71,6 +73,9 @@ public class CoreAuthHandler implements AuthHandler {
 
     /**
      * {@inheritDoc}
+     *
+     * @param params a {@link java.util.Map} object
+     * @return a {@link cool.scx.vo.Json} object
      */
     public Json infoUpdate(Map<String, Object> params) {
         var queryUser = ObjectUtils.mapToBean(params, User.class);
@@ -85,6 +90,8 @@ public class CoreAuthHandler implements AuthHandler {
 
     /**
      * logout
+     *
+     * @return a {@link cool.scx.vo.Json} object
      */
     public Json logout() {
         var b = ScxAuth.removeAuthUser();
@@ -97,6 +104,9 @@ public class CoreAuthHandler implements AuthHandler {
 
     /**
      * authExceptionHandler
+     *
+     * @param e a {@link cool.scx.exception.AuthException} object
+     * @return a {@link cool.scx.vo.Json} object
      */
     public Json authExceptionHandler(AuthException e) {
         if (e instanceof UnknownDeviceException) {
@@ -121,6 +131,9 @@ public class CoreAuthHandler implements AuthHandler {
 
     /**
      * signup
+     *
+     * @param params a {@link java.util.Map} object
+     * @return a {@link cool.scx.vo.Json} object
      */
     public Json signup(Map<String, Object> params) {
         var username = params.get("username").toString();
@@ -142,11 +155,17 @@ public class CoreAuthHandler implements AuthHandler {
 
     /**
      * {@inheritDoc}
+     *
+     * @param username a {@link java.lang.String} object
+     * @return a {@link cool.scx.auth.AuthUser} object
      */
     public AuthUser findByUsername(String username) {
         return coreUserService.findByUsername(username);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HashSet<String> getPerms(AuthUser user) {
         return coreUserService.getPermStrByUser((User) user);
@@ -184,6 +203,9 @@ public class CoreAuthHandler implements AuthHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AuthUser getAuthUser(String username) {
         return null;
@@ -191,6 +213,10 @@ public class CoreAuthHandler implements AuthHandler {
 
     /**
      * {@inheritDoc}
+     *
+     * @param params a {@link java.util.Map} object
+     * @return a {@link cool.scx.auth.AuthUser} object
+     * @throws cool.scx.exception.AuthException if any.
      */
     public AuthUser login(Map<String, Object> params) throws AuthException {
         //license 失效时不允许登录

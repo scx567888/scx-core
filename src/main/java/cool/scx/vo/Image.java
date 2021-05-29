@@ -86,6 +86,8 @@ public class Image implements BaseVo {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * sendToClient
      */
     @Override

@@ -77,6 +77,11 @@ public final class ScxContext {
         });
     }
 
+    /**
+     * <p>scxBeanClassNameMapping.</p>
+     *
+     * @return a {@link java.util.Map} object
+     */
     public static Map<String, Class<?>> scxBeanClassNameMapping() {
         return SCX_BEAN_CLASS_NAME_MAPPING;
     }

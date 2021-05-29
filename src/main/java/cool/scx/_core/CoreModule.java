@@ -23,6 +23,8 @@ public class CoreModule implements BaseModule {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * start
      */
     @Override

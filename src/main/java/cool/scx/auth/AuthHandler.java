@@ -30,6 +30,8 @@ public interface AuthHandler {
     void noPermsHandler(Device device, RoutingContext context);
 
     /**
+     * <p>getAuthUser.</p>
+     *
      * @param username 根据用户名获取 用户
      *                 这里并没有将用户直接存储到 session 中
      *                 而是通过此接口进行查找是为了保证用户信息修改后回显的及时性

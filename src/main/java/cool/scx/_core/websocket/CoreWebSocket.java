@@ -24,6 +24,8 @@ import io.vertx.core.http.WebSocketFrame;
 public class CoreWebSocket implements BaseWebSocketController {
 
     /**
+     * {@inheritDoc}
+     * <p>
      * onOpen
      */
     @Override
@@ -32,6 +34,8 @@ public class CoreWebSocket implements BaseWebSocketController {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * onClose
      */
     @Override
