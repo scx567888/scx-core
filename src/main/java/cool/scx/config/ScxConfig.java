@@ -102,9 +102,9 @@ public final class ScxConfig {
             Ansi.OUT.green("Y 已加载配置文件                       \t -->\t " + scxConfigJson.getPath()).ln();
         } catch (Exception e) {
             if (e instanceof JsonProcessingException) {
-                Ansi.OUT.red("N 配置文件已损坏!!! 已创建正确的配置文件 scx-config.json").ln();
+                Ansi.OUT.red("N 配置文件已损坏!!! 请确保配置文件正确 scx-config.json").ln();
             } else if (e instanceof ConfigFileMissingException) {
-                Ansi.OUT.red("N 配置文件已丢失!!! 已创建默认的配置文件 scx-config.json").ln();
+                Ansi.OUT.red("N 配置文件已丢失!!! 请确保配置文件存在 scx-config.json").ln();
             } else {
                 e.printStackTrace();
             }
