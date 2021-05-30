@@ -154,8 +154,8 @@ public class TemplateController {
      */
     @ScxMapping(value = "upload")
     public Json upload(File file, String filePath) throws IOException {
-        //filePath = filePath + "\\" + file.getOriginalFilename();
-        //FileUtils.fileAppend(filePath, file.getBytes());
+//        filePath = filePath + "\\" + file.getOriginalFilename();
+//        FileUtils.fileAppend(filePath, file.getBytes());
         return Json.ok();
     }
 

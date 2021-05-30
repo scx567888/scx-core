@@ -13,11 +13,21 @@ import cool.scx.base.BaseModel;
 @ScxModel(tablePrefix = "cms")
 public class Article extends BaseModel {
 
-    public String articleTitle;//文章标题
+    /**
+     * 文章标题
+     */
+    public String articleTitle;
 
+    /**
+     * 文章内容
+     */
     @Column(type = "TEXT")
-    public String articleContent;//文章内容
+    public String articleContent;
 
+    /**
+     * 对应的 栏目 id
+     */
     @Column(notNull = true)
-    public Integer columnId;//对应的 栏目 id
+    public Integer columnId;
+
 }

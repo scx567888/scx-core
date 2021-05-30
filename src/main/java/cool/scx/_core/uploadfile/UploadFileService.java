@@ -24,4 +24,5 @@ public class UploadFileService extends BaseService<UploadFile> {
         p.queryObject.fileMD5 = fileMD5;
         return get(p);
     }
+
 }

@@ -3,7 +3,7 @@ package cool.scx._core.auth.exception;
 import cool.scx.exception.AuthException;
 
 /**
- * <p>EmptyPasswordException class.</p>
+ * 空密码 异常
  *
  * @author 司昌旭
  * @version 1.1.2

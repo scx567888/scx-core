@@ -123,6 +123,7 @@ public class UploadController {
 
     /**
      * 通用下载资源方法
+     * todo 优化性能
      *
      * @param fileId a {@link java.lang.String} object.
      * @return a {@link cool.scx.vo.Download} object.

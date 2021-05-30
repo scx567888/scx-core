@@ -1,6 +1,5 @@
 package cool.scx._core.cms;
 
-
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
 

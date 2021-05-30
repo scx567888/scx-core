@@ -22,6 +22,9 @@ import java.util.Map;
 @ScxController
 public class AuthController {
 
+    /**
+     * handler
+     */
     private final CoreAuthHandler coreAuthHandler;
 
     /**

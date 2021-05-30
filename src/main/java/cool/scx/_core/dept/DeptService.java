@@ -7,7 +7,6 @@ import cool.scx.bo.Param;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 public class DeptService extends BaseService<Dept> {
 
     private final UserDeptService userDeptService;
-
 
     /**
      * <p>Constructor for CoreDeptService.</p>
@@ -58,9 +56,9 @@ public class DeptService extends BaseService<Dept> {
      * @param userId  a {@link java.lang.Long} object
      * @param deptIds a {@link java.lang.String} object
      */
-    public void saveDeptListWithUserId(Long userId, String deptIds) {
+    public void saveDeptListWithUserId(Long userId, List<String> deptIds) {
         if (!StringUtils.isEmpty(deptIds)) {
-            var idArr = Arrays.stream(deptIds.split(",")).filter(id -> !StringUtils.isEmpty(id)).map(id -> {
+            var idArr = deptIds.stream().filter(id -> !StringUtils.isEmpty(id)).map(id -> {
                         var userDept = new UserDept();
                         userDept.userId = userId;
                         userDept.deptId = Long.parseLong(id);
@@ -95,5 +93,16 @@ public class DeptService extends BaseService<Dept> {
             return userDeptService.list(ud);
         }
         return new ArrayList<>();
+    }
+
+    public List<UserDept> getUserDeptByUserIds(List<Long> userIds) {
+        var p = new Param<>(new UserDept());
+        var userIdsStr = userIds.stream().map(Object::toString).collect(Collectors.joining(","));
+        if (!"".equals(userIdsStr)) {
+            p.whereSql = " user_id in (" + userIdsStr + ")";
+            return userDeptService.list(p);
+        } else {
+            return new ArrayList<>();
+        }
     }
 }

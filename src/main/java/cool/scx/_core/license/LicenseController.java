@@ -106,4 +106,5 @@ public class LicenseController {
         }
         Html.sendStr(getHtml(license));
     }
+
 }

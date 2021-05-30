@@ -13,7 +13,15 @@ import java.util.List;
  */
 @ScxModel(tablePrefix = "core")
 public class Role extends BaseModel {
-    public String roleName;//角色名称
 
-    public List<String> perms;//权限
+    /**
+     * 角色名称
+     */
+    public String roleName;
+
+    /**
+     * 角色权限
+     */
+    public List<String> perms;
+
 }

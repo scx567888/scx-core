@@ -1,4 +1,4 @@
-package cool.scx._core.system;
+package cool.scx._core.log;
 
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
@@ -10,6 +10,6 @@ import cool.scx.base.BaseService;
  * @version 0.3.6
  */
 @ScxService
-public class ScxLogService extends BaseService<ScxLog> {
+public class LogService extends BaseService<Log> {
 
 }

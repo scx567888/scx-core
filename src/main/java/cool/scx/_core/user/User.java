@@ -8,6 +8,7 @@ import cool.scx.auth.AuthUser;
 import cool.scx.base.BaseModel;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>CoreUser class.</p>
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
  */
 @ScxModel(tablePrefix = "core")
 public class User extends BaseModel implements AuthUser {
+
     /**
      * 性别
      */
@@ -28,12 +30,10 @@ public class User extends BaseModel implements AuthUser {
     @Column(useLike = true)
     public String nickName;
 
-
     /**
      * 用户头像 id 此处存储的是 位于 uploadFile 表中的 id
      */
     public String avatar;
-
 
     /**
      * 电话号码
@@ -45,21 +45,6 @@ public class User extends BaseModel implements AuthUser {
      */
     @JsonIgnore
     public LocalDateTime lastLoginDate;
-
-    /**
-     * dept id 集合
-     */
-    @NoColumn
-    @JsonIgnore
-    public String deptIds;
-
-    /**
-     * role id 集合
-     */
-    @NoColumn
-    @JsonIgnore
-    public String roleIds;
-
 
     /**
      * 登录名，创建后不可改
@@ -82,17 +67,25 @@ public class User extends BaseModel implements AuthUser {
     public String salt;
 
     /**
-     * 用户级别 共六个级别
-     * 2  超级管理员 一个系统应有且只有一个
-     * 4  普通管理员
-     * 8  教师,商家等
-     * 16 普通会员用户
-     * 32 普通用户
-     * 64 游客
+     * 是否为超级管理员
      */
-    @Column(notNull = true, defaultValue = "8")
+    @Column(notNull = true, defaultValue = "false")
     @JsonIgnore
-    public Byte level;
+    public Boolean isAdmin;
+
+    /**
+     * dept id 集合
+     */
+    @NoColumn
+    @JsonIgnore
+    public List<Long> deptIds;
+
+    /**
+     * role id 集合
+     */
+    @NoColumn
+    @JsonIgnore
+    public List<Long> roleIds;
 
     /**
      * {@inheritDoc}
@@ -107,6 +100,6 @@ public class User extends BaseModel implements AuthUser {
      */
     @Override
     public boolean _isAdmin() {
-        return level != null && level < 5;
+        return isAdmin;
     }
 }

@@ -8,7 +8,7 @@ import cool.scx.util.Tidy;
 import java.io.File;
 
 /**
- * <p>CoreConfig class.</p>
+ * 核心模块配置文件
  *
  * @author 司昌旭
  * @version 1.1.2

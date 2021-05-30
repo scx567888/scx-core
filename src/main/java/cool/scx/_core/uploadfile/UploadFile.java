@@ -38,7 +38,7 @@ public class UploadFile extends BaseModel {
     public Long fileSize;
 
     /**
-     * 文件名
+     * 原始文件名
      */
     @Column(type = "TEXT", notNull = true)
     public String fileName;

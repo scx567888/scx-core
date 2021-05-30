@@ -1,10 +1,7 @@
 package cool.scx._core.cms;
 
-
 import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
-
-//栏目
 
 /**
  * <p>Column class.</p>
@@ -14,6 +11,15 @@ import cool.scx.base.BaseModel;
  */
 @ScxModel(tablePrefix = "cms")
 public class Column extends BaseModel {
-    public String columnName;//栏目名称
-    public String columnPath;//栏目路径
+
+    /**
+     * 栏目名称
+     */
+    public String columnName;
+
+    /**
+     * 栏目路径
+     */
+    public String columnPath;
+
 }

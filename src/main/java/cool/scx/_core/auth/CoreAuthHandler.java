@@ -2,6 +2,8 @@ package cool.scx._core.auth;
 
 import cool.scx._core.auth.exception.*;
 import cool.scx._core.config.CoreConfig;
+import cool.scx._core.dept.DeptService;
+import cool.scx._core.role.RoleService;
 import cool.scx._core.user.User;
 import cool.scx._core.user.UserService;
 import cool.scx.annotation.ScxService;
@@ -35,18 +37,15 @@ import java.util.Map;
 public class CoreAuthHandler implements AuthHandler {
 
     private static final HashMap<String, LoginError> loginErrorMap = new HashMap<>();
-
     private final UserService userService;
+    private final RoleService roleService;
+    private final DeptService deptService;
 
-    /**
-     * <p>Constructor for CoreAuthHandler.</p>
-     *
-     * @param userService a {@link cool.scx._core.user.UserService} object.
-     */
-    public CoreAuthHandler(UserService userService) {
+    public CoreAuthHandler(UserService userService, RoleService roleService, DeptService deptService) {
         this.userService = userService;
+        this.roleService = roleService;
+        this.deptService = deptService;
     }
-
 
     /**
      * info
@@ -60,7 +59,7 @@ public class CoreAuthHandler implements AuthHandler {
             return Json.fail(Json.ILLEGAL_TOKEN, "登录已失效");
         } else {
             //返回登录用户的信息给前台 含用户的所有角色和权限
-            var permList = userService.getPermStrByUser(user);
+            var permList = getPermsByUser(user);
             return Json.ok()
                     .data("id", user.id)
                     .data("username", user.username)
@@ -83,7 +82,7 @@ public class CoreAuthHandler implements AuthHandler {
         queryUser.id = currentUser.id;
         currentUser.password = queryUser.password;
         currentUser.salt = null;
-        var b = userService.updateUserPassword(currentUser) != null;
+        var b = updateUserPassword(currentUser) != null;
         LogUtils.recordLog("更新了自己的信息", "用户名是 :" + currentUser.username);
         return Json.ok().data("success", b);
     }
@@ -146,9 +145,9 @@ public class CoreAuthHandler implements AuthHandler {
         if (user != null) {
             return Json.ok("userAlreadyExists");
         } else {
-            newUser.queryObject.level = 4;
+            newUser.queryObject.isAdmin = false;
             newUser.queryObject.password = password;
-            userService.registeredUser(newUser.queryObject);
+            registeredUser(newUser.queryObject);
             return Json.ok("registerSuccess");
         }
     }
@@ -158,7 +157,7 @@ public class CoreAuthHandler implements AuthHandler {
      */
     @Override
     public HashSet<String> getPerms(AuthUser user) {
-        return userService.getPermStrByUser((User) user);
+        return getPermsByUser((User) user);
     }
 
     /**
@@ -209,10 +208,6 @@ public class CoreAuthHandler implements AuthHandler {
      * @throws cool.scx.exception.AuthException if any.
      */
     public AuthUser login(Map<String, Object> params) throws AuthException {
-        //license 失效时不允许登录
-//        if (!licenseService.passLicense()) {
-//            return Json.fail(Json.FAIL_CODE, "licenseError");
-//        }
         var username = params.get("username");
         var password = params.get("password");
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
@@ -250,7 +245,6 @@ public class CoreAuthHandler implements AuthHandler {
         }
     }
 
-
     private boolean notHaveLoginError(String ip, LoginError loginError) {
         if (LocalDateTime.now().isBefore(loginError.lastErrorDate)) {
             return false;
@@ -277,6 +271,79 @@ public class CoreAuthHandler implements AuthHandler {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param user a {@link cool.scx._core.user.User} object.
+     * @return a {@link cool.scx.auth.AuthUser} object.
+     */
+    public AuthUser registeredUser(User user) {
+        var deptIds = user.deptIds;
+        var roleIds = user.roleIds;
+        var passwordAndSalt = encryptPassword(user.password);
+        var coreUser = new User();
+        coreUser.password = passwordAndSalt[0];
+        coreUser.salt = passwordAndSalt[1];
+        var newUser = userService.save(coreUser);
+        deptService.saveDeptListWithUserId(newUser.id, deptIds);
+        roleService.saveRoleListWithUserId(newUser.id, roleIds);
+        return newUser;
+    }
+
+    /**
+     * <p>encryptPassword.</p>
+     *
+     * @param password a {@link java.lang.String} object.
+     * @return an array of {@link java.lang.String} objects.
+     */
+    public String[] encryptPassword(String password) {
+        var passwordAndSalt = new String[2];
+        var salt = StringUtils.getUUID().replace("-", "").substring(16);
+        passwordAndSalt[1] = salt;
+        try {
+            String decrypt = CryptoUtils.encryptPassword(password, salt);
+            passwordAndSalt[0] = decrypt;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return passwordAndSalt;
+    }
+
+    /**
+     * 更新用户密码
+     */
+    public User updateUserPassword(User newUser) {
+        var user = new User();
+        if (!StringUtils.isEmpty(newUser.password)) {
+            var passwordAndSalt = encryptPassword(newUser.password);
+            user.password = passwordAndSalt[0];
+            user.salt = passwordAndSalt[1];
+        } else {
+            user.password = null;
+        }
+        return userService.update(user);
+    }
+
+    /**
+     * 根据用户获取权限字符串 这里不使用 list 而是 set 是为了去重
+     *
+     * @param user a {@link cool.scx.auth.AuthUser} object.
+     * @return a {@link java.util.HashSet} object.
+     */
+    private HashSet<String> getPermsByUser(User user) {
+        var permList = new HashSet<String>();
+        //如果是超级管理员或管理员 直接设置为 *
+        if (user.isAdmin) {
+            permList.add("*");
+        } else {
+            roleService.getRoleListByUser(user).forEach(role -> permList.addAll(role.perms));
+            deptService.getDeptListByUser(user).forEach(dept -> permList.addAll(dept.perms));
+            //这里无论 是否有权限 都要给一个最基本的首页权限 不然用户进不去首页
+            permList.add("/dashboard");
+        }
+        return permList;
     }
 
 }

@@ -3,7 +3,7 @@ package cool.scx._core.auth.exception;
 import cool.scx.exception.AuthException;
 
 /**
- * <p>WrongPasswordException class.</p>
+ * 密码错误异常
  *
  * @author 司昌旭
  * @version 0.3.6

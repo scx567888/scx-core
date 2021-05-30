@@ -1,4 +1,4 @@
-package cool.scx._core.system;
+package cool.scx._core.log;
 
 import cool.scx.annotation.ScxModel;
 import cool.scx.base.BaseModel;
@@ -10,9 +10,12 @@ import cool.scx.base.BaseModel;
  * @version 0.3.6
  */
 @ScxModel(tablePrefix = "core")
-public class ScxLog extends BaseModel {
+public class Log extends BaseModel {
 
-    public String userIp;//用户ip
+    /**
+     * 用户ip
+     */
+    public String userIp;//
 
     /**
      * 日志类型  目前分为两种 一种是 系统信息 如 非法登录 内存溢出 文件下载等 标识符 为  0
@@ -20,10 +23,19 @@ public class ScxLog extends BaseModel {
      */
     public Integer type;
 
-    public String username;//操作人 姓名
+    /**
+     * 操作人 姓名
+     */
+    public String username;
 
-    public String title;//事件 title
+    /**
+     * 事件 title
+     */
+    public String title;
 
-    public String content;//事件 内容
+    /**
+     * 事件 内容
+     */
+    public String content;
 
 }

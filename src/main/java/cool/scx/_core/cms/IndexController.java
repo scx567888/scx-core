@@ -24,7 +24,6 @@ public class IndexController {
 
     private final UserService coreUserService;
 
-
     /**
      * <p>Constructor for IndexController.</p>
      *
@@ -41,7 +40,6 @@ public class IndexController {
      * @param user a {@link cool.scx.auth.AuthUser} object.
      * @return 页面
      */
-//    @ScxMapping(value = "/", method = Method.GET)
     @ScxMapping(value = "/rfuhuiqdbcszqwhuiashanksjnqs", method = Method.GET)
     public Html Index(AuthUser user) {
         Integer count = coreUserService.count(new Param<>(new User()));
@@ -53,7 +51,7 @@ public class IndexController {
                 s.username = StringUtils.getUUID() + "👶";
                 s.password = StringUtils.getUUID();
                 s.salt = StringUtils.getUUID();
-                s.level = 8;
+                s.isAdmin = false;
                 s1.add(s);
             }
             coreUserService.saveList(s1);
