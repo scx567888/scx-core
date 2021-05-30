@@ -41,6 +41,13 @@ public class CoreAuthHandler implements AuthHandler {
     private final RoleService roleService;
     private final DeptService deptService;
 
+    /**
+     * <p>Constructor for CoreAuthHandler.</p>
+     *
+     * @param userService a {@link cool.scx._core.user.UserService} object
+     * @param roleService a {@link cool.scx._core.role.RoleService} object
+     * @param deptService a {@link cool.scx._core.dept.DeptService} object
+     */
     public CoreAuthHandler(UserService userService, RoleService roleService, DeptService deptService) {
         this.userService = userService;
         this.roleService = roleService;
@@ -313,6 +320,9 @@ public class CoreAuthHandler implements AuthHandler {
 
     /**
      * 更新用户密码
+     *
+     * @param newUser a {@link cool.scx._core.user.User} object
+     * @return a {@link cool.scx._core.user.User} object
      */
     public User updateUserPassword(User newUser) {
         var user = new User();

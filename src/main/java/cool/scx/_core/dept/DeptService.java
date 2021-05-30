@@ -95,6 +95,12 @@ public class DeptService extends BaseService<Dept> {
         return new ArrayList<>();
     }
 
+    /**
+     * <p>getUserDeptByUserIds.</p>
+     *
+     * @param userIds a {@link java.util.List} object
+     * @return a {@link java.util.List} object
+     */
     public List<UserDept> getUserDeptByUserIds(List<Long> userIds) {
         var p = new Param<>(new UserDept());
         var userIdsStr = userIds.stream().map(Object::toString).collect(Collectors.joining(","));
