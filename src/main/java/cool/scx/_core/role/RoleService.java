@@ -73,12 +73,12 @@ public class RoleService extends BaseService<Role> {
      * @param userId  a {@link java.lang.Long} object
      * @param roleIds a {@link java.lang.String} object
      */
-    public void saveRoleListWithUserId(Long userId, List<String> roleIds) {
+    public void saveRoleListWithUserId(Long userId, List<Long> roleIds) {
         if (!StringUtils.isEmpty(roleIds)) {
             var idArr = roleIds.stream().filter(id -> !StringUtils.isEmpty(id)).map(id -> {
                         var userRole = new UserRole();
                         userRole.userId = userId;
-                        userRole.roleId = Long.parseLong(id);
+                        userRole.roleId = id;
                         return userRole;
                     }
             ).collect(Collectors.toList());

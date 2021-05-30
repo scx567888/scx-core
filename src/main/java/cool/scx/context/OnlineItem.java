@@ -1,4 +1,4 @@
-package cool.scx.auth;
+package cool.scx.context;
 
 import io.vertx.core.http.ServerWebSocket;
 
@@ -9,10 +9,12 @@ import io.vertx.core.http.ServerWebSocket;
  * @version 0.9.0
  */
 public class OnlineItem {
+
     /**
      * 连接
      */
     public ServerWebSocket webSocket;
+
     /**
      * 此连接对应的用户名
      * 当初始连接的时候 username 会为空
@@ -32,4 +34,5 @@ public class OnlineItem {
         this.webSocket = webSocket;
         this.username = username;
     }
+
 }

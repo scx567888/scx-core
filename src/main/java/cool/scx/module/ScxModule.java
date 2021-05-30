@@ -225,9 +225,9 @@ public final class ScxModule {
     }
 
     /**
-     * <p>iterateClass.</p>
+     * 按照模块顺序迭代 class list
      *
-     * @param fun a {@link java.util.function.Function} object.
+     * @param fun 执行的方法 返回是否中断处理
      */
     public static void iterateClass(Function<Class<?>, Boolean> fun) {
         for (ModuleItem scxModule : MODULE_ITEM_LIST) {

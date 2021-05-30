@@ -3,7 +3,6 @@ package cool.scx.context;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
-import cool.scx.auth.OnlineItem;
 import cool.scx.module.ScxModule;
 import cool.scx.util.Ansi;
 import io.vertx.core.http.ServerWebSocket;
@@ -48,7 +47,7 @@ public final class ScxContext {
         initScxAnnotationBean();
         var allBean = APPLICATION_CONTEXT.getBeanDefinitionNames();
         var beanNumber = Arrays.stream(allBean).filter(s -> !s.startsWith("org.springframework")).count();
-        Ansi.OUT.brightBlue("共加载 " + beanNumber + " 个Bean...").ln();
+        Ansi.OUT.brightBlue("共加载 " + beanNumber + " 个 Bean !!!").ln();
     }
 
     /**
@@ -149,7 +148,7 @@ public final class ScxContext {
      * <p>getOnlineItemByWebSocket.</p>
      *
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
-     * @return a {@link cool.scx.auth.OnlineItem} object.
+     * @return a {@link OnlineItem} object.
      */
     public static OnlineItem getOnlineItemByWebSocket(ServerWebSocket webSocket) {
         var binaryHandlerID = webSocket.binaryHandlerID();
@@ -160,7 +159,7 @@ public final class ScxContext {
      * 根据用户名获取所有的在线对象
      *
      * @param username a {@link java.lang.String} object.
-     * @return a {@link cool.scx.auth.OnlineItem} object.
+     * @return a {@link OnlineItem} object.
      */
     public static OnlineItem getOnlineItemByUserName(String username) {
         return ONLINE_ITEMS.stream().filter(u -> u.username.equals(username)).findAny().orElse(null);

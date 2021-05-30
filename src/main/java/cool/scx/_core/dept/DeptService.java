@@ -56,12 +56,12 @@ public class DeptService extends BaseService<Dept> {
      * @param userId  a {@link java.lang.Long} object
      * @param deptIds a {@link java.lang.String} object
      */
-    public void saveDeptListWithUserId(Long userId, List<String> deptIds) {
+    public void saveDeptListWithUserId(Long userId, List<Long> deptIds) {
         if (!StringUtils.isEmpty(deptIds)) {
             var idArr = deptIds.stream().filter(id -> !StringUtils.isEmpty(id)).map(id -> {
                         var userDept = new UserDept();
                         userDept.userId = userId;
-                        userDept.deptId = Long.parseLong(id);
+                        userDept.deptId = id;
                         return userDept;
                     }
             ).collect(Collectors.toList());

@@ -62,4 +62,8 @@ public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
         webSocket.closeHandler(h -> handler.onClose(webSocket));
     }
 
+    public Map<String, BaseWebSocketController> getAllWebSocketController() {
+        return SCX_WEB_SOCKET_CONTROLLER_HANDLERS;
+    }
+
 }

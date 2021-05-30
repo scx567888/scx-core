@@ -9,4 +9,5 @@ import cool.scx.exception.AuthException;
  * @version 1.1.5
  */
 public class UnknownDeviceException extends AuthException {
+
 }

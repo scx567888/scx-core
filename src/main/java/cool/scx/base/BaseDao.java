@@ -24,8 +24,19 @@ import java.util.stream.Stream;
  */
 public final class BaseDao<Entity extends BaseModel> {
 
+    /**
+     * 多条插入时 分割的大小
+     */
     private static final int splitSize = 5000;
+
+    /**
+     * 实体类对应的 table 结构
+     */
     private final TableInfo table;
+
+    /**
+     * 实体类 class 用于泛型转换
+     */
     private final Class<Entity> entityClass;
 
     /**

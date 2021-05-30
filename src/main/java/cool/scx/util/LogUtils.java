@@ -1,6 +1,10 @@
 package cool.scx.util;
 
+import cool.scx._core.log.Log;
+import cool.scx._core.log.LogService;
+import cool.scx.auth.ScxAuth;
 import cool.scx.config.ScxConfig;
+import cool.scx.context.ScxContext;
 
 /**
  * 日志工具类
@@ -10,6 +14,8 @@ import cool.scx.config.ScxConfig;
  * @version 1.0.10
  */
 public final class LogUtils {
+
+    private static final LogService logService = ScxContext.getBean(LogService.class);
 
     /**
      * 记录日志到数据库
@@ -21,6 +27,18 @@ public final class LogUtils {
         if (ScxConfig.showLog()) {
             Ansi.OUT.print(title).ln();
         }
+        var log = new Log();
+        log.userIp = NetUtils.getIpAddr();
+        try {
+            log.username = ScxAuth.getLoginUser()._username();
+            log.type = 1;
+        } catch (Exception e) {
+            log.username = "系统日志";
+            log.type = 0;
+        }
+        log.title = title;
+        log.content = content;
+        logService.save(log);
     }
 
     /**

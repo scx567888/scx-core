@@ -2,9 +2,9 @@ package cool.scx._core.websocket;
 
 import cool.scx._core.user.User;
 import cool.scx.annotation.ScxWebSocketController;
-import cool.scx.auth.OnlineItem;
 import cool.scx.auth.ScxAuth;
 import cool.scx.base.BaseWebSocketController;
+import cool.scx.context.OnlineItem;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
 import cool.scx.util.Ansi;

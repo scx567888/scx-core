@@ -70,6 +70,10 @@ public final class ScxServer {
         }
         server = ScxVertx.vertx().createHttpServer(httpServerOptions);
         server.requestHandler(requestHandler).webSocketHandler(webSocketHandler);
+        int routeSize = requestHandler.getRoutes().size();
+        int webSocketControllerSize = webSocketHandler.getAllWebSocketController().size();
+        Ansi.OUT.brightYellow("已加载 " + routeSize + " 个 Http 路由 !!!").ln();
+        Ansi.OUT.brightYellow("已加载 " + webSocketControllerSize + " 个 WebSocket 路由 !!!").ln();
     }
 
     /**

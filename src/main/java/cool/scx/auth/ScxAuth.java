@@ -4,12 +4,14 @@ import cool.scx.auth.exception.UnknownDeviceException;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
 import cool.scx.exception.AuthException;
+import cool.scx.module.ScxModule;
 import cool.scx.util.Ansi;
 import cool.scx.util.StringUtils;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * <p>ScxAuth class.</p>
@@ -23,10 +25,12 @@ public class ScxAuth {
      * Constant <code>TOKEN_KEY="S-Token"</code>
      */
     public static final String TOKEN_KEY = "S-Token";
+
     /**
      * Constant <code>DEVICE_KEY="S-Device"</code>
      */
     public static final String DEVICE_KEY = "S-Device";
+
     /**
      * 存储所有 已登录 的用户信息
      * todo 需要在 scxConfig中 添加 一个配置项 标识用户多端登录 处理方式
@@ -34,6 +38,7 @@ public class ScxAuth {
      * todo 或者 不对登录做限制 同时允许 任意客户端(来源可以不一致) 登录任意数量的 同一用户
      */
     private static final List<LoginItem> LOGIN_ITEMS = new ArrayList<>();
+
     /**
      * userService 实例 主要用来 获取登录用户的 权限等信息
      */
@@ -61,7 +66,6 @@ public class ScxAuth {
         return b;
     }
 
-
     /**
      * <p>addUserToSession.</p>
      *
@@ -88,7 +92,7 @@ public class ScxAuth {
         } else {
             sessionItem.token = token;
         }
-        Ansi.OUT.print(username + " 登录了 , 登录设备 [" + loginDevice.toString() + "] , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+        Ansi.OUT.print(username + " 登录了 , 登录设备 [" + loginDevice + "] , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
         return token;
     }
 
@@ -193,42 +197,38 @@ public class ScxAuth {
 
     /**
      * 初始化认证需要的数据
-     * todo a
+     * todo 这里还需要初始化一下用户多终端登录的情况是踢出还是共存 (用配置文件)
      */
     public static void initAuth() {
-        AUTH_HANDLER = ScxContext.getBean(AuthHandler.class);
+        Ansi.OUT.brightGreen("ScxAuth 初始化中...").ln();
+        AUTH_HANDLER = getAuthHandlerImpl();
+        Ansi.OUT.brightGreen("ScxAuth 初始化完成...").ln();
     }
 
     /**
-     * 检查 OneAndOnlyOne 是否存在实现类
+     * 获取 AuthHandler 实现类
      */
-    private static void checkMustHaveImpl() {
-//        var classList = new ArrayList<Class<?>>();
-//        ScxModule.iterateClass(c -> {
-//            if (c.isAnnotationPresent(MustHaveImpl.class)) {
-//                classList.add(c);
-//            }
-//            return true;
-//        });
-//
-//        for (Class<?> o : classList) {
-//            ScxModule.iterateClass(c -> {
-//                if (c != o && !c.isInterface() && o.isAssignableFrom(c)) {
-//                    var lastImpl = MUST_HAVE_IMPL_MAPPING.get(o);
-//                    if (lastImpl == null) {
-//                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
-//                    } else {
-//                        Ansi.OUT.blue("已找到 [ " + o.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + lastImpl.getName() + "] 已被覆盖").ln();
-//                    }
-//                    MUST_HAVE_IMPL_MAPPING.put(o, c);
-//                }
-//                return true;
-//            });
-//            if (MUST_HAVE_IMPL_MAPPING.get(o) == null) {
-//                Ansi.OUT.brightRed("Class [ " + o.getName() + " ] 必须有一个实现类 !!!").ln();
-//                System.exit(0);
-//            }
-//        }
+    @SuppressWarnings("unchecked")
+    private static AuthHandler getAuthHandlerImpl() {
+        AtomicReference<Class<? extends AuthHandler>> authHandlerImplClass = new AtomicReference<>();
+        ScxModule.iterateClass(c -> {
+            if (!c.isInterface() && AuthHandler.class.isAssignableFrom(c)) {
+                if (authHandlerImplClass.get() == null) {
+                    Ansi.OUT.brightGreen("已找到 [ " + AuthHandler.class.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
+                } else {
+                    Ansi.OUT.brightGreen("已找到 [ " + AuthHandler.class.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + authHandlerImplClass.get().getName() + "] 已被覆盖").ln();
+                }
+                authHandlerImplClass.set((Class<? extends AuthHandler>) c);
+            }
+            return true;
+        });
+
+        if (authHandlerImplClass.get() == null) {
+            Ansi.OUT.brightRed("Class [ " + AuthHandler.class.getName() + " ] 必须有一个实现类 !!!").ln();
+            System.exit(0);
+        }
+
+        return ScxContext.getBean(authHandlerImplClass.get());
 
     }
 }

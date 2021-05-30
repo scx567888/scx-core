@@ -31,7 +31,7 @@ public class CoreModule implements BaseModule {
      */
     @Override
     public void configLoaded() {
-        CoreConfig.initConfig();
+        CoreConfig.initCoreConfig();
     }
 
     /**

@@ -58,12 +58,12 @@ public final class ScxPlugin {
                             ScxModule.addModule(moduleByFile);
                             Ansi.OUT.yellow("找到插件 文件名称 [" + file.getName() + "] 插件名称 [" + moduleByFile.moduleName + "] 已加载!!!").ln();
                         } catch (Exception e) {
-                            Ansi.OUT.red("找到插件 文件名称 [" + file.getName() + "] 已损坏!!!").ln();
+                            Ansi.OUT.red("找到插件 文件名称 [" + file.getName() + "] 已损坏 !!!").ln();
                         }
                     }
                 }
             }
-            Ansi.OUT.yellow("共加载 " + ScxModule.getAllPluginModule().size() + " 个插件!!!").ln();
+            Ansi.OUT.yellow("共加载 " + ScxModule.getAllPluginModule().size() + " 个插件 !!!").ln();
         } else {
             Ansi.OUT.red("插件目录不存在 未加载任何插件!!!").ln();
         }
