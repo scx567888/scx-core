@@ -151,7 +151,9 @@ public class FileTypeUtils {
      */
     public static void initHeadFileTypeMapping() {
         for (FileType f : ALL_FILE_TYPE_LIST) {
-            HEAD_FILETYPE_MAPPING.put(f.fileHeader.toLowerCase(), f);
+            if (f.fileHeader != null) {
+                HEAD_FILETYPE_MAPPING.put(f.fileHeader.toLowerCase(), f);
+            }
         }
     }
 

@@ -9,6 +9,8 @@ import cool.scx.bo.Param;
 import cool.scx.enumeration.Method;
 import cool.scx.exception.HttpResponseException;
 import cool.scx.util.FileUtils;
+import cool.scx.util.LogUtils;
+import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
@@ -133,17 +135,15 @@ public class UploadController {
     public Download download(String fileId) throws HttpResponseException {
         var param = new Param<>(new UploadFile());
         param.queryObject.fileId = fileId;
-//        UploadFile uploadFile = uploadFileService.get(param);
-        UploadFile uploadFile = new UploadFile();
-//        uploadFile.filePath="";
-//        if (uploadFile == null) {
-//            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
-//        }
-        var file = new File("D:\\Apps\\Windows 10\\windows_10_21H1_x64.iso");
-//        if (!file.exists()) {
-//            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
-//        }
-//        LogUtils.recordLog("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + uploadFile.fileName);
+        UploadFile uploadFile = uploadFileService.get(param);
+        if (uploadFile == null) {
+            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
+        }
+        var file = new File(CoreConfig.uploadFilePath(), uploadFile.filePath);
+        if (!file.exists()) {
+            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
+        }
+        LogUtils.recordLog("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + uploadFile.fileName);
         //  这里让文件限速到 500 kb
         return new Download(file, uploadFile.fileName);
     }
@@ -165,7 +165,7 @@ public class UploadController {
         if (uploadFile == null) {
             throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
         } else {
-            return new Image(new File(CoreConfig.uploadFilePath() + "\\" + uploadFile.filePath), width, height);
+            return new Image(new File(CoreConfig.uploadFilePath(), uploadFile.filePath), width, height);
         }
 
     }
