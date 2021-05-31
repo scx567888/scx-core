@@ -27,7 +27,7 @@ public final class ScxConfig {
     /**
      * Constant <code>SCX_VERSION </code>
      */
-    public static final String SCX_VERSION = "1.1.6";
+    public static final String SCX_VERSION = "1.1.7";
 
     /**
      * Constant <code>SCX_APP_KEY="H8QS91GcuNGP9735"</code>
