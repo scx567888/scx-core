@@ -158,16 +158,16 @@ public class Image implements BaseVo {
             return;
         }
         var imageFileType = FileTypeUtils.getFileTypeForFile(file);
-        if (imageFileType == null) {
-            response.putHeader("content-type", "image/png");
-            sendSystemIcon(response);
-        } else {
+        if (imageFileType != null && imageFileType.isImage) {
             response.putHeader("content-type", imageFileType.mimeType);
             if (height == null && width == null) {
                 sendRawPicture(response);
             } else {
                 sendCroppedPicture(response);
             }
+        } else {
+            response.putHeader("content-type", "image/png");
+            sendSystemIcon(response);
         }
     }
 

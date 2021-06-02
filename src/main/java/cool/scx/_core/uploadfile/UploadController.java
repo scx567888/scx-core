@@ -22,8 +22,8 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * <p>UploadController class.</p>
@@ -165,7 +165,7 @@ public class UploadController {
         if (uploadFile == null) {
             throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
         } else {
-            return new Image(new File(CoreConfig.uploadFilePath(), uploadFile.filePath), width, height,type);
+            return new Image(new File(CoreConfig.uploadFilePath(), uploadFile.filePath), width, height, type);
         }
 
     }
@@ -248,10 +248,10 @@ public class UploadController {
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(value = "/uploadFile/listFile", method = Method.POST)
-    public Json listFile(String fileIds) {
+    public Json listFile(List<String> fileIds) {
         var param = new Param<>(new UploadFile());
         if (StringUtils.isNotEmpty(fileIds)) {
-            String collect = Stream.of(fileIds.split(",")).map(s -> "'" + s + "'").collect(Collectors.joining(","));
+            String collect = fileIds.stream().map(s -> "'" + s + "'").collect(Collectors.joining(","));
             param.whereSql = " file_id in (" + collect + ")";
         } else {
             param.whereSql = " file_id = -1";
