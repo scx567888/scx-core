@@ -29,25 +29,6 @@ import java.util.Map;
 public class Image implements BaseVo {
 
     private static final LimitedMap<String, Buffer> imageCache = new LimitedMap<>(100);
-    private final File file;
-
-    /**
-     * 裁剪的宽度
-     */
-    private final Integer width;
-
-    /**
-     * 裁剪的高度
-     */
-    private final Integer height;
-
-    /**
-     * 裁剪的类型 注意!!! 只有设置 width 和 height 时生效
-     * 类型及简写请参照 TYPE_POSITIONS_MAP
-     * TYPE_POSITIONS_MAP
-     */
-    private final String type;
-
     /**
      * type 和裁剪类型 映射表
      */
@@ -77,6 +58,22 @@ public class Image implements BaseVo {
         TYPE_POSITIONS_MAP.put("br", Positions.BOTTOM_RIGHT);
     }
 
+    private final File file;
+    /**
+     * 裁剪的宽度
+     */
+    private final Integer width;
+    /**
+     * 裁剪的高度
+     */
+    private final Integer height;
+    /**
+     * 裁剪的类型 注意!!! 只有设置 width 和 height 时生效
+     * 类型及简写请参照 TYPE_POSITIONS_MAP
+     * TYPE_POSITIONS_MAP
+     */
+    private final String type;
+
 
     /**
      * <p>Constructor for Image.</p>
@@ -96,6 +93,7 @@ public class Image implements BaseVo {
      * @param _file   a {@link java.io.File} object.
      * @param _width  a {@link java.lang.Integer} object.
      * @param _height a {@link java.lang.Integer} object.
+     * @param _type   a {@link java.lang.String} object
      */
     public Image(File _file, Integer _width, Integer _height, String _type) {
         file = _file;
@@ -122,6 +120,7 @@ public class Image implements BaseVo {
      * @param _filePath a {@link java.lang.String} object.
      * @param _width    a {@link java.lang.Integer} object.
      * @param _height   a {@link java.lang.Integer} object.
+     * @param _type     a {@link java.lang.String} object
      */
     public Image(String _filePath, Integer _width, Integer _height, String _type) {
         file = new File(_filePath);

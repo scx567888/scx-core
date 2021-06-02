@@ -154,6 +154,7 @@ public class UploadController {
      * @param fileId 文件 id
      * @param width  a {@link java.lang.Integer} object.
      * @param height a {@link java.lang.Integer} object.
+     * @param type   a {@link java.lang.String} object
      * @return a {@link cool.scx.vo.Binary} object.
      * @throws cool.scx.exception.HttpResponseException if any.
      */
