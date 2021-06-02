@@ -1,4 +1,4 @@
-package cool.scx._ext.util;
+package cool.scx.util;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
