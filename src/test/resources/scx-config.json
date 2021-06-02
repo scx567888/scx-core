@@ -1,6 +1,6 @@
 {
   "scx": {
-    "port": 8081,
+    "port": 8080,
     "allowed-origin": "*",
     "show-log": true,
     "real-delete": false,

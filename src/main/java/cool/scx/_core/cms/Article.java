@@ -10,7 +10,7 @@ import cool.scx.base.BaseModel;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxModel(tablePrefix = "cms")
+@ScxModel(tablePrefix = "core")
 public class Article extends BaseModel {
 
     /**

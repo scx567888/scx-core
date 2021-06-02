@@ -158,14 +158,14 @@ public class UploadController {
      * @throws cool.scx.exception.HttpResponseException if any.
      */
     @ScxMapping(value = "/showPicture/:fileId", method = Method.GET)
-    public Image showPicture(String fileId, @FromQuery("w") Integer width, @FromQuery("h") Integer height) throws HttpResponseException {
+    public Image showPicture(String fileId, @FromQuery("w") Integer width, @FromQuery("h") Integer height, @FromQuery("t") String type) throws HttpResponseException {
         var param = new Param<>(new UploadFile());
         param.queryObject.fileId = fileId;
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
         } else {
-            return new Image(new File(CoreConfig.uploadFilePath(), uploadFile.filePath), width, height);
+            return new Image(new File(CoreConfig.uploadFilePath(), uploadFile.filePath), width, height,type);
         }
 
     }

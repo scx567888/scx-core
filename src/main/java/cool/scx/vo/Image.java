@@ -7,6 +7,8 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
 import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.AbsoluteSize;
+import net.coobird.thumbnailator.geometry.Positions;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>Image class.</p>
@@ -26,8 +30,52 @@ public class Image implements BaseVo {
 
     private static final LimitedMap<String, Buffer> imageCache = new LimitedMap<>(100);
     private final File file;
+
+    /**
+     * 裁剪的宽度
+     */
     private final Integer width;
+
+    /**
+     * 裁剪的高度
+     */
     private final Integer height;
+
+    /**
+     * 裁剪的类型 注意!!! 只有设置 width 和 height 时生效
+     * 类型及简写请参照 TYPE_POSITIONS_MAP
+     * TYPE_POSITIONS_MAP
+     */
+    private final String type;
+
+    /**
+     * type 和裁剪类型 映射表
+     */
+    private static final Map<String, Positions> TYPE_POSITIONS_MAP = new HashMap<>();
+
+    static {
+        TYPE_POSITIONS_MAP.put("top-left", Positions.TOP_LEFT);
+        TYPE_POSITIONS_MAP.put("top-center", Positions.TOP_CENTER);
+        TYPE_POSITIONS_MAP.put("top-right", Positions.TOP_RIGHT);
+        TYPE_POSITIONS_MAP.put("center-left", Positions.CENTER_LEFT);
+        TYPE_POSITIONS_MAP.put("center", Positions.CENTER);
+        TYPE_POSITIONS_MAP.put("center-center", Positions.CENTER);
+        TYPE_POSITIONS_MAP.put("center-right", Positions.CENTER_RIGHT);
+        TYPE_POSITIONS_MAP.put("bottom-left", Positions.BOTTOM_LEFT);
+        TYPE_POSITIONS_MAP.put("bottom-center", Positions.BOTTOM_CENTER);
+        TYPE_POSITIONS_MAP.put("bottom-right", Positions.BOTTOM_RIGHT);
+        //简写
+        TYPE_POSITIONS_MAP.put("tl", Positions.TOP_LEFT);
+        TYPE_POSITIONS_MAP.put("tc", Positions.TOP_CENTER);
+        TYPE_POSITIONS_MAP.put("tr", Positions.TOP_RIGHT);
+        TYPE_POSITIONS_MAP.put("cl", Positions.CENTER_LEFT);
+        TYPE_POSITIONS_MAP.put("c", Positions.CENTER);
+        TYPE_POSITIONS_MAP.put("cc", Positions.CENTER);
+        TYPE_POSITIONS_MAP.put("cr", Positions.CENTER_RIGHT);
+        TYPE_POSITIONS_MAP.put("bl", Positions.BOTTOM_LEFT);
+        TYPE_POSITIONS_MAP.put("bc", Positions.BOTTOM_CENTER);
+        TYPE_POSITIONS_MAP.put("br", Positions.BOTTOM_RIGHT);
+    }
 
 
     /**
@@ -39,6 +87,7 @@ public class Image implements BaseVo {
         file = _file;
         width = null;
         height = null;
+        type = "z";
     }
 
     /**
@@ -48,10 +97,11 @@ public class Image implements BaseVo {
      * @param _width  a {@link java.lang.Integer} object.
      * @param _height a {@link java.lang.Integer} object.
      */
-    public Image(File _file, Integer _width, Integer _height) {
+    public Image(File _file, Integer _width, Integer _height, String _type) {
         file = _file;
         width = _width;
         height = _height;
+        type = _type == null ? "z" : _type;
     }
 
     /**
@@ -63,6 +113,7 @@ public class Image implements BaseVo {
         file = new File(_filePath);
         width = null;
         height = null;
+        type = "z";
     }
 
     /**
@@ -72,10 +123,11 @@ public class Image implements BaseVo {
      * @param _width    a {@link java.lang.Integer} object.
      * @param _height   a {@link java.lang.Integer} object.
      */
-    public Image(String _filePath, Integer _width, Integer _height) {
+    public Image(String _filePath, Integer _width, Integer _height, String _type) {
         file = new File(_filePath);
         width = _width;
         height = _height;
+        type = _type == null ? "z" : _type;
     }
 
     /**
@@ -126,7 +178,7 @@ public class Image implements BaseVo {
      * @return r
      */
     private boolean checkImageCache(HttpServerResponse response) {
-        var str = file.getPath() + ";" + height + ";" + width;
+        var str = file.getPath() + ";" + height + ";" + width + ";" + type;
         var buffer = imageCache.get(str);
         if (buffer != null) {
             response.end(buffer);
@@ -174,11 +226,22 @@ public class Image implements BaseVo {
     private void sendCroppedPicture(HttpServerResponse response) {
         try (var out = new ByteArrayOutputStream()) {
             var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
-            var croppedHeight = (height == null || height > image.getHeight() || height == 0) ? image.getHeight() : height;
-            var croppedWidth = (width == null || width > image.getWidth() || width == 0) ? image.getWidth() : width;
-            Thumbnails.of(file).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
+            var imageHeight = image.getHeight();
+            var imageWidth = image.getWidth();
+
+            var croppedHeight = (height == null || height > imageHeight || height <= 0) ? imageHeight : height;
+            var croppedWidth = (width == null || width > imageHeight || width <= 0) ? imageWidth : width;
+
+            AbsoluteSize absoluteSize = new AbsoluteSize(croppedWidth, croppedHeight);
+            Positions positions = TYPE_POSITIONS_MAP.get(type.toLowerCase());
+            if (positions != null) {
+                Thumbnails.of(file).sourceRegion(positions, absoluteSize).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
+            } else {
+                Thumbnails.of(file).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
+            }
+
             Buffer b = Buffer.buffer(out.toByteArray());
-            imageCache.put(file.getPath() + ";" + height + ";" + width, b);
+            imageCache.put(file.getPath() + ";" + height + ";" + width + ";" + type, b);
             response.end(b);
         } catch (Exception e) {
             notFound(response);
