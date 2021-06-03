@@ -6,6 +6,8 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -218,5 +220,15 @@ public class Excel {
      */
     public Row getRow(int rowIndex) {
         return rowMap.get(rowIndex);
+    }
+
+    public byte[] toBytes() {
+        try (var o = new ByteArrayOutputStream()) {
+            workbook.write(o);
+            return o.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
