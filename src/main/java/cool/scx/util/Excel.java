@@ -222,6 +222,11 @@ public class Excel {
         return rowMap.get(rowIndex);
     }
 
+    /**
+     * <p>toBytes.</p>
+     *
+     * @return an array of {@link byte} objects
+     */
     public byte[] toBytes() {
         try (var o = new ByteArrayOutputStream()) {
             workbook.write(o);
