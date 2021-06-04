@@ -1,6 +1,5 @@
 package cool.scx.vo;
 
-import cool.scx.base.BaseVo;
 import io.vertx.ext.web.RoutingContext;
 
 /**

@@ -1,9 +1,9 @@
 package cool.scx._core.user;
 
+import cool.scx.BaseService;
 import cool.scx._core.dept.DeptService;
 import cool.scx._core.role.RoleService;
 import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
 
 import java.util.List;

@@ -1,10 +1,9 @@
 package cool.scx.vo;
 
-import cool.scx.base.BaseVo;
 import cool.scx.cms.ScxCms;
-import cool.scx.context.ScxContext;
 import freemarker.template.Template;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
 
 import java.io.StringWriter;
@@ -21,26 +20,22 @@ public final class Html implements BaseVo {
 
     private final Template template;
 
+    private final String htmlStr;
+
     private final Map<String, Object> dataMap = new HashMap<>();
 
-    /**
-     * 构造函数
-     *
-     * @param pagePath 模板的路径
-     */
-    public Html(String pagePath) {
-        template = ScxCms.getTemplateByPath(pagePath);
+    private Html(Template template, String htmlStr) {
+        this.template = template;
+        this.htmlStr = htmlStr;
     }
 
-    /**
-     * 像浏览器发送 html
-     *
-     * @param str html 代码
-     */
-    public static void sendStr(String str) {
-        var response = ScxContext.routingContext().response();
-        response.putHeader("Content-Type", "text/html; charset=utf-8");
-        response.end(Buffer.buffer(str));
+    public static Html ofString(String htmlStr) {
+        return new Html(null, htmlStr);
+    }
+
+    public static Html ofTemplate(String templatePath) {
+        var template = ScxCms.getTemplateByPath(templatePath);
+        return new Html(template, null);
     }
 
     /**
@@ -62,14 +57,26 @@ public final class Html implements BaseVo {
      */
     @Override
     public void sendToClient(RoutingContext context) {
+        var response = context.response();
+        response.putHeader("Content-Type", "text/html; charset=utf-8");
+        if (template != null) {
+            sendTemplate(response);
+        } else {
+            sendStr(response);
+        }
+    }
+
+    private void sendStr(HttpServerResponse response) {
+        response.end(Buffer.buffer(htmlStr));
+    }
+
+    private void sendTemplate(HttpServerResponse response) {
         var sw = new StringWriter();
         try {
             template.process(dataMap, sw);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        var response = context.response();
-        response.putHeader("Content-Type", "text/html; charset=utf-8");
         response.end(Buffer.buffer(sw.toString()));
     }
 }

@@ -27,7 +27,7 @@
     "cms": {
       "root": "/c/",
       "resource-http-url": "/static/*",
-      "resource-locations": "absPath:C:/Users/scx56/Projects/scx/src/main/resources/c/static/",
+      "resource-locations": "/c/static/",
       "template-suffix": ".html"
     }
   },

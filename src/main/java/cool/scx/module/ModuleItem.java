@@ -1,6 +1,6 @@
 package cool.scx.module;
 
-import cool.scx.base.BaseModule;
+import cool.scx.ScxModule;
 
 import java.io.File;
 import java.util.List;
@@ -21,7 +21,7 @@ public class ModuleItem {
     /**
      * 模块的 class
      */
-    public Class<? extends BaseModule> moduleClass;
+    public Class<? extends ScxModule> moduleClass;
 
     /**
      * 模块中所有的 class

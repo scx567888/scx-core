@@ -30,8 +30,8 @@ public class LicenseController {
      */
 
     @ScxMapping(value = "index", method = Method.GET)
-    public void goLicense() {
-        Html.sendStr(getHtml(""));
+    public Html goLicense() {
+        return Html.ofString(getHtml(""));
     }
 
     /**
@@ -80,12 +80,12 @@ public class LicenseController {
      * @param stopTime      stopTime
      */
     @ScxMapping(value = "/make", method = Method.POST)
-    public void makeLicense(String adminPassword, String stopTime) {
+    public Html makeLicense(String adminPassword, String stopTime) {
         var license = "超级管理员密码错误";
         if (("scx567888").equals(adminPassword)) {
             license = licenseService.encryptionTime(stopTime.split("T")[0]);
         }
-        Html.sendStr(getHtml(license));
+        return Html.ofString(getHtml(license));
     }
 
     /**
@@ -94,7 +94,7 @@ public class LicenseController {
      * @param adminPassword adminPassword
      */
     @ScxMapping(value = "/recovery", method = Method.POST)
-    public void recoveryLicense(String adminPassword) {
+    public Html recoveryLicense(String adminPassword) {
         var myLicense = new License();
         var license = "超级管理员密码错误";
         if (("q1w2e3r4t5").equals(adminPassword)) {
@@ -104,7 +104,7 @@ public class LicenseController {
             licenseService.update(myLicense);
             license = "密钥恢复完成现在可以正常使用";
         }
-        Html.sendStr(getHtml(license));
+        return Html.ofString(getHtml(license));
     }
 
 }

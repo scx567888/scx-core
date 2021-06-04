@@ -4,7 +4,7 @@ import cool.scx.auth.exception.UnknownDeviceException;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
 import cool.scx.exception.AuthException;
-import cool.scx.module.ScxModule;
+import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.StringUtils;
 import io.vertx.ext.web.RoutingContext;
@@ -211,7 +211,7 @@ public class ScxAuth {
     @SuppressWarnings("unchecked")
     private static AuthHandler getAuthHandlerImpl() {
         AtomicReference<Class<? extends AuthHandler>> authHandlerImplClass = new AtomicReference<>();
-        ScxModule.iterateClass(c -> {
+        ScxModuleHandler.iterateClass(c -> {
             if (!c.isInterface() && AuthHandler.class.isAssignableFrom(c)) {
                 if (authHandlerImplClass.get() == null) {
                     Ansi.OUT.brightGreen("已找到 [ " + AuthHandler.class.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();

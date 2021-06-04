@@ -3,7 +3,7 @@ package cool.scx.context;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
-import cool.scx.module.ScxModule;
+import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.ext.web.RoutingContext;
@@ -41,8 +41,8 @@ public final class ScxContext {
 
     static {
         Ansi.OUT.brightBlue("ScxContext 初始化中...").ln();
-        APPLICATION_CONTEXT.scan(ScxModule.getAllModuleBasePackages());
-        ScxModule.getAllPluginModule().forEach(m -> m.classList.forEach(APPLICATION_CONTEXT::register));
+        APPLICATION_CONTEXT.scan(ScxModuleHandler.getAllModuleBasePackages());
+        ScxModuleHandler.getAllPluginModule().forEach(m -> m.classList.forEach(APPLICATION_CONTEXT::register));
         APPLICATION_CONTEXT.refresh();
         initScxAnnotationBean();
         var allBean = APPLICATION_CONTEXT.getBeanDefinitionNames();
@@ -61,7 +61,7 @@ public final class ScxContext {
     }
 
     private static void initScxAnnotationBean() {
-        ScxModule.iterateClass(clazz -> {
+        ScxModuleHandler.iterateClass(clazz -> {
             if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class) || clazz.isAnnotationPresent(ScxModel.class)) {
                 String className = clazz.getSimpleName().toLowerCase();
                 Class<?> aClass = SCX_BEAN_CLASS_NAME_MAPPING.get(className);

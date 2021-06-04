@@ -1,11 +1,11 @@
 package cool.scx.web.handler;
 
+import cool.scx.Scx;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.ScxAuth;
-import cool.scx.boot.ScxVertx;
 import cool.scx.config.ScxConfig;
-import cool.scx.module.ScxModule;
+import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.StringUtils;
 import io.vertx.core.http.Cookie;
@@ -34,7 +34,7 @@ public final class ScxRequestHandler extends RouterImpl {
      * <p>Constructor for ScxRequestHandler.</p>
      */
     public ScxRequestHandler() {
-        super(ScxVertx.vertx());
+        super(Scx.vertx());
         registerFaviconHandler();
         registerCookieHandler();
         registerCorsHandler();
@@ -71,7 +71,7 @@ public final class ScxRequestHandler extends RouterImpl {
      * 注册 FaviconIco 图标 handler
      */
     private void registerFaviconHandler() {
-        this.route().handler(FaviconHandler.create(ScxVertx.vertx(), new File(ScxConfig.cmsRoot(), "favicon.ico").getPath()));
+        this.route().handler(FaviconHandler.create(Scx.vertx(), new File(ScxConfig.cmsRoot(), "favicon.ico").getPath()));
     }
 
     /**
@@ -115,7 +115,7 @@ public final class ScxRequestHandler extends RouterImpl {
      */
     private void registerScxMappingHandler() {
         var scxMappingHandlers = new ArrayList<ScxMappingHandler>();
-        ScxModule.iterateClass(clazz -> {
+        ScxModuleHandler.iterateClass(clazz -> {
             if (clazz.isAnnotationPresent(ScxController.class)) {
                 for (var method : clazz.getMethods()) {
                     method.setAccessible(true);

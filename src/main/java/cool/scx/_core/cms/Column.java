@@ -1,7 +1,7 @@
 package cool.scx._core.cms;
 
+import cool.scx.BaseModel;
 import cool.scx.annotation.ScxModel;
-import cool.scx.base.BaseModel;
 
 /**
  * <p>Column class.</p>

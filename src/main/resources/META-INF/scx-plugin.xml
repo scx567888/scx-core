@@ -1,24 +1,20 @@
 <scx-plugin>
-    <id>scx-cms</id>
-    <name>Scx Cms 内容管理系统</name>
+    <id>scx-core</id>
+    <name>Scx Core</name>
     <version>0.0.1</version>
-    <vendor email="小明@qq.com" url="http://www.小明website.com">小明</vendor>
+    <vendor email="abc@edf.com" url="https://www.adbedf.com">avc</vendor>
     <description>
         <![CDATA[
-
-      内容管理系统
-      <h1>这里可以写 html</h1>
-
-    ]]>
+            abc
+            <h1>这里可以写 html</h1>
+        ]]>
     </description>
 
     <change-log>
         <![CDATA[
-
-     ---0.0.1
-        修复了 无法登录的 bug
-
-    ]]>
+            ---0.0.1
+                修复了 bug
+        ]]>
     </change-log>
-    <scx-version>1.0.10</scx-version>
+    <scx-version>1.1.10</scx-version>
 </scx-plugin>

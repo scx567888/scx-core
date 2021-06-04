@@ -1,7 +1,6 @@
 package cool.scx.vo;
 
 
-import cool.scx.base.BaseVo;
 import cool.scx.util.ObjectUtils;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
@@ -22,29 +21,36 @@ public final class Json implements BaseVo {
      * 成功的 code
      */
     public static final int SUCCESS_CODE = 20;
+
     /**
      * 失败的 code
      */
     public static final int FAIL_CODE = -1;
+
     /**
      * 非法的令牌 或 令牌已失效 code
      */
     public static final int ILLEGAL_TOKEN = 41;
+
     /**
      * 没有权限
      */
     public static final int NO_PERMISSION = 43;
+
     /**
      * 后台系统错误
      */
     public static final int SYSTEM_ERROR = 50;
 
+    /**
+     * 内部结构
+     */
     private final Map<String, Object> jsonMap = new HashMap<>();
 
     /**
      * 无参构造：操作成功返回的响应信息
      */
-    public Json() {
+    private Json() {
         jsonMap.put("code", SUCCESS_CODE);
         jsonMap.put("message", "ok");
     }
@@ -55,7 +61,7 @@ public final class Json implements BaseVo {
      * @param code    代码
      * @param message 消息
      */
-    public Json(int code, String message) {
+    private Json(int code, String message) {
         jsonMap.put("code", code);
         jsonMap.put("message", message);
     }

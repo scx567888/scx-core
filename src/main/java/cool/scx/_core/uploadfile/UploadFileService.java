@@ -1,7 +1,7 @@
 package cool.scx._core.uploadfile;
 
+import cool.scx.BaseService;
 import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
 import cool.scx.enumeration.SortType;
 

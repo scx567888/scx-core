@@ -8,10 +8,7 @@ import cool.scx.bo.FileUpload;
 import cool.scx.bo.Param;
 import cool.scx.enumeration.Method;
 import cool.scx.exception.HttpResponseException;
-import cool.scx.util.FileUtils;
-import cool.scx.util.LogUtils;
-import cool.scx.util.NetUtils;
-import cool.scx.util.StringUtils;
+import cool.scx.util.*;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
 import cool.scx.vo.Json;
@@ -210,7 +207,7 @@ public class UploadController {
             //获取文件真实的存储路径
             var fileStoragePath = CoreConfig.uploadFilePath().getPath() + "\\" + uploadFile.filePath;
             //计算 md5 只有前后台 md5 相同文件才算 正确
-            var serverMd5Str = FileUtils.fileMD5(uploadTempFile);
+            var serverMd5Str = MD5Utils.md5(new File(uploadTempFile));
             if (!fileMD5.equalsIgnoreCase(serverMd5Str)) {
                 //md5 不相同 说明临时文件可能损坏 删除临时文件
                 FileUtils.deleteFiles(Path.of(uploadTempFile).getParent());

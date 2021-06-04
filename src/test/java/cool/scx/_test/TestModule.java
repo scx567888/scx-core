@@ -1,13 +1,13 @@
 package cool.scx._test;
 
+import cool.scx.ScxApp;
+import cool.scx.ScxModule;
 import cool.scx._core.CoreModule;
-import cool.scx.base.BaseModule;
-import cool.scx.boot.ScxApp;
 
-public class TestModule implements BaseModule {
+public class TestModule implements ScxModule {
 
     public static void main(String[] args) {
-        ScxApp.run(new BaseModule[]{new CoreModule(), new TestModule()}, args);
+        ScxApp.run(new ScxModule[]{new CoreModule(), new TestModule()}, args);
     }
 
 }

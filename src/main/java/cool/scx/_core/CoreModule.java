@@ -1,9 +1,9 @@
 package cool.scx._core;
 
+import cool.scx.ScxApp;
+import cool.scx.ScxModule;
 import cool.scx._core.config.CoreConfig;
 import cool.scx._core.license.LicenseService;
-import cool.scx.base.BaseModule;
-import cool.scx.boot.ScxApp;
 import cool.scx.context.ScxContext;
 
 /**
@@ -13,7 +13,7 @@ import cool.scx.context.ScxContext;
  * @author 司昌旭
  * @version 1.0.10
  */
-public class CoreModule implements BaseModule {
+public class CoreModule implements ScxModule {
 
     /**
      * 核心启动方法
@@ -30,7 +30,7 @@ public class CoreModule implements BaseModule {
      * start
      */
     @Override
-    public void configLoaded() {
+    public void init() {
         CoreConfig.initCoreConfig();
     }
 

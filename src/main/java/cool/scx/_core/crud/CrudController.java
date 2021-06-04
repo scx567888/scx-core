@@ -1,10 +1,10 @@
 package cool.scx._core.crud;
 
+import cool.scx.BaseModel;
+import cool.scx.BaseService;
 import cool.scx.annotation.FromBody;
 import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
-import cool.scx.base.BaseModel;
-import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;

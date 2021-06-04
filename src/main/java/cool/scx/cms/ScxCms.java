@@ -1,10 +1,9 @@
 package cool.scx.cms;
 
 import cool.scx.annotation.ScxTemplateDirective;
-import cool.scx.base.BaseTemplateDirective;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.module.ScxModule;
+import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
@@ -52,7 +51,7 @@ public final class ScxCms {
         configuration.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
         //自定义的指令就在这里添加
 
-        ScxModule.iterateClass(clazz -> {
+        ScxModuleHandler.iterateClass(clazz -> {
             if (clazz.isAnnotationPresent(ScxTemplateDirective.class) && BaseTemplateDirective.class.isAssignableFrom(clazz)) {
                 try {
                     var myDirective = (BaseTemplateDirective) ScxContext.getBean(clazz);

@@ -1,11 +1,11 @@
 package cool.scx._core.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import cool.scx.BaseModel;
 import cool.scx.annotation.Column;
 import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;
 import cool.scx.auth.AuthUser;
-import cool.scx.base.BaseModel;
 
 import java.time.LocalDateTime;
 import java.util.List;

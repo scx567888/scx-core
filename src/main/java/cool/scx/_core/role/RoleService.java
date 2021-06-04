@@ -1,8 +1,8 @@
 package cool.scx._core.role;
 
+import cool.scx.BaseService;
 import cool.scx._core.user.User;
 import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
 import cool.scx.util.StringUtils;
 

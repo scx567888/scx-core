@@ -1,6 +1,6 @@
 package cool.scx.web;
 
-import cool.scx.boot.ScxVertx;
+import cool.scx.Scx;
 import cool.scx.config.ScxConfig;
 import cool.scx.exception.handler.ScxServerExceptionHandler;
 import cool.scx.util.Ansi;
@@ -47,7 +47,7 @@ public final class ScxServer {
      * <p>initServerStartSuccessHandler.</p>
      */
     public static void initServerStartSuccessHandler() {
-        ScxVertx.eventBus().consumer("startVertxServer", (message) -> {
+        Scx.eventBus().consumer("startVertxServer", (message) -> {
             var port = message.body().toString();
             Ansi.OUT.green("服务器启动成功... 用时 " + Timer.stopToMillis("ScxApp") + " ms").ln();
             var httpOrHttps = ScxConfig.isOpenHttps() ? "https" : "http";
@@ -68,7 +68,7 @@ public final class ScxServer {
                             .setPath(ScxConfig.sslPath().getPath())
                             .setPassword(ScxConfig.sslPassword()));
         }
-        server = ScxVertx.vertx().createHttpServer(httpServerOptions);
+        server = Scx.vertx().createHttpServer(httpServerOptions);
         server.requestHandler(requestHandler).webSocketHandler(webSocketHandler);
         int routeSize = requestHandler.getRoutes().size();
         int webSocketControllerSize = webSocketHandler.getAllWebSocketController().size();
@@ -82,7 +82,7 @@ public final class ScxServer {
     public static void startServer() {
         server.listen(port, http -> {
             if (http.succeeded()) {
-                ScxVertx.eventBus().publish("startVertxServer", port);
+                Scx.eventBus().publish("startVertxServer", port);
             } else {
                 var cause = http.cause();
                 if (cause instanceof BindException) {

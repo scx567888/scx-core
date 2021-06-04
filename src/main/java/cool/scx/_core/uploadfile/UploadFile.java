@@ -1,8 +1,8 @@
 package cool.scx._core.uploadfile;
 
+import cool.scx.BaseModel;
 import cool.scx.annotation.Column;
 import cool.scx.annotation.ScxModel;
-import cool.scx.base.BaseModel;
 
 import java.time.LocalDateTime;
 

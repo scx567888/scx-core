@@ -1,7 +1,7 @@
 package cool.scx._core.log;
 
+import cool.scx.BaseService;
 import cool.scx.annotation.ScxService;
-import cool.scx.base.BaseService;
 
 /**
  * ScxLogService

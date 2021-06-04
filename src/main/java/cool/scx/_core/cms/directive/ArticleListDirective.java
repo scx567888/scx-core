@@ -3,7 +3,7 @@ package cool.scx._core.cms.directive;
 
 import cool.scx._core.cms.ArticleService;
 import cool.scx.annotation.ScxTemplateDirective;
-import cool.scx.base.BaseTemplateDirective;
+import cool.scx.cms.BaseTemplateDirective;
 
 import java.util.Map;
 

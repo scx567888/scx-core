@@ -1,6 +1,5 @@
 package cool.scx.vo;
 
-import cool.scx.base.BaseVo;
 import cool.scx.util.FileTypeUtils;
 import cool.scx.util.LimitedMap;
 import io.vertx.core.buffer.Buffer;

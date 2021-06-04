@@ -3,10 +3,7 @@ package cool.scx.util;
 import cool.scx.context.ScxContext;
 import io.vertx.core.http.HttpServerRequest;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -53,60 +50,6 @@ public final class NetUtils {
 
         }
         return flag;
-    }
-
-    /**
-     * 向 url 发送请求并获取响应值
-     * 示例 :
-     * String url = "https://www.baidu.com";
-     * String s = sendHttpRequest(url, "GET");
-     *
-     * @param urlParam      url
-     * @param requestMethod 请求方式
-     * @return 返回String类型的字符串 ，如果请求失败，返回null
-     */
-    public static String sendHttpRequest(String urlParam, String requestMethod) {
-        HttpURLConnection con;
-        BufferedReader buffer;
-        StringBuilder resultBuffer;
-        InputStream ins = null;
-        try {
-            URL url = new URL(urlParam);
-            //得到连接对象
-            con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod(requestMethod);
-            con.setDoOutput(true);  //允许写出
-            con.setDoInput(true);   //允许读入
-            con.setUseCaches(false);    //不使用缓存
-            //得到响应码
-            int responseCode = con.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                //请求成功，得到响应流
-                ins = con.getInputStream();
-                //转化为字符串
-                resultBuffer = new StringBuilder();
-                String line;
-                //注意响应体的编码格式，可能会有乱码
-                buffer = new BufferedReader(new InputStreamReader(ins, "GBK"));
-
-                while ((line = buffer.readLine()) != null) {
-                    resultBuffer.append(line);
-                }
-                //将resultBuffer返回即可
-                return resultBuffer.toString();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (ins != null) {
-                try {
-                    ins.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
     }
 
     /**
