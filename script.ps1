@@ -3,6 +3,7 @@ $GIT_HOME = 'C:\Apps\git\cmd'
 $MAVEN_HOME = 'C:\Apps\ideaIU\plugins\maven\lib\maven3\bin'
 
 
+#-----------注意 因为 Powershell 无法正确识别无 BOM 头的 UTF-8 脚本 所以脚本修改后保存时请携带 BOM 头-------------
 #-----------全局变量-------------
 #项目名称
 $PROJECT_NAME = '-'
