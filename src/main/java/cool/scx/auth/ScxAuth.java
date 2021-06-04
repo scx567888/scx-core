@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author 司昌旭
  * @version 1.1.4
  */
-public class ScxAuth {
+public final class ScxAuth {
 
     /**
      * Constant <code>TOKEN_KEY="S-Token"</code>

@@ -8,7 +8,7 @@ import io.vertx.core.buffer.Buffer;
  * @author 司昌旭
  * @version 1.0.10
  */
-public class FileUpload {
+public final class FileUpload {
 
     /**
      * 表单中的名称

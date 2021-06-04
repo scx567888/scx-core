@@ -8,7 +8,7 @@ import java.util.List;
  * @author 司昌旭
  * @version 1.0.10
  */
-public class UpdateResult {
+public final class UpdateResult {
 
     /**
      * 受影响的行数

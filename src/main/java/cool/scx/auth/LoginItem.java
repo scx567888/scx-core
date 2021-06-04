@@ -10,7 +10,7 @@ import cool.scx.enumeration.Device;
  * @author 司昌旭
  * @version 1.0.10
  */
-public class LoginItem {
+public final class LoginItem {
     /**
      * token 本质上一个是一个随机字符串
      * 前端 通过此值获取登录用户

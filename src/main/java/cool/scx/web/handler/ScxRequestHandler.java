@@ -71,7 +71,10 @@ public final class ScxRequestHandler extends RouterImpl {
      * 注册 FaviconIco 图标 handler
      */
     private void registerFaviconHandler() {
-        this.route().handler(FaviconHandler.create(Scx.vertx(), new File(ScxConfig.cmsRoot(), "favicon.ico").getPath()));
+        File file = new File(ScxConfig.cmsRoot(), "favicon.ico");
+        if (file.exists()) {
+            this.route().handler(FaviconHandler.create(Scx.vertx(), file.getPath()));
+        }
     }
 
     /**

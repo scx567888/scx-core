@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
  * @author 司昌旭
  * @version 1.1.9
  */
-public class MD5Utils {
+public final class MD5Utils {
 
     /**
      * <p>md5.</p>

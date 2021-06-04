@@ -9,7 +9,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 1.1.2
  */
-public class MapUtils {
+public final class MapUtils {
 
     /**
      * 将嵌套的 map 扁平化

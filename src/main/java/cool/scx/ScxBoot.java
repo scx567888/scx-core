@@ -16,7 +16,7 @@ import java.util.List;
  * @author 司昌旭
  * @version 1.1.9
  */
-public class ScxBoot {
+public final class ScxBoot {
 
     /**
      * 在控制台上打印 banner

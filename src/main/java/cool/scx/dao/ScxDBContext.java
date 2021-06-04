@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author 司昌旭
  * @version 1.1.5
  */
-public class ScxDBContext {
+public final class ScxDBContext {
 
     /**
      * 数据源

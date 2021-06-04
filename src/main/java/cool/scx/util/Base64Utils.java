@@ -9,7 +9,7 @@ import java.util.Base64;
  * @author 司昌旭
  * @version 1.1.9
  */
-public class Base64Utils {
+public final class Base64Utils {
 
     /**
      * <p>base64.</p>

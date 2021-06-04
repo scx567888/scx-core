@@ -13,7 +13,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 1.1.9
  */
-public class HttpUtils {
+public final class HttpUtils {
 
     /**
      * 发送 post 请求

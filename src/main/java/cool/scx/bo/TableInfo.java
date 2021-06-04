@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * @author 司昌旭
  * @version 0.5.0
  */
-public class TableInfo {
+public final class TableInfo {
     /**
      * 实体类型不含@NoColunm 和@NoUpdate 注解的field
      */
