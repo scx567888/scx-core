@@ -27,6 +27,8 @@ public class LicenseController {
 
     /**
      * 跳转至密钥生成页面
+     *
+     * @return a {@link cool.scx.vo.Html} object
      */
 
     @ScxMapping(value = "index", method = Method.GET)
@@ -78,6 +80,7 @@ public class LicenseController {
      *
      * @param adminPassword adminPassword
      * @param stopTime      stopTime
+     * @return a {@link cool.scx.vo.Html} object
      */
     @ScxMapping(value = "/make", method = Method.POST)
     public Html makeLicense(String adminPassword, String stopTime) {
@@ -92,6 +95,7 @@ public class LicenseController {
      * 恢复 License
      *
      * @param adminPassword adminPassword
+     * @return a {@link cool.scx.vo.Html} object
      */
     @ScxMapping(value = "/recovery", method = Method.POST)
     public Html recoveryLicense(String adminPassword) {

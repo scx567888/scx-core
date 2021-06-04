@@ -29,10 +29,22 @@ public final class Html implements BaseVo {
         this.htmlStr = htmlStr;
     }
 
+    /**
+     * <p>ofString.</p>
+     *
+     * @param htmlStr a {@link java.lang.String} object
+     * @return a {@link cool.scx.vo.Html} object
+     */
     public static Html ofString(String htmlStr) {
         return new Html(null, htmlStr);
     }
 
+    /**
+     * <p>ofTemplate.</p>
+     *
+     * @param templatePath a {@link java.lang.String} object
+     * @return a {@link cool.scx.vo.Html} object
+     */
     public static Html ofTemplate(String templatePath) {
         var template = ScxCms.getTemplateByPath(templatePath);
         return new Html(template, null);

@@ -7,6 +7,12 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+/**
+ * <p>HttpUtils class.</p>
+ *
+ * @author 司昌旭
+ * @version 1.1.9
+ */
 public class HttpUtils {
 
     /**
@@ -38,7 +44,7 @@ public class HttpUtils {
     /**
      * 向 url 发送请求并获取响应值
      *
-     * @param url      url
+     * @param url     url
      * @param headers 自定义 header
      * @return 返回响应
      */

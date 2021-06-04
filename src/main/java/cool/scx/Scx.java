@@ -4,6 +4,12 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
 
+/**
+ * Scx 核心类
+ *
+ * @author 司昌旭
+ * @version 1.1.9
+ */
 public final class Scx {
 
     /**

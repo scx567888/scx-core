@@ -7,8 +7,20 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * <p>MD5Utils class.</p>
+ *
+ * @author 司昌旭
+ * @version 1.1.9
+ */
 public class MD5Utils {
 
+    /**
+     * <p>md5.</p>
+     *
+     * @param str a {@link java.lang.String} object
+     * @return a {@link java.lang.String} object
+     */
     public static String md5(String str) {
         var b = str.getBytes(StandardCharsets.UTF_8);
         MessageDigest md5Instance = getMD5Instance();

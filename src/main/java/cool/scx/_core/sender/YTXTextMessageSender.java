@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 
 /**
  * 云通讯短信发送功能
+ *
+ * @author 司昌旭
+ * @version 1.1.9
  */
 @Component
 public class YTXTextMessageSender implements BaseSender<List<String>, Map<String, Object>> {
@@ -27,6 +30,9 @@ public class YTXTextMessageSender implements BaseSender<List<String>, Map<String
 
     private final DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
+    /**
+     * <p>Constructor for YTXTextMessageSender.</p>
+     */
     public YTXTextMessageSender() {
         YTX_ACCOUNT_SID = ScxConfig.get("core.ytx-account-sid");
         YTX_AUTH_TOKEN = ScxConfig.get("core.ytx-auth-token");
@@ -34,11 +40,9 @@ public class YTXTextMessageSender implements BaseSender<List<String>, Map<String
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * 向手机号发送短信
-     *
-     * @param address 手机号列表
-     * @param message 消息 格式如下
-     *                {templateId :xxx ,datas :[xxx,xxx]} datas 数组下标对应模板信息下标
      */
     @Override
     public void send(List<String> address, Map<String, Object> message) {
@@ -57,6 +61,9 @@ public class YTXTextMessageSender implements BaseSender<List<String>, Map<String
         HttpUtils.post(getSendUrl(sigParameter), header, map);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String senderName() {
         return "ytx";

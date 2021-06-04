@@ -10,6 +10,12 @@ import cool.scx.util.FileUtils;
 import java.io.*;
 import java.util.List;
 
+/**
+ * ScxBoot 启动工具类
+ *
+ * @author 司昌旭
+ * @version 1.1.9
+ */
 public class ScxBoot {
 
     /**
