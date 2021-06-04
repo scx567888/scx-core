@@ -89,7 +89,7 @@ public class TestController {
     /**
      * 测试!!!
      */
-    @ScxMapping(value = "/download/:id", method = Method.GET)
+    @ScxMapping(value = "/download", method = Method.GET)
     public Download TestDownload() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < 9999; i++) {
