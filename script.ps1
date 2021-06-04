@@ -1,4 +1,4 @@
-$JAVA_HOME = 'C:\Apps\jdk'
+﻿$JAVA_HOME = 'C:\Apps\jdk'
 $GIT_HOME = 'C:\Apps\git\cmd'
 $MAVEN_HOME = 'C:\Apps\ideaIU\plugins\maven\lib\maven3\bin'
 
@@ -171,9 +171,10 @@ function BuildProject()
 #检查项目 并设置基本变量
 function CheckProject()
 {
-    [XML]$xmlfile = Get-Content .\pom.xml
-    $script:PROJECT_NAME = $xmlfile.project.artifactId
-    $script:PROJECT_VERSION = $xmlfile.project.version
+	$xmlFile = New-Object -Typename XML
+	$xmlFile.load('.\pom.xml')
+    $script:PROJECT_NAME = $xmlFile.project.artifactId
+    $script:PROJECT_VERSION = $xmlFile.project.version
 }
 
 #显示选项
