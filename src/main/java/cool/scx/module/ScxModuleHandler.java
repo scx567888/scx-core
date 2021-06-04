@@ -45,7 +45,7 @@ public final class ScxModuleHandler {
      * <p>initModules.</p>
      */
     public static void initModules() {
-        for (cool.scx.ScxModule baseModule : BASE_MODULE_ARRAY) {
+        for (ScxModule baseModule : BASE_MODULE_ARRAY) {
             baseModule.init();
             var tempScxModule = getModuleByBaseModule(baseModule);
             addModule(tempScxModule);
@@ -67,7 +67,7 @@ public final class ScxModuleHandler {
      * @param baseModule a T object.
      * @param <T>        a T object.
      */
-    public static <T extends cool.scx.ScxModule> void addModule(T baseModule) {
+    public static <T extends ScxModule> void addModule(T baseModule) {
         MODULE_ITEM_LIST.add(getModuleByBaseModule(baseModule));
     }
 
@@ -87,7 +87,7 @@ public final class ScxModuleHandler {
         return tempModule;
     }
 
-    private static <T extends cool.scx.ScxModule> ModuleItem getModuleByBaseModule(T module) {
+    private static <T extends ScxModule> ModuleItem getModuleByBaseModule(T module) {
         ModuleItem t = new ModuleItem();
         t.moduleClass = module.getClass();
         t.moduleName = t.moduleClass.getSimpleName();
@@ -264,7 +264,7 @@ public final class ScxModuleHandler {
      * @param modules an array of T[] objects.
      * @param <T>     a T object.
      */
-    public static <T extends cool.scx.ScxModule> void loadModules(T[] modules) {
+    public static <T extends ScxModule> void loadModules(T[] modules) {
         BASE_MODULE_ARRAY = modules;
         var lastModule = BASE_MODULE_ARRAY[BASE_MODULE_ARRAY.length - 1];
         APP_ROOT_PATH = getModuleRootPath(lastModule.getClass());
@@ -283,7 +283,7 @@ public final class ScxModuleHandler {
      * 启动模块的生命周期
      */
     public static void startModules() {
-        for (cool.scx.ScxModule baseModule : BASE_MODULE_ARRAY) {
+        for (ScxModule baseModule : BASE_MODULE_ARRAY) {
             baseModule.start();
         }
     }
@@ -292,7 +292,7 @@ public final class ScxModuleHandler {
      * <p>stopModules.</p>
      */
     public static void stopModules() {
-        for (cool.scx.ScxModule baseModule : BASE_MODULE_ARRAY) {
+        for (ScxModule baseModule : BASE_MODULE_ARRAY) {
             baseModule.stop();
         }
     }
