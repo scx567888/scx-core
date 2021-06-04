@@ -158,4 +158,8 @@ public final class ScxRequestHandler extends RouterImpl {
         this.route().handler(handle -> handle.fail(404));
     }
 
+    public static void initHandler() {
+
+    }
+
 }

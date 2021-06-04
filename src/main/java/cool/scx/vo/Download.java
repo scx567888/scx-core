@@ -1,5 +1,6 @@
 package cool.scx.vo;
 
+import cool.scx.Scx;
 import cool.scx.util.FileTypeUtils;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
@@ -12,23 +13,14 @@ import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 文件下载 vo
- * todo 现在节流会导致线程轮询阻塞
  *
  * @author 司昌旭
  * @version 1.0.10
  */
 public class Download implements BaseVo {
-
-    /**
-     * 延时任务线程池
-     */
-    private static final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     /**
      * 待下载的文件
@@ -215,9 +207,16 @@ public class Download implements BaseVo {
         response.write(Buffer.buffer(b), (r) -> {
             if (r.succeeded()) {
                 if (pauseTime > 0) {
-                    executorService.schedule(() -> writeFile(response, accessFile, bucketSize), pauseTime, TimeUnit.MILLISECONDS);
+                    Scx.setTimer(pauseTime, () -> writeFile(response, accessFile, bucketSize));
                 } else {
                     writeFile(response, accessFile, bucketSize);
+                }
+            } else {
+                // 请求失败 关闭文件
+                try {
+                    accessFile.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -262,7 +261,7 @@ public class Download implements BaseVo {
         response.write(Buffer.buffer(b), (r) -> {
             if (r.succeeded()) {
                 if (pauseTime > 0) {
-                    executorService.schedule(() -> writeBytes(response, to, length), pauseTime, TimeUnit.MILLISECONDS);
+                    Scx.setTimer(pauseTime, () -> writeBytes(response, to, length));
                 } else {
                     writeBytes(response, to, length);
                 }

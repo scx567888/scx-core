@@ -47,7 +47,7 @@ public final class ScxServer {
      * <p>initServerStartSuccessHandler.</p>
      */
     public static void initServerStartSuccessHandler() {
-        Scx.eventBus().consumer("startVertxServer", (message) -> {
+        Scx.vertx().eventBus().consumer("startVertxServer", (message) -> {
             var port = message.body().toString();
             Ansi.OUT.green("服务器启动成功... 用时 " + Timer.stopToMillis("ScxApp") + " ms").ln();
             var httpOrHttps = ScxConfig.isOpenHttps() ? "https" : "http";
@@ -82,7 +82,7 @@ public final class ScxServer {
     public static void startServer() {
         server.listen(port, http -> {
             if (http.succeeded()) {
-                Scx.eventBus().publish("startVertxServer", port);
+                Scx.vertx().eventBus().publish("startVertxServer", port);
             } else {
                 var cause = http.cause();
                 if (cause instanceof BindException) {

@@ -1,4 +1,4 @@
-package cool.scx._core.websocket;
+package cool.scx.eventbus;
 
 import cool.scx._core.user.User;
 import cool.scx.annotation.ScxWebSocketController;
@@ -21,7 +21,7 @@ import io.vertx.core.http.WebSocketFrame;
  * @version 1.0.16
  */
 @ScxWebSocketController("/scx")
-public class CoreWebSocket implements BaseWebSocketController {
+public class ScxEventBusWebSocketHandler implements BaseWebSocketController {
 
     /**
      * {@inheritDoc}

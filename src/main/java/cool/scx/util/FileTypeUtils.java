@@ -42,7 +42,10 @@ public final class FileTypeUtils {
 
 
     /**
-     * <p>getFileTypeForExtension.</p>
+     * 根据后缀名获取 filetype
+     * 注意不需要带 . 如果是文件名请使用 getFileTypeForFilename
+     * 正确 txt , png , docx
+     * 错误 .txt , a.png , doc.docx
      *
      * @param ext a {@link java.lang.String} object
      * @return a {@link cool.scx.util.FileType} object

@@ -2,7 +2,8 @@ package cool.scx;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
-import io.vertx.core.eventbus.EventBus;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Scx 核心类
@@ -28,21 +29,16 @@ public final class Scx {
     }
 
     /**
-     * 获取全局的事件总线
-     *
-     * @return 全局的事件总线
-     */
-    public static EventBus eventBus() {
-        return GLOBAL_VERTX.eventBus();
-    }
-
-    /**
      * 获取全局的 vertx
      *
      * @return 全局的事件总线
      */
     public static Vertx vertx() {
         return GLOBAL_VERTX;
+    }
+
+    public static void setTimer(long pauseTime, Runnable runnable) {
+        GLOBAL_VERTX.nettyEventLoopGroup().schedule(runnable, pauseTime, TimeUnit.MILLISECONDS);
     }
 
 }

@@ -71,4 +71,35 @@ public class ScxWebSocketHandler implements Handler<ServerWebSocket> {
         return SCX_WEB_SOCKET_CONTROLLER_HANDLERS;
     }
 
+    /**
+     * 向 handler 里添加 处理器
+     * 注意!!! 必须在 ScxServer.loadServer 之前添加
+     * @param args
+     */
+    public static void addHandler(Class<? extends BaseWebSocketController> args) {
+
+    }
+
+    /**
+     * 向 handler 里添加 处理器
+     * 注意!!! 必须在 ScxServer.loadServer 之前添加
+     * @param args
+     */
+    public static void removeHandler(Class<? extends BaseWebSocketController> args) {
+
+    }
+
+    /**
+     * 向 handler 里添加 处理器
+     * 注意!!! 必须在 ScxServer.loadServer 之前添加
+     * @param
+     */
+    public static void clearHandler() {
+
+    }
+
+    public static void initHandler() {
+
+    }
+
 }

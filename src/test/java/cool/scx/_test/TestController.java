@@ -7,11 +7,16 @@ import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.Param;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
+import cool.scx.util.FileTypeUtils;
 import cool.scx.util.HttpUtils;
 import cool.scx.util.StringUtils;
+import cool.scx.vo.BaseVo;
+import cool.scx.vo.Binary;
+import cool.scx.vo.Download;
 import cool.scx.vo.Html;
 
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -79,6 +84,30 @@ public class TestController {
     public Html TestHttpUtils() {
         HttpResponse<String> stringHttpResponse = HttpUtils.get("https://www.baidu.com/", new HashMap<>());
         return Html.ofString(stringHttpResponse.body());
+    }
+
+    /**
+     * 测试!!!
+     */
+    @ScxMapping(value = "/download/:id", method = Method.GET)
+    public Download TestDownload() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < 9999; i++) {
+            s.append("download ").append(i);
+        }
+        return new Download(s.toString().getBytes(StandardCharsets.UTF_8), "a.txt");
+    }
+
+    /**
+     * 测试!!!
+     */
+    @ScxMapping(value = "/binary", method = Method.GET)
+    public BaseVo TestBinary() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < 9999; i++) {
+            s.append("download ").append(i);
+        }
+        return new Binary(s.toString().getBytes(StandardCharsets.UTF_8), FileTypeUtils.getFileTypeForExtension("txt"));
     }
 
 }
