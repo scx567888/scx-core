@@ -16,12 +16,21 @@ import io.vertx.ext.web.impl.RouterImpl;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <p>ScxRouter class.</p>
+ *
+ * @author 司昌旭
+ * @version 1.1.9
+ */
 public final class ScxRouter {
 
     private static final Router vertRouter = new RouterImpl(Scx.vertx());
 
     private static final Map<String, BaseWSHandler> SCX_WEB_SOCKET_ROUTE_HANDLERS = new HashMap<>();
 
+    /**
+     * <p>initRouter.</p>
+     */
     public static void initRouter() {
         vertRouter.route().handler(new FaviconHandler());
         vertRouter.route().handler(new CookieHandler());
@@ -32,6 +41,9 @@ public final class ScxRouter {
         vertRouter.route().handler(handle -> handle.fail(404));
     }
 
+    /**
+     * <p>initWebSocketRouter.</p>
+     */
     public static void initWebSocketRouter() {
         ScxModuleHandler.iterateClass(c -> {
             if (c.isAnnotationPresent(ScxWebSocketRoute.class) && !c.isInterface() && BaseWSHandler.class.isAssignableFrom(c)) {
@@ -42,10 +54,20 @@ public final class ScxRouter {
         });
     }
 
+    /**
+     * <p>handle.</p>
+     *
+     * @param request a {@link io.vertx.core.http.HttpServerRequest} object
+     */
     public static void handle(HttpServerRequest request) {
         vertRouter.handle(request);
     }
 
+    /**
+     * <p>webSocketHandler.</p>
+     *
+     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object
+     */
     public static void webSocketHandler(ServerWebSocket webSocket) {
         var handler = SCX_WEB_SOCKET_ROUTE_HANDLERS.get(webSocket.path());
         if (handler == null) {
@@ -66,14 +88,30 @@ public final class ScxRouter {
         webSocket.closeHandler(h -> handler.onClose(webSocket));
     }
 
+    /**
+     * <p>routeSize.</p>
+     *
+     * @return a int
+     */
     public static int routeSize() {
         return vertRouter.getRoutes().size();
     }
 
+    /**
+     * <p>webSocketRouteSize.</p>
+     *
+     * @return a int
+     */
     public static int webSocketRouteSize() {
         return SCX_WEB_SOCKET_ROUTE_HANDLERS.size();
     }
 
+    /**
+     * <p>addWebSocketRoute.</p>
+     *
+     * @param handler a T object
+     * @param <T>     a T class
+     */
     public static <T extends BaseWSHandler> void addWebSocketRoute(T handler) {
         var annotation = handler.getClass().getAnnotation(ScxWebSocketRoute.class);
         if (annotation != null) {

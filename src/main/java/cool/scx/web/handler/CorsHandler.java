@@ -11,11 +11,17 @@ import java.util.Set;
 
 /**
  * 注册 跨域 处理器
+ *
+ * @author 司昌旭
+ * @version 1.1.9
  */
 public class CorsHandler implements Handler<RoutingContext> {
 
     private final CorsHandlerImpl vertxCorsHandler;
 
+    /**
+     * <p>Constructor for CorsHandler.</p>
+     */
     public CorsHandler() {
         var allowedHeaders = Set.of("x-requested-with", "Access-Control-Allow-Origin",
                 "origin", "Content-Type", "accept", "X-PINGARUNER", ScxAuth.TOKEN_KEY, ScxAuth.DEVICE_KEY);
@@ -25,6 +31,9 @@ public class CorsHandler implements Handler<RoutingContext> {
         this.vertxCorsHandler = (CorsHandlerImpl) new CorsHandlerImpl(ScxConfig.allowedOrigin()).allowedHeaders(allowedHeaders).allowedMethods(allowedMethods).allowCredentials(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(RoutingContext ctx) {
         vertxCorsHandler.handle(ctx);

@@ -12,9 +12,17 @@ import java.util.List;
 
 /**
  * 处理 scxMapping 处理器
+ *
+ * @author 司昌旭
+ * @version 1.1.9
  */
 public class ScxMappingHandlerRegister {
 
+    /**
+     * <p>register.</p>
+     *
+     * @param router a {@link io.vertx.ext.web.Router} object
+     */
     public static void register(Router router) {
         var scxMappingHandlers = new ArrayList<ScxMappingHandler>();
         ScxModuleHandler.iterateClass(clazz -> {

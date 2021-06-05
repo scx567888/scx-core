@@ -12,6 +12,9 @@ import java.nio.file.Path;
 
 /**
  * 注册 FaviconIco 图标 handler
+ *
+ * @author 司昌旭
+ * @version 1.1.9
  */
 public class FaviconHandler implements Handler<RoutingContext> {
     private final long maxAgeSeconds = 86400;
@@ -19,6 +22,9 @@ public class FaviconHandler implements Handler<RoutingContext> {
     private Buffer imgBuffer = null;
     private String bufferLength = null;
 
+    /**
+     * <p>Constructor for FaviconHandler.</p>
+     */
     public FaviconHandler() {
         var faviconPath = Path.of(ScxConfig.cmsRoot().getPath(), "favicon.ico");
         if (Files.exists(faviconPath)) {
@@ -34,6 +40,9 @@ public class FaviconHandler implements Handler<RoutingContext> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(RoutingContext ctx) {
         if ("/favicon.ico".equals(ctx.request().path())) {

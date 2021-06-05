@@ -37,6 +37,12 @@ public final class Scx {
         return GLOBAL_VERTX;
     }
 
+    /**
+     * <p>setTimer.</p>
+     *
+     * @param pauseTime a long
+     * @param runnable  a {@link java.lang.Runnable} object
+     */
     public static void setTimer(long pauseTime, Runnable runnable) {
         GLOBAL_VERTX.nettyEventLoopGroup().schedule(runnable, pauseTime, TimeUnit.MILLISECONDS);
     }
