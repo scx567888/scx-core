@@ -1,7 +1,8 @@
 package cool.scx.eventbus;
 
+import cool.scx.BaseWSHandler;
 import cool.scx._core.user.User;
-import cool.scx.annotation.ScxWebSocketController;
+import cool.scx.annotation.ScxWebSocketRoute;
 import cool.scx.auth.ScxAuth;
 import cool.scx.context.OnlineItem;
 import cool.scx.context.ScxContext;
@@ -9,7 +10,6 @@ import cool.scx.enumeration.Device;
 import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 import cool.scx.vo.Json;
-import cool.scx.web.BaseWebSocketController;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
@@ -20,8 +20,8 @@ import io.vertx.core.http.WebSocketFrame;
  * @author 司昌旭
  * @version 1.0.16
  */
-@ScxWebSocketController("/scx")
-public class ScxEventBusWebSocketHandler implements BaseWebSocketController {
+@ScxWebSocketRoute("/scx")
+public class ScxEventBusWebSocketHandler implements BaseWSHandler {
 
     /**
      * {@inheritDoc}

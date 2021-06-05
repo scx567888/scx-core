@@ -142,7 +142,11 @@ public class Download implements BaseVo {
     @Override
     public void sendToClient(RoutingContext context) throws Exception {
         if (file != null) {
-            sendFile(context);
+            if (!file.exists()) {
+                context.fail(404);
+            } else {
+                sendFile(context);
+            }
         } else {
             sendBytes(context);
         }
@@ -165,7 +169,6 @@ public class Download implements BaseVo {
         response.putHeader("Content-Type", mimeType != null ? mimeType : "application/octet-stream");
         //通知客户端 类型为下载
         response.putHeader("Content-Disposition", "attachment;filename=" + new String(downloadName.getBytes(StandardCharsets.UTF_8), "ISO8859-1"));
-
         //客户端要求的文件起始位置
         var fromPos = 0L;
         //客户端要求的文件结束
@@ -188,7 +191,7 @@ public class Download implements BaseVo {
             var bucketSize0 = (int) Math.min(fileSize, bucketSize);
             writeFile(response, in, bucketSize0);
         } catch (IOException e) {
-            response.setStatusCode(404);
+            context.fail(404);
         }
     }
 

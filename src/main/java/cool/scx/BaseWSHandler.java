@@ -1,4 +1,4 @@
-package cool.scx.web;
+package cool.scx;
 
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.ServerWebSocket;
@@ -10,7 +10,7 @@ import io.vertx.core.http.WebSocketFrame;
  * @author 司昌旭
  * @version 1.0.10
  */
-public interface BaseWebSocketController {
+public interface BaseWSHandler {
 
     /**
      * 连接打开时

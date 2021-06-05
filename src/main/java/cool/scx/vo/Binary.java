@@ -71,7 +71,11 @@ public class Binary implements BaseVo {
     @Override
     public void sendToClient(RoutingContext context) throws Exception {
         if (file != null) {
-            sendFile(context);
+            if (!file.exists()) {
+                context.fail(404);
+            } else {
+                sendFile(context);
+            }
         } else {
             sendBytes(context);
         }

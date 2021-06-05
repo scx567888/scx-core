@@ -12,7 +12,7 @@ import io.vertx.ext.web.RoutingContext;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
-class BHandler implements Handler<Buffer> {
+class BodyBufferHandler implements Handler<Buffer> {
 
     private static final long BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
     final RoutingContext context;
@@ -31,7 +31,7 @@ class BHandler implements Handler<Buffer> {
      * @param context       a {@link io.vertx.ext.web.RoutingContext} object.
      * @param contentLength a long.
      */
-    public BHandler(RoutingContext context, long contentLength) {
+    public BodyBufferHandler(RoutingContext context, long contentLength) {
         this.context = context;
         this.contentLength = contentLength;
         if (contentLength != -1L) {

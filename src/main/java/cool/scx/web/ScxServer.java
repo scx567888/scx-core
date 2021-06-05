@@ -6,8 +6,6 @@ import cool.scx.exception.handler.ScxServerExceptionHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.NetUtils;
 import cool.scx.util.Timer;
-import cool.scx.web.handler.ScxRequestHandler;
-import cool.scx.web.handler.ScxWebSocketHandler;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpServer;
@@ -57,9 +55,6 @@ public final class ScxServer {
     }
 
     private static void loadServer() {
-        //先获取 handler 此处每次都重新获取是因为 handler 所扫描的类 是可以根据 scxConfig 进行配置的 所以不能为 final
-        ScxRequestHandler requestHandler = new ScxRequestHandler();
-        ScxWebSocketHandler webSocketHandler = new ScxWebSocketHandler();
         //创建服务器端配置文件
         var httpServerOptions = new HttpServerOptions();
         if (ScxConfig.isOpenHttps()) {
@@ -69,11 +64,9 @@ public final class ScxServer {
                             .setPassword(ScxConfig.sslPassword()));
         }
         server = Scx.vertx().createHttpServer(httpServerOptions);
-        server.requestHandler(requestHandler).webSocketHandler(webSocketHandler);
-        int routeSize = requestHandler.getRoutes().size();
-        int webSocketControllerSize = webSocketHandler.getAllWebSocketController().size();
-        Ansi.OUT.brightYellow("已加载 " + routeSize + " 个 Http 路由 !!!").ln();
-        Ansi.OUT.brightYellow("已加载 " + webSocketControllerSize + " 个 WebSocket 路由 !!!").ln();
+        server.requestHandler(ScxRouter::handle).webSocketHandler(ScxRouter::webSocketHandler);
+        Ansi.OUT.brightYellow("已加载 " + ScxRouter.routeSize() + " 个 Http 路由 !!!").ln();
+        Ansi.OUT.brightYellow("已加载 " + ScxRouter.webSocketRouteSize() + " 个 WebSocket 路由 !!!").ln();
     }
 
     /**

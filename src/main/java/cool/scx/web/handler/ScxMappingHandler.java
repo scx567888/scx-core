@@ -32,7 +32,7 @@ import java.util.stream.Stream;
  * @author 司昌旭
  * @version 0.3.6
  */
-public class ScxMappingHandler implements Handler<RoutingContext> {
+class ScxMappingHandler implements Handler<RoutingContext> {
 
     public final Method method;
     public final ScxMapping scxMapping;

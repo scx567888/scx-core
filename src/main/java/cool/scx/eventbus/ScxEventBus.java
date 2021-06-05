@@ -1,6 +1,7 @@
 package cool.scx.eventbus;
 
 import cool.scx.Scx;
+import cool.scx.web.ScxRouter;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
@@ -17,7 +18,6 @@ public class ScxEventBus {
     private static final EventBus VERTX_EVENTBUS = Scx.vertx().eventBus();
 
     /**
-     *
      * @param address
      * @param message
      */
@@ -45,6 +45,10 @@ public class ScxEventBus {
      */
     public static <T> MessageConsumer<T> localConsumer(String address, Handler<Message<T>> messageHandler) {
         return VERTX_EVENTBUS.localConsumer(address, messageHandler);
+    }
+
+    public static void initEventBus() {
+        ScxRouter.addWebSocketRoute(new ScxEventBusWebSocketHandler());
     }
 
 }

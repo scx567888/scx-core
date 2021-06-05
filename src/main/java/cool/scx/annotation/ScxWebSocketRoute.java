@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Component
-public @interface ScxWebSocketController {
+public @interface ScxWebSocketRoute {
 
     /**
      * websocket 映射路径

@@ -5,13 +5,13 @@ import cool.scx.cms.ScxCms;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.dao.ScxDBContext;
+import cool.scx.eventbus.ScxEventBus;
 import cool.scx.message.ScxSender;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.plugin.ScxPlugin;
 import cool.scx.util.Timer;
-import cool.scx.web.handler.ScxRequestHandler;
+import cool.scx.web.ScxRouter;
 import cool.scx.web.ScxServer;
-import cool.scx.web.handler.ScxWebSocketHandler;
 
 /**
  * 启动类
@@ -64,10 +64,12 @@ public final class ScxApp {
         ScxSender.initSender();
         // 初始化 监听器
         ScxBoot.addListener();
-        //初始化 ScxRequestHandler
-        ScxRequestHandler.initHandler();
-        //初始化 ScxRequestHandler
-        ScxWebSocketHandler.initHandler();
+        // 初始化 http 路由
+        ScxRouter.initRouter();
+        // 初始化 websocket 路由
+        ScxRouter.initWebSocketRouter();
+        // 初始化事件总线
+        ScxEventBus.initEventBus();
         // 初始化 web 服务器
         ScxServer.initServer();
         // 初始化 模块的 start 生命周期

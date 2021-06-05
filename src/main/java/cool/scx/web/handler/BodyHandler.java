@@ -7,6 +7,8 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.impl.RoutingContextInternal;
 
 /**
+ * 处理 body 请求体处理器
+ *
  * <p>BodyHandler class.</p>
  *
  * @author 司昌旭
@@ -34,7 +36,7 @@ public class BodyHandler implements Handler<RoutingContext> {
             context.next();
         } else {
             if (!((RoutingContextInternal) context).seenHandler(2)) {
-                var handler = new BHandler(context, parseContentLengthHeader(request));
+                var handler = new BodyBufferHandler(context, parseContentLengthHeader(request));
                 request.handler(handler);
                 request.endHandler((v) -> handler.end());
                 ((RoutingContextInternal) context).visitHandler(2);
