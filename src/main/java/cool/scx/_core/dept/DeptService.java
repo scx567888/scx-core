@@ -1,8 +1,8 @@
 package cool.scx._core.dept;
 
-import cool.scx.BaseService;
 import cool.scx._core.user.User;
 import cool.scx.annotation.ScxService;
+import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
 import cool.scx.util.StringUtils;
 
@@ -24,7 +24,7 @@ public class DeptService extends BaseService<Dept> {
     /**
      * <p>Constructor for CoreDeptService.</p>
      *
-     * @param userDeptService a {@link cool.scx._core.dept.UserDeptService} object.
+     * @param userDeptService a {@link UserDeptService} object.
      */
     public DeptService(UserDeptService userDeptService) {
         this.userDeptService = userDeptService;
@@ -33,8 +33,8 @@ public class DeptService extends BaseService<Dept> {
     /**
      * getDeptListByUser
      *
-     * @param user a {@link cool.scx._core.user.User} object
-     * @return a {@link java.util.List} object
+     * @param user a {@link User} object
+     * @return a {@link List} object
      */
     public List<Dept> getDeptListByUser(User user) {
         var userDeptParam = new Param<>(new UserDept());
@@ -53,8 +53,8 @@ public class DeptService extends BaseService<Dept> {
     /**
      * saveDeptListWithUserId
      *
-     * @param userId  a {@link java.lang.Long} object
-     * @param deptIds a {@link java.lang.String} object
+     * @param userId  a {@link Long} object
+     * @param deptIds a {@link String} object
      */
     public void saveDeptListWithUserId(Long userId, List<Long> deptIds) {
         if (!StringUtils.isEmpty(deptIds)) {
@@ -72,7 +72,7 @@ public class DeptService extends BaseService<Dept> {
     /**
      * {@inheritDoc}
      *
-     * @param id a {@link java.lang.Long} object
+     * @param id a {@link Long} object
      */
     public void deleteByUserId(Long id) {
         var userDept = new Param<>(new UserDept());
@@ -83,8 +83,8 @@ public class DeptService extends BaseService<Dept> {
     /**
      * {@inheritDoc}
      *
-     * @param userId a {@link java.lang.Long} object
-     * @return a {@link java.util.List} object
+     * @param userId a {@link Long} object
+     * @return a {@link List} object
      */
     public List<UserDept> findDeptByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {
@@ -98,8 +98,8 @@ public class DeptService extends BaseService<Dept> {
     /**
      * <p>getUserDeptByUserIds.</p>
      *
-     * @param userIds a {@link java.util.List} object
-     * @return a {@link java.util.List} object
+     * @param userIds a {@link List} object
+     * @return a {@link List} object
      */
     public List<UserDept> getUserDeptByUserIds(List<Long> userIds) {
         var p = new Param<>(new UserDept());

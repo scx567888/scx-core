@@ -1,9 +1,9 @@
 package cool.scx._core.crud;
 
-import cool.scx.BaseModel;
-import cool.scx.BaseService;
 import cool.scx.annotation.FromBody;
 import cool.scx.annotation.ScxMapping;
+import cool.scx.base.BaseModel;
+import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
@@ -81,14 +81,14 @@ public class CrudController {
     /**
      * 列表查询
      *
-     * @param modelName     a {@link java.lang.String} object.
-     * @param limit         a {@link java.lang.Integer} object.
-     * @param page          a {@link java.lang.Integer} object.
-     * @param orderByColumn a {@link java.lang.String} object.
-     * @param sortType      a {@link java.lang.String} object.
-     * @param queryObject   a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @param modelName     a {@link String} object.
+     * @param limit         a {@link Integer} object.
+     * @param page          a {@link Integer} object.
+     * @param orderByColumn a {@link String} object.
+     * @param sortType      a {@link String} object.
+     * @param queryObject   a {@link Map} object.
+     * @return a {@link Json} object.
+     * @throws HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/list", method = {Method.GET, Method.POST})
     public Json list(String modelName,
@@ -109,10 +109,10 @@ public class CrudController {
     /**
      * 获取详细信息
      *
-     * @param modelName a {@link java.lang.String} object.
-     * @param id        a {@link java.lang.Long} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @param modelName a {@link String} object.
+     * @param id        a {@link Long} object.
+     * @return a {@link Json} object.
+     * @throws HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/:id", method = Method.GET)
     public Json info(String modelName, Long id) throws HttpResponseException {
@@ -124,10 +124,10 @@ public class CrudController {
     /**
      * 保存
      *
-     * @param modelName a {@link java.lang.String} object.
-     * @param entityMap a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @param modelName a {@link String} object.
+     * @param entityMap a {@link Map} object.
+     * @return a {@link Json} object.
+     * @throws HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName", method = Method.POST)
     public Json save(String modelName, Map<String, Object> entityMap) throws HttpResponseException {
@@ -139,10 +139,10 @@ public class CrudController {
     /**
      * 更新
      *
-     * @param modelName a {@link java.lang.String} object.
-     * @param entityMap a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws java.lang.Exception if any.
+     * @param modelName a {@link String} object.
+     * @param entityMap a {@link Map} object.
+     * @return a {@link Json} object.
+     * @throws Exception if any.
      */
     @ScxMapping(value = ":modelName", method = Method.PUT)
     public Json update(String modelName, Map<String, Object> entityMap) throws Exception {
@@ -154,10 +154,10 @@ public class CrudController {
     /**
      * 删除
      *
-     * @param modelName a {@link java.lang.String} object.
-     * @param id        a {@link java.lang.Integer} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws java.lang.Exception if any.
+     * @param modelName a {@link String} object.
+     * @param id        a {@link Integer} object.
+     * @return a {@link Json} object.
+     * @throws Exception if any.
      */
     @ScxMapping(value = ":modelName/:id", method = Method.DELETE)
     public Json delete(String modelName, Integer id) throws Exception {
@@ -169,10 +169,10 @@ public class CrudController {
     /**
      * 批量删除
      *
-     * @param modelName a {@link java.lang.String} object.
-     * @param deleteIds a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @param modelName a {@link String} object.
+     * @param deleteIds a {@link Map} object.
+     * @return a {@link Json} object.
+     * @throws HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/batchDelete", method = Method.DELETE)
     public Json batchDelete(String modelName, @FromBody("deleteIds") List<Long> deleteIds) throws HttpResponseException {
@@ -184,10 +184,10 @@ public class CrudController {
     /**
      * 撤销删除
      *
-     * @param modelName a {@link java.lang.String} object.
-     * @param id        a {@link java.lang.Integer} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @param modelName a {@link String} object.
+     * @param id        a {@link Integer} object.
+     * @return a {@link Json} object.
+     * @throws HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/revokeDelete/:id", method = Method.GET)
     public Json revokeDelete(String modelName, Integer id) throws HttpResponseException {
@@ -199,10 +199,10 @@ public class CrudController {
     /**
      * 获取自动完成字段
      *
-     * @param modelName a {@link java.lang.String} object.
-     * @param fieldName a {@link java.lang.String} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @param modelName a {@link String} object.
+     * @param fieldName a {@link String} object.
+     * @return a {@link Json} object.
+     * @throws HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", method = Method.POST)
     public Json getAutoComplete(String modelName, String fieldName) throws HttpResponseException {
@@ -214,10 +214,10 @@ public class CrudController {
     /**
      * 校验唯一性
      *
-     * @param modelName a {@link java.lang.String} object.
-     * @param params    a {@link java.util.Map} object.
-     * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @param modelName a {@link String} object.
+     * @param params    a {@link Map} object.
+     * @return a {@link Json} object.
+     * @throws HttpResponseException if any.
      */
     @ScxMapping(value = ":modelName/checkUnique", method = Method.POST)
     public Json checkUnique(String modelName, Map<String, Object> params) throws HttpResponseException {

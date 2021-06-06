@@ -1,7 +1,7 @@
 package cool.scx._core.log;
 
-import cool.scx.BaseModel;
 import cool.scx.annotation.ScxModel;
+import cool.scx.base.BaseModel;
 
 /**
  * 日志记录表

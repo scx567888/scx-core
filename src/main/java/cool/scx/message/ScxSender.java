@@ -1,7 +1,6 @@
 package cool.scx.message;
 
 import cool.scx.context.ScxContext;
-import cool.scx.message.sender.EmailSender;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
 
@@ -53,7 +52,7 @@ public class ScxSender {
      * <p>getSender.</p>
      *
      * @param name a {@link java.lang.String} object
-     * @return a {@link cool.scx.message.BaseSender} object
+     * @return a {@link BaseSender} object
      */
     public static BaseSender<?, ?> getSender(String name) {
         return NameMapping.get(name);

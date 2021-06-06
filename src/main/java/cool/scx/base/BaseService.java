@@ -1,4 +1,4 @@
-package cool.scx;
+package cool.scx.base;
 
 import cool.scx.bo.Param;
 import cool.scx.config.ScxConfig;

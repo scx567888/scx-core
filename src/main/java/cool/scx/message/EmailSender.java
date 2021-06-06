@@ -1,6 +1,4 @@
-package cool.scx.message.sender;
-
-import cool.scx.message.BaseSender;
+package cool.scx.message;
 
 /**
  * <p>EmailSender class.</p>

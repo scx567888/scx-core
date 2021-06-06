@@ -20,7 +20,7 @@ public class NoticeController {
     /**
      * 获取所有在线用户列表
      *
-     * @return a {@link cool.scx.vo.Json} object.
+     * @return a {@link Json} object.
      */
     @ScxMapping(method = Method.POST)
     public Json getAllOnlineUser() {

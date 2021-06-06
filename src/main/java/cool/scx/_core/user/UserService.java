@@ -1,9 +1,9 @@
 package cool.scx._core.user;
 
-import cool.scx.BaseService;
 import cool.scx._core.dept.DeptService;
 import cool.scx._core.role.RoleService;
 import cool.scx.annotation.ScxService;
+import cool.scx.base.BaseService;
 import cool.scx.bo.Param;
 
 import java.util.List;
@@ -34,8 +34,8 @@ public class UserService extends BaseService<User> {
     /**
      * <p>Constructor for CoreUserService.</p>
      *
-     * @param deptService a {@link cool.scx._core.dept.DeptService} object.
-     * @param roleService a {@link cool.scx._core.role.RoleService} object.
+     * @param deptService a {@link DeptService} object.
+     * @param roleService a {@link RoleService} object.
      */
     public UserService(DeptService deptService, RoleService roleService) {
         this.deptService = deptService;
@@ -47,8 +47,8 @@ public class UserService extends BaseService<User> {
      * <p>
      * 重写方法
      *
-     * @param param a {@link cool.scx.bo.Param} object
-     * @return a {@link java.util.List} object
+     * @param param a {@link Param} object
+     * @return a {@link List} object
      */
     public List<User> listWithRoleAndDept(Param<User> param) {
         List<User> userList = super.listWithLike(param);
@@ -71,8 +71,8 @@ public class UserService extends BaseService<User> {
     /**
      * <p>findByUsername.</p>
      *
-     * @param username a {@link java.lang.String} object
-     * @return a {@link cool.scx._core.user.User} object
+     * @param username a {@link String} object
+     * @return a {@link User} object
      */
     public User findByUsername(String username) {
         var param = new Param<>(new User());

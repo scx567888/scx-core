@@ -1,4 +1,4 @@
-package cool.scx;
+package cool.scx.base;
 
 import cool.scx.annotation.Column;
 

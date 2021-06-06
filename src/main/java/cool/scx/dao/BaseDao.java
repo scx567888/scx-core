@@ -1,7 +1,7 @@
 package cool.scx.dao;
 
-import cool.scx.BaseModel;
 import cool.scx.annotation.Column;
+import cool.scx.base.BaseModel;
 import cool.scx.bo.Param;
 import cool.scx.bo.TableInfo;
 import cool.scx.bo.UpdateResult;

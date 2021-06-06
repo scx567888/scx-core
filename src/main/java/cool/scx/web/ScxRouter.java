@@ -1,8 +1,8 @@
 package cool.scx.web;
 
-import cool.scx.BaseWSHandler;
 import cool.scx.Scx;
 import cool.scx.annotation.ScxWebSocketRoute;
+import cool.scx.base.BaseWSHandler;
 import cool.scx.context.ScxContext;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.StringUtils;
