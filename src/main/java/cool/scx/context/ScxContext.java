@@ -1,8 +1,6 @@
 package cool.scx.context;
 
-import cool.scx.annotation.ScxController;
-import cool.scx.annotation.ScxModel;
-import cool.scx.annotation.ScxService;
+import cool.scx.annotation.*;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
 import io.vertx.core.http.ServerWebSocket;
@@ -41,11 +39,7 @@ public final class ScxContext {
 
     static {
         Ansi.OUT.brightBlue("ScxContext 初始化中...").ln();
-        APPLICATION_CONTEXT.scan(ScxModuleHandler.getAllModuleBasePackages());
-        ScxModuleHandler.getAllPluginModule().forEach(m -> m.classList.forEach(APPLICATION_CONTEXT::register));
-        APPLICATION_CONTEXT.refresh();
-        initScxAnnotationBean();
-        var allBean = APPLICATION_CONTEXT.getBeanDefinitionNames();
+        var allBean = initScxAnnotationBean();
         var beanNumber = Arrays.stream(allBean).filter(s -> !s.startsWith("org.springframework")).count();
         Ansi.OUT.brightBlue("共加载 " + beanNumber + " 个 Bean !!!").ln();
     }
@@ -60,20 +54,31 @@ public final class ScxContext {
         return SCX_BEAN_CLASS_NAME_MAPPING.get(str.toLowerCase());
     }
 
-    private static void initScxAnnotationBean() {
-        ScxModuleHandler.iterateClass(clazz -> {
-            if (clazz.isAnnotationPresent(ScxService.class) || clazz.isAnnotationPresent(ScxController.class) || clazz.isAnnotationPresent(ScxModel.class)) {
-                String className = clazz.getSimpleName().toLowerCase();
-                Class<?> aClass = SCX_BEAN_CLASS_NAME_MAPPING.get(className);
+    private static String[] initScxAnnotationBean() {
+        ScxModuleHandler.iterateClass((c) -> {
+            if (hasScxAnnotation(c)) {
+                APPLICATION_CONTEXT.register(c);
+                var className = c.getSimpleName().toLowerCase();
+                var aClass = SCX_BEAN_CLASS_NAME_MAPPING.get(className);
                 if (aClass == null) {
-                    SCX_BEAN_CLASS_NAME_MAPPING.put(clazz.getSimpleName().toLowerCase(), clazz);
+                    SCX_BEAN_CLASS_NAME_MAPPING.put(c.getSimpleName().toLowerCase(), c);
                 } else {
-                    SCX_BEAN_CLASS_NAME_MAPPING.put(clazz.getName(), clazz);
-                    Ansi.OUT.brightRed("检测到重复名称的 class ").brightYellow("[" + aClass.getName() + "] ").blue("[" + clazz.getName() + "]").brightRed(" 可能会导致根据名称调用时意义不明确 !!! 建议修改 !!!").ln();
+                    SCX_BEAN_CLASS_NAME_MAPPING.put(c.getName(), c);
+                    Ansi.OUT.brightRed("检测到重复名称的 class ").brightYellow("[" + aClass.getName() + "] ").blue("[" + c.getName() + "]").brightRed(" 可能会导致根据名称调用时意义不明确 !!! 建议修改 !!!").ln();
                 }
             }
             return true;
         });
+        APPLICATION_CONTEXT.refresh();
+        return APPLICATION_CONTEXT.getBeanDefinitionNames();
+    }
+
+    private static boolean hasScxAnnotation(Class<?> clazz) {
+        return (clazz.isAnnotationPresent(ScxService.class)
+                || clazz.isAnnotationPresent(ScxMapping.class)
+                || clazz.isAnnotationPresent(ScxModel.class)
+                || clazz.isAnnotationPresent(ScxTemplateDirective.class)
+                || clazz.isAnnotationPresent(ScxWebSocketRoute.class));
     }
 
     /**

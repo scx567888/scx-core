@@ -2,10 +2,10 @@ package cool.scx._core.license;
 
 import cool.scx.BaseService;
 import cool.scx._core.config.CoreConfig;
+import cool.scx._core.log.LogUtils;
 import cool.scx.annotation.ScxService;
 import cool.scx.util.Ansi;
 import cool.scx.util.CryptoUtils;
-import cool.scx.util.LogUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -25,7 +25,7 @@ public final class MapUtils {
         source.forEach((key, value) -> {
             String newKey = prefix + key;
             if (value instanceof Map) {
-                result.putAll(flatMap((Map) value, newKey));
+                result.putAll(flatMap((Map<String, Object>) value, newKey));
             } else {
                 result.put(newKey, value);
             }

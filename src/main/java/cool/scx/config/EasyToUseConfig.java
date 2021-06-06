@@ -141,20 +141,20 @@ class EasyToUseConfig {
         disabledPluginList = new HashSet<>(tempDisabledPluginList);
 
         String tempCmsRoot = ScxConfig.get("scx.cms.root", "/c/",
-                s -> Ansi.OUT.green("Y Cms 根目录                         \t -->\t " + FileUtils.getFileByRootModulePath(s)).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.cms.root               \t -->\t 已采用默认值 : " + FileUtils.getFileByRootModulePath(f)).ln());
+                s -> Ansi.OUT.green("Y Cms 根目录                         \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
+                f -> Ansi.OUT.red("N 未检测到 scx.cms.root               \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
 
-        cmsRoot = FileUtils.getFileByRootModulePath(tempCmsRoot);
+        cmsRoot = FileUtils.getFileByAppRoot(tempCmsRoot);
 
         cmsResourceHttpUrl = ScxConfig.get("scx.cms.resource-http-url", "/static/*",
                 s -> Ansi.OUT.green("Y Cms 静态资源 Url                     \t -->\t " + s).ln(),
                 f -> Ansi.OUT.red("N 未检测到 scx.cms.resource-http-url   \t -->\t 已采用默认值 : " + f).ln());
 
         String tempCmsResourceLocations = ScxConfig.get("scx.cms.resource-locations", "/c/static",
-                s -> Ansi.OUT.green("Y Cms 静态资源目录                     \t -->\t " + FileUtils.getFileByRootModulePath(s)).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.cms.resource-locations  \t -->\t 已采用默认值 : " + FileUtils.getFileByRootModulePath(f)).ln());
+                s -> Ansi.OUT.green("Y Cms 静态资源目录                     \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
+                f -> Ansi.OUT.red("N 未检测到 scx.cms.resource-locations  \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
 
-        cmsResourceLocations = FileUtils.getFileByRootModulePath(tempCmsResourceLocations);
+        cmsResourceLocations = FileUtils.getFileByAppRoot(tempCmsResourceLocations);
 
         cmsTemplateSuffix = ScxConfig.get("scx.cms.template-suffix", ".html",
                 s -> Ansi.OUT.green("Y Cms 模板文件后缀                     \t -->\t " + s).ln(),
@@ -165,10 +165,10 @@ class EasyToUseConfig {
                 f -> Ansi.OUT.red("N 未检测到 scx.https.is-open           \t -->\t 已采用默认值 : " + f).ln());
 
         var tempSSLPath = ScxConfig.get("scx.https.ssl-path", "",
-                s -> Ansi.OUT.green("Y 证书路径                            \t -->\t " + FileUtils.getFileByRootModulePath(s)).ln(),
+                s -> Ansi.OUT.green("Y 证书路径                            \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
                 f -> Ansi.OUT.red("N 未检测到 scx.https.ssl-path         \t -->\t 请检查证书路径是否正确").ln());
 
-        sslPath = FileUtils.getFileByRootModulePath(tempSSLPath);
+        sslPath = FileUtils.getFileByAppRoot(tempSSLPath);
 
         var tempSSLPassword = "";
 

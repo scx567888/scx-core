@@ -9,4 +9,5 @@ import cool.scx.exception.AuthException;
  * @version 0.3.6
  */
 public class WrongPasswordException extends AuthException {
+
 }

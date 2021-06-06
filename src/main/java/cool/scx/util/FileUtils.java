@@ -3,8 +3,8 @@ package cool.scx.util;
 import cool.scx.module.ScxModuleHandler;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -29,7 +29,6 @@ public final class FileUtils {
      * 文件大小格式化 映射表 方便计算使用
      */
     private final static HashMap<String, Long> DISPLAY_SIZE_MAP = getDisplaySizeMap();
-
 
     /**
      * deleteFilesVisitor
@@ -191,8 +190,12 @@ public final class FileUtils {
      * @param path a {@link java.lang.String} object.
      * @return a {@link java.io.File} object.
      */
-    public static File getFileByRootModulePath(String path) {
-        return path.startsWith("absPath:") ? new File(path.replaceAll("absPath:", "")) : new File(ScxModuleHandler.appRootPath(), path);
+    public static File getFileByAppRoot(String path) {
+        if (path.startsWith("AppRoot:")) {
+            return new File(ScxModuleHandler.appRootPath(), path.replaceAll("AppRoot:", ""));
+        } else {
+            return new File(path);
+        }
     }
 
     /**
@@ -202,22 +205,12 @@ public final class FileUtils {
      * @param fileContent 待写入的内容
      */
     public static void setFileContent(String filePath, String fileContent) {
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(filePath);
-            var channel = fos.getChannel();
+        try (var file = new RandomAccessFile(filePath, "rw")) {
+            var channel = file.getChannel();
             var src = StandardCharsets.UTF_8.encode(fileContent);
             channel.write(src);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 

@@ -3,7 +3,6 @@ package cool.scx._core.crud;
 import cool.scx.BaseModel;
 import cool.scx.BaseService;
 import cool.scx.annotation.FromBody;
-import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.Param;
 import cool.scx.context.ScxContext;
@@ -22,7 +21,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 1.0.10
  */
-@ScxController("api")
+@ScxMapping("api")
 public class CrudController {
 
     /**
@@ -39,7 +38,7 @@ public class CrudController {
             var o = ScxContext.getBean(ScxContext.getClassByName(modelName.toLowerCase() + "service"));
             return (BaseService<T>) o;
         } catch (Exception e) {
-            throw new HttpResponseException(ctx -> Json.fail(modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
+            throw new HttpResponseException(ctx -> Json.fail(Json.SYSTEM_ERROR, modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
         }
     }
 

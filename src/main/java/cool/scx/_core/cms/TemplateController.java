@@ -1,6 +1,5 @@
 package cool.scx._core.cms;
 
-import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.Method;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxController("template")
+@ScxMapping
 public class TemplateController {
 
     /**

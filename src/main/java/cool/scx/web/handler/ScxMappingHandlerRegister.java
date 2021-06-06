@@ -1,6 +1,5 @@
 package cool.scx.web.handler;
 
-import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
@@ -26,7 +25,7 @@ public class ScxMappingHandlerRegister {
     public static void register(Router router) {
         var scxMappingHandlers = new ArrayList<ScxMappingHandler>();
         ScxModuleHandler.iterateClass(clazz -> {
-            if (clazz.isAnnotationPresent(ScxController.class)) {
+            if (clazz.isAnnotationPresent(ScxMapping.class)) {
                 for (var method : clazz.getMethods()) {
                     method.setAccessible(true);
                     if (method.isAnnotationPresent(ScxMapping.class)) {

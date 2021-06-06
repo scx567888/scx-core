@@ -18,6 +18,8 @@ import java.util.List;
  */
 public final class ScxBoot {
 
+    private static final String SESSION_CACHE_PATH = "AppRoot:scx-session.cache";
+
     /**
      * 在控制台上打印 banner
      */
@@ -38,7 +40,7 @@ public final class ScxBoot {
     @SuppressWarnings("unchecked")
     public static void addListener() {
         try {
-            var fis = new FileInputStream(FileUtils.getFileByRootModulePath("scx-session.cache"));
+            var fis = new FileInputStream(FileUtils.getFileByAppRoot(SESSION_CACHE_PATH));
             ObjectInputStream objectInputStream = new ObjectInputStream(fis);
             var o = (List<LoginItem>) objectInputStream.readObject();
 //            for (var entry : o.entrySet()) {
@@ -54,7 +56,7 @@ public final class ScxBoot {
                 ScxModuleHandler.stopModules();
                 Ansi.OUT.red("项目停止!!!").ln();
                 Ansi.OUT.red("保存 session 中!!!").ln();
-                var fos = new FileOutputStream(FileUtils.getFileByRootModulePath("scx-session.cache"));
+                var fos = new FileOutputStream(FileUtils.getFileByAppRoot(SESSION_CACHE_PATH));
                 var objectOutputStream = new ObjectOutputStream(fos);
                 objectOutputStream.writeObject(ScxAuth.getAllLoginItem());
                 objectOutputStream.close();

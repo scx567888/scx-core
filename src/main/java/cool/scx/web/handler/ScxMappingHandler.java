@@ -1,7 +1,10 @@
 package cool.scx.web.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.annotation.*;
+import cool.scx.annotation.FromBody;
+import cool.scx.annotation.FromPath;
+import cool.scx.annotation.FromQuery;
+import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.AuthUser;
 import cool.scx.auth.ScxAuth;
 import cool.scx.bo.FileUpload;
@@ -35,8 +38,8 @@ import java.util.stream.Stream;
 class ScxMappingHandler implements Handler<RoutingContext> {
 
     public final Method method;
-    public final ScxMapping scxMapping;
-    public final ScxController scxController;
+    public final ScxMapping methodScxMapping;
+    public final ScxMapping classScxMapping;
     public final Object example;
     public final int order;
     public final Class<?> clazz;
@@ -53,9 +56,9 @@ class ScxMappingHandler implements Handler<RoutingContext> {
      */
     public ScxMappingHandler(Class<?> clazz, Method method) {
         this.clazz = clazz;
-        this.scxController = clazz.getAnnotation(ScxController.class);
+        this.classScxMapping = clazz.getAnnotation(ScxMapping.class);
         this.method = method;
-        this.scxMapping = method.getAnnotation(ScxMapping.class);
+        this.methodScxMapping = method.getAnnotation(ScxMapping.class);
         this.example = ScxContext.getBean(clazz);
         this.url = getUrl();
         this.order = getOrder();
@@ -142,7 +145,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
      */
     private boolean checkedLoginAndPerms(RoutingContext context) {
         //如果 不检查登录 对应的也没有必要检查 权限 所以直接返回 true
-        if (!scxMapping.checkedLogin()) {
+        if (!methodScxMapping.checkedLogin()) {
             return true;
         } else {
             //当前登录的用户
@@ -154,7 +157,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
             } else {
                 //这里就是 需要登录 并且 能够获取到当前登录用户的
                 //不需要 检查权限 直接返回 true
-                if (!scxMapping.checkedPerms()) {
+                if (!methodScxMapping.checkedPerms()) {
                     return true;
                 } else {
                     //这里就是 管理员级别  不受权限验证
@@ -176,9 +179,9 @@ class ScxMappingHandler implements Handler<RoutingContext> {
     }
 
     private String getUrl() {
-        return scxMapping.useMethodNameAsUrl() && "".equals(scxMapping.value()) ?
+        return methodScxMapping.useMethodNameAsUrl() && "".equals(methodScxMapping.value()) ?
                 StringUtils.clearHttpUrl("api", getApiNameByControllerName(clazz), method.getName())
-                : StringUtils.clearHttpUrl(scxController.value(), scxMapping.value());
+                : StringUtils.clearHttpUrl(classScxMapping.value(), methodScxMapping.value());
     }
 
     private int getOrder() {
@@ -267,7 +270,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
     }
 
     private Set<HttpMethod> getHttpMethod() {
-        return Stream.of(scxMapping.method())
+        return Stream.of(methodScxMapping.method())
                 .map(r -> HttpMethod.valueOf(r.toString()))
                 .collect(Collectors.toSet());
     }

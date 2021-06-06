@@ -19,7 +19,7 @@ public final class ScxPlugin {
     /**
      * Constant <code>PLUGIN_ROOT</code>
      */
-    public static final File PLUGIN_ROOT = FileUtils.getFileByRootModulePath("plugins");
+    public static final String PLUGIN_ROOT = "AppRoot:plugins";
 
     /**
      * <p>reloadPlugins.</p>
@@ -43,8 +43,9 @@ public final class ScxPlugin {
      * <p>init.</p>
      */
     private static void loadPlugins() {
-        if (PLUGIN_ROOT.exists()) {
-            var allPluginJar = PLUGIN_ROOT.listFiles((file, s) -> s.endsWith(".jar"));
+        var pluginRoot = FileUtils.getFileByAppRoot(PLUGIN_ROOT);
+        if (pluginRoot.exists()) {
+            var allPluginJar = pluginRoot.listFiles((file, s) -> s.endsWith(".jar"));
             if (allPluginJar != null) {
                 for (File file : allPluginJar) {
                     //判断是否被禁用

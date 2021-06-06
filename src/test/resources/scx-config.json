@@ -21,18 +21,18 @@
     },
     "https": {
       "is-open": false,
-      "ssl-path": "/ssl/scx_dev.jks",
+      "ssl-path": "AppRoot:/ssl/scx_dev.jks",
       "ssl-password": "k8s6nDQxC5zCfUYChf1tRLwriOw66th8egQomJLwjnXJBE5aqgSSz5a2/vcV4zqZ"
     },
     "cms": {
-      "root": "/c/",
+      "root": "AppRoot:/c/",
       "resource-http-url": "/static/*",
-      "resource-locations": "/c/static/",
+      "resource-locations": "C:/Users/scx56/Projects/scx/src/main/resources/c/static/",
       "template-suffix": ".html"
     }
   },
   "core": {
-    "upload-file-path": "absPath:C:\\Users\\scx56\\Documents\\scxFiles",
+    "upload-file-path": "C:\\Users\\scx56\\Documents\\scxFiles",
     "confusion-login-error": false,
     "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
     "login-error-lock-times": 3,

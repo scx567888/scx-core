@@ -1,10 +1,10 @@
-package cool.scx.util;
+package cool.scx._core.log;
 
-import cool.scx._core.log.Log;
-import cool.scx._core.log.LogService;
 import cool.scx.auth.ScxAuth;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
+import cool.scx.util.Ansi;
+import cool.scx.util.NetUtils;
 
 /**
  * 日志工具类

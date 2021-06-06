@@ -1,6 +1,5 @@
 package cool.scx._core.notice;
 
-import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
  * @author 司昌旭
  * @version 1.0.10
  */
-@ScxController
+@ScxMapping
 public class NoticeController {
 
     /**

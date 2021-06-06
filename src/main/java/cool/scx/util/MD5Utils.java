@@ -1,9 +1,8 @@
 package cool.scx.util;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -23,7 +22,7 @@ public final class MD5Utils {
      */
     public static String md5(String str) {
         var b = str.getBytes(StandardCharsets.UTF_8);
-        MessageDigest md5Instance = getMD5Instance();
+        var md5Instance = getMD5Instance();
         md5Instance.update(b);
         return byteArrayToHex(md5Instance.digest());
     }
@@ -35,11 +34,13 @@ public final class MD5Utils {
      * @return a md5 值
      */
     public static String md5(File inputFile) {
-        // 缓冲区大小（这个可以抽出一个参数）
-        try (var fileInputStream = new FileInputStream(inputFile); var digestInputStream = new DigestInputStream(fileInputStream, getMD5Instance())) {
-            byte[] buffer = new byte[256 * 1024];
-            while (digestInputStream.read(buffer) > 0) ;
-            var md5Instance = digestInputStream.getMessageDigest();
+        try (var file = new RandomAccessFile(inputFile, "r")) {
+            var md5Instance = getMD5Instance();
+            // 缓冲区
+            byte[] cache = new byte[256 * 1024];
+            while (file.read(cache) != -1) {
+                md5Instance.update(cache);
+            }
             return byteArrayToHex(md5Instance.digest());
         } catch (Exception e) {
             return null;

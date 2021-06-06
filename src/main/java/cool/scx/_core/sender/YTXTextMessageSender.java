@@ -1,11 +1,11 @@
 package cool.scx._core.sender;
 
+import cool.scx.annotation.ScxService;
 import cool.scx.config.ScxConfig;
 import cool.scx.message.BaseSender;
 import cool.scx.util.Base64Utils;
 import cool.scx.util.HttpUtils;
 import cool.scx.util.MD5Utils;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @author 司昌旭
  * @version 1.1.9
  */
-@Component
+@ScxService
 public class YTXTextMessageSender implements BaseSender<List<String>, Map<String, Object>> {
 
     private final String YTX_BASE_URL = "https://app.cloopen.com:8883";

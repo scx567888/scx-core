@@ -2,13 +2,13 @@ package cool.scx._test;
 
 import cool.scx._core.user.User;
 import cool.scx._core.user.UserService;
-import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.Param;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
 import cool.scx.util.FileTypeUtils;
 import cool.scx.util.HttpUtils;
+import cool.scx.util.MD5Utils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.BaseVo;
 import cool.scx.vo.Binary;
@@ -26,7 +26,7 @@ import java.util.HashMap;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxController
+@ScxMapping
 public class TestController {
 
     private final UserService coreUserService;
@@ -108,6 +108,14 @@ public class TestController {
             s.append("download ").append(i);
         }
         return new Binary(s.toString().getBytes(StandardCharsets.UTF_8), FileTypeUtils.getFileTypeForExtension("txt"));
+    }
+
+    /**
+     * 测试!!!
+     */
+    @ScxMapping(value = "/md5", method = Method.GET)
+    public String TestMd5() {
+        return MD5Utils.md5("123");
     }
 
 }

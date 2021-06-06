@@ -9,14 +9,16 @@ import cool.scx.exception.AuthException;
  * @version 0.3.6
  */
 public class TooManyErrorsException extends AuthException {
+
     public long remainingTime;
 
     /**
-     * <p>Constructor for TooManyErrorsException.</p>
+     * 构造函数 设置剩余错误次数
      *
      * @param remainingTime a long.
      */
     public TooManyErrorsException(long remainingTime) {
         this.remainingTime = remainingTime;
     }
+
 }

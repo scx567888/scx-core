@@ -4,7 +4,7 @@ import cool.scx.BaseService;
 import cool.scx.annotation.ScxService;
 
 /**
- * <p>ArticleService class.</p>
+ * ArticleService
  *
  * @author 司昌旭
  * @version 0.3.6

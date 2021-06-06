@@ -100,10 +100,10 @@ public class CoreConfig {
         public CoreEasyToUse() {
 
             String tempUploadFilePath = ScxConfig.get("core.upload-file-path", "/UploadFile/",
-                    s -> Ansi.OUT.magenta("Y 文件上传目录                         \t -->\t " + FileUtils.getFileByRootModulePath(s)).ln(),
+                    s -> Ansi.OUT.magenta("Y 文件上传目录                         \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
                     f -> Ansi.OUT.red("N 未检测到 core.upload-file-path       \t -->\t 已采用默认值 : " + f).ln());
 
-            uploadFilePath = FileUtils.getFileByRootModulePath(tempUploadFilePath);
+            uploadFilePath = FileUtils.getFileByAppRoot(tempUploadFilePath);
 
             confusionLoginError = ScxConfig.get("core.confusion-login-error", false,
                     s -> Ansi.OUT.magenta("Y 是否混淆登录错误                     \t -->\t " + (s ? "是" : "否")).ln(),

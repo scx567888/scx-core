@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * @author 司昌旭
  * @version 0.3.6
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ScxMapping {
 

@@ -1,6 +1,5 @@
 package cool.scx._core.auth;
 
-import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.ScxAuth;
 import cool.scx.context.ScxContext;
@@ -19,7 +18,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxController
+@ScxMapping
 public class AuthController {
 
     /**

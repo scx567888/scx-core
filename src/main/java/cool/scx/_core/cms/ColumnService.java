@@ -4,7 +4,7 @@ import cool.scx.BaseService;
 import cool.scx.annotation.ScxService;
 
 /**
- * <p>ColumnService class.</p>
+ * ColumnService
  *
  * @author 司昌旭
  * @version 0.3.6

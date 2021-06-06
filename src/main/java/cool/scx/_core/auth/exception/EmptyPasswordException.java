@@ -9,4 +9,5 @@ import cool.scx.exception.AuthException;
  * @version 1.1.2
  */
 public class EmptyPasswordException extends AuthException {
+
 }

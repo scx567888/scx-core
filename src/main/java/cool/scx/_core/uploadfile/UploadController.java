@@ -1,14 +1,17 @@
 package cool.scx._core.uploadfile;
 
 import cool.scx._core.config.CoreConfig;
+import cool.scx._core.log.LogUtils;
 import cool.scx.annotation.FromQuery;
-import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.FileUpload;
 import cool.scx.bo.Param;
 import cool.scx.enumeration.Method;
 import cool.scx.exception.HttpResponseException;
-import cool.scx.util.*;
+import cool.scx.util.FileUtils;
+import cool.scx.util.MD5Utils;
+import cool.scx.util.NetUtils;
+import cool.scx.util.StringUtils;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
 import cool.scx.vo.Json;
@@ -28,7 +31,7 @@ import java.util.stream.Collectors;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxController("/api")
+@ScxMapping("/api")
 public class UploadController {
 
     private final UploadFileService uploadFileService;

@@ -25,23 +25,28 @@ import java.util.function.Consumer;
 public final class ScxConfig {
 
     /**
-     * Constant <code>SCX_VERSION </code>
+     * SCX 版本号
      */
     public static final String SCX_VERSION = "1.1.9";
 
     /**
-     * Constant <code>SCX_APP_KEY="H8QS91GcuNGP9735"</code>
+     * APP KEY 常量
      */
     public static final String SCX_APP_KEY = "H8QS91GcuNGP9735";
 
     /**
-     * Constant <code>DATETIME_FORMATTER</code>
+     * 配置文件 路径
+     */
+    public static final String SCX_CONFIG_PATH = "AppRoot:scx-config.json";
+
+    /**
+     * 默认 LocalDateTime 格式化类
      */
     public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-
     /**
      * 当前 默认配置文件的实例
+     * 是一个映射表
      * 注意!!! 如果未执行 init 或 loadConfig 方法 nowScxExample 可能为空
      */
     private static final Map<String, Object> CONFIG_EXAMPLE = new HashMap<>();
@@ -90,7 +95,7 @@ public final class ScxConfig {
      * 加载 配置文件
      */
     private static void loadJsonConfig() {
-        var scxConfigJson = FileUtils.getFileByRootModulePath("scx-config.json");
+        var scxConfigJson = FileUtils.getFileByAppRoot(SCX_CONFIG_PATH);
         var mapper = new ObjectMapper();
         try {
             if (!scxConfigJson.exists()) {

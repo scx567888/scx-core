@@ -3,6 +3,7 @@ package cool.scx._core.auth;
 import cool.scx._core.auth.exception.*;
 import cool.scx._core.config.CoreConfig;
 import cool.scx._core.dept.DeptService;
+import cool.scx._core.log.LogUtils;
 import cool.scx._core.role.RoleService;
 import cool.scx._core.user.User;
 import cool.scx._core.user.UserService;

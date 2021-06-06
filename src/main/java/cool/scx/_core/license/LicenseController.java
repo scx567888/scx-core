@@ -1,6 +1,5 @@
 package cool.scx._core.license;
 
-import cool.scx.annotation.ScxController;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.Method;
 import cool.scx.vo.Html;
@@ -11,7 +10,7 @@ import cool.scx.vo.Html;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxController("/license")
+@ScxMapping("/license")
 public class LicenseController {
 
     private final LicenseService licenseService;
