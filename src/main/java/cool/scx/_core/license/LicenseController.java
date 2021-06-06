@@ -18,7 +18,7 @@ public class LicenseController {
     /**
      * <p>Constructor for LicenseController.</p>
      *
-     * @param licenseService a {@link LicenseService} object.
+     * @param licenseService a {@link cool.scx._core.license.LicenseService} object.
      */
     public LicenseController(LicenseService licenseService) {
         this.licenseService = licenseService;
@@ -27,7 +27,7 @@ public class LicenseController {
     /**
      * 跳转至密钥生成页面
      *
-     * @return a {@link Html} object
+     * @return a {@link cool.scx.vo.Html} object
      */
 
     @ScxMapping(value = "index", method = Method.GET)
@@ -38,8 +38,8 @@ public class LicenseController {
     /**
      * <p>getHtml.</p>
      *
-     * @param s a {@link String} object.
-     * @return a {@link String} object.
+     * @param s a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
      */
     public String getHtml(String s) {
         return "<!DOCTYPE html>\n" +
@@ -79,7 +79,7 @@ public class LicenseController {
      *
      * @param adminPassword adminPassword
      * @param stopTime      stopTime
-     * @return a {@link Html} object
+     * @return a {@link cool.scx.vo.Html} object
      */
     @ScxMapping(value = "/make", method = Method.POST)
     public Html makeLicense(String adminPassword, String stopTime) {
@@ -94,7 +94,7 @@ public class LicenseController {
      * 恢复 License
      *
      * @param adminPassword adminPassword
-     * @return a {@link Html} object
+     * @return a {@link cool.scx.vo.Html} object
      */
     @ScxMapping(value = "/recovery", method = Method.POST)
     public Html recoveryLicense(String adminPassword) {

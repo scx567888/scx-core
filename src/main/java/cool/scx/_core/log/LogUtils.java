@@ -44,7 +44,7 @@ public final class LogUtils {
     /**
      * 记录日志
      *
-     * @param str a {@link String} object.
+     * @param str a {@link java.lang.String} object.
      */
     public static void recordLog(String str) {
         recordLog(str, str);

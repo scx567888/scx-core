@@ -52,7 +52,7 @@ public class ScxSender {
      * <p>getSender.</p>
      *
      * @param name a {@link java.lang.String} object
-     * @return a {@link BaseSender} object
+     * @return a {@link cool.scx.message.BaseSender} object
      */
     public static BaseSender<?, ?> getSender(String name) {
         return NameMapping.get(name);

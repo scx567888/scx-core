@@ -45,9 +45,9 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * <p>Constructor for CoreAuthHandler.</p>
      *
-     * @param userService a {@link UserService} object
-     * @param roleService a {@link RoleService} object
-     * @param deptService a {@link DeptService} object
+     * @param userService a {@link cool.scx._core.user.UserService} object
+     * @param roleService a {@link cool.scx._core.role.RoleService} object
+     * @param deptService a {@link cool.scx._core.dept.DeptService} object
      */
     public CoreAuthHandler(UserService userService, RoleService roleService, DeptService deptService) {
         this.userService = userService;
@@ -58,7 +58,7 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * info
      *
-     * @return a {@link Json} object
+     * @return a {@link cool.scx.vo.Json} object
      */
     public Json info() {
         var user = (User) ScxAuth.getLoginUser();
@@ -81,8 +81,8 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * {@inheritDoc}
      *
-     * @param params a {@link Map} object
-     * @return a {@link Json} object
+     * @param params a {@link java.util.Map} object
+     * @return a {@link cool.scx.vo.Json} object
      */
     public Json infoUpdate(Map<String, Object> params) {
         var queryUser = ObjectUtils.mapToBean(params, User.class);
@@ -98,7 +98,7 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * logout
      *
-     * @return a {@link Json} object
+     * @return a {@link cool.scx.vo.Json} object
      */
     public Json logout() {
         var b = ScxAuth.removeAuthUser();
@@ -112,8 +112,8 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * authExceptionHandler
      *
-     * @param e a {@link AuthException} object
-     * @return a {@link Json} object
+     * @param e a {@link cool.scx.exception.AuthException} object
+     * @return a {@link cool.scx.vo.Json} object
      */
     public Json authExceptionHandler(AuthException e) {
         if (e instanceof UnknownDeviceException) {
@@ -139,8 +139,8 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * signup
      *
-     * @param params a {@link Map} object
-     * @return a {@link Json} object
+     * @param params a {@link java.util.Map} object
+     * @return a {@link cool.scx.vo.Json} object
      */
     public Json signup(Map<String, Object> params) {
         var username = params.get("username").toString();
@@ -211,9 +211,9 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * {@inheritDoc}
      *
-     * @param params a {@link Map} object
-     * @return a {@link AuthUser} object
-     * @throws AuthException if any.
+     * @param params a {@link java.util.Map} object
+     * @return a {@link cool.scx.auth.AuthUser} object
+     * @throws cool.scx.exception.AuthException if any.
      */
     public AuthUser login(Map<String, Object> params) throws AuthException {
         var username = params.get("username");
@@ -284,8 +284,8 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * {@inheritDoc}
      *
-     * @param user a {@link User} object.
-     * @return a {@link AuthUser} object.
+     * @param user a {@link cool.scx._core.user.User} object.
+     * @return a {@link cool.scx.auth.AuthUser} object.
      */
     public AuthUser registeredUser(User user) {
         var deptIds = user.deptIds;
@@ -303,8 +303,8 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * <p>encryptPassword.</p>
      *
-     * @param password a {@link String} object.
-     * @return an array of {@link String} objects.
+     * @param password a {@link java.lang.String} object.
+     * @return an array of {@link java.lang.String} objects.
      */
     public String[] encryptPassword(String password) {
         var passwordAndSalt = new String[2];
@@ -322,8 +322,8 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * 更新用户密码
      *
-     * @param newUser a {@link User} object
-     * @return a {@link User} object
+     * @param newUser a {@link cool.scx._core.user.User} object
+     * @return a {@link cool.scx._core.user.User} object
      */
     public User updateUserPassword(User newUser) {
         var user = new User();

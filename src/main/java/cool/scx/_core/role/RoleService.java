@@ -24,7 +24,7 @@ public class RoleService extends BaseService<Role> {
     /**
      * <p>Constructor for CoreRoleService.</p>
      *
-     * @param userRoleService a {@link UserRoleService} object.
+     * @param userRoleService a {@link cool.scx._core.role.UserRoleService} object.
      */
     public RoleService(UserRoleService userRoleService) {
         this.userRoleService = userRoleService;
@@ -33,8 +33,8 @@ public class RoleService extends BaseService<Role> {
     /**
      * getRoleListByUser
      *
-     * @param user a {@link User} object
-     * @return a {@link List} object
+     * @param user a {@link cool.scx._core.user.User} object
+     * @return a {@link java.util.List} object
      */
     public List<Role> getRoleListByUser(User user) {
         var userRoleParam = new Param<>(new UserRole());
@@ -52,8 +52,8 @@ public class RoleService extends BaseService<Role> {
     /**
      * getUserRoleByUserIds
      *
-     * @param userIds a {@link User} object
-     * @return a {@link List} object
+     * @param userIds a {@link cool.scx._core.user.User} object
+     * @return a {@link java.util.List} object
      */
     public List<UserRole> getUserRoleByUserIds(List<Long> userIds) {
         var p = new Param<>(new UserRole());
@@ -70,8 +70,8 @@ public class RoleService extends BaseService<Role> {
     /**
      * saveRoleListWithUserId
      *
-     * @param userId  a {@link Long} object
-     * @param roleIds a {@link String} object
+     * @param userId  a {@link java.lang.Long} object
+     * @param roleIds a {@link java.lang.String} object
      */
     public void saveRoleListWithUserId(Long userId, List<Long> roleIds) {
         if (!StringUtils.isEmpty(roleIds)) {
@@ -89,7 +89,7 @@ public class RoleService extends BaseService<Role> {
     /**
      * {@inheritDoc}
      *
-     * @param id a {@link Long} object
+     * @param id a {@link java.lang.Long} object
      */
     public void deleteByUserId(Long id) {
         var userDept = new Param<>(new UserRole());
@@ -100,8 +100,8 @@ public class RoleService extends BaseService<Role> {
     /**
      * {@inheritDoc}
      *
-     * @param userId a {@link Long} object
-     * @return a {@link List} object
+     * @param userId a {@link java.lang.Long} object
+     * @return a {@link java.util.List} object
      */
     public List<UserRole> findRoleByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {
