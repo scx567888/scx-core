@@ -38,8 +38,9 @@ public final class MD5Utils {
             var md5Instance = getMD5Instance();
             // 缓冲区
             byte[] cache = new byte[256 * 1024];
-            while (file.read(cache) != -1) {
-                md5Instance.update(cache);
+            int len;
+            while ((len = file.read(cache)) != -1) {
+                md5Instance.update(cache, 0, len);
             }
             return byteArrayToHex(md5Instance.digest());
         } catch (Exception e) {
