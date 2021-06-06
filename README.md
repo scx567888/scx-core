@@ -46,7 +46,7 @@
 <dependency>
     <groupId>cool.scx</groupId>
     <artifactId>scx</artifactId>
-    <version>1.1.8</version>
+    <version>1.1.10</version>
 </dependency>
 ```
 
