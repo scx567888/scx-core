@@ -29,6 +29,12 @@ public class AuthController {
     private final CoreAuthHandler coreAuthHandler;
     private final LicenseService licenseService;
 
+    /**
+     * <p>Constructor for AuthController.</p>
+     *
+     * @param coreAuthHandler a {@link cool.scx._core._auth.auth.CoreAuthHandler} object
+     * @param licenseService  a {@link cool.scx._core._auth.license.LicenseService} object
+     */
     public AuthController(CoreAuthHandler coreAuthHandler, LicenseService licenseService) {
         this.coreAuthHandler = coreAuthHandler;
         this.licenseService = licenseService;

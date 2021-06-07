@@ -26,7 +26,7 @@ public class AuthConfig {
     /**
      * <p>license.</p>
      *
-     * @return a {@link String} object.
+     * @return a {@link java.lang.String} object.
      */
     public static String license() {
         return coreEasyToUse.license;

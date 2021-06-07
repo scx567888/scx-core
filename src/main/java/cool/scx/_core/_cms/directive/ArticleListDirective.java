@@ -22,7 +22,7 @@ public class ArticleListDirective extends BaseTemplateDirective {
     /**
      * <p>Constructor for ArticleListDirective.</p>
      *
-     * @param articleService a {@link ArticleService} object.
+     * @param articleService a {@link cool.scx._core._cms.article.ArticleService} object.
      */
     public ArticleListDirective(ArticleService articleService) {
         this.articleService = articleService;
