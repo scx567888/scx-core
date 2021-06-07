@@ -1,7 +1,7 @@
 package cool.scx._test;
 
-import cool.scx._core.user.User;
-import cool.scx._core.user.UserService;
+import cool.scx._core._auth.user.User;
+import cool.scx._core._auth.user.UserService;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.Param;
 import cool.scx.context.ScxContext;
@@ -34,7 +34,7 @@ public class TestController {
     /**
      * <p>Constructor for IndexController.</p>
      *
-     * @param coreUserService a {@link cool.scx._core.user.UserService} object.
+     * @param coreUserService a {@link cool.scx._core._auth.user.UserService} object.
      */
     public TestController(UserService coreUserService) {
         this.coreUserService = coreUserService;

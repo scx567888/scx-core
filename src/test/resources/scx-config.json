@@ -32,10 +32,17 @@
     }
   },
   "core": {
-    "upload-file-path": "C:\\Users\\scx56\\Documents\\scxFiles",
-    "confusion-login-error": false,
-    "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
-    "login-error-lock-times": 3,
-    "login-error-lock-second": 60
+    "base": {
+      "upload-file-path": "C:\\Users\\scx56\\Documents\\scxFiles",
+      "ytx-account-sid": "xxx",
+      "ytx-auth-token": "xxx",
+      "ytx-app-id": "xxx"
+    },
+    "auth": {
+      "confusion-login-error": false,
+      "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
+      "login-error-lock-times": 3,
+      "login-error-lock-second": 60
+    }
   }
 }
