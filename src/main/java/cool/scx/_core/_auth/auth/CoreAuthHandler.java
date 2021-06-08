@@ -281,7 +281,7 @@ public class CoreAuthHandler implements AuthHandler {
      */
     public Json login(String username, String password, RoutingContext ctx) {
         try {
-            if (AuthModuleOption.loginUseLicense() && licenseService.passLicense()) {
+            if (AuthModuleOption.loginUseLicense() && !licenseService.passLicense()) {
                 return Json.fail(Json.FAIL_CODE, "licenseError");
             }
             if (StringUtils.isEmpty(username)) {

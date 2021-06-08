@@ -1,5 +1,6 @@
 package cool.scx._core._auth.auth;
 
+import cool.scx.annotation.FromBody;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.Method;
 import cool.scx.vo.Json;
@@ -40,7 +41,7 @@ public class AuthController {
      * @return json
      */
     @ScxMapping(method = Method.POST)
-    public Json login(String username, String password, RoutingContext ctx) {
+    public Json login(@FromBody String username, @FromBody String password, RoutingContext ctx) {
         return coreAuthHandler.login(username, password, ctx);
     }
 

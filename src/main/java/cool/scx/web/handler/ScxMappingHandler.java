@@ -21,6 +21,7 @@ import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.RoutingContext;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
@@ -102,7 +103,10 @@ class ScxMappingHandler implements Handler<RoutingContext> {
     private static Object getParamFromBody(JsonNode jsonNode, Map<String, Object> formAttributesMap, String bodyParamValue, Parameter parameter, boolean required) throws UnsupportedMediaTypeException {
         if (formAttributesMap.size() == 0) {
             var j = jsonNode;
-            if (StringUtils.isNotEmpty(bodyParamValue)) {
+            if (bodyParamValue != null) {
+                if ("".equals(bodyParamValue)) {
+                    bodyParamValue = parameter.getName();
+                }
                 var split = bodyParamValue.split("\\.");
                 for (String s : split) {
                     if (j != null) {
@@ -268,7 +272,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
                 continue;
             }
             // 再尝试将整体转换为 参数
-            finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, "", parameters[i], false);
+            finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, null, parameters[i], false);
             if (finalHandlerParams[i] != null) {
                 continue;
             }
@@ -309,9 +313,11 @@ class ScxMappingHandler implements Handler<RoutingContext> {
         try {
             result = getResult(context);
         } catch (Exception e) {
+            //如果是反射调用方法就使用 方法的内部异常 否则使用异常
+            Throwable exception = (e instanceof InvocationTargetException) ? e.getCause() : e;
             //在此处进行对异常进行截获处理
-            if (e instanceof HttpRequestException) {
-                ((HttpRequestException) e).exceptionHandler(context);
+            if (exception instanceof HttpRequestException) {
+                ((HttpRequestException) exception).exceptionHandler(context);
                 context.end();
                 return;
             }
