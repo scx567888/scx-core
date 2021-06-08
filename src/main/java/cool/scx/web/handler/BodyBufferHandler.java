@@ -23,6 +23,11 @@ class BodyBufferHandler implements Handler<Buffer> {
     boolean ended;
     long uploadSize = 0L;
 
+    /**
+     * <p>Constructor for BodyBufferHandler.</p>
+     *
+     * @param context a {@link io.vertx.ext.web.RoutingContext} object
+     */
     public BodyBufferHandler(RoutingContext context) {
         this.context = context;
         var contentType = context.request().getHeader(HttpHeaders.CONTENT_TYPE);
@@ -63,6 +68,9 @@ class BodyBufferHandler implements Handler<Buffer> {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(Buffer buff) {
         if (!this.failed) {
@@ -86,6 +94,9 @@ class BodyBufferHandler implements Handler<Buffer> {
         }
     }
 
+    /**
+     * <p>end.</p>
+     */
     public void end() {
         this.ended = true;
         if (this.uploadCount.get() == 0) {
