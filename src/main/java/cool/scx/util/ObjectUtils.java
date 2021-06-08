@@ -166,6 +166,7 @@ public final class ObjectUtils {
      * @param type     a {@link java.lang.Class} object.
      * @param <T>      a T object.
      * @return a T object.
+     * @throws java.io.IOException if any.
      */
     public static <T> T jsonNodeToBean(JsonNode jsonNode, Type type) throws IOException {
         var reader = OBJECT_MAPPER.readerFor(TYPE_FACTORY.constructType(type));

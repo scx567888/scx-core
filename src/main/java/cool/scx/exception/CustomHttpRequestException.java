@@ -6,6 +6,9 @@ import java.util.function.Consumer;
 
 /**
  * 自定义异常
+ *
+ * @author 司昌旭
+ * @version 1.1.14
  */
 public class CustomHttpRequestException extends HttpRequestException {
 
@@ -20,6 +23,9 @@ public class CustomHttpRequestException extends HttpRequestException {
         this.errFun = _errFun;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void exceptionHandler(RoutingContext ctx) {
         errFun.accept(ctx);

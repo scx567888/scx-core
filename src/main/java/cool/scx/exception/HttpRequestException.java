@@ -13,7 +13,8 @@ public abstract class HttpRequestException extends Exception {
 
     /**
      * 异常 handler
-     * @param ctx
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object
      */
     public abstract void exceptionHandler(RoutingContext ctx);
 
