@@ -1,4 +1,4 @@
-package cool.scx._core._auth.auth.exception;
+package cool.scx.auth.exception;
 
 import cool.scx.exception.AuthException;
 

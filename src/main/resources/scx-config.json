@@ -27,7 +27,7 @@
     "cms": {
       "root": "AppRoot:/c/",
       "resource-http-url": "/static/*",
-      "resource-locations": "C:/Users/scx56/Projects/scx/src/main/resources/c/static/",
+      "resource-locations": "AppRoot:/c/static/",
       "template-suffix": ".html"
     }
   },

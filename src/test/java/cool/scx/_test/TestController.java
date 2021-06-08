@@ -4,7 +4,6 @@ import cool.scx._core._auth.user.User;
 import cool.scx._core._auth.user.UserService;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.Param;
-import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
 import cool.scx.util.FileTypeUtils;
 import cool.scx.util.HttpUtils;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * <p>IndexController class.</p>
+ * 简单测试
  *
  * @author 司昌旭
  * @version 0.3.6
@@ -29,15 +28,15 @@ import java.util.HashMap;
 @ScxMapping
 public class TestController {
 
-    private final UserService coreUserService;
+    private final UserService userService;
 
     /**
-     * <p>Constructor for IndexController.</p>
+     * TestController
      *
-     * @param coreUserService a {@link cool.scx._core._auth.user.UserService} object.
+     * @param userService a
      */
-    public TestController(UserService coreUserService) {
-        this.coreUserService = coreUserService;
+    public TestController(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -47,32 +46,35 @@ public class TestController {
      */
     @ScxMapping(value = "/", method = Method.GET)
     public Html TestIndex() {
-        Integer count = coreUserService.count(new Param<>(new User()));
+        Integer count = userService.count(new Param<>(new User()));
         if (count < 50) {
             var s1 = new ArrayList<User>();
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < 25; i++) {
                 var s = new User();
+                var uuid = StringUtils.getUUID();
                 //测试表情符能否存储
-                s.username = StringUtils.getUUID() + "👶";
-                s.password = StringUtils.getUUID();
-                s.salt = StringUtils.getUUID();
+                s.username = uuid + "👶";
+                s.nickName = uuid + "🥝";
+                s.password = uuid;
+                s.salt = uuid;
                 s.isAdmin = false;
                 s1.add(s);
             }
-            coreUserService.saveList(s1);
-            for (int i = 0; i < 50; i++) {
+            userService.saveList(s1);
+            for (int i = 0; i < 25; i++) {
                 var s = new User();
-                s.username = StringUtils.getUUID();
-                s.password = StringUtils.getUUID();
-                s.salt = StringUtils.getUUID();
-                coreUserService.save(s);
+                var uuid = StringUtils.getUUID();
+                s.username = uuid;
+                s.password = uuid;
+                s.salt = uuid;
+                userService.save(s);
             }
         }
-        var users = coreUserService.list(new Param<>(ScxContext.getBean(User.class)).setPagination(1000));
+        var users = userService.list(new Param<>(new User()).setPagination(100));
         Html index = Html.ofTemplate("index");
         index.add("userList", users);
-        index.add("name", "name");
-        index.add("age", 88888);
+        index.add("name", "小明");
+        index.add("age", 22);
         return index;
     }
 

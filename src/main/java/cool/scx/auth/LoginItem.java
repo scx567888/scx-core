@@ -19,10 +19,9 @@ public final class LoginItem {
     public String token;
 
     /**
-     * 和 token 对应的用户名
-     * 根据具体配置情况可能唯一 (唯一性控制 是在 scxContext 中进行控制)
+     * 唯一 ID 用于标识用户
      */
-    public String username;
+    public String uniqueID;
 
     /**
      * 登陆的设备类型
@@ -34,11 +33,11 @@ public final class LoginItem {
      *
      * @param loginDevice a {@link cool.scx.enumeration.Device} object
      * @param token       a {@link java.lang.String} object
-     * @param username    a {@link java.lang.String} object
+     * @param uniqueID    a {@link java.lang.String} object
      */
-    public LoginItem(Device loginDevice, String token, String username) {
+    public LoginItem(Device loginDevice, String token, String uniqueID) {
         this.loginDevice = loginDevice;
         this.token = token;
-        this.username = username;
+        this.uniqueID = uniqueID;
     }
 }

@@ -3,28 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
-    <link href="" rel="shortcut icon" type="image/x-icon">
+    <link href="./favicon.ico" rel="icon" type="image/x-icon">
     <link href="static/css/index.css" rel="stylesheet">
 </head>
 <body>
 <h1>首页</h1>
-
+测试单条内容
 <h1>${name!}</h1>
 <h2>${age!}</h2>
+<br>
+测试图片
+<img alt="a" src="static/images/test.png">
 
-[#list userList as user]
-用户名：${user.username!}
-昵称：${user.nickName!}
-[/#list]
+测试自定义内容 及自定义指令
+<div style="display: flex;justify-content: space-around;">
+    <table style="border: 1px green solid">
+        <tr>
+            <th>用户名</th>
+            <th>昵称</th>
+        </tr>
+        [#list userList as user]
+        <tr>
+            <td>${user.username!}</td>
+            <td>${user.nickName!}</td>
+        </tr>
+        [/#list]
+    </table>
 
-[@column_list_tag a=1 b=2]
-[#list column_list as column]
-路径：${column.columnPath!}
-名称：${column.columnName!}
-[/#list]
-[/@column_list_tag]
-
-<img src="static/images/test.png">
+    <table style="border: 1px blue solid">
+        <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>内容</th>
+        </tr>
+        [@article_list_tag author="🚗🚗"]
+        [#list article_list as article]
+        <tr>
+            <td>${article.columnId!}</td>
+            <td>${article.articleTitle!}</td>
+            <td>${article.articleContent!}</td>
+        </tr>
+        [/#list]
+        [/@article_list_tag]
+    </table>
+</div>
+测试嵌入页面
+[#include "/about.html"/]
 <script src="static/js/index.js"></script>
 </body>
 </html>

@@ -9,12 +9,12 @@ package cool.scx.auth;
 public interface AuthUser {
 
     /**
-     * 用户名 认证 session中用来判断用户的唯一标识
+     * 唯一 ID 认证 session中用来判断用户的唯一标识
      * 请确保不会重复
      *
-     * @return 用户名
+     * @return 唯一 ID
      */
-    String _username();
+    String _UniqueID();
 
     /**
      * 是否为管理员
@@ -22,6 +22,6 @@ public interface AuthUser {
      *
      * @return 是否为管理员
      */
-    boolean _isAdmin();
+    Boolean _IsAdmin();
 
 }

@@ -77,7 +77,7 @@ public final class ScxAuth {
     public static String addAuthUser(RoutingContext ctx, AuthUser authUser) throws AuthException {
         String token;
         var loginDevice = getDevice(ctx);
-        var username = authUser._username();
+        var uniqueID = authUser._UniqueID();
         //先判断登录用户的来源
         if (loginDevice == Device.ADMIN || loginDevice == Device.APPLE || loginDevice == Device.ANDROID) {
             token = StringUtils.getUUID();
@@ -86,16 +86,15 @@ public final class ScxAuth {
         } else {
             throw new UnknownDeviceException();
         }
-        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.username.equals(username) && loginDevice == u.loginDevice).findAny().orElse(null);
+        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.uniqueID.equals(uniqueID) && loginDevice == u.loginDevice).findAny().orElse(null);
         if (sessionItem == null) {
-            LOGIN_ITEMS.add(new LoginItem(loginDevice, token, username));
+            LOGIN_ITEMS.add(new LoginItem(loginDevice, token, uniqueID));
         } else {
             sessionItem.token = token;
         }
-        Ansi.OUT.print(username + " 登录了 , 登录设备 [" + loginDevice + "] , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
+        Ansi.OUT.print(uniqueID + " 登录了 , 登录设备 [" + loginDevice + "] , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
         return token;
     }
-
 
     /**
      * <p>getUserFromSessionByToken.</p>
@@ -110,7 +109,7 @@ public final class ScxAuth {
             return null;
         }
         //每次都从数据库中获取用户 保证 权限设置的及时性 但是为了 性能 此处应该做缓存 todo
-        return AUTH_HANDLER.getAuthUser(sessionItem.username);
+        return AUTH_HANDLER.getAuthUser(sessionItem.uniqueID);
     }
 
     /**

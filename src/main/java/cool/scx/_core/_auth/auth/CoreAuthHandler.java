@@ -1,22 +1,30 @@
 package cool.scx._core._auth.auth;
 
 import cool.scx._core._auth.AuthConfig;
-import cool.scx._core._auth.auth.exception.*;
+import cool.scx._core._auth.AuthModuleOption;
 import cool.scx._core._auth.dept.DeptService;
+import cool.scx._core._auth.license.LicenseService;
 import cool.scx._core._auth.role.RoleService;
 import cool.scx._core._auth.user.User;
 import cool.scx._core._auth.user.UserService;
 import cool.scx.annotation.ScxService;
 import cool.scx.auth.AuthHandler;
 import cool.scx.auth.AuthUser;
+import cool.scx.auth.AuthUtils;
 import cool.scx.auth.ScxAuth;
 import cool.scx.auth.exception.UnknownDeviceException;
+import cool.scx.auth.exception.UnknownUserException;
+import cool.scx.auth.exception.WrongPasswordException;
 import cool.scx.bo.Param;
 import cool.scx.config.ScxConfig;
+import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
 import cool.scx.enumeration.SortType;
 import cool.scx.exception.AuthException;
-import cool.scx.util.*;
+import cool.scx.util.Ansi;
+import cool.scx.util.NetUtils;
+import cool.scx.util.ObjectUtils;
+import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
@@ -37,6 +45,7 @@ import java.util.Map;
 public class CoreAuthHandler implements AuthHandler {
 
     private static final HashMap<String, LoginError> loginErrorMap = new HashMap<>();
+    private final LicenseService licenseService;
     private final UserService userService;
     private final RoleService roleService;
     private final DeptService deptService;
@@ -44,11 +53,13 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * <p>Constructor for CoreAuthHandler.</p>
      *
-     * @param userService a {@link cool.scx._core._auth.user.UserService} object
-     * @param roleService a {@link cool.scx._core._auth.role.RoleService} object
-     * @param deptService a {@link cool.scx._core._auth.dept.DeptService} object
+     * @param licenseService a
+     * @param userService    a {@link UserService} object
+     * @param roleService    a {@link RoleService} object
+     * @param deptService    a {@link DeptService} object
      */
-    public CoreAuthHandler(UserService userService, RoleService roleService, DeptService deptService) {
+    public CoreAuthHandler(LicenseService licenseService, UserService userService, RoleService roleService, DeptService deptService) {
+        this.licenseService = licenseService;
         this.userService = userService;
         this.roleService = roleService;
         this.deptService = deptService;
@@ -66,13 +77,12 @@ public class CoreAuthHandler implements AuthHandler {
             return Json.fail(Json.ILLEGAL_TOKEN, "登录已失效");
         } else {
             //返回登录用户的信息给前台 含用户的所有角色和权限
-            var permList = getPermsByUser(user);
             return Json.ok()
                     .data("id", user.id)
                     .data("username", user.username)
                     .data("nickName", user.nickName)
                     .data("avatar", user.avatar)
-                    .data("perms", permList)
+                    .data("perms", getPerms(user))
                     .data("realDelete", ScxConfig.realDelete());
         }
     }
@@ -117,10 +127,6 @@ public class CoreAuthHandler implements AuthHandler {
     public Json authExceptionHandler(AuthException e) {
         if (e instanceof UnknownDeviceException) {
             return Json.fail("未知设备");
-        } else if (e instanceof EmptyUsernameException) {
-            return Json.fail("用户名不能为空");
-        } else if (e instanceof EmptyPasswordException) {
-            return Json.fail("密码不能为空");
         } else if (e instanceof UnknownUserException) {
             return Json.fail(AuthConfig.confusionLoginError() ? "usernameOrPasswordError" : "userNotFound");
         } else if (e instanceof WrongPasswordException) {
@@ -138,17 +144,14 @@ public class CoreAuthHandler implements AuthHandler {
     /**
      * signup
      *
-     * @param params a {@link java.util.Map} object
+     * @param username a {@link java.util.Map} object
+     * @param password a {@link java.util.Map} object
      * @return a {@link cool.scx.vo.Json} object
      */
-    public Json signup(Map<String, Object> params) {
-        var username = params.get("username").toString();
-        var password = params.get("password").toString();
+    public Json signup(String username, String password) {
         var newUser = new Param<>(new User());
-
         newUser.addOrderBy("id", SortType.ASC).queryObject.username = username;
-
-        AuthUser user = userService.get(newUser);
+        User user = userService.get(newUser);
         if (user != null) {
             return Json.ok("userAlreadyExists");
         } else {
@@ -164,66 +167,34 @@ public class CoreAuthHandler implements AuthHandler {
      */
     @Override
     public HashSet<String> getPerms(AuthUser user) {
-        return getPermsByUser((User) user);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void noLoginHandler(Device device, RoutingContext context) {
-        if (device == Device.ADMIN) {
-            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
-        } else if (device == Device.ANDROID) {
-            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
-        } else if (device == Device.APPLE) {
-            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
-        } else if (device == Device.WEBSITE) {
-            Ansi.OUT.red("未登录").ln();
+        var permList = new HashSet<String>();
+        //如果是超级管理员或管理员 直接设置为 *
+        if (user._IsAdmin()) {
+            permList.add("*");
+        } else {
+            roleService.getRoleListByUser((User) user).forEach(role -> permList.addAll(role.perms));
+            deptService.getDeptListByUser((User) user).forEach(dept -> permList.addAll(dept.perms));
         }
+        return permList;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void noPermsHandler(Device device, RoutingContext context) {
-        if (device == Device.ADMIN) {
-            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
-        } else if (device == Device.ANDROID) {
-            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
-        } else if (device == Device.APPLE) {
-            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
-        } else if (device == Device.WEBSITE) {
-            Ansi.OUT.red("没有权限").ln();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public AuthUser getAuthUser(String username) {
-        return userService.findByUsername(username);
+    public AuthUser getAuthUser(String uniqueID) {
+        return userService.findByUsername(uniqueID);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @param params a {@link java.util.Map} object
+     * @param username 用户名
+     * @param password 密码
      * @return a {@link cool.scx.auth.AuthUser} object
      * @throws cool.scx.exception.AuthException if any.
      */
-    public AuthUser login(Map<String, Object> params) throws AuthException {
-        var username = params.get("username");
-        var password = params.get("password");
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            if (StringUtils.isEmpty(username)) {
-                throw new EmptyUsernameException();
-            } else {
-                throw new EmptyPasswordException();
-            }
-        }
+    private User tryLogin(String username, String password) throws AuthException {
         var now = LocalDateTime.now();
         var ip = NetUtils.getIpAddr();
         var loginError = loginErrorMap.get(ip);
@@ -239,7 +210,7 @@ public class CoreAuthHandler implements AuthHandler {
                 loginErrorMap.put(ip, le);
                 throw new UnknownUserException();
             }
-            if (!verifyPassword(user, password.toString())) {
+            if (!AuthUtils.verifyPassword(user.password, user.salt, password.toString())) {
                 var le = new LoginError(now, loginError.errorTimes + 1);
                 loginErrorMap.put(ip, le);
                 throw new WrongPasswordException();
@@ -264,32 +235,15 @@ public class CoreAuthHandler implements AuthHandler {
     }
 
     /**
-     * 校验密码是否正确
-     *
-     * @param user     用户包括密码和盐
-     * @param password 前台传过来密码
-     * @return 是否相同
-     */
-    private boolean verifyPassword(User user, String password) {
-        try {
-            var decryptPassword = CryptoUtils.decryptPassword(user.password, user.salt);
-            return password.equals(decryptPassword);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
      * {@inheritDoc}
      *
      * @param user a {@link cool.scx._core._auth.user.User} object.
      * @return a {@link cool.scx.auth.AuthUser} object.
      */
-    public AuthUser registeredUser(User user) {
+    public User registeredUser(User user) {
         var deptIds = user.deptIds;
         var roleIds = user.roleIds;
-        var passwordAndSalt = encryptPassword(user.password);
+        var passwordAndSalt = AuthUtils.getPasswordAndSalt(user.password);
         var coreUser = new User();
         coreUser.password = passwordAndSalt[0];
         coreUser.salt = passwordAndSalt[1];
@@ -297,25 +251,6 @@ public class CoreAuthHandler implements AuthHandler {
         deptService.saveDeptListWithUserId(newUser.id, deptIds);
         roleService.saveRoleListWithUserId(newUser.id, roleIds);
         return newUser;
-    }
-
-    /**
-     * <p>encryptPassword.</p>
-     *
-     * @param password a {@link java.lang.String} object.
-     * @return an array of {@link java.lang.String} objects.
-     */
-    public String[] encryptPassword(String password) {
-        var passwordAndSalt = new String[2];
-        var salt = StringUtils.getUUID().replace("-", "").substring(16);
-        passwordAndSalt[1] = salt;
-        try {
-            String decrypt = CryptoUtils.encryptPassword(password, salt);
-            passwordAndSalt[0] = decrypt;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return passwordAndSalt;
     }
 
     /**
@@ -327,7 +262,7 @@ public class CoreAuthHandler implements AuthHandler {
     public User updateUserPassword(User newUser) {
         var user = new User();
         if (!StringUtils.isEmpty(newUser.password)) {
-            var passwordAndSalt = encryptPassword(newUser.password);
+            var passwordAndSalt = AuthUtils.getPasswordAndSalt(newUser.password);
             user.password = passwordAndSalt[0];
             user.salt = passwordAndSalt[1];
         } else {
@@ -337,23 +272,35 @@ public class CoreAuthHandler implements AuthHandler {
     }
 
     /**
-     * 根据用户获取权限字符串 这里不使用 list 而是 set 是为了去重
+     * 登录
      *
-     * @param user a {@link AuthUser} object.
-     * @return a {@link HashSet} object.
+     * @param username u
+     * @param password p
+     * @param ctx      c
+     * @return j
      */
-    private HashSet<String> getPermsByUser(User user) {
-        var permList = new HashSet<String>();
-        //如果是超级管理员或管理员 直接设置为 *
-        if (user.isAdmin) {
-            permList.add("*");
-        } else {
-            roleService.getRoleListByUser(user).forEach(role -> permList.addAll(role.perms));
-            deptService.getDeptListByUser(user).forEach(dept -> permList.addAll(dept.perms));
-            //这里无论 是否有权限 都要给一个最基本的首页权限 不然用户进不去首页
-            permList.add("/dashboard");
+    public Json login(String username, String password, RoutingContext ctx) {
+        try {
+            if (AuthModuleOption.loginUseLicense() && licenseService.passLicense()) {
+                return Json.fail(Json.FAIL_CODE, "licenseError");
+            }
+            if (StringUtils.isEmpty(username)) {
+                return Json.fail("用户名不能为空");
+            } else if (StringUtils.isEmpty(password)) {
+                return Json.fail("密码不能为空");
+            }
+            var loginUser = tryLogin(username, password);
+            var token = ScxAuth.addAuthUser(ctx, loginUser);
+            //这里根据登录设备向客户端返回不同的信息
+            var loginDevice = ScxAuth.getDevice(ScxContext.routingContext());
+            if (loginDevice == Device.WEBSITE) {
+                return Json.ok("login-successful");
+            } else {
+                return Json.ok().data("token", token);
+            }
+        } catch (AuthException authException) {
+            return authExceptionHandler(authException);
         }
-        return permList;
     }
 
 }

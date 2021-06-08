@@ -2,7 +2,7 @@ package cool.scx._core._cms.directive;
 
 import cool.scx._core._cms.column.ColumnService;
 import cool.scx.annotation.ScxTemplateDirective;
-import cool.scx.cms.BaseTemplateDirective;
+import cool.scx.base.BaseTemplateDirective;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import java.util.Map;
  * @version 0.3.6
  */
 @ScxTemplateDirective
-public class ColumnListDirective extends BaseTemplateDirective {
+public class ColumnListDirective implements BaseTemplateDirective {
 
     private final ColumnService columnService;
 
@@ -42,7 +42,7 @@ public class ColumnListDirective extends BaseTemplateDirective {
      * directiveName
      */
     @Override
-    public String directiveName() {
+    public String _DirectiveName() {
         return "column_list_tag";
     }
 
@@ -52,7 +52,8 @@ public class ColumnListDirective extends BaseTemplateDirective {
      * directiveName
      */
     @Override
-    public String variableName() {
+    public String _VariableName() {
         return "column_list";
     }
+
 }

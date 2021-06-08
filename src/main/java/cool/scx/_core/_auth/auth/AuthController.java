@@ -1,13 +1,7 @@
 package cool.scx._core._auth.auth;
 
-import cool.scx._core._auth.AuthModuleOption;
-import cool.scx._core._auth.license.LicenseService;
 import cool.scx.annotation.ScxMapping;
-import cool.scx.auth.ScxAuth;
-import cool.scx.context.ScxContext;
-import cool.scx.enumeration.Device;
 import cool.scx.enumeration.Method;
-import cool.scx.exception.AuthException;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
@@ -27,57 +21,39 @@ public class AuthController {
      * handler
      */
     private final CoreAuthHandler coreAuthHandler;
-    private final LicenseService licenseService;
 
     /**
-     * <p>Constructor for AuthController.</p>
+     * a
      *
-     * @param coreAuthHandler a {@link cool.scx._core._auth.auth.CoreAuthHandler} object
-     * @param licenseService  a {@link cool.scx._core._auth.license.LicenseService} object
+     * @param coreAuthHandler a
      */
-    public AuthController(CoreAuthHandler coreAuthHandler, LicenseService licenseService) {
+    public AuthController(CoreAuthHandler coreAuthHandler) {
         this.coreAuthHandler = coreAuthHandler;
-        this.licenseService = licenseService;
     }
 
     /**
      * 登录方法
      *
-     * @param params         前台发送的登录数据
-     * @param routingContext a {@link io.vertx.ext.web.RoutingContext} object
+     * @param username 用户名
+     * @param password 密码
+     * @param ctx      a
      * @return json
      */
     @ScxMapping(method = Method.POST)
-    public Json login(Map<String, Object> params, RoutingContext routingContext) {
-        try {
-            if (AuthModuleOption.loginUseLicense()) {
-                var licenseRight = licenseService.passLicense();
-                if (!licenseRight) {
-                    return Json.fail(Json.FAIL_CODE, "licenseError");
-                }
-            }
-            var loginUser = coreAuthHandler.login(params);
-            var loginDevice = ScxAuth.getDevice(ScxContext.routingContext());
-            String token = ScxAuth.addAuthUser(routingContext, loginUser);
-            if (loginDevice == Device.WEBSITE) {
-                return Json.ok("login-successful");
-            } else {
-                return Json.ok().data("token", token);
-            }
-        } catch (AuthException authException) {
-            return coreAuthHandler.authExceptionHandler(authException);
-        }
+    public Json login(String username, String password, RoutingContext ctx) {
+        return coreAuthHandler.login(username, password, ctx);
     }
 
     /**
      * 注册方法
      *
-     * @param params 前台发送的注册信息
+     * @param username 前台发送的用户名
+     * @param password 前台发送的密码
      * @return a {@link cool.scx.vo.Json} object.
      */
     @ScxMapping(method = Method.POST)
-    public Json signup(Map<String, Object> params) {
-        return coreAuthHandler.signup(params);
+    public Json signup(String username, String password) {
+        return coreAuthHandler.signup(username, password);
     }
 
     /**
@@ -89,7 +65,6 @@ public class AuthController {
     public Json logout() {
         return coreAuthHandler.logout();
     }
-
 
     /**
      * 拉取当前登录用户的信息 (包括权限)

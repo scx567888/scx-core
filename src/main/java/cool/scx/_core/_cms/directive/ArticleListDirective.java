@@ -3,7 +3,7 @@ package cool.scx._core._cms.directive;
 
 import cool.scx._core._cms.article.ArticleService;
 import cool.scx.annotation.ScxTemplateDirective;
-import cool.scx.cms.BaseTemplateDirective;
+import cool.scx.base.BaseTemplateDirective;
 
 import java.util.Map;
 
@@ -14,15 +14,15 @@ import java.util.Map;
  * @version 0.3.6
  */
 @ScxTemplateDirective
-public class ArticleListDirective extends BaseTemplateDirective {
+public class ArticleListDirective implements BaseTemplateDirective {
 
 
     private final ArticleService articleService;
 
     /**
-     * <p>Constructor for ArticleListDirective.</p>
+     * a
      *
-     * @param articleService a {@link cool.scx._core._cms.article.ArticleService} object.
+     * @param articleService a
      */
     public ArticleListDirective(ArticleService articleService) {
         this.articleService = articleService;
@@ -35,7 +35,7 @@ public class ArticleListDirective extends BaseTemplateDirective {
      */
     @Override
     public Object getResults(Map<String, Object> params) {
-        return articleService.listAll();
+        return articleService.testListAll(params);
     }
 
     /**
@@ -44,7 +44,7 @@ public class ArticleListDirective extends BaseTemplateDirective {
      * getResults
      */
     @Override
-    public String directiveName() {
+    public String _DirectiveName() {
         return "article_list_tag";
     }
 
@@ -52,7 +52,7 @@ public class ArticleListDirective extends BaseTemplateDirective {
      * {@inheritDoc}
      */
     @Override
-    public String variableName() {
+    public String _VariableName() {
         return "article_list";
     }
 }

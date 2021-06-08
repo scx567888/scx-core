@@ -1,6 +1,7 @@
 package cool.scx.cms;
 
 import cool.scx.annotation.ScxTemplateDirective;
+import cool.scx.base.BaseTemplateDirective;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.module.ScxModuleHandler;
@@ -55,8 +56,8 @@ public final class ScxCms {
             if (clazz.isAnnotationPresent(ScxTemplateDirective.class) && BaseTemplateDirective.class.isAssignableFrom(clazz)) {
                 try {
                     var myDirective = (BaseTemplateDirective) ScxContext.getBean(clazz);
-                    Ansi.OUT.blue("已加载自定义 Freemarker 标签 [" + myDirective.directiveName() + "] Class -> " + clazz.getName()).ln();
-                    configuration.setSharedVariable(myDirective.directiveName(), myDirective);
+                    Ansi.OUT.blue("已加载自定义 Freemarker 标签 [" + myDirective._DirectiveName() + "] Class -> " + clazz.getName()).ln();
+                    configuration.setSharedVariable(myDirective._DirectiveName(), myDirective);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

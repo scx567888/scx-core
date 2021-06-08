@@ -1,4 +1,4 @@
-package cool.scx.cms;
+package cool.scx.base;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
@@ -17,8 +17,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-public abstract class BaseTemplateDirective implements TemplateDirectiveModel {
-
+public interface BaseTemplateDirective extends TemplateDirectiveModel {
 
     /**
      * {@inheritDoc}
@@ -26,10 +25,10 @@ public abstract class BaseTemplateDirective implements TemplateDirectiveModel {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public void execute(Environment environment, Map params, TemplateModel[] model, TemplateDirectiveBody body) throws TemplateException, IOException {
+    default void execute(Environment environment, Map params, TemplateModel[] model, TemplateDirectiveBody body) throws TemplateException, IOException {
         var results = getResults((Map<String, Object>) params);
         var wrap = environment.getObjectWrapper().wrap(results);
-        environment.setVariable(variableName(), wrap);
+        environment.setVariable(_VariableName(), wrap);
         body.render(environment.getOut());
     }
 
@@ -38,14 +37,14 @@ public abstract class BaseTemplateDirective implements TemplateDirectiveModel {
      *
      * @return a {@link java.lang.String} object.
      */
-    public abstract String directiveName();
+    String _DirectiveName();
 
     /**
      * 获取自定义 变量的名称
      *
      * @return a
      */
-    public abstract String variableName();
+    String _VariableName();
 
     /**
      * 委派下去让子类实现，并且返回加工后的返回值
@@ -54,6 +53,6 @@ public abstract class BaseTemplateDirective implements TemplateDirectiveModel {
      * @param params r
      * @return r
      */
-    public abstract Object getResults(Map<String, Object> params);
+    Object getResults(Map<String, Object> params);
 
 }
