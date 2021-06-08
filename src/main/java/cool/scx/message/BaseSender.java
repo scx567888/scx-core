@@ -12,6 +12,7 @@ public interface BaseSender<AddressType, MessageType, Result> {
      *
      * @param address a AddressType object
      * @param message a MessageType object
+     * @return a Result object
      */
     Result send(AddressType address, MessageType message);
 

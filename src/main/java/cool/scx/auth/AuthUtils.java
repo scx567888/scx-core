@@ -5,6 +5,9 @@ import cool.scx.util.StringUtils;
 
 /**
  * 提供常见的认证方法
+ *
+ * @author 司昌旭
+ * @version 1.1.13
  */
 public final class AuthUtils {
 

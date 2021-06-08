@@ -44,6 +44,7 @@ public class ScxSender {
      * @param <T>   a T class
      * @return a T object
      */
+    @SuppressWarnings("unchecked")
     public static <T extends BaseSender<?, ?, ?>> T getSender(Class<T> clazz) {
         return (T) ClassMapping.get(clazz);
     }

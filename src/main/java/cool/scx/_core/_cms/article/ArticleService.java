@@ -16,6 +16,12 @@ import java.util.Map;
 @ScxService
 public class ArticleService extends BaseService<Article> {
 
+    /**
+     * <p>testListAll.</p>
+     *
+     * @param params a {@link java.util.Map} object
+     * @return a {@link java.lang.Object} object
+     */
     public Object testListAll(Map<String, Object> params) {
         var author = params.get("author") != null ? params.get("author").toString() : "";
         var p = new Param<>(new Article());

@@ -54,9 +54,9 @@ public class CoreAuthHandler implements AuthHandler {
      * <p>Constructor for CoreAuthHandler.</p>
      *
      * @param licenseService a
-     * @param userService    a {@link UserService} object
-     * @param roleService    a {@link RoleService} object
-     * @param deptService    a {@link DeptService} object
+     * @param userService    a {@link cool.scx._core._auth.user.UserService} object
+     * @param roleService    a {@link cool.scx._core._auth.role.RoleService} object
+     * @param deptService    a {@link cool.scx._core._auth.dept.DeptService} object
      */
     public CoreAuthHandler(LicenseService licenseService, UserService userService, RoleService roleService, DeptService deptService) {
         this.licenseService = licenseService;

@@ -87,11 +87,17 @@ public class User extends BaseModel implements AuthUser {
     @JsonIgnore
     public List<Long> roleIds;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String _UniqueID() {
         return username;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Boolean _IsAdmin() {
         return isAdmin;
