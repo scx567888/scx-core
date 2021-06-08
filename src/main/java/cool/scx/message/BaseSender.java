@@ -6,14 +6,14 @@ package cool.scx.message;
  * @author 司昌旭
  * @version 1.1.9
  */
-public interface BaseSender<AddressType, MessageType> {
+public interface BaseSender<AddressType, MessageType, Result> {
     /**
      * <p>send.</p>
      *
      * @param address a AddressType object
      * @param message a MessageType object
      */
-    void send(AddressType address, MessageType message);
+    Result send(AddressType address, MessageType message);
 
     /**
      * <p>senderName.</p>

@@ -15,9 +15,9 @@ import java.util.Map;
  */
 public class ScxSender {
 
-    private static final Map<String, BaseSender<?, ?>> NameMapping = new HashMap<>();
+    private static final Map<String, BaseSender<?, ?, ?>> NameMapping = new HashMap<>();
 
-    private static final Map<Class<?>, BaseSender<?, ?>> ClassMapping = new HashMap<>();
+    private static final Map<Class<?>, BaseSender<?, ?, ?>> ClassMapping = new HashMap<>();
 
     /**
      * <p>initSender.</p>
@@ -27,7 +27,7 @@ public class ScxSender {
         addSender(new EmailSender());
         ScxModuleHandler.iterateClass(c -> {
             if (!c.isInterface() && BaseSender.class.isAssignableFrom(c)) {
-                var tempSender = (BaseSender<?, ?>) ScxContext.getBean(c);
+                var tempSender = (BaseSender<?, ?, ?>) ScxContext.getBean(c);
                 addSender(tempSender);
                 Ansi.OUT.brightCyan("已加载自定义 Sender , 名称 [" + tempSender.senderName() + "] Class -> " + c.getName()).ln();
             }
@@ -44,7 +44,7 @@ public class ScxSender {
      * @param <T>   a T class
      * @return a T object
      */
-    public static <T extends BaseSender<?, ?>> T getSender(Class<T> clazz) {
+    public static <T extends BaseSender<?, ?, ?>> T getSender(Class<T> clazz) {
         return (T) ClassMapping.get(clazz);
     }
 
@@ -54,11 +54,11 @@ public class ScxSender {
      * @param name a {@link java.lang.String} object
      * @return a {@link cool.scx.message.BaseSender} object
      */
-    public static BaseSender<?, ?> getSender(String name) {
+    public static BaseSender<?, ?, ?> getSender(String name) {
         return NameMapping.get(name);
     }
 
-    private static void addSender(BaseSender<?, ?> sender) {
+    private static void addSender(BaseSender<?, ?, ?> sender) {
         NameMapping.put(sender.senderName(), sender);
         ClassMapping.put(sender.getClass(), sender);
     }

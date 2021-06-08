@@ -6,7 +6,7 @@ package cool.scx.message;
  * @author 司昌旭
  * @version 1.1.9
  */
-public class EmailSender implements BaseSender<String, String> {
+public class EmailSender implements BaseSender<String, String, Object> {
 
 
     /**
@@ -20,8 +20,8 @@ public class EmailSender implements BaseSender<String, String> {
      * {@inheritDoc}
      */
     @Override
-    public void send(String address, String message) {
-
+    public Object send(String address, String message) {
+        return null;
     }
 
     /**

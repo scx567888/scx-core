@@ -7,6 +7,7 @@ import cool.scx.util.Base64Utils;
 import cool.scx.util.HttpUtils;
 import cool.scx.util.MD5Utils;
 
+import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  * @version 1.1.9
  */
 @ScxService
-public class YTXTextMessageSender implements BaseSender<List<String>, Map<String, Object>> {
+public class YTXTextMessageSender implements BaseSender<List<String>, Map<String, Object>, HttpResponse<String>> {
 
     private final String YTX_BASE_URL = "https://app.cloopen.com:8883";
     private final String YTX_ACCOUNT_SID;
@@ -45,7 +46,7 @@ public class YTXTextMessageSender implements BaseSender<List<String>, Map<String
      * 向手机号发送短信
      */
     @Override
-    public void send(List<String> address, Map<String, Object> message) {
+    public HttpResponse<String> send(List<String> address, Map<String, Object> message) {
         String timeStampStr = getTimeStampStr();
         String authorization = getAuthorization(timeStampStr);
         String sigParameter = getSigParameter(timeStampStr);
@@ -58,7 +59,7 @@ public class YTXTextMessageSender implements BaseSender<List<String>, Map<String
 
         var header = new HashMap<String, String>();
         header.put("Authorization", authorization);
-        HttpUtils.post(getSendUrl(sigParameter), header, map);
+        return HttpUtils.post(getSendUrl(sigParameter), header, map);
     }
 
     /**
