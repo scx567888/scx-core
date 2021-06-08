@@ -7,7 +7,6 @@ import cool.scx.util.Base64Utils;
 import cool.scx.util.HttpUtils;
 import cool.scx.util.MD5Utils;
 
-import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
  * @version 1.1.9
  */
 @ScxService
-public class YTXTextMessageSender implements BaseSender<List<String>, Map<String, Object>, HttpResponse<String>> {
+public class YTXTextMessageSender implements BaseSender<List<String>, Map<String, Object>, String> {
 
     private final String YTX_BASE_URL = "https://app.cloopen.com:8883";
     private final String YTX_ACCOUNT_SID;
@@ -46,12 +45,12 @@ public class YTXTextMessageSender implements BaseSender<List<String>, Map<String
      * 向手机号发送短信
      */
     @Override
-    public HttpResponse<String> send(List<String> address, Map<String, Object> message) {
-        String timeStampStr = getTimeStampStr();
-        String authorization = getAuthorization(timeStampStr);
-        String sigParameter = getSigParameter(timeStampStr);
+    public String send(List<String> address, Map<String, Object> message) {
+        var timeStampStr = getTimeStampStr();
+        var authorization = getAuthorization(timeStampStr);
+        var sigParameter = getSigParameter(timeStampStr);
 
-        Map<String, Object> map = new HashMap<>();
+        var map = new HashMap<String, Object>();
         map.put("to", address.stream().collect(Collectors.joining(",", "", "")));
         map.put("appId", YTX_APP_ID);
         map.put("templateId", message.get("templateId"));
@@ -59,7 +58,8 @@ public class YTXTextMessageSender implements BaseSender<List<String>, Map<String
 
         var header = new HashMap<String, String>();
         header.put("Authorization", authorization);
-        return HttpUtils.post(getSendUrl(sigParameter), header, map);
+        var post = HttpUtils.post(getSendUrl(sigParameter), header, map);
+        return post.body();
     }
 
     /**
