@@ -1,6 +1,7 @@
 package cool.scx._core._base.uploadfile;
 
 import cool.scx._core._base.BaseConfig;
+import cool.scx.annotation.FromPath;
 import cool.scx.annotation.FromQuery;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.FileUpload;
@@ -156,7 +157,10 @@ public class UploadController {
      * @throws cool.scx.exception.HttpRequestException if any.
      */
     @ScxMapping(value = "/showPicture/:fileId", method = Method.GET)
-    public Image showPicture(String fileId, @FromQuery("w") Integer width, @FromQuery("h") Integer height, @FromQuery("t") String type) throws HttpRequestException {
+    public Image showPicture(@FromPath String fileId,
+                             @FromQuery(value = "w", required = false) Integer width,
+                             @FromQuery(value = "h", required = false) Integer height,
+                             @FromQuery(value = "t", required = false) String type) throws HttpRequestException {
         var param = new Param<>(new UploadFile());
         param.queryObject.fileId = fileId;
         UploadFile uploadFile = uploadFileService.get(param);

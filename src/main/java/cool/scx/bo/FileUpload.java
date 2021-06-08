@@ -35,13 +35,12 @@ public final class FileUpload {
      *
      * @param name     a {@link java.lang.String} object.
      * @param fileName a {@link java.lang.String} object.
-     * @param fileSize a {@link java.lang.Long} object.
      * @param buffer   a {@link io.vertx.core.buffer.Buffer} object.
      */
-    public FileUpload(String name, String fileName, Long fileSize, Buffer buffer) {
+    public FileUpload(String name, String fileName, Buffer buffer) {
         this.name = name;
         this.fileName = fileName;
-        this.fileSize = fileSize;
+        this.fileSize = buffer.length();
         this.buffer = buffer;
     }
 }
