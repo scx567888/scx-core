@@ -10,7 +10,8 @@ import cool.scx.auth.ScxAuth;
 import cool.scx.bo.FileUpload;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
-import cool.scx.exception.HttpResponseException;
+import cool.scx.exception.HttpRequestException;
+import cool.scx.exception.UnsupportedMediaTypeException;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.BaseVo;
@@ -79,29 +80,26 @@ class ScxMappingHandler implements Handler<RoutingContext> {
         return Character.toLowerCase(s.charAt(0)) + s.substring(1);
     }
 
-    private static Object getParamFromPath(Map<String, String> pathParams, String pathParamValue, boolean pathParamPolymerize, Parameter parameter) {
-        if (StringUtils.isEmpty(pathParamValue)) {
-            pathParamValue = parameter.getName();
+    private static Object getParamFromMap(Map<String, ?> map, String value, boolean merge, Parameter parameter, boolean required) throws UnsupportedMediaTypeException {
+        if (StringUtils.isEmpty(value)) {
+            value = parameter.getName();
         }
-        if (pathParamPolymerize) {
-            return ObjectUtils.mapToBean(pathParams, parameter.getType());
-        } else {
-            return ObjectUtils.parseSimpleType(pathParams.get(pathParamValue), parameter.getType());
-        }
-    }
-
-    private static Object getParamFromQuery(Map<String, Object> queryParams, String queryParamValue, boolean queryParamPolymerize, Parameter parameter) {
-        if (StringUtils.isEmpty(queryParamValue)) {
-            queryParamValue = parameter.getName();
-        }
-        if (queryParamPolymerize) {
-            return ObjectUtils.mapToBean(queryParams, parameter.getType());
-        } else {
-            return ObjectUtils.parseSimpleType(queryParams.get(queryParamValue), parameter.getType());
+        try {
+            if (merge) {
+                return ObjectUtils.mapToBean(map, parameter.getType());
+            } else {
+                return ObjectUtils.parseSimpleType(map.get(value), parameter.getType());
+            }
+        } catch (Exception e) {
+            if (required) {
+                throw new UnsupportedMediaTypeException();
+            } else {
+                return null;
+            }
         }
     }
 
-    private static Object getParamFromBody(JsonNode jsonNode, Map<String, Object> formAttributesMap, String bodyParamValue, Parameter parameter) {
+    private static Object getParamFromBody(JsonNode jsonNode, Map<String, Object> formAttributesMap, String bodyParamValue, Parameter parameter, boolean required) throws UnsupportedMediaTypeException {
         if (formAttributesMap.size() == 0) {
             var j = jsonNode;
             if (StringUtils.isNotEmpty(bodyParamValue)) {
@@ -112,12 +110,28 @@ class ScxMappingHandler implements Handler<RoutingContext> {
                     }
                 }
             }
-            return ObjectUtils.jsonNodeToBean(j, parameter.getParameterizedType());
+            try {
+                return ObjectUtils.jsonNodeToBean(j, parameter.getParameterizedType());
+            } catch (Exception e) {
+                if (required) {
+                    throw new UnsupportedMediaTypeException();
+                } else {
+                    return null;
+                }
+            }
         } else {
-            if (StringUtils.isEmpty(bodyParamValue)) {
-                return ObjectUtils.mapToBean(formAttributesMap, parameter.getType());
-            } else {
-                return ObjectUtils.parseSimpleType(formAttributesMap.get(bodyParamValue), parameter.getType());
+            try {
+                if (StringUtils.isEmpty(bodyParamValue)) {
+                    return ObjectUtils.mapToBean(formAttributesMap, parameter.getType());
+                } else {
+                    return ObjectUtils.parseSimpleType(formAttributesMap.get(bodyParamValue), parameter.getType());
+                }
+            } catch (Exception e) {
+                if (required) {
+                    throw new UnsupportedMediaTypeException();
+                } else {
+                    return null;
+                }
             }
         }
     }
@@ -234,37 +248,37 @@ class ScxMappingHandler implements Handler<RoutingContext> {
             }
             var bodyParam = parameters[i].getAnnotation(FromBody.class);
             if (bodyParam != null) {
-                finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, bodyParam.value(), parameters[i]);
+                finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, bodyParam.value(), parameters[i], bodyParam.required());
                 continue;
             }
             var queryParam = parameters[i].getAnnotation(FromQuery.class);
             if (queryParam != null) {
-                finalHandlerParams[i] = getParamFromQuery(queryParams, queryParam.value(), queryParam.merge(), parameters[i]);
+                finalHandlerParams[i] = getParamFromMap(queryParams, queryParam.value(), queryParam.merge(), parameters[i], queryParam.required());
                 continue;
             }
             var pathParam = parameters[i].getAnnotation(FromPath.class);
             if (pathParam != null) {
-                finalHandlerParams[i] = getParamFromPath(pathParams, pathParam.value(), pathParam.merge(), parameters[i]);
+                finalHandlerParams[i] = getParamFromMap(pathParams, pathParam.value(), pathParam.merge(), parameters[i], pathParam.required());
                 continue;
             }
-            //------这里针对没有注解的参数进行赋值猜测---------------
+            //------ 这里针对没有注解的参数进行赋值猜测 ---------------
             //  从 body 里进行猜测 先尝试 根据参数名称进行转换
-            finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, parameters[i].getName(), parameters[i]);
+            finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, parameters[i].getName(), parameters[i], false);
             if (finalHandlerParams[i] != null) {
                 continue;
             }
             // 再尝试将整体转换为 参数
-            finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, "", parameters[i]);
+            finalHandlerParams[i] = getParamFromBody(jsonNode, formAttributes, "", parameters[i], false);
             if (finalHandlerParams[i] != null) {
                 continue;
             }
             //从查询参数里进行猜测
-            finalHandlerParams[i] = getParamFromQuery(queryParams, parameters[i].getName(), false, parameters[i]);
+            finalHandlerParams[i] = getParamFromMap(queryParams, parameters[i].getName(), false, parameters[i], false);
             if (finalHandlerParams[i] != null) {
                 continue;
             }
             //从路径进行猜测
-            finalHandlerParams[i] = getParamFromPath(pathParams, parameters[i].getName(), false, parameters[i]);
+            finalHandlerParams[i] = getParamFromMap(pathParams, parameters[i].getName(), false, parameters[i], false);
         }
         return method.invoke(example, finalHandlerParams);
     }
@@ -295,11 +309,9 @@ class ScxMappingHandler implements Handler<RoutingContext> {
         try {
             result = getResult(context);
         } catch (Exception e) {
-            var cause = e.getCause();
-            // 我们后面会自定义一些其他 自定义异常
-            //在此处进行截获处理
-            if (cause instanceof HttpResponseException) {
-                ((HttpResponseException) cause).errFun.accept(context);
+            //在此处进行对异常进行截获处理
+            if (e instanceof HttpRequestException) {
+                ((HttpRequestException) e).exceptionHandler(context);
                 context.end();
                 return;
             }

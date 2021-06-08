@@ -8,7 +8,9 @@ import cool.scx.bo.Param;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
 import cool.scx.enumeration.SortType;
-import cool.scx.exception.HttpResponseException;
+import cool.scx.exception.CustomHttpRequestException;
+import cool.scx.exception.HttpRequestException;
+import cool.scx.exception.UnsupportedMediaTypeException;
 import cool.scx.util.ObjectUtils;
 import cool.scx.vo.Json;
 
@@ -26,29 +28,30 @@ public class CrudController {
 
     /**
      * 获取 service
+     * todo 错误信息待处理
      *
      * @param modelName model 名称
      * @param <T>       model 类型
      * @return service
-     * @throws HttpResponseException service 未找到
+     * @throws HttpRequestException service 未找到
      */
     @SuppressWarnings("unchecked")
-    private static <T extends BaseModel> BaseService<T> getBaseService(String modelName) throws HttpResponseException {
+    private static <T extends BaseModel> BaseService<T> getBaseService(String modelName) throws HttpRequestException {
         try {
             var o = ScxContext.getBean(ScxContext.getClassByName(modelName.toLowerCase() + "service"));
             return (BaseService<T>) o;
         } catch (Exception e) {
-            throw new HttpResponseException(ctx -> Json.fail(Json.SYSTEM_ERROR, modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
+            throw new CustomHttpRequestException(ctx -> Json.fail(Json.SYSTEM_ERROR, modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
         }
     }
 
-    private static BaseModel getBaseModel(Map<String, Object> entityMap, String modelName) throws HttpResponseException {
+    private static BaseModel getBaseModel(Map<String, Object> entityMap, String modelName) throws HttpRequestException {
         try {
             return (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
         } catch (Exception e) {
             e.printStackTrace();
             //这里一般就是 参数转换错误
-            throw new HttpResponseException(routingContext -> Json.fail(Json.SYSTEM_ERROR, "参数错误!!!").sendToClient(routingContext));
+            throw new UnsupportedMediaTypeException();
         }
     }
 
@@ -88,7 +91,7 @@ public class CrudController {
      * @param sortType      a {@link java.lang.String} object.
      * @param queryObject   a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws cool.scx.exception.HttpRequestException if any.
      */
     @ScxMapping(value = ":modelName/list", method = {Method.GET, Method.POST})
     public Json list(String modelName,
@@ -97,7 +100,7 @@ public class CrudController {
                      @FromBody("orderBy.orderByColumn") String orderByColumn,
                      @FromBody("orderBy.sortType") String sortType,
                      @FromBody("queryObject") Map<String, Object> queryObject
-    ) throws HttpResponseException {
+    ) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, limit, page, orderByColumn, sortType, queryObject);
         var list = baseService.listWithLike(param);
@@ -112,10 +115,10 @@ public class CrudController {
      * @param modelName a {@link java.lang.String} object.
      * @param id        a {@link java.lang.Long} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws cool.scx.exception.HttpRequestException if any.
      */
     @ScxMapping(value = ":modelName/:id", method = Method.GET)
-    public Json info(String modelName, Long id) throws HttpResponseException {
+    public Json info(String modelName, Long id) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var list = baseService.getById(id);
         return Json.ok().items(list);
@@ -127,10 +130,10 @@ public class CrudController {
      * @param modelName a {@link java.lang.String} object.
      * @param entityMap a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws cool.scx.exception.HttpRequestException if any.
      */
     @ScxMapping(value = ":modelName", method = Method.POST)
-    public Json save(String modelName, Map<String, Object> entityMap) throws HttpResponseException {
+    public Json save(String modelName, Map<String, Object> entityMap) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var realObject = getBaseModel(entityMap, modelName);
         return Json.ok().items(baseService.save(realObject));
@@ -172,10 +175,10 @@ public class CrudController {
      * @param modelName a {@link java.lang.String} object.
      * @param deleteIds a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws cool.scx.exception.HttpRequestException if any.
      */
     @ScxMapping(value = ":modelName/batchDelete", method = Method.DELETE)
-    public Json batchDelete(String modelName, @FromBody("deleteIds") List<Long> deleteIds) throws HttpResponseException {
+    public Json batchDelete(String modelName, @FromBody("deleteIds") List<Long> deleteIds) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var deletedCount = baseService.deleteByIds(deleteIds.toArray(Long[]::new));
         return Json.ok("success").data("deletedCount", deletedCount);
@@ -187,10 +190,10 @@ public class CrudController {
      * @param modelName a {@link java.lang.String} object.
      * @param id        a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws cool.scx.exception.HttpRequestException if any.
      */
     @ScxMapping(value = ":modelName/revokeDelete/:id", method = Method.GET)
-    public Json revokeDelete(String modelName, Integer id) throws HttpResponseException {
+    public Json revokeDelete(String modelName, Integer id) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var revokeDeleteCount = baseService.revokeDeleteByIds(Long.valueOf(id));
         return Json.ok(revokeDeleteCount == 1 ? "success" : "error");
@@ -202,10 +205,10 @@ public class CrudController {
      * @param modelName a {@link java.lang.String} object.
      * @param fieldName a {@link java.lang.String} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws cool.scx.exception.HttpRequestException if any.
      */
     @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", method = Method.POST)
-    public Json getAutoComplete(String modelName, String fieldName) throws HttpResponseException {
+    public Json getAutoComplete(String modelName, String fieldName) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var fieldList = baseService.getFieldList(fieldName);
         return Json.ok().items(fieldList);
@@ -217,10 +220,10 @@ public class CrudController {
      * @param modelName a {@link java.lang.String} object.
      * @param params    a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws cool.scx.exception.HttpRequestException if any.
      */
     @ScxMapping(value = ":modelName/checkUnique", method = Method.POST)
-    public Json checkUnique(String modelName, Map<String, Object> params) throws HttpResponseException {
+    public Json checkUnique(String modelName, Map<String, Object> params) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, null, null, null, null, params);
         if (param.queryObject.id != null) {

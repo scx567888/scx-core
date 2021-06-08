@@ -26,4 +26,11 @@ public @interface FromBody {
      */
     String value() default "";
 
+    /**
+     * 是否必填
+     *
+     * @return 是否必填
+     */
+    boolean required() default true;
+
 }

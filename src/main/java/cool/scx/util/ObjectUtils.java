@@ -167,13 +167,9 @@ public final class ObjectUtils {
      * @param <T>      a T object.
      * @return a T object.
      */
-    public static <T> T jsonNodeToBean(JsonNode jsonNode, Type type) {
+    public static <T> T jsonNodeToBean(JsonNode jsonNode, Type type) throws IOException {
         var reader = OBJECT_MAPPER.readerFor(TYPE_FACTORY.constructType(type));
-        try {
-            return reader.readValue(jsonNode);
-        } catch (Exception e) {
-            return null;
-        }
+        return reader.readValue(jsonNode);
     }
 
     /**
@@ -207,10 +203,10 @@ public final class ObjectUtils {
      * @return 处理后的值
      */
     public static <T> T parseSimpleType(Object value, Class<T> targetClass) {
-        try {
+        if (value == null) {
+            throw new NullPointerException();
+        } else {
             return OBJECT_MAPPER.convertValue(value, targetClass);
-        } catch (Exception e) {
-            return null;
         }
     }
 

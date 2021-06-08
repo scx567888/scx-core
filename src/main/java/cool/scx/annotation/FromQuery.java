@@ -30,4 +30,11 @@ public @interface FromQuery {
      */
     boolean merge() default false;
 
+    /**
+     * 是否必填
+     *
+     * @return 是否必填
+     */
+    boolean required() default true;
+
 }

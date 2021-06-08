@@ -6,7 +6,8 @@ import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.FileUpload;
 import cool.scx.bo.Param;
 import cool.scx.enumeration.Method;
-import cool.scx.exception.HttpResponseException;
+import cool.scx.exception.HttpRequestException;
+import cool.scx.exception.NotFoundException;
 import cool.scx.util.*;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
@@ -125,19 +126,19 @@ public class UploadController {
      *
      * @param fileId a {@link java.lang.String} object.
      * @return a {@link cool.scx.vo.Download} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws cool.scx.exception.HttpRequestException if any.
      */
     @ScxMapping(value = "/download/:fileId", method = Method.GET)
-    public Download download(String fileId) throws HttpResponseException {
+    public Download download(String fileId) throws HttpRequestException {
         var param = new Param<>(new UploadFile());
         param.queryObject.fileId = fileId;
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
-            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
+            throw new NotFoundException();
         }
         var file = new File(BaseConfig.uploadFilePath(), uploadFile.filePath);
         if (!file.exists()) {
-            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
+            throw new NotFoundException();
         }
         Ansi.OUT.brightBlue("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + uploadFile.fileName).ln();
         //  这里让文件限速到 500 kb
@@ -152,15 +153,15 @@ public class UploadController {
      * @param height a {@link java.lang.Integer} object.
      * @param type   a {@link java.lang.String} object
      * @return a {@link cool.scx.vo.Binary} object.
-     * @throws cool.scx.exception.HttpResponseException if any.
+     * @throws cool.scx.exception.HttpRequestException if any.
      */
     @ScxMapping(value = "/showPicture/:fileId", method = Method.GET)
-    public Image showPicture(String fileId, @FromQuery("w") Integer width, @FromQuery("h") Integer height, @FromQuery("t") String type) throws HttpResponseException {
+    public Image showPicture(String fileId, @FromQuery("w") Integer width, @FromQuery("h") Integer height, @FromQuery("t") String type) throws HttpRequestException {
         var param = new Param<>(new UploadFile());
         param.queryObject.fileId = fileId;
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
-            throw new HttpResponseException(context -> context.response().setStatusCode(404).send("Not Found!!!"));
+            throw new NotFoundException();
         } else {
             return new Image(new File(BaseConfig.uploadFilePath(), uploadFile.filePath), width, height, type);
         }
