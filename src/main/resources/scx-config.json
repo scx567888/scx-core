@@ -33,7 +33,7 @@
   },
   "core": {
     "base": {
-      "upload-file-path": "C:\\Users\\scx56\\Documents\\scxFiles",
+      "upload-file-path": "C:\\Users\\public\\Documents\\scxFiles",
       "ytx-account-sid": "xxx",
       "ytx-auth-token": "xxx",
       "ytx-app-id": "xxx"
