@@ -43,9 +43,9 @@ public class BaseConfig {
 
         public BaseEasyToUse() {
 
-            String tempUploadFilePath = ScxConfig.get("core.base.upload-file-path", "/UploadFile/",
+            String tempUploadFilePath = ScxConfig.get("core.base.upload-file-path", "/ScxUploadFiles/",
                     s -> Ansi.OUT.magenta("Y 文件上传目录                         \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
-                    f -> Ansi.OUT.red("N 未检测到 core.upload-file-path       \t -->\t 已采用默认值 : " + f).ln());
+                    f -> Ansi.OUT.red("N 未检测到 core.base.upload-file-path  \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
 
             uploadFilePath = FileUtils.getFileByAppRoot(tempUploadFilePath);
 
