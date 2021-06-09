@@ -85,7 +85,7 @@ public final class SQLBuilder {
      * 获取插入语句构造器
      *
      * @param _tableName 表名
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public static SQLBuilder Insert(String _tableName) {
         return new SQLBuilder(SQLType.INSERT).Table(_tableName);
@@ -95,7 +95,7 @@ public final class SQLBuilder {
      * 获取更新语句构造器
      *
      * @param _tableName a {@link java.lang.String} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public static SQLBuilder Update(String _tableName) {
         return new SQLBuilder(SQLType.UPDATE).Table(_tableName);
@@ -105,7 +105,7 @@ public final class SQLBuilder {
      * 获取查询语句构造器
      *
      * @param _tableName a {@link java.lang.String} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public static SQLBuilder Select(String _tableName) {
         return new SQLBuilder(SQLType.SELECT).Table(_tableName);
@@ -115,7 +115,7 @@ public final class SQLBuilder {
      * 获取删除语句构造器
      *
      * @param _tableName a {@link java.lang.String} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public static SQLBuilder Delete(String _tableName) {
         return new SQLBuilder(SQLType.DELETE).Table(_tableName);
@@ -136,7 +136,7 @@ public final class SQLBuilder {
      * 设置更新列
      *
      * @param fields an array of {@link java.lang.reflect.Field} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder UpdateColumns(Field[] fields) {
         _updateColumns = Stream.of(fields).map(field -> StringUtils.camelToUnderscore(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
@@ -147,7 +147,7 @@ public final class SQLBuilder {
      * 设置列 一般用于插入
      *
      * @param fields an array of {@link java.lang.reflect.Field} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder Columns(Field[] fields) {
         _columns = Stream.of(fields).map(o -> StringUtils.camelToUnderscore(o.getName())).toArray(String[]::new);
@@ -158,7 +158,7 @@ public final class SQLBuilder {
      * 设置值 (非批量插入)
      *
      * @param fields an array of {@link java.lang.reflect.Field} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder Values(Field[] fields) {
         _values = new String[1][fields.length];
@@ -170,7 +170,7 @@ public final class SQLBuilder {
      * 设置值 (批量插入)
      *
      * @param values an array of {@link java.lang.String} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder Values(String[][] values) {
         _values = values;
@@ -181,7 +181,7 @@ public final class SQLBuilder {
      * 设置 where 语句
      *
      * @param whereColumns an array of {@link java.lang.String} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder Where(String[] whereColumns) {
         _whereColumns = whereColumns;
@@ -192,7 +192,7 @@ public final class SQLBuilder {
      * 设置 GroupBy 语句
      *
      * @param groupBy a {@link java.util.Set} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder GroupBy(Set<String> groupBy) {
         _groupBySet = groupBy;
@@ -203,7 +203,7 @@ public final class SQLBuilder {
      * 设置 OrderBy 语句
      *
      * @param orderBys a {@link java.util.Map} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder OrderBy(Map<String, SortType> orderBys) {
         _orderByMap = orderBys;
@@ -215,7 +215,7 @@ public final class SQLBuilder {
      *
      * @param page  a {@link java.lang.Integer} object.
      * @param limit a {@link java.lang.Integer} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder Pagination(Integer page, Integer limit) {
         _page = page;
@@ -227,7 +227,7 @@ public final class SQLBuilder {
      * 设置 WhereSql (独立于 Where)
      *
      * @param whereSql a {@link java.lang.String} object.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder WhereSql(String whereSql) {
         _whereSql = whereSql;
@@ -256,7 +256,7 @@ public final class SQLBuilder {
      * 设置 查询列
      *
      * @param selectColumns an array of {@link java.lang.String} objects.
-     * @return a {@link SQLBuilder} object.
+     * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder SelectColumns(String[] selectColumns) {
         _selectColumns = selectColumns;

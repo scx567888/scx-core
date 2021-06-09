@@ -82,6 +82,14 @@ public final class StringUtils {
         return UUID.randomUUID().toString();
     }
 
+    /**
+     * 获取随机的 Code
+     * 注意!!! 此方法和 getUUID 不同 若需要获取 uuid 请使用 getUUID
+     *
+     * @param size       code 的长度
+     * @param withLetter code 中是否包含字母
+     * @return a {@link java.lang.String} object
+     */
     public static String getRandomCode(int size, boolean withLetter) {
         char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
         char[] charsWithLetter = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};

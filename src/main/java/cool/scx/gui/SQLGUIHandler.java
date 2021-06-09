@@ -32,6 +32,8 @@ public class SQLGUIHandler extends BaseGUIHandler {
 
     /**
      * 向用户确认是否修复数据表
+     *
+     * @return a 结果
      */
     public static boolean confirmFixTable() {
         var options = new Object[]{"修复数据表", "忽略", "退出"};
