@@ -1,6 +1,7 @@
 package cool.scx.util;
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -79,6 +80,23 @@ public final class StringUtils {
      */
     public static String getUUID() {
         return UUID.randomUUID().toString();
+    }
+
+    public static String getRandomCode(int size, boolean withLetter) {
+        char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+        char[] charsWithLetter = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+        var rand = new Random();
+        var code = new StringBuilder();
+        if (withLetter) {
+            for (int j = 0; j < size; j++) {
+                code.append(charsWithLetter[rand.nextInt(charsWithLetter.length)]);
+            }
+        } else {
+            for (int j = 0; j < size; j++) {
+                code.append(chars[rand.nextInt(chars.length)]);
+            }
+        }
+        return code.toString();
     }
 
     /**
