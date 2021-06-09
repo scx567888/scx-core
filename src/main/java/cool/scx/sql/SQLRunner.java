@@ -1,7 +1,8 @@
-package cool.scx.dao;
+package cool.scx.sql;
 
 import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
+import cool.scx.dao.ScxDBContext;
 import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 

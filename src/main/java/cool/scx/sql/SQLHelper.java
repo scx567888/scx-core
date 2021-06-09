@@ -1,4 +1,4 @@
-package cool.scx.dao;
+package cool.scx.sql;
 
 import cool.scx.annotation.Column;
 import cool.scx.bo.TableInfo;

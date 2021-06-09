@@ -120,4 +120,12 @@ public class TestController {
         return MD5Utils.md5("123");
     }
 
+    /**
+     * 测试!!!
+     */
+    @ScxMapping(value = "/random-code", method = Method.GET)
+    public String getRandomCode() {
+        return StringUtils.getRandomCode(9999, true);
+    }
+
 }

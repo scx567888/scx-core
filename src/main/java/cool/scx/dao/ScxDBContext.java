@@ -5,7 +5,8 @@ import cool.scx.annotation.ScxModel;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.FixTableResult;
-import cool.scx.exception.SQLRunnerExceptionHandler;
+import cool.scx.gui.SQLGUIHandler;
+import cool.scx.sql.SQLHelper;
 import cool.scx.util.Ansi;
 
 import javax.sql.DataSource;
@@ -53,7 +54,10 @@ public final class ScxDBContext {
         Ansi.OUT.brightMagenta("ScxDBContext 初始化中...").ln();
         var dataSourceCanUse = checkDataSource();
         if (dataSourceCanUse && ScxConfig.fixTable()) {
-            fixTable();
+            var doFixTable = SQLGUIHandler.confirmFixTable();
+            if (doFixTable) {
+                fixTable();
+            }
         }
         Ansi.OUT.brightMagenta("ScxDBContext 初始化完成...").ln();
     }
@@ -66,7 +70,7 @@ public final class ScxDBContext {
             dataSource = ds;
             return true;
         } catch (Exception e) {
-            SQLRunnerExceptionHandler.sqlExceptionHandler(e);
+            SQLGUIHandler.dataSourceExceptionHandler(e);
             return false;
         }
     }

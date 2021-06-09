@@ -1,4 +1,4 @@
-package cool.scx.exception;
+package cool.scx.gui;
 
 import cool.scx.config.ScxConfig;
 import cool.scx.util.Ansi;
@@ -13,7 +13,7 @@ import javax.swing.*;
  * @author 司昌旭
  * @version 1.0.8
  */
-public class ScxServerExceptionHandler extends BaseExceptionHandler {
+public class ScxServerGUIHandler extends BaseGUIHandler {
 
     /**
      * <p>bindExceptionHandler.</p>

@@ -2,7 +2,7 @@ package cool.scx.web;
 
 import cool.scx.Scx;
 import cool.scx.config.ScxConfig;
-import cool.scx.exception.ScxServerExceptionHandler;
+import cool.scx.gui.ScxServerGUIHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.NetUtils;
 import cool.scx.util.Timer;
@@ -79,7 +79,7 @@ public final class ScxServer {
             } else {
                 var cause = http.cause();
                 if (cause instanceof BindException) {
-                    ScxServerExceptionHandler.bindExceptionHandler();
+                    ScxServerGUIHandler.bindExceptionHandler();
                 } else {
                     cause.printStackTrace();
                 }
