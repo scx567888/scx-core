@@ -53,7 +53,7 @@
 2. 编写您自己的模块 。
 
 ``` java
-public class YourModule implements BaseModule {
+public class YourModule implements ScxModule {
 
 }
 ```
@@ -67,7 +67,13 @@ public static void main(String[] args) {
 }
 //同时使用内置的模块
 public static void main(String[] args) {
-    ScxApp.run(new BaseModule[]{new CoreModule(),new YourModule()}, args);
+    ScxModule[] modules = {
+            new BaseModule(), //基本模块
+            new AuthModule(), //认证模块
+            new CmsModule(),  //CMS 模块
+            new YourModule()  //自定义模块
+        };
+    ScxApp.run(modules, args);
 }
 ```
 
