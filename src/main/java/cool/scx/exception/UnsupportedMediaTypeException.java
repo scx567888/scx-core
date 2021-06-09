@@ -15,7 +15,7 @@ public class UnsupportedMediaTypeException extends HttpRequestException {
      */
     @Override
     public void exceptionHandler(RoutingContext ctx) {
-        ctx.response().setStatusCode(415).send("Request Parameter Wrong!!!");
+        ctx.response().setStatusCode(415).send("Unsupported Media Type !!!");
     }
 
 }

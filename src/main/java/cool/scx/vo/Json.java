@@ -48,11 +48,9 @@ public final class Json implements BaseVo {
     private final Map<String, Object> jsonMap = new HashMap<>();
 
     /**
-     * 无参构造：操作成功返回的响应信息
+     * 无参构造
      */
     private Json() {
-        jsonMap.put("code", SUCCESS_CODE);
-        jsonMap.put("message", "ok");
     }
 
     /**
@@ -67,12 +65,21 @@ public final class Json implements BaseVo {
     }
 
     /**
+     * <p>empty.</p>
+     *
+     * @return a {@link cool.scx.vo.Json} object.
+     */
+    public static Json empty() {
+        return new Json();
+    }
+
+    /**
      * <p>ok.</p>
      *
      * @return a {@link cool.scx.vo.Json} object.
      */
     public static Json ok() {
-        return new Json();
+        return new Json(SUCCESS_CODE, "ok");
     }
 
     /**

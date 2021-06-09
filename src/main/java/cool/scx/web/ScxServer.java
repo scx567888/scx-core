@@ -2,7 +2,7 @@ package cool.scx.web;
 
 import cool.scx.Scx;
 import cool.scx.config.ScxConfig;
-import cool.scx.exception.handler.ScxServerExceptionHandler;
+import cool.scx.exception.ScxServerExceptionHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.NetUtils;
 import cool.scx.util.Timer;

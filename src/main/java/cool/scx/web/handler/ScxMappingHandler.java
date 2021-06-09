@@ -10,8 +10,8 @@ import cool.scx.auth.ScxAuth;
 import cool.scx.bo.FileUpload;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Device;
+import cool.scx.exception.BadRequestException;
 import cool.scx.exception.HttpRequestException;
-import cool.scx.exception.UnsupportedMediaTypeException;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.BaseVo;
@@ -81,7 +81,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
         return Character.toLowerCase(s.charAt(0)) + s.substring(1);
     }
 
-    private static Object getParamFromMap(Map<String, ?> map, String value, boolean merge, Parameter parameter, boolean required) throws UnsupportedMediaTypeException {
+    private static Object getParamFromMap(Map<String, ?> map, String value, boolean merge, Parameter parameter, boolean required) throws BadRequestException {
         if (StringUtils.isEmpty(value)) {
             value = parameter.getName();
         }
@@ -93,14 +93,14 @@ class ScxMappingHandler implements Handler<RoutingContext> {
             }
         } catch (Exception e) {
             if (required) {
-                throw new UnsupportedMediaTypeException();
+                throw new BadRequestException(e);
             } else {
                 return null;
             }
         }
     }
 
-    private static Object getParamFromBody(JsonNode jsonNode, Map<String, Object> formAttributesMap, String bodyParamValue, Parameter parameter, boolean required) throws UnsupportedMediaTypeException {
+    private static Object getParamFromBody(JsonNode jsonNode, Map<String, Object> formAttributesMap, String bodyParamValue, Parameter parameter, boolean required) throws BadRequestException {
         if (formAttributesMap.size() == 0) {
             var j = jsonNode;
             if (bodyParamValue != null) {
@@ -118,7 +118,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
                 return ObjectUtils.jsonNodeToBean(j, parameter.getParameterizedType());
             } catch (Exception e) {
                 if (required) {
-                    throw new UnsupportedMediaTypeException();
+                    throw new BadRequestException(e);
                 } else {
                     return null;
                 }
@@ -132,7 +132,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
                 }
             } catch (Exception e) {
                 if (required) {
-                    throw new UnsupportedMediaTypeException();
+                    throw new BadRequestException();
                 } else {
                     return null;
                 }

@@ -8,9 +8,9 @@ import cool.scx.bo.Param;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
 import cool.scx.enumeration.SortType;
+import cool.scx.exception.BadRequestException;
 import cool.scx.exception.CustomHttpRequestException;
 import cool.scx.exception.HttpRequestException;
-import cool.scx.exception.UnsupportedMediaTypeException;
 import cool.scx.util.ObjectUtils;
 import cool.scx.vo.Json;
 
@@ -49,9 +49,8 @@ public class CrudController {
         try {
             return (BaseModel) ObjectUtils.mapToBean(entityMap, ScxContext.getClassByName(modelName));
         } catch (Exception e) {
-            e.printStackTrace();
             //这里一般就是 参数转换错误
-            throw new UnsupportedMediaTypeException();
+            throw new BadRequestException(e);
         }
     }
 

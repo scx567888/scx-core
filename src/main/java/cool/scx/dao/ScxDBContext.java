@@ -5,7 +5,7 @@ import cool.scx.annotation.ScxModel;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.FixTableResult;
-import cool.scx.exception.handler.SQLRunnerExceptionHandler;
+import cool.scx.exception.SQLRunnerExceptionHandler;
 import cool.scx.util.Ansi;
 
 import javax.sql.DataSource;
