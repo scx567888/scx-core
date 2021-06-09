@@ -27,7 +27,7 @@ public final class ScxConfig {
     /**
      * SCX 版本号
      */
-    public static final String SCX_VERSION = "1.1.14";
+    public static final String SCX_VERSION = "1.1.15";
 
     /**
      * APP KEY 常量
