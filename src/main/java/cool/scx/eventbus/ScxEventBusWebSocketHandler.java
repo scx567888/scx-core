@@ -1,14 +1,10 @@
 package cool.scx.eventbus;
 
 import cool.scx.annotation.ScxWebSocketRoute;
-import cool.scx.auth.ScxAuth;
 import cool.scx.base.BaseWSHandler;
-import cool.scx.context.OnlineItem;
 import cool.scx.context.ScxContext;
-import cool.scx.enumeration.Device;
 import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
-import cool.scx.vo.Json;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
@@ -23,6 +19,23 @@ import io.vertx.core.http.WebSocketFrame;
 public class ScxEventBusWebSocketHandler implements BaseWSHandler {
 
     /**
+     * 心跳检测字符
+     */
+    private static final String LOVE = "❤";
+
+    private static ScxWebSocketEvent createScxWebSocketEvent(String text, ServerWebSocket webSocket) {
+        var map = ObjectUtils.jsonToMap(text);
+        Object eventName = map.get("eventName");
+        Object data = map.get("data");
+        Object callBackID = map.get("callBackID");
+        if (eventName != null) {
+            return new ScxWebSocketEvent(eventName.toString(), data, callBackID != null ? callBackID.toString() : null, webSocket);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * {@inheritDoc}
      * <p>
      * onOpen
@@ -30,6 +43,7 @@ public class ScxEventBusWebSocketHandler implements BaseWSHandler {
     @Override
     public void onOpen(ServerWebSocket webSocket) {
         ScxContext.addOnlineItem(webSocket, null);
+        Ansi.OUT.brightBlue(webSocket.binaryHandlerID() + " 连接了!!! 当前总连接数 : " + ScxContext.getOnlineItemList().size()).ln();
     }
 
     /**
@@ -49,42 +63,14 @@ public class ScxEventBusWebSocketHandler implements BaseWSHandler {
      */
     @Override
     public void onMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket) {
-        var binaryHandlerID = webSocket.binaryHandlerID();
-        var map = ObjectUtils.jsonToMap(textData);
-        var type = map.get("type");
-        var callBackId = map.get("callBackId").toString();
-        //这条信息是 登录(websocket)验证信息
-        if ("login".equals(type.toString())) {
-            Object token = map.get("token");
-            if (token != null) {
-                Device device = Device.ADMIN;//todo 此处获取不正确
-                var nowLoginUser = ScxAuth.getLoginUserByToken(device, token.toString());
-                //这条websocket 连接验证通过
-                if (nowLoginUser != null) {
-                    ScxContext.addOnlineItem(webSocket, nowLoginUser._UniqueID());
-                    //理论上 sessionItem 不可能为空 但是 还是应该判断一下 这里嫌麻烦 先不写了 todo
-                    var s = Json.ok().data("callBackId", callBackId).data("message", nowLoginUser).toString();
-                    webSocket.writeTextMessage(s);
-                    Ansi.OUT.brightGreen(binaryHandlerID + " 登录了!!! 登录的 ID 为 : " + nowLoginUser._UniqueID()).ln();
-                }
-                Ansi.OUT.brightYellow("当前总在线用户数量 : " + ScxContext.getOnlineUserCount()).ln();
+        //这里是心跳检测
+        if (LOVE.equals(textData)) {
+            webSocket.writeTextMessage(LOVE);
+        } else { //这里是其他事件
+            var event = createScxWebSocketEvent(textData, webSocket);
+            if (event != null) {
+                ScxEventBus.requestScxWebSocketEvent(event);
             }
-        } else if ("sendMessage".equals(type.toString())) {
-            //发送的用户
-            var username = map.get("username").toString();
-            var message = map.get("message").toString();
-            var fromUser = ScxContext.getOnlineItemByWebSocket(webSocket);
-
-//            var toUser = ScxContext.getOnlineItemByUserName(username);
-
-            //测试群发
-            var toUser = ScxContext.getOnlineItemList();
-            for (OnlineItem onlineItem : toUser) {
-                if (!onlineItem.username.equals(fromUser.username)) {
-                    onlineItem.webSocket.writeTextMessage(Json.ok().data("callBackId", callBackId).data("fromUser", fromUser.username).data("message", message).toString());
-                }
-            }
-
         }
     }
 
@@ -93,7 +79,7 @@ public class ScxEventBusWebSocketHandler implements BaseWSHandler {
      */
     @Override
     public void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) {
-//        System.out.println(binaryData);
+        System.out.println("onBinaryMessage");
     }
 
     /**
@@ -103,4 +89,5 @@ public class ScxEventBusWebSocketHandler implements BaseWSHandler {
     public void onError(Throwable event, ServerWebSocket webSocket) {
         event.printStackTrace();
     }
+
 }

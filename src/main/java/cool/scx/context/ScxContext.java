@@ -127,7 +127,6 @@ public final class ScxContext {
         } else {
             onlineItem.username = username;
         }
-        Ansi.OUT.brightBlue(binaryHandlerID + " 连接了!!! 当前总连接数 : " + ONLINE_ITEMS.size()).ln();
     }
 
     /**

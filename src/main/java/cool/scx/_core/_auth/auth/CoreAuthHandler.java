@@ -30,9 +30,9 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 核心包的权限处理器
@@ -44,7 +44,7 @@ import java.util.Map;
 @ScxService
 public class CoreAuthHandler implements AuthHandler {
 
-    private static final HashMap<String, LoginError> loginErrorMap = new HashMap<>();
+    private static final Map<String, LoginError> loginErrorMap = new ConcurrentHashMap<>();
     private final LicenseService licenseService;
     private final UserService userService;
     private final RoleService roleService;
