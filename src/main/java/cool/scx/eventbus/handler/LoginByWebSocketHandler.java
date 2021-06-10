@@ -2,8 +2,19 @@ package cool.scx.eventbus.handler;
 
 import io.vertx.core.json.JsonObject;
 
+/**
+ * <p>LoginByWebSocketHandler class.</p>
+ *
+ * @author 司昌旭
+ * @version 1.1.17
+ */
 public class LoginByWebSocketHandler {
 
+    /**
+     * <p>loginByWebSocket.</p>
+     *
+     * @param args a {@link io.vertx.core.json.JsonObject} object
+     */
     public static void loginByWebSocket(JsonObject args) {
 //        Object token = map.get("token");
 //        if (token != null) {

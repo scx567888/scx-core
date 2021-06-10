@@ -42,6 +42,11 @@ public class ScxEventBus {
         initDefaultHandler();
     }
 
+    /**
+     * <p>requestScxWebSocketEvent.</p>
+     *
+     * @param event a {@link cool.scx.eventbus.ScxWebSocketEvent} object
+     */
     public static void requestScxWebSocketEvent(ScxWebSocketEvent event) {
         VERTX_EVENTBUS.request(event.eventName, event.data, (c) -> {
             if (c.succeeded()) {
@@ -56,6 +61,11 @@ public class ScxEventBus {
         });
     }
 
+    /**
+     * <p>vertxEventbus.</p>
+     *
+     * @return a {@link io.vertx.core.eventbus.EventBus} object
+     */
     public static EventBus vertxEventbus() {
         return VERTX_EVENTBUS;
     }

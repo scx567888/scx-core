@@ -2,8 +2,20 @@ package cool.scx.eventbus.handler;
 
 import io.vertx.core.json.JsonObject;
 
+/**
+ * <p>SendMessageByWebsocketHandler class.</p>
+ *
+ * @author 司昌旭
+ * @version 1.1.17
+ */
 public class SendMessageByWebsocketHandler {
 
+    /**
+     * <p>sendMessage.</p>
+     *
+     * @param json a {@link io.vertx.core.json.JsonObject} object
+     * @return a {@link java.lang.String} object
+     */
     public static String sendMessage(JsonObject json) {
 
         return json.toString() + "Test";
