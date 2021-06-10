@@ -12,6 +12,8 @@ import javax.swing.*;
  */
 public class SQLGUIHandler extends BaseGUIHandler {
 
+    private static boolean alreadyShowConfirmFixTable = false;
+
     /**
      * <p>sqlExceptionHandler.</p>
      *
@@ -36,8 +38,12 @@ public class SQLGUIHandler extends BaseGUIHandler {
      * @return a 结果
      */
     public static boolean confirmFixTable() {
+        if (alreadyShowConfirmFixTable) {
+            return true;
+        }
         var options = new Object[]{"修复数据表", "忽略", "退出"};
-        int result = JOptionPane.showOptionDialog(null, "Y 检测到配置文件中已指定修复数据表 , 是否修复?", "Y 是否修复数据表 !!!", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+        int result = JOptionPane.showOptionDialog(null, "Y 检测到需要修复数据表 , 是否修复?", "Y 是否修复数据表 !!!", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+        alreadyShowConfirmFixTable = true;
         if (result == 0) {
             return true;
         } else if (result == 1) {

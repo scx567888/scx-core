@@ -10,7 +10,7 @@ import cool.scx.sql.SQLHelper;
 import cool.scx.util.Ansi;
 
 import javax.sql.DataSource;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <p>ScxDBContext class.</p>
@@ -30,20 +30,41 @@ public final class ScxDBContext {
      */
     public static void fixTable() {
         Ansi.OUT.brightMagenta("修复数据表中...").ln();
-        var noNeedFix = new AtomicBoolean(true);
+        var fixSuccess = new AtomicInteger();
+        var cancelFix = new AtomicInteger();
+        var fixFail = new AtomicInteger();
+        var noNeedToFix = new AtomicInteger();
         ScxContext.scxBeanClassNameMapping().forEach((k, v) -> {
             if (v.isAnnotationPresent(ScxModel.class) && !v.isInterface()) {
                 try {
-                    if (SQLHelper.fixTable(v) != FixTableResult.NO_NEED_TO_FIX) {
-                        noNeedFix.set(false);
+                    var r = SQLHelper.fixTable(v);
+                    if (r == FixTableResult.CANCEL_FIX) {
+                        cancelFix.incrementAndGet();
+                    } else if (r == FixTableResult.FIX_SUCCESS) {
+                        fixSuccess.incrementAndGet();
+                    } else if (r == FixTableResult.FIX_FAIL) {
+                        fixFail.incrementAndGet();
+                    } else if (r == FixTableResult.NO_NEED_TO_FIX) {
+                        noNeedToFix.incrementAndGet();
                     }
                 } catch (Exception ignored) {
 
                 }
             }
         });
-        if (noNeedFix.get()) {
-            Ansi.OUT.brightMagenta("没有表需要修复...").ln();
+
+        if (cancelFix.get() != 0) {
+            Ansi.OUT.brightMagenta("已取消修复表...").ln();
+        } else {
+            if (fixSuccess.get() != 0) {
+                Ansi.OUT.brightMagenta("修复成功 " + fixSuccess.get() + " 张表...").ln();
+            }
+            if (fixFail.get() != 0) {
+                Ansi.OUT.brightMagenta("修复失败 " + fixFail.get() + " 张表...").ln();
+            }
+            if (fixSuccess.get() + fixSuccess.get() + cancelFix.get() == 0) {
+                Ansi.OUT.brightMagenta("没有表需要修复...").ln();
+            }
         }
     }
 
@@ -54,10 +75,7 @@ public final class ScxDBContext {
         Ansi.OUT.brightMagenta("ScxDBContext 初始化中...").ln();
         var dataSourceCanUse = checkDataSource();
         if (dataSourceCanUse && ScxConfig.fixTable()) {
-            var doFixTable = SQLGUIHandler.confirmFixTable();
-            if (doFixTable) {
-                fixTable();
-            }
+            fixTable();
         }
         Ansi.OUT.brightMagenta("ScxDBContext 初始化完成...").ln();
     }

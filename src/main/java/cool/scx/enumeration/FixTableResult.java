@@ -10,4 +10,5 @@ public enum FixTableResult {
     NO_NEED_TO_FIX,
     FIX_SUCCESS,
     FIX_FAIL,
+    CANCEL_FIX,
 }
