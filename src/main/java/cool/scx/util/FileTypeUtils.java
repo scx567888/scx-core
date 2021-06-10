@@ -37,7 +37,11 @@ public final class FileTypeUtils {
      * @return a {@link java.lang.String} object
      */
     public static String getMimeTypeForExtension(String ext) {
-        return getFileTypeForExtension(ext).mimeType;
+        var fileType = getFileTypeForExtension(ext);
+        if (fileType != null) {
+            return fileType.mimeType;
+        }
+        return null;
     }
 
 

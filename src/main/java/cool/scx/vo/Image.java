@@ -1,7 +1,7 @@
 package cool.scx.vo;
 
 import cool.scx.util.FileTypeUtils;
-import cool.scx.util.LimitedMap;
+import cool.scx.util.FixedMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class Image implements BaseVo {
 
-    private static final LimitedMap<String, Buffer> imageCache = new LimitedMap<>(100);
+    private static final FixedMap<String, Buffer> imageCache = new FixedMap<>(100);
     /**
      * type 和裁剪类型 映射表
      */

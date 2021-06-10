@@ -1,6 +1,7 @@
-package cool.scx._core._base.uploadfile;
+package cool.scx._core._base;
 
-import cool.scx._core._base.BaseConfig;
+import cool.scx._core._base.uploadfile.UploadFile;
+import cool.scx._core._base.uploadfile.UploadFileService;
 import cool.scx.annotation.FromPath;
 import cool.scx.annotation.FromQuery;
 import cool.scx.annotation.ScxMapping;
@@ -10,6 +11,7 @@ import cool.scx.enumeration.Method;
 import cool.scx.exception.HttpRequestException;
 import cool.scx.exception.NotFoundException;
 import cool.scx.util.*;
+import cool.scx.vo.Binary;
 import cool.scx.vo.Download;
 import cool.scx.vo.Image;
 import cool.scx.vo.Json;
@@ -30,7 +32,7 @@ import java.util.stream.Collectors;
  * @version 0.3.6
  */
 @ScxMapping("/api")
-public class UploadController {
+public class BaseController {
 
     private final UploadFileService uploadFileService;
 
@@ -39,7 +41,7 @@ public class UploadController {
      *
      * @param uploadFileService a {@link cool.scx._core._base.uploadfile.UploadFileService} object.
      */
-    public UploadController(UploadFileService uploadFileService) {
+    public BaseController(UploadFileService uploadFileService) {
         this.uploadFileService = uploadFileService;
     }
 
@@ -129,7 +131,7 @@ public class UploadController {
      * @return a {@link cool.scx.vo.Download} object.
      * @throws cool.scx.exception.HttpRequestException if any.
      */
-    @ScxMapping(value = "/download/:fileId", method = Method.GET)
+    @ScxMapping(value = "/download/:fileId", method = {Method.GET, Method.HEAD})
     public Download download(String fileId) throws HttpRequestException {
         var param = new Param<>(new UploadFile());
         param.queryObject.fileId = fileId;
@@ -147,6 +149,28 @@ public class UploadController {
     }
 
     /**
+     * 直接展示文件方法
+     *
+     * @param fileId a {@link java.lang.String} object.
+     * @return a {@link cool.scx.vo.Download} object.
+     * @throws cool.scx.exception.HttpRequestException if any.
+     */
+    @ScxMapping(value = "/binary/:fileId", method = {Method.GET, Method.HEAD})
+    public Binary binary(String fileId) throws HttpRequestException {
+        var param = new Param<>(new UploadFile());
+        param.queryObject.fileId = fileId;
+        UploadFile uploadFile = uploadFileService.get(param);
+        if (uploadFile == null) {
+            throw new NotFoundException();
+        }
+        var file = new File(BaseConfig.uploadFilePath(), uploadFile.filePath);
+        if (!file.exists()) {
+            throw new NotFoundException();
+        }
+        return new Binary(file);
+    }
+
+    /**
      * 通用查看图片方法
      *
      * @param fileId 文件 id
@@ -156,11 +180,30 @@ public class UploadController {
      * @return a {@link cool.scx.vo.Binary} object.
      * @throws cool.scx.exception.HttpRequestException if any.
      */
-    @ScxMapping(value = "/showPicture/:fileId", method = Method.GET)
+    @Deprecated
+    @ScxMapping(value = "/showPicture/:fileId", method = {Method.GET, Method.HEAD})
     public Image showPicture(@FromPath String fileId,
                              @FromQuery(value = "w", required = false) Integer width,
                              @FromQuery(value = "h", required = false) Integer height,
                              @FromQuery(value = "t", required = false) String type) throws HttpRequestException {
+        return picture(fileId, width, height, type);
+    }
+
+    /**
+     * 通用查看图片方法
+     *
+     * @param fileId 文件 id
+     * @param width  a {@link java.lang.Integer} object.
+     * @param height a {@link java.lang.Integer} object.
+     * @param type   a {@link java.lang.String} object
+     * @return a {@link cool.scx.vo.Binary} object.
+     * @throws cool.scx.exception.HttpRequestException if any.
+     */
+    @ScxMapping(value = "/picture/:fileId", method = {Method.GET, Method.HEAD})
+    public Image picture(@FromPath String fileId,
+                         @FromQuery(value = "w", required = false) Integer width,
+                         @FromQuery(value = "h", required = false) Integer height,
+                         @FromQuery(value = "t", required = false) String type) throws HttpRequestException {
         var param = new Param<>(new UploadFile());
         param.queryObject.fileId = fileId;
         UploadFile uploadFile = uploadFileService.get(param);
@@ -169,7 +212,6 @@ public class UploadController {
         } else {
             return new Image(new File(BaseConfig.uploadFilePath(), uploadFile.filePath), width, height, type);
         }
-
     }
 
     /**

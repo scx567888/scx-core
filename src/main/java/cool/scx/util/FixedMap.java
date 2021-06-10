@@ -11,7 +11,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 1.0.10
  */
-public class LimitedMap<K, V> extends LinkedHashMap<K, V> {
+public class FixedMap<K, V> extends LinkedHashMap<K, V> {
     /**
      * 最大容量
      */
@@ -22,7 +22,10 @@ public class LimitedMap<K, V> extends LinkedHashMap<K, V> {
      *
      * @param maxSize 最大容量
      */
-    public LimitedMap(int maxSize) {
+    public FixedMap(int maxSize) {
+        if (maxSize < 1) {
+            throw new IllegalArgumentException("maxSize must be >= 1");
+        }
         this.maxSize = maxSize;
     }
 
