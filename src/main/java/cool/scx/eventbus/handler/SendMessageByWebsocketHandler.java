@@ -4,6 +4,7 @@ import io.vertx.core.json.JsonObject;
 
 /**
  * <p>SendMessageByWebsocketHandler class.</p>
+ * todo a
  *
  * @author 司昌旭
  * @version 1.1.17

@@ -4,7 +4,7 @@ import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
 /**
- * <p>BadRequestException class.</p>
+ * 请求错误异常
  *
  * @author 司昌旭
  * @version 1.1.15

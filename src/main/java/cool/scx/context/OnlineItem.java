@@ -4,6 +4,7 @@ import io.vertx.core.http.ServerWebSocket;
 
 /**
  * websocket 在线对象
+ * todo 尝试和 loginitem 整合为一个对象
  *
  * @author 司昌旭
  * @version 0.9.0

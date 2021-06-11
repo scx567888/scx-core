@@ -38,7 +38,7 @@ public class DeptService extends BaseService<Dept> {
      */
     public List<Dept> getDeptListByUser(User user) {
         var userDeptParam = new Param<>(new UserDept());
-        userDeptParam.queryObject.userId = user.id;
+        userDeptParam.o.userId = user.id;
 
         var collect = userDeptService.list(userDeptParam).stream().map(UserDept -> UserDept.deptId.toString()).collect(Collectors.joining(","));
         if (!"".equals(collect)) {
@@ -76,7 +76,7 @@ public class DeptService extends BaseService<Dept> {
      */
     public void deleteByUserId(Long id) {
         var userDept = new Param<>(new UserDept());
-        userDept.queryObject.userId = id;
+        userDept.o.userId = id;
         userDeptService.delete(userDept);
     }
 
@@ -89,7 +89,7 @@ public class DeptService extends BaseService<Dept> {
     public List<UserDept> findDeptByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {
             var ud = new Param<>(new UserDept());
-            ud.queryObject.userId = userId;
+            ud.o.userId = userId;
             return userDeptService.list(ud);
         }
         return new ArrayList<>();

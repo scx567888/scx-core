@@ -5,7 +5,6 @@ import cool.scx.base.BaseModel;
 import cool.scx.bo.Param;
 import cool.scx.bo.TableInfo;
 import cool.scx.bo.UpdateResult;
-import cool.scx.config.ScxConfig;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.SQLRunner;
@@ -14,11 +13,19 @@ import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * <p>BaseDao class.</p>
+ * 基本 Dao
+ * <p>
+ * 提供一些简单的数据库操作
+ * <p>
+ * 如果BaseDao 无法满足需求
+ * <p>
+ * 可以考虑使用 {@link cool.scx.sql.SQLRunner}
  *
  * @author 司昌旭
  * @version 0.3.6
@@ -56,7 +63,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * @param entity a Entity object.
      * @return a {@link java.lang.Long} object.
      */
-    public Long save(Entity entity) {
+    public Long insert(Entity entity) {
         var c = Stream.of(table.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
         var sql = SQLBuilder.Insert(table.tableName).Columns(c).Values(c).GetSQL();
         var updateResult = SQLRunner.update(sql, ObjectUtils.beanToMap(entity));
@@ -69,14 +76,14 @@ public final class BaseDao<Entity extends BaseModel> {
      * @param entityList a {@link java.util.List} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Long> saveList(List<Entity> entityList) {
+    public List<Long> insertList(List<Entity> entityList) {
         var size = entityList.size();
         if (size > splitSize) {
             Ansi.OUT.brightRed("批量插入数据量过大 , 达到" + size + "条 !!! 已按照" + splitSize + "条进行切分 !!!").ln();
             var generatedKeys = new ArrayList<Long>(splitSize);
             double number = Math.ceil(1.0 * size / splitSize);
             for (int i = 0; i < number; i++) {
-                generatedKeys.addAll(saveList(entityList.subList(i * splitSize, (Math.min((i + 1) * splitSize, size)))));
+                generatedKeys.addAll(insertList(entityList.subList(i * splitSize, (Math.min((i + 1) * splitSize, size)))));
             }
             return generatedKeys;
         }
@@ -103,15 +110,15 @@ public final class BaseDao<Entity extends BaseModel> {
      * @param ignoreLike a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<Entity> list(Param<Entity> param, boolean ignoreLike) {
+    public List<Entity> select(Param<Entity> param, boolean ignoreLike) {
         var sql = SQLBuilder.Select(table.tableName).SelectColumns(table.selectColumns)
-                .Where(getWhereColumns(param.queryObject, ignoreLike))
+                .Where(getWhereColumns(param.o, ignoreLike))
                 .WhereSql(param.whereSql)
                 .GroupBy(param.groupBy)
                 .OrderBy(param.orderBy)
                 .Pagination(param.getPage(), param.getLimit())
                 .GetSQL();
-        return SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject), entityClass);
+        return SQLRunner.query(sql, ObjectUtils.beanToMap(param.o), entityClass);
     }
 
     /**
@@ -123,11 +130,11 @@ public final class BaseDao<Entity extends BaseModel> {
      */
     public Integer count(Param<Entity> param, boolean ignoreLike) {
         var sql = SQLBuilder.Select(table.tableName).SelectColumns(new String[]{"COUNT(*)"})
-                .Where(getWhereColumns(param.queryObject, ignoreLike))
+                .Where(getWhereColumns(param.o, ignoreLike))
                 .WhereSql(param.whereSql)
                 .GroupBy(param.groupBy)
                 .GetSQL();
-        return Integer.parseInt(SQLRunner.query(sql, ObjectUtils.beanToMap(param.queryObject)).get(0).get("COUNT(*)").toString());
+        return Integer.parseInt(SQLRunner.query(sql, ObjectUtils.beanToMap(param.o)).get(0).get("COUNT(*)").toString());
     }
 
     /**
@@ -138,12 +145,12 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link cool.scx.bo.UpdateResult} object.
      */
     public UpdateResult update(Param<Entity> param, boolean includeNull) {
-        var entityMap = ObjectUtils.beanToMap(param.queryObject);
+        var entityMap = ObjectUtils.beanToMap(param.o);
         var setColumns = Stream.of(table.canUpdateFields)
-                .filter(field -> (!includeNull && ObjectUtils.getFieldValue(field, param.queryObject) != null))
+                .filter(field -> (!includeNull && ObjectUtils.getFieldValue(field, param.o) != null))
                 .toArray(Field[]::new);
         var sql = SQLBuilder.Update(table.tableName).UpdateColumns(setColumns);
-        if (param.queryObject.id != null) {
+        if (param.o.id != null) {
             sql.WhereSql(" id = :id ");
         } else if (!StringUtils.isEmpty(param.whereSql)) {
             sql.WhereSql(param.whereSql);
@@ -160,33 +167,15 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link java.lang.Integer} object.
      */
     public Integer delete(Param<Entity> param) {
-        var entityMap = ObjectUtils.beanToMap(param.queryObject);
+        var entityMap = ObjectUtils.beanToMap(param.o);
         var sql = SQLBuilder.Delete(table.tableName);
-        var whereColumns = getWhereColumns(param.queryObject, false);
+        var whereColumns = getWhereColumns(param.o, false);
         if (whereColumns.length > 0 || StringUtils.isNotEmpty(param.whereSql)) {
             sql.Where(whereColumns).WhereSql(param.whereSql);
         } else {
             throw new RuntimeException("删除数据时必须指定 删除条件(queryObject) 或 自定义的 where 语句 !!!");
         }
         return SQLRunner.update(sql.GetSQL(), entityMap).affectedLength;
-    }
-
-    /**
-     * <p>getFieldList.</p>
-     *
-     * @param fieldName a {@link java.lang.String} object.
-     * @return a {@link java.util.List} object.
-     */
-    public List<Map<String, Object>> getFieldList(String fieldName) {
-        if (Arrays.stream(table.allFields).filter(field -> field.getName().equals(fieldName)).count() == 1) {
-            var sql = SQLBuilder.Select(table.tableName).SelectColumns(new String[]{StringUtils.camelToUnderscore(fieldName) + " As value "})
-                    .WhereSql(ScxConfig.realDelete() ? "" : " is_deleted = FALSE").GroupBy(new HashSet<>() {{
-                        add("value");
-                    }}).GetSQL();
-            return SQLRunner.query(sql, new HashMap<>());
-        } else {
-            return new ArrayList<>();
-        }
     }
 
     private String[] getWhereColumns(Entity entity, boolean ignoreLike) {
@@ -205,6 +194,10 @@ public final class BaseDao<Entity extends BaseModel> {
                         }
                     }).toArray(String[]::new);
         }
+    }
+
+    public TableInfo table() {
+        return table;
     }
 
 }

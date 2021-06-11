@@ -7,7 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * <p>MD5Utils class.</p>
+ * MD5 工具类
  *
  * @author 司昌旭
  * @version 1.1.9

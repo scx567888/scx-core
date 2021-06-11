@@ -76,7 +76,7 @@ public class UserService extends BaseService<User> {
      */
     public User findByUsername(String username) {
         var param = new Param<>(new User());
-        param.queryObject.username = username;
+        param.o.username = username;
         return get(param);
     }
 

@@ -3,7 +3,7 @@ package cool.scx.auth.exception;
 import cool.scx.exception.AuthException;
 
 /**
- * 未知(未找到)用户异常
+ * 未知 (未找到) 用户异常
  *
  * @author 司昌旭
  * @version 0.3.6

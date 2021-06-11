@@ -10,7 +10,9 @@ import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
 
 /**
- * <p>CoreWebSocket class.</p>
+ * 时间总线 websocket 连接处理类
+ * <p>
+ * 负责维护前台和后台的事件总线通讯
  *
  * @author 司昌旭
  * @version 1.0.16
@@ -79,7 +81,7 @@ public class ScxEventBusWebSocketHandler implements BaseWSHandler {
      */
     @Override
     public void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) {
-        System.out.println("onBinaryMessage");
+        Ansi.OUT.print("onBinaryMessage").ln();
     }
 
     /**

@@ -5,22 +5,34 @@ import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.dao.BaseDao;
 import cool.scx.enumeration.SortType;
+import cool.scx.sql.SQLBuilder;
+import cool.scx.sql.SQLRunner;
+import cool.scx.util.StringUtils;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
- * 最基本的 service 类 业务 service 需继承此类
+ * 最基本的 service 类
+ * <p>
+ * 对 BaseDao 进行了封装以简化操作成本
+ * <p>
+ * 业务 service 需继承此类
  *
  * @author 司昌旭
  * @version 0.3.6
  */
 public abstract class BaseService<Entity extends BaseModel> {
 
+    /**
+     * 实际用于操作数据的  baseDao
+     */
     private final BaseDao<Entity> baseDao;
+
+    /**
+     * 实体类的 class 用于一些基本操作
+     */
     private final Class<Entity> entityClass;
 
     /**
@@ -39,7 +51,7 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return 实体
      */
     public Entity save(Entity entity) {
-        var newId = baseDao.save(entity);
+        var newId = baseDao.insert(entity);
         return getById(newId);
     }
 
@@ -53,7 +65,7 @@ public abstract class BaseService<Entity extends BaseModel> {
         if (entityList == null || entityList.size() == 0) {
             return new ArrayList<>();
         } else {
-            return baseDao.saveList(entityList);
+            return baseDao.insertList(entityList);
         }
     }
 
@@ -64,14 +76,13 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return 被删除的数据条数 用于前台分页优化
      */
     public Integer deleteByIds(Long... ids) {
+        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
         if (ScxConfig.realDelete()) {
-            var defaultParam = new Param<>(ScxContext.getBean(entityClass));
             defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
             return baseDao.delete(defaultParam);
         } else {
-            var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-            defaultParam.queryObject.isDeleted = true;
-            defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ") AND is_deleted = false";
+            defaultParam.o.tombstone = true;
+            defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ") AND tombstone = false";
             return baseDao.update(defaultParam, false).affectedLength;
         }
     }
@@ -86,14 +97,13 @@ public abstract class BaseService<Entity extends BaseModel> {
         if (ScxConfig.realDelete()) {
             return baseDao.delete(param);
         } else {
-            param.queryObject.isDeleted = true;
+            param.o.tombstone = true;
             return baseDao.update(param, false).affectedLength;
         }
-
     }
 
     /**
-     * <p>deleteList.</p>
+     * 批量删除
      *
      * @param entityList a {@link java.util.List} object.
      * @return a {@link java.lang.Integer} object.
@@ -108,7 +118,7 @@ public abstract class BaseService<Entity extends BaseModel> {
         } else {
             for (Entity entity : entityList) {
                 var defaultParam = new Param<>(entity);
-                defaultParam.queryObject.isDeleted = true;
+                defaultParam.o.tombstone = true;
                 deleteCount += baseDao.update(defaultParam, false).affectedLength;
             }
         }
@@ -126,7 +136,7 @@ public abstract class BaseService<Entity extends BaseModel> {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
             var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-            defaultParam.queryObject.isDeleted = false;
+            defaultParam.o.tombstone = false;
             defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
             return baseDao.update(defaultParam, false).affectedLength;
         }
@@ -142,14 +152,13 @@ public abstract class BaseService<Entity extends BaseModel> {
         if (ScxConfig.realDelete()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
-            param.queryObject.isDeleted = false;
+            param.o.tombstone = false;
             return baseDao.update(param, false).affectedLength;
         }
-
     }
 
     /**
-     * <p>revokeDeleteList.</p>
+     * 批量恢复数据
      *
      * @param entityList a {@link java.util.List} object.
      * @return a {@link java.lang.Integer} object.
@@ -161,7 +170,7 @@ public abstract class BaseService<Entity extends BaseModel> {
         } else {
             for (Entity entity : entityList) {
                 var defaultParam = new Param<>(entity);
-                defaultParam.queryObject.isDeleted = false;
+                defaultParam.o.tombstone = false;
                 deleteCount += baseDao.update(defaultParam, false).affectedLength;
             }
         }
@@ -191,7 +200,7 @@ public abstract class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * <p>deleteListIgnoreConfig.</p>
+     * 批量删除 强制使用 物理删除
      *
      * @param entityList a {@link java.util.List} object.
      * @return a {@link java.lang.Integer} object.
@@ -212,12 +221,12 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return a {@link java.util.List} object.
      */
     public List<Entity> update(Param<Entity> param) {
-        param.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        param.o.tombstone = ScxConfig.realDelete() ? null : false;
         var ids = baseDao.update(param, false);
         var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        defaultParam.o.tombstone = ScxConfig.realDelete() ? null : false;
         defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        return baseDao.list(defaultParam, false);
+        return baseDao.select(defaultParam, false);
     }
 
     /**
@@ -228,12 +237,12 @@ public abstract class BaseService<Entity extends BaseModel> {
      */
     public Entity update(Entity entity) {
         var param = new Param<>(entity);
-        param.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        param.o.tombstone = ScxConfig.realDelete() ? null : false;
         var ids = baseDao.update(param, false);
         var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        defaultParam.o.tombstone = ScxConfig.realDelete() ? null : false;
         defaultParam.setPagination(1).whereSql = "id = " + entity.id;
-        var list = baseDao.list(defaultParam, false);
+        var list = baseDao.select(defaultParam, false);
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -244,12 +253,12 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return 更新后的数据
      */
     public List<Entity> updateIncludeNull(Param<Entity> param) {
-        param.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        param.o.tombstone = ScxConfig.realDelete() ? null : false;
         var ids = baseDao.update(param, true);
         var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        defaultParam.o.tombstone = ScxConfig.realDelete() ? null : false;
         defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        return baseDao.list(defaultParam, false);
+        return baseDao.select(defaultParam, false);
     }
 
     /**
@@ -260,12 +269,12 @@ public abstract class BaseService<Entity extends BaseModel> {
      */
     public Entity updateIncludeNull(Entity entity) {
         var param = new Param<>(entity);
-        param.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        param.o.tombstone = ScxConfig.realDelete() ? null : false;
         var ids = baseDao.update(param, true);
         var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        defaultParam.o.tombstone = ScxConfig.realDelete() ? null : false;
         defaultParam.setPagination(1).whereSql = "id = " + ids.generatedKeys.get(0);
-        var list = baseDao.list(defaultParam, false);
+        var list = baseDao.select(defaultParam, false);
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -288,9 +297,9 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return e
      */
     public Entity get(Param<Entity> param) {
-        param.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        param.o.tombstone = ScxConfig.realDelete() ? null : false;
         param.setPagination(1);
-        var list = baseDao.list(param, true);
+        var list = baseDao.select(param, true);
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -301,9 +310,9 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return a Entity object.
      */
     public Entity getWithLike(Param<Entity> param) {
-        param.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        param.o.tombstone = ScxConfig.realDelete() ? null : false;
         param.setPagination(1);
-        var list = baseDao.list(param, false);
+        var list = baseDao.select(param, false);
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -314,7 +323,7 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return e
      */
     public Integer count(Param<Entity> param) {
-        param.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        param.o.tombstone = ScxConfig.realDelete() ? null : false;
         return baseDao.count(param, true);
     }
 
@@ -325,7 +334,7 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return a {@link java.lang.Integer} object.
      */
     public Integer countWithLike(Param<Entity> param) {
-        param.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        param.o.tombstone = ScxConfig.realDelete() ? null : false;
         return baseDao.count(param, false);
     }
 
@@ -337,8 +346,8 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return e
      */
     public List<Entity> list(Param<Entity> param) {
-        param.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
-        return baseDao.list(param, true);
+        param.o.tombstone = ScxConfig.realDelete() ? null : false;
+        return baseDao.select(param, true);
     }
 
     /**
@@ -349,31 +358,31 @@ public abstract class BaseService<Entity extends BaseModel> {
      */
     public List<Entity> listByIds(Long... ids) {
         var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
+        defaultParam.o.tombstone = ScxConfig.realDelete() ? null : false;
         defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        return baseDao.list(defaultParam, true);
+        return baseDao.select(defaultParam, true);
     }
 
     /**
-     * <p>listWithLike.</p>
+     * 查询 包含 like
      *
      * @param param a {@link cool.scx.bo.Param} object.
      * @return a {@link java.util.List} object.
      */
     public List<Entity> listWithLike(Param<Entity> param) {
-        param.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
-        return baseDao.list(param, false);
+        param.o.tombstone = ScxConfig.realDelete() ? null : false;
+        return baseDao.select(param, false);
     }
 
     /**
-     * <p>listAll.</p>
+     * 获取所有数据
      *
      * @return a {@link java.util.List} object.
      */
     public List<Entity> listAll() {
         var param = new Param<>(ScxContext.getBean(entityClass)).addOrderBy("id", SortType.DESC);
-        param.queryObject.isDeleted = ScxConfig.realDelete() ? null : false;
-        return baseDao.list(param, false);
+        param.o.tombstone = ScxConfig.realDelete() ? null : false;
+        return baseDao.select(param, false);
     }
 
     /**
@@ -383,7 +392,15 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return 以 value 为键值的 list 集合
      */
     public List<Map<String, Object>> getFieldList(String fieldName) {
-        return baseDao.getFieldList(fieldName);
+        if (Arrays.stream(baseDao.table().allFields).filter(field -> field.getName().equals(fieldName)).count() == 1) {
+            var sql = SQLBuilder.Select(baseDao.table().tableName).SelectColumns(new String[]{StringUtils.camelToUnderscore(fieldName) + " As value "})
+                    .WhereSql(ScxConfig.realDelete() ? "" : " tombstone = FALSE").GroupBy(new HashSet<>() {{
+                        add("value");
+                    }}).GetSQL();
+            return SQLRunner.query(sql, new HashMap<>());
+        } else {
+            return new ArrayList<>();
+        }
     }
 
 }

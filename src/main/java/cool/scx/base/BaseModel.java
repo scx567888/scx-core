@@ -32,9 +32,11 @@ public abstract class BaseModel implements Serializable {
     public LocalDateTime createDate;
 
     /**
-     * 删除状态  false 未删除 true 已删除
+     * 墓碑
+     * <p>
+     * 用于标识逻辑删除的状态
      */
     @Column(excludeOnInsert = true, notNull = true, defaultValue = "false")
-    public Boolean isDeleted;
+    public Boolean tombstone;
 
 }

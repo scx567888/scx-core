@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
- * <p>Base64Utils class.</p>
+ * Base64工具类
  *
  * @author 司昌旭
  * @version 1.1.9
@@ -12,13 +12,13 @@ import java.util.Base64;
 public final class Base64Utils {
 
     /**
-     * <p>base64.</p>
+     * 获取 base64
      *
-     * @param args a {@link java.lang.String} object
+     * @param str a {@link java.lang.String} object
      * @return a {@link java.lang.String} object
      */
-    public static String base64(String args) {
+    public static String base64(String str) {
         var decoder = Base64.getEncoder();
-        return decoder.encodeToString(args.getBytes(StandardCharsets.UTF_8));
+        return decoder.encodeToString(str.getBytes(StandardCharsets.UTF_8));
     }
 }

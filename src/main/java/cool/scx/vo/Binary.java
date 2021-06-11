@@ -23,7 +23,9 @@ import java.util.regex.Pattern;
  */
 public class Binary implements BaseVo {
 
-    //正则表达式 用于校验 RANGE 字段
+    /**
+     * 正则表达式 用于校验 RANGE 字段
+     */
     private static final Pattern RANGE = Pattern.compile("^bytes=(\\d+)-(\\d*)$");
 
     /**
@@ -80,7 +82,7 @@ public class Binary implements BaseVo {
     public void sendToClient(RoutingContext context) throws Exception {
         if (file != null) {
             if (!file.exists()) {
-                context.fail(404);
+                throw new NotFoundException();
             } else {
                 sendFile(context);
             }
@@ -92,7 +94,7 @@ public class Binary implements BaseVo {
     /**
      * @param context c
      */
-    private void sendFile(RoutingContext context) throws BadRequestException, NotFoundException {
+    private void sendFile(RoutingContext context) throws BadRequestException {
         var request = context.request();
         var response = context.response();
         //只处理 get 或 head 请求

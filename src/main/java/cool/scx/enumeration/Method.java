@@ -7,6 +7,7 @@ package cool.scx.enumeration;
  * @version 0.3.6
  */
 public enum Method {
+
     POST("POST"),
     GET("GET"),
     PUT("PUT"),

@@ -5,7 +5,7 @@ import cool.scx.util.Ansi;
 import javax.swing.*;
 
 /**
- * <p>SQLRunnerExceptionHandler class.</p>
+ * SQLGUIHandler
  *
  * @author 司昌旭
  * @version 1.0.10

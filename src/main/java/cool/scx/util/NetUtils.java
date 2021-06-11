@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 /**
- * <p>NetUtils class.</p>
+ * 基本网络操作工具类
  *
  * @author 司昌旭
  * @version 0.3.6

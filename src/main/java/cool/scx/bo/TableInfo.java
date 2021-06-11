@@ -11,19 +11,20 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 /**
- * <p>TableInfo class.</p>
+ * 用于描述根据 class 构建的对应的数据表结构
  *
  * @author 司昌旭
  * @version 0.5.0
  */
 public final class TableInfo {
+
     /**
-     * 实体类型不含@NoColunm 和@NoUpdate 注解的field
+     * 实体类型 不含@NoColunm 和@NoUpdate 注解的 field
      */
     public final Field[] canUpdateFields;
 
     /**
-     * 实体类型不含@NoColunm 和@NoInsert 注解的field
+     * 实体类型 不含@NoColunm 和@NoInsert 注解的 field
      */
     public final Field[] canInsertFields;
 
@@ -43,7 +44,7 @@ public final class TableInfo {
     public final String[] selectColumns;
 
     /**
-     * <p>Constructor for TableInfo.</p>
+     * c
      *
      * @param clazz a {@link java.lang.Class} object.
      */
@@ -74,7 +75,7 @@ public final class TableInfo {
     }
 
     private static String[] getSelectColumns(Field[] allFields) {
-        return Stream.of(allFields).filter(field -> ScxConfig.realDelete() || !"isDeleted".equals(field.getName())).map(field -> {
+        return Stream.of(allFields).filter(field -> ScxConfig.realDelete() || !"tombstone".equals(field.getName())).map(field -> {
             var underscore = StringUtils.camelToUnderscore(field.getName());
             return underscore.contains("_") ? underscore + " AS " + field.getName() : underscore;
         }).toArray(String[]::new);
@@ -90,4 +91,5 @@ public final class TableInfo {
         }
         return "scx_" + StringUtils.camelToUnderscore(clazz.getSimpleName());
     }
+
 }

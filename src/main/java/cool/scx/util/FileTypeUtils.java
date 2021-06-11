@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>FileTypeUtils class.</p>
+ * 文件类型工具类
  *
  * @author 司昌旭
  * @version 1.1.4

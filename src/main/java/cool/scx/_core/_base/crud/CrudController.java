@@ -225,10 +225,10 @@ public class CrudController {
     public Json checkUnique(String modelName, Map<String, Object> params) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, null, null, null, null, params);
-        if (param.queryObject.id != null) {
-            param.whereSql = "id != " + param.queryObject.id;
+        if (param.o.id != null) {
+            param.whereSql = "id != " + param.o.id;
         }
-        param.queryObject.id = null;
+        param.o.id = null;
         var b = baseService.count(param) == 0;
         return Json.ok().data("isUnique", b);
     }

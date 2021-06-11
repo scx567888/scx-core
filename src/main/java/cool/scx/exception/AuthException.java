@@ -1,7 +1,7 @@
 package cool.scx.exception;
 
 /**
- * <p>AuthException class.</p>
+ * 认证异常
  *
  * @author 司昌旭
  * @version 0.3.6

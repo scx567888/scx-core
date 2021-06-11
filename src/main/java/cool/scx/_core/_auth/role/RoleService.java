@@ -38,7 +38,7 @@ public class RoleService extends BaseService<Role> {
      */
     public List<Role> getRoleListByUser(User user) {
         var userRoleParam = new Param<>(new UserRole());
-        userRoleParam.queryObject.userId = user.id;
+        userRoleParam.o.userId = user.id;
         var collect = userRoleService.list(userRoleParam).stream().map(userRole -> userRole.roleId.toString()).collect(Collectors.joining(","));
         if (!"".equals(collect)) {
             var roleParam = new Param<>(new Role());
@@ -93,7 +93,7 @@ public class RoleService extends BaseService<Role> {
      */
     public void deleteByUserId(Long id) {
         var userDept = new Param<>(new UserRole());
-        userDept.queryObject.userId = id;
+        userDept.o.userId = id;
         userRoleService.delete(userDept);
     }
 
@@ -106,7 +106,7 @@ public class RoleService extends BaseService<Role> {
     public List<UserRole> findRoleByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {
             var userRole = new Param<>(new UserRole());
-            userRole.queryObject.userId = userId;
+            userRole.o.userId = userId;
             return userRoleService.list(userRole);
         }
         return new ArrayList<>();

@@ -9,7 +9,7 @@ import cool.scx.auth.AuthUser;
 import cool.scx.auth.ScxAuth;
 import cool.scx.bo.FileUpload;
 import cool.scx.context.ScxContext;
-import cool.scx.enumeration.Device;
+import cool.scx.enumeration.DeviceType;
 import cool.scx.exception.BadRequestException;
 import cool.scx.exception.HttpRequestException;
 import cool.scx.util.ObjectUtils;
@@ -154,6 +154,23 @@ class ScxMappingHandler implements Handler<RoutingContext> {
         return map;
     }
 
+    /**
+     * 异常处理器
+     *
+     * @param e 异常
+     */
+    private static void exceptionHandler(Throwable e, RoutingContext context) {
+        //如果是反射调用方法就使用 方法的内部异常 否则使用异常
+        Throwable exception = (e instanceof InvocationTargetException) ? e.getCause() : e;
+        //在此处进行对异常进行截获处理
+        if (exception instanceof HttpRequestException) {
+            ((HttpRequestException) exception).exceptionHandler(context);
+            context.end();
+            return;
+        }
+        Json.fail(Json.SYSTEM_ERROR, e.getMessage()).sendToClient(context);
+        e.printStackTrace();
+    }
 
     /**
      * 同时验证登录和权限
@@ -241,7 +258,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
                 finalHandlerParams[i] = ctx;
                 continue;
             }
-            if (nowType == Device.class) {
+            if (nowType == DeviceType.class) {
                 finalHandlerParams[i] = ScxAuth.getDevice(ctx);
                 continue;
             }
@@ -313,16 +330,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
         try {
             result = getResult(context);
         } catch (Exception e) {
-            //如果是反射调用方法就使用 方法的内部异常 否则使用异常
-            Throwable exception = (e instanceof InvocationTargetException) ? e.getCause() : e;
-            //在此处进行对异常进行截获处理
-            if (exception instanceof HttpRequestException) {
-                ((HttpRequestException) exception).exceptionHandler(context);
-                context.end();
-                return;
-            }
-            Json.fail(Json.SYSTEM_ERROR, e.getMessage()).sendToClient(context);
-            e.printStackTrace();
+            exceptionHandler(e, context);
             return;
         }
         if (result instanceof String || result instanceof Integer || result instanceof Double || result instanceof Boolean) {
@@ -334,8 +342,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
             try {
                 ((BaseVo) result).sendToClient(context);
             } catch (Exception e) {
-                //此处暂时未对异常进行处理
-                e.printStackTrace();
+                exceptionHandler(e, context);
             }
             return;
         }

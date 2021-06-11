@@ -18,7 +18,7 @@ import cool.scx.auth.exception.WrongPasswordException;
 import cool.scx.bo.Param;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.enumeration.Device;
+import cool.scx.enumeration.DeviceType;
 import cool.scx.enumeration.SortType;
 import cool.scx.exception.AuthException;
 import cool.scx.util.Ansi;
@@ -110,7 +110,9 @@ public class CoreAuthHandler implements AuthHandler {
      * @return a {@link cool.scx.vo.Json} object
      */
     public Json logout() {
-        var b = ScxAuth.removeAuthUser();
+        var ctx = ScxContext.routingContext();
+        var b = ScxAuth.removeAuthUser(ctx);
+        Ansi.OUT.print("当前总登录用户数量 : " + ScxAuth.getAllLoginItem().size() + " 个").ln();
         if (b) {
             return Json.ok("User Logged Out");
         } else {
@@ -150,14 +152,14 @@ public class CoreAuthHandler implements AuthHandler {
      */
     public Json signup(String username, String password) {
         var newUser = new Param<>(new User());
-        newUser.addOrderBy("id", SortType.ASC).queryObject.username = username;
+        newUser.addOrderBy("id", SortType.ASC).o.username = username;
         User user = userService.get(newUser);
         if (user != null) {
             return Json.ok("userAlreadyExists");
         } else {
-            newUser.queryObject.isAdmin = false;
-            newUser.queryObject.password = password;
-            registeredUser(newUser.queryObject);
+            newUser.o.isAdmin = false;
+            newUser.o.password = password;
+            registeredUser(newUser.o);
             return Json.ok("registerSuccess");
         }
     }
@@ -293,7 +295,8 @@ public class CoreAuthHandler implements AuthHandler {
             var token = ScxAuth.addAuthUser(ctx, loginUser);
             //这里根据登录设备向客户端返回不同的信息
             var loginDevice = ScxAuth.getDevice(ScxContext.routingContext());
-            if (loginDevice == Device.WEBSITE) {
+            Ansi.OUT.print(loginUser.username + " 登录了 , 登录设备 [" + loginDevice + "] , 当前总登录用户数量 : " + ScxAuth.getAllLoginItem().size() + " 个").ln();
+            if (loginDevice == DeviceType.WEBSITE) {
                 return Json.ok("login-successful");
             } else {
                 return Json.ok().data("token", token);

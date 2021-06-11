@@ -10,6 +10,7 @@ import io.vertx.ext.web.RoutingContext;
  * @version 0.5.0
  */
 public interface BaseVo {
+
     /**
      * 向客户端发送相应的方法
      *
@@ -17,4 +18,5 @@ public interface BaseVo {
      * @throws java.lang.Exception if any.
      */
     void sendToClient(RoutingContext context) throws Exception;
+
 }

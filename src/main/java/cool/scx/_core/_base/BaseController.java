@@ -134,7 +134,7 @@ public class BaseController {
     @ScxMapping(value = "/download/:fileId", method = {Method.GET, Method.HEAD})
     public Download download(String fileId) throws HttpRequestException {
         var param = new Param<>(new UploadFile());
-        param.queryObject.fileId = fileId;
+        param.o.fileId = fileId;
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
@@ -158,7 +158,7 @@ public class BaseController {
     @ScxMapping(value = "/binary/:fileId", method = {Method.GET, Method.HEAD})
     public Binary binary(String fileId) throws HttpRequestException {
         var param = new Param<>(new UploadFile());
-        param.queryObject.fileId = fileId;
+        param.o.fileId = fileId;
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
@@ -205,7 +205,7 @@ public class BaseController {
                          @FromQuery(value = "h", required = false) Integer height,
                          @FromQuery(value = "t", required = false) String type) throws HttpRequestException {
         var param = new Param<>(new UploadFile());
-        param.queryObject.fileId = fileId;
+        param.o.fileId = fileId;
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
@@ -313,13 +313,13 @@ public class BaseController {
     public Json deleteFile(String fileId) {
         //先获取文件的基本信息
         var param = new Param<>(new UploadFile());
-        param.queryObject.fileId = fileId;
+        param.o.fileId = fileId;
         UploadFile needDeleteFile = uploadFileService.get(param);
 
         if (needDeleteFile != null) {
             //判断文件是否被其他人引用过
             var param1 = new Param<>(new UploadFile());
-            param1.queryObject.fileMD5 = needDeleteFile.fileMD5;
+            param1.o.fileMD5 = needDeleteFile.fileMD5;
             Integer count = uploadFileService.count(param1);
 
             //没有被其他人引用过 可以删除物理文件

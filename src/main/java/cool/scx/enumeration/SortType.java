@@ -1,7 +1,7 @@
 package cool.scx.enumeration;
 
 /**
- * <p>SortType class.</p>
+ * 排序类型
  *
  * @author 司昌旭
  * @version 0.3.6

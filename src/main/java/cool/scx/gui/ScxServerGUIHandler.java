@@ -8,7 +8,7 @@ import cool.scx.web.ScxServer;
 import javax.swing.*;
 
 /**
- * <p>ScxServerExceptionHandler class.</p>
+ * ScxServerGUIHandler
  *
  * @author 司昌旭
  * @version 1.0.8

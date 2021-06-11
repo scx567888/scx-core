@@ -3,8 +3,8 @@ package cool.scx.gui;
 import javax.swing.*;
 
 /**
- * 基本 GUI 父类
- * 此处只做 UI 框架的初始化
+ * GUI 模块 的父类
+ * 只用作 UI 框架的初始化
  *
  * @author 司昌旭
  * @version 1.0.10

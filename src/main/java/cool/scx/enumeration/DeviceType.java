@@ -1,12 +1,13 @@
 package cool.scx.enumeration;
 
 /**
- * 登录设备
+ * 登录设备类型
  *
  * @author 司昌旭
  * @version 1.0.2
  */
-public enum Device {
+public enum DeviceType {
+
     ANDROID("ANDROID"),
     APPLE("APPLE"),
     ADMIN("ADMIN"),
@@ -15,7 +16,7 @@ public enum Device {
 
     private final String device_str;
 
-    Device(String device_str) {
+    DeviceType(String device_str) {
         this.device_str = device_str;
     }
 

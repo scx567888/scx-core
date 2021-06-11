@@ -1,7 +1,7 @@
 package cool.scx.enumeration;
 
 /**
- * <p>SQLType class.</p>
+ * sql 类型
  *
  * @author 司昌旭
  * @version 1.0.10

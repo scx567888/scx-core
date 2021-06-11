@@ -38,10 +38,14 @@ public final class Scx {
     }
 
     /**
-     * <p>setTimer.</p>
+     * 设置计时器
+     * <p>
+     * 本质上时内部调用 netty 的线程池完成
+     * <p>
+     * 因为java无法做到特别精确的计时所以此处单位采取 毫秒
      *
-     * @param pauseTime a long
-     * @param runnable  a {@link java.lang.Runnable} object
+     * @param pauseTime 延时执行的时间  单位毫秒
+     * @param runnable  执行的事件
      */
     public static void setTimer(long pauseTime, Runnable runnable) {
         GLOBAL_VERTX.nettyEventLoopGroup().schedule(runnable, pauseTime, TimeUnit.MILLISECONDS);

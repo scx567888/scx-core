@@ -2,7 +2,7 @@ package cool.scx.auth;
 
 import cool.scx.auth.exception.UnknownDeviceException;
 import cool.scx.context.ScxContext;
-import cool.scx.enumeration.Device;
+import cool.scx.enumeration.DeviceType;
 import cool.scx.exception.AuthException;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * <p>ScxAuth class.</p>
+ * 提供基本的认证逻辑
+ * todo 这里面的大部分方法逻辑有问题 需要修改
  *
  * @author 司昌旭
  * @version 1.1.4
@@ -22,12 +23,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class ScxAuth {
 
     /**
-     * Constant <code>TOKEN_KEY="S-Token"</code>
+     * 获取 token 的标识字段
      */
     public static final String TOKEN_KEY = "S-Token";
 
     /**
-     * Constant <code>DEVICE_KEY="S-Device"</code>
+     * 获取 设备 的标识字段
      */
     public static final String DEVICE_KEY = "S-Device";
 
@@ -40,12 +41,12 @@ public final class ScxAuth {
     private static final List<LoginItem> LOGIN_ITEMS = new ArrayList<>();
 
     /**
-     * userService 实例 主要用来 获取登录用户的 权限等信息
+     * AuthHandler 实例 主要用来 获取登录用户的 权限等信息
      */
     private static AuthHandler AUTH_HANDLER;
 
     /**
-     * <p>authHandler.</p>
+     * 获取 AuthHandler
      *
      * @return a {@link cool.scx.auth.AuthHandler} object
      */
@@ -54,20 +55,30 @@ public final class ScxAuth {
     }
 
     /**
-     * <p>logoutUser.</p>
+     * 移除认证用户
+     *
+     * @return a boolean.
+     */
+    public static boolean removeAuthUser(RoutingContext ctx) {
+        String token = getTokenByDevice(ctx);
+        return LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
+    }
+
+    /**
+     * 移除认证用户
+     * <p>
+     * 使用默认的 路由上下文
      *
      * @return a boolean.
      */
     public static boolean removeAuthUser() {
         var ctx = ScxContext.routingContext();
         String token = getTokenByDevice(ctx);
-        boolean b = LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
-        Ansi.OUT.print("当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
-        return b;
+        return LOGIN_ITEMS.removeIf(i -> i.token.equals(token));
     }
 
     /**
-     * <p>addUserToSession.</p>
+     * 添加用户到 登录列表中
      *
      * @param ctx      a {@link io.vertx.ext.web.RoutingContext} object
      * @param authUser a {@link cool.scx.auth.AuthUser} object
@@ -79,41 +90,51 @@ public final class ScxAuth {
         var loginDevice = getDevice(ctx);
         var uniqueID = authUser._UniqueID();
         //先判断登录用户的来源
-        if (loginDevice == Device.ADMIN || loginDevice == Device.APPLE || loginDevice == Device.ANDROID) {
+        if (loginDevice == DeviceType.ADMIN || loginDevice == DeviceType.APPLE || loginDevice == DeviceType.ANDROID) {
             token = StringUtils.getUUID();
-        } else if (loginDevice == Device.WEBSITE) {
+        } else if (loginDevice == DeviceType.WEBSITE) {
             token = getTokenByCookie(ctx);
         } else {
             throw new UnknownDeviceException();
         }
         var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.uniqueID.equals(uniqueID) && loginDevice == u.loginDevice).findAny().orElse(null);
         if (sessionItem == null) {
-            LOGIN_ITEMS.add(new LoginItem(loginDevice, token, uniqueID));
+            LOGIN_ITEMS.add(new LoginItem(token, uniqueID, loginDevice));
         } else {
             sessionItem.token = token;
         }
-        Ansi.OUT.print(uniqueID + " 登录了 , 登录设备 [" + loginDevice + "] , 当前总登录用户数量 : " + LOGIN_ITEMS.size() + " 个").ln();
         return token;
     }
 
     /**
-     * <p>getUserFromSessionByToken.</p>
+     * 根据 token 获取用户
      *
      * @param token  a {@link java.lang.String} object.
-     * @param device a {@link cool.scx.enumeration.Device} object.
+     * @param device a {@link DeviceType} object.
      * @return a {@link cool.scx.auth.AuthUser} object.
      */
-    public static AuthUser getLoginUserByToken(Device device, String token) {
+    public static AuthUser getLoginUserByToken(DeviceType device, String token) {
         var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token) && u.loginDevice == device).findAny().orElse(null);
         if (sessionItem == null) {
             return null;
         }
-        //每次都从数据库中获取用户 保证 权限设置的及时性 但是为了 性能 此处应该做缓存 todo
+        //todo  这里每次都从数据库中获取用户是为了保证权限设置的及时性 但是为了 性能 此处应该做一个缓存
         return AUTH_HANDLER.getAuthUser(sessionItem.uniqueID);
     }
 
     /**
-     * <p>getLoginUserByHeader.</p>
+     * 获取用户
+     *
+     * @return a {@link cool.scx.auth.AuthUser} object.
+     */
+    public static AuthUser getLoginUser(RoutingContext ctx) {
+        return getLoginUserByToken(getDevice(ctx), getTokenByDevice(ctx));
+    }
+
+    /**
+     * 获取用户
+     * <p>
+     * 使用默认的路由上下文
      *
      * @return a {@link cool.scx.auth.AuthUser} object.
      */
@@ -123,27 +144,32 @@ public final class ScxAuth {
     }
 
     /**
-     * <p>getDevice.</p>
+     * 获取用户的设备
      *
      * @param routingContext a {@link io.vertx.ext.web.RoutingContext} object
-     * @return a {@link cool.scx.enumeration.Device} object
+     * @return a {@link DeviceType} object
      */
-    public static Device getDevice(RoutingContext routingContext) {
+    public static DeviceType getDevice(RoutingContext routingContext) {
         String device = routingContext.request().getHeader(DEVICE_KEY);
         if (device == null || device.equalsIgnoreCase("WEBSITE")) {
-            return Device.WEBSITE;
+            return DeviceType.WEBSITE;
         }
         if (device.equalsIgnoreCase("APPLE")) {
-            return Device.APPLE;
+            return DeviceType.APPLE;
         }
         if (device.equalsIgnoreCase("ADMIN")) {
-            return Device.ADMIN;
+            return DeviceType.ADMIN;
         }
         if (device.equalsIgnoreCase("ANDROID")) {
-            return Device.ANDROID;
+            return DeviceType.ANDROID;
         } else {
-            return Device.UNKNOWN;
+            return DeviceType.UNKNOWN;
         }
+    }
+
+    public static DeviceType getDevice() {
+        var ctx = ScxContext.routingContext();
+        return getDevice(ctx);
     }
 
     /**
@@ -230,4 +256,16 @@ public final class ScxAuth {
         return ScxContext.getBean(authHandlerImplClass.get());
 
     }
+
+    /**
+     * 直接添加一个 loginItem
+     * <p>
+     * 注意此方法可能有安全性问题
+     * <p>
+     * 不建议用户使用
+     */
+    public static void addLoginItem(LoginItem loginItem) {
+        LOGIN_ITEMS.add(loginItem);
+    }
+
 }

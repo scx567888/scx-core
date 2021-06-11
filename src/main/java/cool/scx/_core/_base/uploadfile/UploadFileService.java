@@ -21,7 +21,7 @@ public class UploadFileService extends BaseService<UploadFile> {
      */
     public UploadFile findFileByMd5(String fileMD5) {
         var p = new Param<>(new UploadFile()).addOrderBy("uploadTime", SortType.DESC);
-        p.queryObject.fileMD5 = fileMD5;
+        p.o.fileMD5 = fileMD5;
         return get(p);
     }
 

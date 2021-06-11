@@ -21,7 +21,7 @@ public final class UpdateResult {
     public final List<Long> generatedKeys;
 
     /**
-     * <p>Constructor for UpdateResult.</p>
+     * c
      *
      * @param affectedLength a {@link java.lang.Integer} object.
      * @param generatedKeys  a {@link java.util.List} object.
@@ -30,4 +30,5 @@ public final class UpdateResult {
         this.affectedLength = affectedLength;
         this.generatedKeys = generatedKeys;
     }
+
 }
