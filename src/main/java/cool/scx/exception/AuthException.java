@@ -7,5 +7,8 @@ package cool.scx.exception;
  * @version 0.3.6
  */
 public class AuthException extends Exception {
-
+    @Override
+    public String getMessage() {
+        return "AuthException";
+    }
 }

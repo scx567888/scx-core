@@ -9,10 +9,7 @@ import cool.scx.util.FileTypeUtils;
 import cool.scx.util.HttpUtils;
 import cool.scx.util.MD5Utils;
 import cool.scx.util.StringUtils;
-import cool.scx.vo.BaseVo;
-import cool.scx.vo.Binary;
-import cool.scx.vo.Download;
-import cool.scx.vo.Html;
+import cool.scx.vo.*;
 
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
@@ -126,6 +123,15 @@ public class TestController {
     @ScxMapping(value = "/random-code", method = Method.GET)
     public String getRandomCode() {
         return StringUtils.getRandomCode(9999, true);
+    }
+
+    /**
+     * 测试!!!
+     */
+    @ScxMapping(value = "/big-json", method = Method.GET)
+    public BaseVo bigJson() throws Exception {
+        var users = userService.listAll();
+        return Json.ok().items(users);
     }
 
 }

@@ -15,7 +15,6 @@ import cool.scx.exception.HttpRequestException;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.BaseVo;
-import cool.scx.vo.Json;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpMethod;
@@ -159,7 +158,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
      *
      * @param e 异常
      */
-    private static void exceptionHandler(Throwable e, RoutingContext context) {
+    private static void exceptionHandler0(Throwable e, RoutingContext context) {
         //如果是反射调用方法就使用 方法的内部异常 否则使用异常
         Throwable exception = (e instanceof InvocationTargetException) ? e.getCause() : e;
         //在此处进行对异常进行截获处理
@@ -168,7 +167,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
             context.end();
             return;
         }
-        Json.fail(Json.SYSTEM_ERROR, e.getMessage()).sendToClient(context);
+        context.response().setStatusCode(500).end(exception.getMessage());
         e.printStackTrace();
     }
 
@@ -330,7 +329,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
         try {
             result = getResult(context);
         } catch (Exception e) {
-            exceptionHandler(e, context);
+            exceptionHandler0(e, context);
             return;
         }
         if (result instanceof String || result instanceof Integer || result instanceof Double || result instanceof Boolean) {
@@ -342,7 +341,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
             try {
                 ((BaseVo) result).sendToClient(context);
             } catch (Exception e) {
-                exceptionHandler(e, context);
+                exceptionHandler0(e, context);
             }
             return;
         }
