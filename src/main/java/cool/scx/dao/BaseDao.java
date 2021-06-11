@@ -196,6 +196,11 @@ public final class BaseDao<Entity extends BaseModel> {
         }
     }
 
+    /**
+     * <p>table.</p>
+     *
+     * @return a {@link cool.scx.bo.TableInfo} object
+     */
     public TableInfo table() {
         return table;
     }

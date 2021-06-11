@@ -57,6 +57,7 @@ public final class ScxAuth {
     /**
      * 移除认证用户
      *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object
      * @return a boolean.
      */
     public static boolean removeAuthUser(RoutingContext ctx) {
@@ -110,7 +111,7 @@ public final class ScxAuth {
      * 根据 token 获取用户
      *
      * @param token  a {@link java.lang.String} object.
-     * @param device a {@link DeviceType} object.
+     * @param device a {@link cool.scx.enumeration.DeviceType} object.
      * @return a {@link cool.scx.auth.AuthUser} object.
      */
     public static AuthUser getLoginUserByToken(DeviceType device, String token) {
@@ -125,6 +126,7 @@ public final class ScxAuth {
     /**
      * 获取用户
      *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object
      * @return a {@link cool.scx.auth.AuthUser} object.
      */
     public static AuthUser getLoginUser(RoutingContext ctx) {
@@ -147,7 +149,7 @@ public final class ScxAuth {
      * 获取用户的设备
      *
      * @param routingContext a {@link io.vertx.ext.web.RoutingContext} object
-     * @return a {@link DeviceType} object
+     * @return a {@link cool.scx.enumeration.DeviceType} object
      */
     public static DeviceType getDevice(RoutingContext routingContext) {
         String device = routingContext.request().getHeader(DEVICE_KEY);
@@ -167,6 +169,11 @@ public final class ScxAuth {
         }
     }
 
+    /**
+     * <p>getDevice.</p>
+     *
+     * @return a {@link cool.scx.enumeration.DeviceType} object
+     */
     public static DeviceType getDevice() {
         var ctx = ScxContext.routingContext();
         return getDevice(ctx);
@@ -258,11 +265,13 @@ public final class ScxAuth {
     }
 
     /**
-     * 直接添加一个 loginItem
+     * (内部方法) 直接添加一个 loginItem
      * <p>
      * 注意此方法可能有安全性问题
      * <p>
      * 不建议用户使用
+     *
+     * @param loginItem a {@link cool.scx.auth.LoginItem} object
      */
     public static void addLoginItem(LoginItem loginItem) {
         LOGIN_ITEMS.add(loginItem);

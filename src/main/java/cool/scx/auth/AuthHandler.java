@@ -20,7 +20,7 @@ public interface AuthHandler {
      * 未登录 handler
      *
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
-     * @param device  a {@link DeviceType} object.
+     * @param device  a {@link cool.scx.enumeration.DeviceType} object.
      */
     default void noLoginHandler(DeviceType device, RoutingContext context) {
         Ansi.OUT.red("未登录").ln();
@@ -39,7 +39,7 @@ public interface AuthHandler {
      * 无权限 handler
      *
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
-     * @param device  a {@link DeviceType} object.
+     * @param device  a {@link cool.scx.enumeration.DeviceType} object.
      */
     default void noPermsHandler(DeviceType device, RoutingContext context) {
         Ansi.OUT.red("没有权限").ln();
