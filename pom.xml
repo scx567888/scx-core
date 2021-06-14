@@ -254,7 +254,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.0</version>
                 <!-- 复制所需依赖的 jar 包到 lib 文件夹下 , 部署时如果有新增的依赖项记得更新部署项目的 lib 文件夹 -->
                 <configuration>
                     <outputDirectory>${project.build.directory}/lib</outputDirectory>
