@@ -260,8 +260,6 @@
                     <outputDirectory>${project.build.directory}/lib</outputDirectory>
                     <!-- 只包含运行依赖项 -->
                     <includeScope>compile</includeScope>
-                    <!-- 排除 test 依赖 -->
-                    <excludeScope>test</excludeScope>
                 </configuration>
             </plugin>
 
