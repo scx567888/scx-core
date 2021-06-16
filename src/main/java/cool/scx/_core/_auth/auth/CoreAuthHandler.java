@@ -70,6 +70,7 @@ public class CoreAuthHandler implements AuthHandler {
      * info
      *
      * @return a {@link cool.scx.vo.Json} object
+     * @throws cool.scx.exception.UnauthorizedException if any.
      */
     public Json info() throws UnauthorizedException {
         var user = (User) ScxAuth.getLoginUser();

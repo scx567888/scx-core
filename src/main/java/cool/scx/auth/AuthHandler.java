@@ -20,6 +20,7 @@ public interface AuthHandler {
      *
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
      * @param device  a {@link cool.scx.enumeration.DeviceType} object.
+     * @throws java.lang.Exception if any.
      */
     default void noLoginHandler(DeviceType device, RoutingContext context) throws Exception {
         throw new UnauthorizedException();
@@ -30,6 +31,7 @@ public interface AuthHandler {
      *
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
      * @param device  a {@link cool.scx.enumeration.DeviceType} object.
+     * @throws java.lang.Exception if any.
      */
     default void noPermsHandler(DeviceType device, RoutingContext context) throws Exception {
         throw new NoPermException();

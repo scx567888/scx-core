@@ -4,9 +4,15 @@ import io.vertx.ext.web.RoutingContext;
 
 /**
  * 未认证异常 (未登录)
+ *
+ * @author 司昌旭
+ * @version 1.1.19
  */
 public class UnauthorizedException extends HttpRequestException {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void exceptionHandler(RoutingContext ctx) {
         ctx.response().setStatusCode(401).send("Unauthorized !!!");

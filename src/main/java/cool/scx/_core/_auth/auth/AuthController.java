@@ -72,6 +72,7 @@ public class AuthController {
      * 拉取当前登录用户的信息 (包括权限)
      *
      * @return Json
+     * @throws cool.scx.exception.UnauthorizedException if any.
      */
     @ScxMapping(method = Method.GET)
     public Json info() throws UnauthorizedException {
