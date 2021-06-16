@@ -239,7 +239,7 @@ public class BaseController {
                     var save = uploadFileService.save(copyUploadFile(fileName, fileByMd5));
                     //有可能有之前的残留临时文件 再次一并清楚
                     FileUtils.deleteFiles(Path.of(uploadTempFile).getParent());
-                    return Json.ok().data("type", "alreadyExists").items(save);
+                    return Json.ok().put("type", "alreadyExists").items(save);
                 }
             }
         }
@@ -257,7 +257,7 @@ public class BaseController {
             if (!fileMD5.equalsIgnoreCase(serverMd5Str)) {
                 //md5 不相同 说明临时文件可能损坏 删除临时文件
                 FileUtils.deleteFiles(Path.of(uploadTempFile).getParent());
-                return Json.ok().data("type", "uploadFail");
+                return Json.ok().put("type", "uploadFail");
             }
             //讲临时文件移动并重命名到 真实的存储路径
             var renameSuccess = FileUtils.fileMove(uploadTempFile, fileStoragePath);
@@ -268,19 +268,19 @@ public class BaseController {
                 //存储到数据库
                 var save = uploadFileService.save(uploadFile);
                 //像前台发送上传成功的消息
-                return Json.ok().data("type", "uploadSuccess").items(save);
+                return Json.ok().put("type", "uploadSuccess").items(save);
             } else {
                 //移动失败 返回上传失败的信息
-                return Json.ok().data("type", "uploadFail");
+                return Json.ok().put("type", "uploadFail");
             }
         } else {
             var lastUploadChunk = getLastUploadChunk(uploadConfigFile, chunkLength);
             if (nowChunkIndex - lastUploadChunk == 1) {
                 FileUtils.fileAppend(uploadTempFile, fileData.buffer.getBytes());
                 changeLastUploadChunk(uploadConfigFile, nowChunkIndex, chunkLength);
-                return Json.ok().data("type", "needMore").items(nowChunkIndex);
+                return Json.ok().put("type", "needMore").items(nowChunkIndex);
             } else {
-                return Json.ok().data("type", "needMore").items(lastUploadChunk);
+                return Json.ok().put("type", "needMore").items(lastUploadChunk);
             }
         }
     }
@@ -329,7 +329,7 @@ public class BaseController {
                 if (file.exists()) {
                     boolean b = FileUtils.deleteFiles(Path.of(BaseConfig.uploadFilePath() + "\\" + needDeleteFile.filePath).getParent());
                     if (!b) {
-                        return Json.ok("deleteFail");
+                        return Json.message("deleteFail");
                     }
                 }
             }
@@ -337,7 +337,7 @@ public class BaseController {
             uploadFileService.deleteByIds(needDeleteFile.id);
         }
 
-        return Json.ok("deleteSuccess");
+        return Json.message("deleteSuccess");
     }
 
 }

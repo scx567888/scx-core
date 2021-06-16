@@ -18,34 +18,9 @@ import java.util.Map;
 public final class Json implements BaseVo {
 
     /**
-     * 成功的 code
-     */
-    public static final int SUCCESS_CODE = 20;
-
-    /**
-     * 失败的 code
-     */
-    public static final int FAIL_CODE = -1;
-
-    /**
-     * 非法的令牌 或 令牌已失效 code
-     */
-    public static final int ILLEGAL_TOKEN = 41;
-
-    /**
-     * 没有权限
-     */
-    public static final int NO_PERMISSION = 43;
-
-    /**
-     * 后台系统错误
-     */
-    public static final int SYSTEM_ERROR = 50;
-
-    /**
      * 内部结构
      */
-    private final Map<String, Object> jsonMap = new HashMap<>();
+    private final JsonBody jsonBody = new JsonBody();
 
     /**
      * 无参构造
@@ -56,12 +31,10 @@ public final class Json implements BaseVo {
     /**
      * 全参构造
      *
-     * @param code    代码
      * @param message 消息
      */
-    private Json(int code, String message) {
-        jsonMap.put("code", code);
-        jsonMap.put("message", message);
+    private Json(String message) {
+        jsonBody.message = message;
     }
 
     /**
@@ -79,7 +52,16 @@ public final class Json implements BaseVo {
      * @return a {@link cool.scx.vo.Json} object.
      */
     public static Json ok() {
-        return new Json(SUCCESS_CODE, "ok");
+        return new Json("ok");
+    }
+
+    /**
+     * 普通错误
+     *
+     * @return json
+     */
+    public static Json fail() {
+        return new Json("fail");
     }
 
     /**
@@ -88,31 +70,9 @@ public final class Json implements BaseVo {
      * @param message 自定义的成功信息
      * @return json
      */
-    public static Json ok(String message) {
-        return new Json(SUCCESS_CODE, message);
+    public static Json message(String message) {
+        return new Json(message);
     }
-
-    /**
-     * 普通错误
-     *
-     * @param message 返回错误信息
-     * @return json
-     */
-    public static Json fail(String message) {
-        return new Json(FAIL_CODE, message);
-    }
-
-    /**
-     * 自定义 code 码
-     *
-     * @param code    自定义的 code 码
-     * @param message 消息
-     * @return json
-     */
-    public static Json fail(int code, String message) {
-        return new Json(code, message);
-    }
-
 
     /**
      * 设置操作返回的数据，数据使用自定义的key存储
@@ -121,8 +81,8 @@ public final class Json implements BaseVo {
      * @param dataVal 值
      * @return json
      */
-    public Json data(String dataKey, Object dataVal) {
-        jsonMap.put(dataKey, dataVal);
+    public Json put(String dataKey, Object dataVal) {
+        jsonBody.data.put(dataKey, dataVal);
         return this;
     }
 
@@ -134,7 +94,7 @@ public final class Json implements BaseVo {
      * @return json
      */
     public Json items(Object dataVal) {
-        jsonMap.put("items", dataVal);
+        jsonBody.data.put("items", dataVal);
         return this;
     }
 
@@ -146,8 +106,8 @@ public final class Json implements BaseVo {
      * @return json
      */
     public Json tables(Object items, Integer total) {
-        jsonMap.put("items", items);
-        jsonMap.put("total", total);
+        jsonBody.data.put("items", items);
+        jsonBody.data.put("total", total);
         return this;
     }
 
@@ -160,7 +120,7 @@ public final class Json implements BaseVo {
     public void sendToClient(RoutingContext context) {
         var response = context.response();
         response.putHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8");
-        response.end(Buffer.buffer(ObjectUtils.beanToByteArrayUseAnnotations(jsonMap)));
+        response.end(Buffer.buffer(ObjectUtils.beanToByteArrayUseAnnotations(jsonBody)));
     }
 
     /**
@@ -170,6 +130,12 @@ public final class Json implements BaseVo {
      */
     @Override
     public String toString() {
-        return ObjectUtils.beanToJsonUseAnnotations(jsonMap);
+        return ObjectUtils.beanToJsonUseAnnotations(jsonBody);
     }
+
+    private static class JsonBody {
+        public final Map<String, Object> data = new HashMap<>();
+        public String message;
+    }
+
 }

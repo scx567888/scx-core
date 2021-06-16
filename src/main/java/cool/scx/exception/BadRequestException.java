@@ -38,7 +38,7 @@ public class BadRequestException extends HttpRequestException {
             ctx.response().setStatusCode(400).send("Bad Request !!!");
         } else {
             ctx.response().setStatusCode(400);
-            Json.empty().data("error", "Request Parameter Wrong !!!").data("message", throwable.getMessage()).sendToClient(ctx);
+            Json.empty().put("error", "Request Parameter Wrong !!!").put("err-message", throwable.getMessage()).sendToClient(ctx);
         }
     }
 }

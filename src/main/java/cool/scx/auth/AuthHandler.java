@@ -1,9 +1,8 @@
 package cool.scx.auth;
 
 import cool.scx.enumeration.DeviceType;
-import cool.scx.util.Ansi;
-import cool.scx.vo.Html;
-import cool.scx.vo.Json;
+import cool.scx.exception.NoPermException;
+import cool.scx.exception.UnauthorizedException;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.HashSet;
@@ -22,17 +21,8 @@ public interface AuthHandler {
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
      * @param device  a {@link cool.scx.enumeration.DeviceType} object.
      */
-    default void noLoginHandler(DeviceType device, RoutingContext context) {
-        Ansi.OUT.red("未登录").ln();
-        if (device == DeviceType.ADMIN) {
-            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
-        } else if (device == DeviceType.ANDROID) {
-            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
-        } else if (device == DeviceType.APPLE) {
-            Json.fail(Json.ILLEGAL_TOKEN, "未登录").sendToClient(context);
-        } else if (device == DeviceType.WEBSITE) {
-            Html.ofString("未登录").sendToClient(context);
-        }
+    default void noLoginHandler(DeviceType device, RoutingContext context) throws Exception {
+        throw new UnauthorizedException();
     }
 
     /**
@@ -41,17 +31,8 @@ public interface AuthHandler {
      * @param context a {@link io.vertx.ext.web.RoutingContext} object.
      * @param device  a {@link cool.scx.enumeration.DeviceType} object.
      */
-    default void noPermsHandler(DeviceType device, RoutingContext context) {
-        Ansi.OUT.red("没有权限").ln();
-        if (device == DeviceType.ADMIN) {
-            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
-        } else if (device == DeviceType.ANDROID) {
-            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
-        } else if (device == DeviceType.APPLE) {
-            Json.fail(Json.NO_PERMISSION, "没有权限").sendToClient(context);
-        } else if (device == DeviceType.WEBSITE) {
-            Html.ofString("没有权限").sendToClient(context);
-        }
+    default void noPermsHandler(DeviceType device, RoutingContext context) throws Exception {
+        throw new NoPermException();
     }
 
     /**

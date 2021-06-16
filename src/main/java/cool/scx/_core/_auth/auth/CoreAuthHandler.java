@@ -21,6 +21,7 @@ import cool.scx.context.ScxContext;
 import cool.scx.enumeration.DeviceType;
 import cool.scx.enumeration.SortType;
 import cool.scx.exception.AuthException;
+import cool.scx.exception.UnauthorizedException;
 import cool.scx.util.Ansi;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ObjectUtils;
@@ -70,20 +71,20 @@ public class CoreAuthHandler implements AuthHandler {
      *
      * @return a {@link cool.scx.vo.Json} object
      */
-    public Json info() {
+    public Json info() throws UnauthorizedException {
         var user = (User) ScxAuth.getLoginUser();
         //从session取出用户信息
         if (user == null) {
-            return Json.fail(Json.ILLEGAL_TOKEN, "登录已失效");
+            throw new UnauthorizedException();
         } else {
             //返回登录用户的信息给前台 含用户的所有角色和权限
             return Json.ok()
-                    .data("id", user.id)
-                    .data("username", user.username)
-                    .data("nickName", user.nickName)
-                    .data("avatar", user.avatar)
-                    .data("perms", getPerms(user))
-                    .data("realDelete", ScxConfig.realDelete());
+                    .put("id", user.id)
+                    .put("username", user.username)
+                    .put("nickName", user.nickName)
+                    .put("avatar", user.avatar)
+                    .put("perms", getPerms(user))
+                    .put("realDelete", ScxConfig.realDelete());
         }
     }
 
@@ -101,7 +102,7 @@ public class CoreAuthHandler implements AuthHandler {
         currentUser.salt = null;
         var b = updateUserPassword(currentUser) != null;
         Ansi.OUT.print("更新了自己的信息 用户名是 :" + currentUser.username).ln();
-        return Json.ok().data("success", b);
+        return b ? Json.ok() : Json.fail();
     }
 
     /**
@@ -113,11 +114,7 @@ public class CoreAuthHandler implements AuthHandler {
         var ctx = ScxContext.routingContext();
         var b = ScxAuth.removeAuthUser(ctx);
         Ansi.OUT.print("当前总登录用户数量 : " + ScxAuth.getAllLoginItem().size() + " 个").ln();
-        if (b) {
-            return Json.ok("User Logged Out");
-        } else {
-            return Json.fail("User Logged Out Fail");
-        }
+        return b ? Json.ok() : Json.fail();
     }
 
     /**
@@ -128,18 +125,18 @@ public class CoreAuthHandler implements AuthHandler {
      */
     public Json authExceptionHandler(AuthException e) {
         if (e instanceof UnknownDeviceException) {
-            return Json.fail("未知设备");
+            return Json.message("未知设备");
         } else if (e instanceof UnknownUserException) {
-            return Json.fail(AuthConfig.confusionLoginError() ? "usernameOrPasswordError" : "userNotFound");
+            return Json.message(AuthConfig.confusionLoginError() ? "usernameOrPasswordError" : "userNotFound");
         } else if (e instanceof WrongPasswordException) {
             //这里和用户密码错误   可以使用相同的 提示信息 防止恶意破解
-            return Json.fail(AuthConfig.confusionLoginError() ? "usernameOrPasswordError" : "passwordError");
+            return Json.message(AuthConfig.confusionLoginError() ? "usernameOrPasswordError" : "passwordError");
         } else if (e instanceof TooManyErrorsException) {
             //密码错误次数过多
-            return Json.fail("tooManyErrors").data("remainingTime", ((TooManyErrorsException) e).remainingTime);
+            return Json.message("tooManyErrors").put("remainingTime", ((TooManyErrorsException) e).remainingTime);
         } else {
             Ansi.OUT.print("登录出错 : " + e.getMessage()).ln();
-            return Json.fail("logonFailure");
+            return Json.message("logonFailure");
         }
     }
 
@@ -155,12 +152,12 @@ public class CoreAuthHandler implements AuthHandler {
         newUser.addOrderBy("id", SortType.ASC).o.username = username;
         User user = userService.get(newUser);
         if (user != null) {
-            return Json.ok("userAlreadyExists");
+            return Json.message("userAlreadyExists");
         } else {
             newUser.o.isAdmin = false;
             newUser.o.password = password;
             registeredUser(newUser.o);
-            return Json.ok("registerSuccess");
+            return Json.message("registerSuccess");
         }
     }
 
@@ -284,12 +281,12 @@ public class CoreAuthHandler implements AuthHandler {
     public Json login(String username, String password, RoutingContext ctx) {
         try {
             if (AuthModuleOption.loginUseLicense() && !licenseService.passLicense()) {
-                return Json.fail(Json.FAIL_CODE, "licenseError");
+                return Json.message("licenseError");
             }
             if (StringUtils.isEmpty(username)) {
-                return Json.fail("用户名不能为空");
+                return Json.message("用户名不能为空");
             } else if (StringUtils.isEmpty(password)) {
-                return Json.fail("密码不能为空");
+                return Json.message("密码不能为空");
             }
             var loginUser = tryLogin(username, password);
             var token = ScxAuth.addAuthUser(ctx, loginUser);
@@ -297,9 +294,9 @@ public class CoreAuthHandler implements AuthHandler {
             var loginDevice = ScxAuth.getDevice(ScxContext.routingContext());
             Ansi.OUT.print(loginUser.username + " 登录了 , 登录设备 [" + loginDevice + "] , 当前总登录用户数量 : " + ScxAuth.getAllLoginItem().size() + " 个").ln();
             if (loginDevice == DeviceType.WEBSITE) {
-                return Json.ok("login-successful");
+                return Json.message("login-successful");
             } else {
-                return Json.ok().data("token", token);
+                return Json.ok().put("token", token);
             }
         } catch (AuthException authException) {
             return authExceptionHandler(authException);

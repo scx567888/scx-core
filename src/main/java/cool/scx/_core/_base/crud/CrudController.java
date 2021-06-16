@@ -41,7 +41,7 @@ public class CrudController {
             var o = ScxContext.getBean(ScxContext.getClassByName(modelName.toLowerCase() + "service"));
             return (BaseService<T>) o;
         } catch (Exception e) {
-            throw new CustomHttpRequestException(ctx -> Json.fail(Json.SYSTEM_ERROR, modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
+            throw new CustomHttpRequestException(ctx -> Json.message(modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
         }
     }
 
@@ -180,7 +180,7 @@ public class CrudController {
     public Json batchDelete(String modelName, @FromBody("deleteIds") List<Long> deleteIds) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var deletedCount = baseService.deleteByIds(deleteIds.toArray(Long[]::new));
-        return Json.ok("success").data("deletedCount", deletedCount);
+        return Json.ok().put("deletedCount", deletedCount);
     }
 
     /**
@@ -195,7 +195,7 @@ public class CrudController {
     public Json revokeDelete(String modelName, Integer id) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var revokeDeleteCount = baseService.revokeDeleteByIds(Long.valueOf(id));
-        return Json.ok(revokeDeleteCount == 1 ? "success" : "error");
+        return Json.message(revokeDeleteCount == 1 ? "success" : "error");
     }
 
     /**
@@ -230,7 +230,7 @@ public class CrudController {
         }
         param.o.id = null;
         var b = baseService.count(param) == 0;
-        return Json.ok().data("isUnique", b);
+        return Json.ok().put("isUnique", b);
     }
 
 }

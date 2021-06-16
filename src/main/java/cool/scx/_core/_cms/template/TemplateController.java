@@ -104,7 +104,7 @@ public class TemplateController {
         var directoryList = allFileList.stream().filter(fileInfo -> "Directory".equals(fileInfo.type)).collect(Collectors.toList());
         var fileList = allFileList.stream().filter(fileInfo -> "File".equals(fileInfo.type)).collect(Collectors.toList());
         directoryList.addAll(fileList);
-        return Json.ok().data("cmsRootTreeList", directoryList);
+        return Json.ok().put("cmsRootTreeList", directoryList);
     }
 
     /**
@@ -119,12 +119,12 @@ public class TemplateController {
             boolean b = checkPath(filePath);
             if (b) {
                 String fileContent = Files.readString(Paths.get(filePath));
-                return Json.ok().data("fileContent", fileContent);
+                return Json.ok().put("fileContent", fileContent);
             } else {
-                return Json.ok().data("fileContent", "文件无法访问");
+                return Json.ok().put("fileContent", "文件无法访问");
             }
         } catch (Exception exception) {
-            return Json.ok().data("fileContent", "此文件无法编辑");
+            return Json.ok().put("fileContent", "此文件无法编辑");
         }
     }
 
@@ -142,7 +142,7 @@ public class TemplateController {
             FileUtils.setFileContent(filePath, fileContent);
             return getFileContent(filePath);
         } else {
-            return Json.fail(Json.SYSTEM_ERROR, "文件无法访问");
+            return Json.message("文件无法访问");
         }
     }
 
@@ -161,7 +161,7 @@ public class TemplateController {
             FileUtils.deleteIfExists(file);
             return Json.ok();
         } else {
-            return Json.fail(Json.SYSTEM_ERROR, "文件无法访问");
+            return Json.message("文件无法访问");
         }
     }
 
@@ -181,7 +181,7 @@ public class TemplateController {
             FileUtils.fileAppend(filePath, file.buffer.getBytes());
             return Json.ok();
         } else {
-            return Json.fail(Json.SYSTEM_ERROR, "文件无法访问");
+            return Json.message("文件无法访问");
         }
     }
 
@@ -203,7 +203,7 @@ public class TemplateController {
             path.toFile().renameTo(new File(parent + "\\" + newFilePath));
             return Json.ok();
         } else {
-            return Json.fail(Json.SYSTEM_ERROR, "文件无法访问");
+            return Json.message("文件无法访问");
         }
     }
 

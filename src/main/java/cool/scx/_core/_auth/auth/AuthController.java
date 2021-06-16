@@ -3,6 +3,7 @@ package cool.scx._core._auth.auth;
 import cool.scx.annotation.FromBody;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.Method;
+import cool.scx.exception.UnauthorizedException;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
 
@@ -73,7 +74,7 @@ public class AuthController {
      * @return Json
      */
     @ScxMapping(method = Method.GET)
-    public Json info() {
+    public Json info() throws UnauthorizedException {
         return coreAuthHandler.info();
     }
 

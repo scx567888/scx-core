@@ -177,7 +177,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
      * @param context 上下文对象
      * @return 验证结果 true 为 允许继续向下进行处理 false 表示截至继续运行
      */
-    private boolean checkedLoginAndPerms(RoutingContext context) {
+    private boolean checkedLoginAndPerms(RoutingContext context) throws Exception {
         //如果 不检查登录 对应的也没有必要检查 权限 所以直接返回 true
         if (!methodScxMapping.checkedLogin()) {
             return true;
@@ -317,35 +317,27 @@ class ScxMappingHandler implements Handler<RoutingContext> {
     @Override
     public void handle(RoutingContext context) {
         ScxContext.routingContext(context);
-        //检查是否登录 并且权限是否正确
-        boolean b = checkedLoginAndPerms(context);
-        //这里验证失败不需要返回 因为 对相应的客户端的相应的处理已经在 checkedLoginAndPerms 中完成
-        if (!b) {
-            return;
-        }
-
-        var response = context.response();
-        Object result;
         try {
-            result = getResult(context);
+            //检查是否登录 并且权限是否正确
+            if (!checkedLoginAndPerms(context)) {
+                return;
+            }
+
+            var result = getResult(context);
+
+            var response = context.response();
+            if (result instanceof String || result instanceof Integer || result instanceof Double || result instanceof Boolean) {
+                response.putHeader("Content-Type", "text/plain; charset=utf-8");
+                response.end(result.toString());
+            } else if (result instanceof BaseVo) {
+                ((BaseVo) result).sendToClient(context);
+            } else {
+                response.end(ObjectUtils.beanToJsonUseAnnotations(result));
+            }
+
         } catch (Exception e) {
             exceptionHandler0(e, context);
-            return;
         }
-        if (result instanceof String || result instanceof Integer || result instanceof Double || result instanceof Boolean) {
-            response.putHeader("Content-Type", "text/plain; charset=utf-8");
-            response.end(result.toString());
-            return;
-        }
-        if (result instanceof BaseVo) {
-            try {
-                ((BaseVo) result).sendToClient(context);
-            } catch (Exception e) {
-                exceptionHandler0(e, context);
-            }
-            return;
-        }
-        response.end(ObjectUtils.beanToJsonUseAnnotations(result));
     }
 
 }
