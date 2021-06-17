@@ -4,7 +4,6 @@ import cool.scx.annotation.Column;
 import cool.scx.bo.TableInfo;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.FixTableResult;
-import cool.scx.gui.SQLGUIHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.StringUtils;
 
@@ -16,8 +15,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static cool.scx.enumeration.FixTableResult.CANCEL_FIX;
 
 /**
  * 构建 SQL 的助手(常用方法) 类
@@ -42,12 +39,6 @@ public final class SQLHelper {
      */
     private static final String databaseName = ScxConfig.dataSourceDatabase();
 
-
-    /**
-     *
-     */
-    private static boolean cancelFix = false;
-
     /**
      * 根据 class 通过反射获取 对应的 TableInfo (表结构)
      *
@@ -71,9 +62,6 @@ public final class SQLHelper {
      * @return 是否修复
      */
     public static FixTableResult fixTable(Class<?> clazz) {
-        if (cancelFix) {
-            return CANCEL_FIX;
-        }
         var table = getTableInfo(clazz);
         try (var connection = SQLRunner.getConnection()) {
             //获取当前连接对象的 MetaData
@@ -92,10 +80,6 @@ public final class SQLHelper {
                 ).collect(Collectors.toList());
 
                 if (nonExistentFields.size() != 0) {
-                    cancelFix = !SQLGUIHandler.confirmFixTable();
-                    if (cancelFix) {
-                        return CANCEL_FIX;
-                    }
                     var columns = nonExistentFields.stream().map(field -> StringUtils.camelToUnderscore(field.getName())).collect(Collectors.joining(" , ", " [ ", " ] "));
                     Ansi.OUT.brightBlue("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!").ln();
                     var addSql = nonExistentFields.stream().map(field -> " ADD " + getSQLColumn(field)).collect(Collectors.joining(",", "", ""));
@@ -112,10 +96,6 @@ public final class SQLHelper {
                     return FixTableResult.NO_NEED_TO_FIX;
                 }
             } else {
-                cancelFix = !SQLGUIHandler.confirmFixTable();
-                if (cancelFix) {
-                    return CANCEL_FIX;
-                }
                 Ansi.OUT.brightMagenta("未找到表 " + table.tableName + " --> 正在自动建立 !!!").ln();
                 var createTableSql = "CREATE TABLE `" + table.tableName + "` ( " + Stream.of(table.allFields).map(field -> getSQLColumn(field) + ",").collect(Collectors.joining("", "", "")) + String.join(",", getOtherSQL(table.allFields)) + ") ;";
                 SQLRunner.execute(createTableSql, null);
@@ -124,6 +104,38 @@ public final class SQLHelper {
         } catch (Exception e) {
             e.printStackTrace();
             return FixTableResult.FIX_FAIL;
+        }
+    }
+
+    /**
+     * 检查是否需要修复表
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     * @return 是否修复
+     */
+    public static boolean needFixTable(Class<?> clazz) {
+        var table = getTableInfo(clazz);
+        try (var connection = SQLRunner.getConnection()) {
+            //获取当前连接对象的 MetaData
+            var dbMetaData = connection.getMetaData();
+            //根据表名称获取表
+            var nowTable = dbMetaData.getTables(databaseName, databaseName, table.tableName, new String[]{"TABLE"});
+            //获取到表
+            if (nowTable.next()) {
+                var nowColumns = dbMetaData.getColumns(databaseName, databaseName, nowTable.getString("TABLE_NAME"), null);
+                var stringArrayList = new ArrayList<>();
+                while (nowColumns.next()) {
+                    stringArrayList.add(nowColumns.getString("COLUMN_NAME"));
+                }
+                var nonExistentFields = Stream.of(table.allFields).filter(field -> !stringArrayList.contains(StringUtils.camelToUnderscore(field.getName()))).collect(Collectors.toList());
+
+                return nonExistentFields.size() != 0;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

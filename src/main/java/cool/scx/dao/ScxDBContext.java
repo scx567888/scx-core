@@ -10,7 +10,6 @@ import cool.scx.sql.SQLHelper;
 import cool.scx.util.Ansi;
 
 import javax.sql.DataSource;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <p>ScxDBContext class.</p>
@@ -28,44 +27,61 @@ public final class ScxDBContext {
     /**
      * <p>fixTable.</p>
      */
-    public static void fixTable() {
+    public static void fixTableByScxModel() {
+        //如果无法链接数据库 就跳过修复表
+        if (!checkDataSource()) {
+            return;
+        }
         Ansi.OUT.brightMagenta("修复数据表中...").ln();
-        var fixSuccess = new AtomicInteger();
-        var cancelFix = new AtomicInteger();
-        var fixFail = new AtomicInteger();
-        var noNeedToFix = new AtomicInteger();
-        ScxContext.scxBeanClassNameMapping().forEach((k, v) -> {
+        //已经显示过修复表的 gui 这里使用 flag 只显示一次
+        boolean alreadyShowConfirmFixTable = false;
+        //修复成功的表
+        var fixSuccess = 0;
+        //修复失败的表
+        var fixFail = 0;
+        //不需要修复的表
+        var noNeedToFix = 0;
+        for (var entry : ScxContext.scxBeanClassNameMapping().entrySet()) {
+            var v = entry.getValue();
+            //只对 ScxModel 注解标识的了类进行数据表修复
             if (v.isAnnotationPresent(ScxModel.class) && !v.isInterface()) {
-                try {
-                    var r = SQLHelper.fixTable(v);
-                    if (r == FixTableResult.CANCEL_FIX) {
-                        cancelFix.incrementAndGet();
-                    } else if (r == FixTableResult.FIX_SUCCESS) {
-                        fixSuccess.incrementAndGet();
-                    } else if (r == FixTableResult.FIX_FAIL) {
-                        fixFail.incrementAndGet();
-                    } else if (r == FixTableResult.NO_NEED_TO_FIX) {
-                        noNeedToFix.incrementAndGet();
+                //判断是否需要修复
+                if (SQLHelper.needFixTable(v)) {
+                    //如果已经显示过gui选择界面了就不再显示
+                    if (!alreadyShowConfirmFixTable) {
+                        //获取用户数据 true 为修复 false 为不修复
+                        var cancelFix = !SQLGUIHandler.confirmFixTable();
+                        //如果取消修复 直接跳出这个方法
+                        if (cancelFix) {
+                            Ansi.OUT.brightMagenta("已取消修复表...").ln();
+                            return;
+                        }
+                        //设置 flag
+                        alreadyShowConfirmFixTable = true;
                     }
-                } catch (Exception ignored) {
-
+                    //获取修复表的结果
+                    var r = SQLHelper.fixTable(v);
+                    if (r == FixTableResult.FIX_SUCCESS) {
+                        fixSuccess = fixSuccess + 1;
+                    } else if (r == FixTableResult.FIX_FAIL) {
+                        fixFail = fixFail + 1;
+                    } else if (r == FixTableResult.NO_NEED_TO_FIX) {
+                        noNeedToFix = noNeedToFix + 1;
+                    }
                 }
             }
-        });
-
-        if (cancelFix.get() != 0) {
-            Ansi.OUT.brightMagenta("已取消修复表...").ln();
-        } else {
-            if (fixSuccess.get() != 0) {
-                Ansi.OUT.brightMagenta("修复成功 " + fixSuccess.get() + " 张表...").ln();
-            }
-            if (fixFail.get() != 0) {
-                Ansi.OUT.brightMagenta("修复失败 " + fixFail.get() + " 张表...").ln();
-            }
-            if (fixSuccess.get() + fixSuccess.get() + cancelFix.get() == 0) {
-                Ansi.OUT.brightMagenta("没有表需要修复...").ln();
-            }
         }
+
+        if (fixSuccess != 0) {
+            Ansi.OUT.brightMagenta("修复成功 " + fixSuccess + " 张表...").ln();
+        }
+        if (fixFail != 0) {
+            Ansi.OUT.brightMagenta("修复失败 " + fixFail + " 张表...").ln();
+        }
+        if (fixSuccess + fixFail == 0) {
+            Ansi.OUT.brightMagenta("没有表需要修复...").ln();
+        }
+
     }
 
     /**
@@ -73,10 +89,7 @@ public final class ScxDBContext {
      */
     public static void initDB() {
         Ansi.OUT.brightMagenta("ScxDBContext 初始化中...").ln();
-        var dataSourceCanUse = checkDataSource();
-        if (dataSourceCanUse && ScxConfig.fixTable()) {
-            fixTable();
-        }
+        fixTableByScxModel();
         Ansi.OUT.brightMagenta("ScxDBContext 初始化完成...").ln();
     }
 

@@ -30,12 +30,6 @@ class EasyToUseConfig {
     final boolean realDelete;
 
     /**
-     * 修复表格
-     */
-    final boolean fixTable;
-
-
-    /**
      * 关闭的插件名称列表
      */
     final Set<String> disabledPluginList;
@@ -124,15 +118,9 @@ class EasyToUseConfig {
                 s -> Ansi.OUT.green("Y 数据库删除方式为                     \t -->\t " + (s ? "物理删除" : "逻辑删除")).ln(),
                 f -> Ansi.OUT.red("N 未检测到 scx.real-delete            \t -->\t 已采用默认值 : " + f).ln());
 
-
         allowedOrigin = ScxConfig.get("scx.allowed-origin", "*",
                 s -> Ansi.OUT.green("Y 允许的请求源                         \t -->\t " + s).ln(),
                 f -> Ansi.OUT.red("N 未检测到 scx.allowed-origin          \t -->\t 已采用默认值 : " + f).ln());
-
-        fixTable = ScxConfig.get("scx.fix-table", false,
-                s -> Ansi.OUT.green("Y 修复数据表                          \t -->\t " + (s ? "是" : "否")).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.fix-table               \t -->\t 已采用默认值 : " + f).ln());
-
 
         var tempDisabledPluginList = ScxConfig.get("scx.plugin-disabled-list", new ArrayList<String>(),
                 s -> Ansi.OUT.green("Y 禁用插件列表                         \t -->\t " + s).ln(),

@@ -273,15 +273,6 @@ public final class ScxConfig {
     }
 
     /**
-     * <p>fixTable.</p>
-     *
-     * @return a boolean.
-     */
-    public static boolean fixTable() {
-        return easyToUseConfig.fixTable;
-    }
-
-    /**
      * <p>realDelete.</p>
      *
      * @return a boolean.
