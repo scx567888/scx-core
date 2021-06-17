@@ -48,7 +48,6 @@ class ScxMappingHandler implements Handler<RoutingContext> {
     public final Set<HttpMethod> httpMethods;
     public final String permStr;
 
-
     /**
      * <p>Constructor for ScxRouteHandler.</p>
      *
@@ -167,7 +166,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
             context.end();
             return;
         }
-        context.response().setStatusCode(500).end(exception.getMessage());
+        context.response().setStatusCode(500).end("Internal Server Error !!!");
         e.printStackTrace();
     }
 
