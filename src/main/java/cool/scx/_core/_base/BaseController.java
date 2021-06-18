@@ -239,7 +239,7 @@ public class BaseController {
                     var save = uploadFileService.save(copyUploadFile(fileName, fileByMd5));
                     //有可能有之前的残留临时文件 再次一并清楚
                     FileUtils.deleteFiles(Path.of(uploadTempFile).getParent());
-                    return Json.ok().put("type", "alreadyExists").items(save);
+                    return Json.ok().put("type", "alreadyExists").put("items", save);
                 }
             }
         }
@@ -268,7 +268,7 @@ public class BaseController {
                 //存储到数据库
                 var save = uploadFileService.save(uploadFile);
                 //像前台发送上传成功的消息
-                return Json.ok().put("type", "uploadSuccess").items(save);
+                return Json.ok().put("type", "uploadSuccess").put("items", save);
             } else {
                 //移动失败 返回上传失败的信息
                 return Json.ok().put("type", "uploadFail");
@@ -278,9 +278,9 @@ public class BaseController {
             if (nowChunkIndex - lastUploadChunk == 1) {
                 FileUtils.fileAppend(uploadTempFile, fileData.buffer.getBytes());
                 changeLastUploadChunk(uploadConfigFile, nowChunkIndex, chunkLength);
-                return Json.ok().put("type", "needMore").items(nowChunkIndex);
+                return Json.ok().put("type", "needMore").put("items", nowChunkIndex);
             } else {
-                return Json.ok().put("type", "needMore").items(lastUploadChunk);
+                return Json.ok().put("type", "needMore").put("items", lastUploadChunk);
             }
         }
     }
@@ -300,7 +300,7 @@ public class BaseController {
         } else {
             param.whereSql = " file_id = -1";
         }
-        return Json.ok().items(uploadFileService.list(param));
+        return Json.ok().put("items", uploadFileService.list(param));
     }
 
     /**
@@ -329,7 +329,7 @@ public class BaseController {
                 if (file.exists()) {
                     boolean b = FileUtils.deleteFiles(Path.of(BaseConfig.uploadFilePath() + "\\" + needDeleteFile.filePath).getParent());
                     if (!b) {
-                        return Json.message("deleteFail");
+                        return Json.fail();
                     }
                 }
             }
@@ -337,7 +337,7 @@ public class BaseController {
             uploadFileService.deleteByIds(needDeleteFile.id);
         }
 
-        return Json.message("deleteSuccess");
+        return Json.ok();
     }
 
 }

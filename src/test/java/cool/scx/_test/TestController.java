@@ -131,7 +131,7 @@ public class TestController {
     @ScxMapping(value = "/big-json", method = Method.GET)
     public BaseVo bigJson() throws Exception {
         var users = userService.listAll();
-        return Json.ok().items(users);
+        return Json.ok().put("items", users);
     }
 
 }

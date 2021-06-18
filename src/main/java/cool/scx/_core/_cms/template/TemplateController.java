@@ -142,7 +142,7 @@ public class TemplateController {
             FileUtils.setFileContent(filePath, fileContent);
             return getFileContent(filePath);
         } else {
-            return Json.message("文件无法访问");
+            return Json.fail("文件无法访问");
         }
     }
 
@@ -161,7 +161,7 @@ public class TemplateController {
             FileUtils.deleteIfExists(file);
             return Json.ok();
         } else {
-            return Json.message("文件无法访问");
+            return Json.fail("文件无法访问");
         }
     }
 
@@ -181,7 +181,7 @@ public class TemplateController {
             FileUtils.fileAppend(filePath, file.buffer.getBytes());
             return Json.ok();
         } else {
-            return Json.message("文件无法访问");
+            return Json.fail("文件无法访问");
         }
     }
 
@@ -203,7 +203,7 @@ public class TemplateController {
             path.toFile().renameTo(new File(parent + "\\" + newFilePath));
             return Json.ok();
         } else {
-            return Json.message("文件无法访问");
+            return Json.fail("文件无法访问");
         }
     }
 

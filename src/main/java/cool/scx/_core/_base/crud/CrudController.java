@@ -41,7 +41,7 @@ public class CrudController {
             var o = ScxContext.getBean(ScxContext.getClassByName(modelName.toLowerCase() + "service"));
             return (BaseService<T>) o;
         } catch (Exception e) {
-            throw new CustomHttpRequestException(ctx -> Json.message(modelName.toLowerCase() + "service : 不存在!!!").sendToClient(ctx));
+            throw new CustomHttpRequestException(ctx -> Json.fail("unknown-crud-service").put("service-name", modelName.toLowerCase()).sendToClient(ctx));
         }
     }
 
@@ -104,7 +104,7 @@ public class CrudController {
         var param = getParam(modelName, limit, page, orderByColumn, sortType, queryObject);
         var list = baseService.listWithLike(param);
         var count = baseService.countWithLike(param);
-        return Json.ok().tables(list, count);
+        return Json.ok().put("items", list).put("total", count);
     }
 
 
@@ -119,8 +119,8 @@ public class CrudController {
     @ScxMapping(value = ":modelName/:id", method = Method.GET)
     public Json info(String modelName, Long id) throws HttpRequestException {
         var baseService = getBaseService(modelName);
-        var list = baseService.getById(id);
-        return Json.ok().items(list);
+        var info = baseService.getById(id);
+        return Json.ok().put("info", info);
     }
 
     /**
@@ -135,7 +135,7 @@ public class CrudController {
     public Json save(String modelName, Map<String, Object> entityMap) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var realObject = getBaseModel(entityMap, modelName);
-        return Json.ok().items(baseService.save(realObject));
+        return Json.ok().put("item", baseService.save(realObject));
     }
 
     /**
@@ -150,7 +150,7 @@ public class CrudController {
     public Json update(String modelName, Map<String, Object> entityMap) throws Exception {
         var baseService = getBaseService(modelName);
         var realObject = getBaseModel(entityMap, modelName);
-        return Json.ok().items(baseService.update(realObject));
+        return Json.ok().put("item", baseService.update(realObject));
     }
 
     /**
@@ -165,7 +165,7 @@ public class CrudController {
     public Json delete(String modelName, Integer id) throws Exception {
         var baseService = getBaseService(modelName);
         var deleteByIds = baseService.deleteByIds(Long.valueOf(id));
-        return Json.ok().items(deleteByIds == 1);
+        return Json.ok().put("delete-result", deleteByIds == 1);
     }
 
     /**
@@ -195,7 +195,7 @@ public class CrudController {
     public Json revokeDelete(String modelName, Integer id) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var revokeDeleteCount = baseService.revokeDeleteByIds(Long.valueOf(id));
-        return Json.message(revokeDeleteCount == 1 ? "success" : "error");
+        return revokeDeleteCount == 1 ? Json.ok() : Json.fail();
     }
 
     /**
@@ -210,7 +210,7 @@ public class CrudController {
     public Json getAutoComplete(String modelName, String fieldName) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var fieldList = baseService.getFieldList(fieldName);
-        return Json.ok().items(fieldList);
+        return Json.ok().put("fields", fieldList);
     }
 
     /**

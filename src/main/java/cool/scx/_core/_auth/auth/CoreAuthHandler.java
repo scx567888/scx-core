@@ -126,18 +126,18 @@ public class CoreAuthHandler implements AuthHandler {
      */
     public Json authExceptionHandler(AuthException e) {
         if (e instanceof UnknownDeviceException) {
-            return Json.message("未知设备");
+            return Json.fail("未知设备");
         } else if (e instanceof UnknownUserException) {
-            return Json.message(AuthConfig.confusionLoginError() ? "usernameOrPasswordError" : "userNotFound");
+            return Json.fail(AuthConfig.confusionLoginError() ? "usernameOrPasswordError" : "userNotFound");
         } else if (e instanceof WrongPasswordException) {
             //这里和用户密码错误   可以使用相同的 提示信息 防止恶意破解
-            return Json.message(AuthConfig.confusionLoginError() ? "usernameOrPasswordError" : "passwordError");
+            return Json.fail(AuthConfig.confusionLoginError() ? "usernameOrPasswordError" : "passwordError");
         } else if (e instanceof TooManyErrorsException) {
             //密码错误次数过多
-            return Json.message("tooManyErrors").put("remainingTime", ((TooManyErrorsException) e).remainingTime);
+            return Json.fail("tooManyErrors").put("remainingTime", ((TooManyErrorsException) e).remainingTime);
         } else {
             Ansi.OUT.print("登录出错 : " + e.getMessage()).ln();
-            return Json.message("logonFailure");
+            return Json.fail("logonFailure");
         }
     }
 
@@ -153,12 +153,12 @@ public class CoreAuthHandler implements AuthHandler {
         newUser.addOrderBy("id", SortType.ASC).o.username = username;
         User user = userService.get(newUser);
         if (user != null) {
-            return Json.message("userAlreadyExists");
+            return Json.fail("userAlreadyExists");
         } else {
             newUser.o.isAdmin = false;
             newUser.o.password = password;
             registeredUser(newUser.o);
-            return Json.message("registerSuccess");
+            return Json.fail("registerSuccess");
         }
     }
 
@@ -282,12 +282,12 @@ public class CoreAuthHandler implements AuthHandler {
     public Json login(String username, String password, RoutingContext ctx) {
         try {
             if (AuthModuleOption.loginUseLicense() && !licenseService.passLicense()) {
-                return Json.message("licenseError");
+                return Json.fail("licenseError");
             }
             if (StringUtils.isEmpty(username)) {
-                return Json.message("用户名不能为空");
+                return Json.fail("用户名不能为空");
             } else if (StringUtils.isEmpty(password)) {
-                return Json.message("密码不能为空");
+                return Json.fail("密码不能为空");
             }
             var loginUser = tryLogin(username, password);
             var token = ScxAuth.addAuthUser(ctx, loginUser);
@@ -295,7 +295,7 @@ public class CoreAuthHandler implements AuthHandler {
             var loginDevice = ScxAuth.getDevice(ScxContext.routingContext());
             Ansi.OUT.print(loginUser.username + " 登录了 , 登录设备 [" + loginDevice + "] , 当前总登录用户数量 : " + ScxAuth.getAllLoginItem().size() + " 个").ln();
             if (loginDevice == DeviceType.WEBSITE) {
-                return Json.message("login-successful");
+                return Json.fail("login-successful");
             } else {
                 return Json.ok().put("token", token);
             }
