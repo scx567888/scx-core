@@ -22,7 +22,7 @@ import java.util.HashMap;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxMapping
+@ScxMapping("/")
 public class TestController {
 
     private final UserService userService;
@@ -120,7 +120,7 @@ public class TestController {
     /**
      * 测试!!!
      */
-    @ScxMapping(value = "/random-code", method = Method.GET)
+    @ScxMapping(method = Method.GET)
     public String getRandomCode() {
         return StringUtils.getRandomCode(9999, true);
     }
@@ -128,7 +128,7 @@ public class TestController {
     /**
      * 测试!!!
      */
-    @ScxMapping(value = "/big-json", method = Method.GET)
+    @ScxMapping(method = Method.GET)
     public BaseVo bigJson() throws Exception {
         var users = userService.listAll();
         return Json.ok().put("items", users);

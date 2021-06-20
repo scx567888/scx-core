@@ -24,10 +24,7 @@ import io.vertx.ext.web.RoutingContext;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,19 +62,6 @@ class ScxMappingHandler implements Handler<RoutingContext> {
         this.order = getOrder();
         this.httpMethods = getHttpMethod();
         this.permStr = clazz.getSimpleName() + ":" + method.getName();
-    }
-
-    /**
-     * 根据 controller 获取 api 的 名称
-     * 例 1 : UserController -- user
-     * 例 2 : AppleColorController -- apple-color
-     *
-     * @param controllerClass controller 的 Class
-     * @return 处理后的路径
-     */
-    public static String getApiNameByControllerName(Class<?> controllerClass) {
-        var s = controllerClass.getSimpleName().replace("Controller", "");
-        return CaseUtils.toKebab(s);
     }
 
     private static Object getParamFromMap(Map<String, ?> map, String value, boolean merge, Parameter parameter, boolean required) throws BadRequestException {
@@ -213,9 +197,20 @@ class ScxMappingHandler implements Handler<RoutingContext> {
     }
 
     private String getUrl() {
-        return methodScxMapping.useMethodNameAsUrl() && "".equals(methodScxMapping.value()) ?
-                StringUtils.clearHttpUrl("api", getApiNameByControllerName(clazz), CaseUtils.toKebab(method.getName()))
-                : StringUtils.clearHttpUrl(classScxMapping.value(), methodScxMapping.value());
+        var urlList = new ArrayList<String>();
+        //获取父级的 url
+        if (classScxMapping.useMethodNameAsUrl() && "".equals(classScxMapping.value())) {
+            urlList.add(CaseUtils.toKebab(clazz.getSimpleName().replace("Controller", "")));
+        } else {
+            urlList.add(classScxMapping.value());
+        }
+        //获取方法的 url
+        if (methodScxMapping.useMethodNameAsUrl() && "".equals(methodScxMapping.value())) {
+            urlList.add(CaseUtils.toKebab(method.getName()));
+        } else {
+            urlList.add(methodScxMapping.value());
+        }
+        return StringUtils.clearHttpUrl(urlList.toArray(new String[0]));
     }
 
     private int getOrder() {
