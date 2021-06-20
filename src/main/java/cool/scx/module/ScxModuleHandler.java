@@ -211,8 +211,13 @@ public final class ScxModuleHandler {
      * @return a {@link java.io.File} object.
      */
     private static File getModuleRootPath(Class<?> modelClass) {
-        var file = new File(getClassSourceRealPath(modelClass).getFile());
-        return file.getPath().endsWith(".jar") ? file.getParentFile() : file;
+        try {
+            File file = new File(getClassSourceRealPath(modelClass).toURI().getPath());
+            return file.getPath().endsWith(".jar") ? file.getParentFile() : file;
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
