@@ -2,6 +2,7 @@ package cool.scx.sql;
 
 import cool.scx.enumeration.SQLType;
 import cool.scx.enumeration.SortType;
+import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -139,7 +140,7 @@ public final class SQLBuilder {
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder UpdateColumns(Field[] fields) {
-        _updateColumns = Stream.of(fields).map(field -> StringUtils.camelToUnderscore(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
+        _updateColumns = Stream.of(fields).map(field -> CaseUtils.toSnake(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
         return this;
     }
 
@@ -150,7 +151,7 @@ public final class SQLBuilder {
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder Columns(Field[] fields) {
-        _columns = Stream.of(fields).map(o -> StringUtils.camelToUnderscore(o.getName())).toArray(String[]::new);
+        _columns = Stream.of(fields).map(o -> CaseUtils.toSnake(o.getName())).toArray(String[]::new);
         return this;
     }
 

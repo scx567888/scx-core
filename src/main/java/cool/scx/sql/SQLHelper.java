@@ -5,7 +5,7 @@ import cool.scx.bo.TableInfo;
 import cool.scx.config.ScxConfig;
 import cool.scx.enumeration.FixTableResult;
 import cool.scx.util.Ansi;
-import cool.scx.util.StringUtils;
+import cool.scx.util.CaseUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -76,11 +76,11 @@ public final class SQLHelper {
                     stringArrayList.add(nowColumns.getString("COLUMN_NAME"));
                 }
                 var nonExistentFields = Stream.of(table.allFields).filter(field ->
-                        !stringArrayList.contains(StringUtils.camelToUnderscore(field.getName()))
+                        !stringArrayList.contains(CaseUtils.toSnake(field.getName()))
                 ).collect(Collectors.toList());
 
                 if (nonExistentFields.size() != 0) {
-                    var columns = nonExistentFields.stream().map(field -> StringUtils.camelToUnderscore(field.getName())).collect(Collectors.joining(" , ", " [ ", " ] "));
+                    var columns = nonExistentFields.stream().map(field -> CaseUtils.toSnake(field.getName())).collect(Collectors.joining(" , ", " [ ", " ] "));
                     Ansi.OUT.brightBlue("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!").ln();
                     var addSql = nonExistentFields.stream().map(field -> " ADD " + getSQLColumn(field)).collect(Collectors.joining(",", "", ""));
                     var alertSql = "ALTER TABLE `" + table.tableName + "` " + addSql;
@@ -127,7 +127,7 @@ public final class SQLHelper {
                 while (nowColumns.next()) {
                     stringArrayList.add(nowColumns.getString("COLUMN_NAME"));
                 }
-                var nonExistentFields = Stream.of(table.allFields).filter(field -> !stringArrayList.contains(StringUtils.camelToUnderscore(field.getName()))).collect(Collectors.toList());
+                var nonExistentFields = Stream.of(table.allFields).filter(field -> !stringArrayList.contains(CaseUtils.toSnake(field.getName()))).collect(Collectors.toList());
 
                 return nonExistentFields.size() != 0;
             } else {
@@ -151,7 +151,7 @@ public final class SQLHelper {
         for (Field field : allFields) {
             var column = field.getAnnotation(Column.class);
             if (column != null) {
-                var columnName = StringUtils.camelToUnderscore(field.getName());
+                var columnName = CaseUtils.toSnake(field.getName());
                 if (column.primaryKey()) {
                     list.add("PRIMARY KEY (`" + columnName + "`)");
                 }
@@ -173,7 +173,7 @@ public final class SQLHelper {
      * @return 生成的语句片段
      */
     private static String getSQLColumn(Field field) {
-        var columnName = "`" + StringUtils.camelToUnderscore(field.getName()) + "` ";
+        var columnName = "`" + CaseUtils.toSnake(field.getName()) + "` ";
         var type = "";
         var notNull = "";
         var autoIncrement = "";

@@ -12,6 +12,7 @@ import cool.scx.context.ScxContext;
 import cool.scx.enumeration.DeviceType;
 import cool.scx.exception.BadRequestException;
 import cool.scx.exception.HttpRequestException;
+import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.BaseVo;
@@ -69,14 +70,14 @@ class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * 根据 controller 获取 api 的 名称
      * 例 1 : UserController -- user
-     * 例 2 : AppleColorController -- appleColor
+     * 例 2 : AppleColorController -- apple-color
      *
      * @param controllerClass controller 的 Class
      * @return 处理后的路径
      */
     public static String getApiNameByControllerName(Class<?> controllerClass) {
         var s = controllerClass.getSimpleName().replace("Controller", "");
-        return Character.toLowerCase(s.charAt(0)) + s.substring(1);
+        return CaseUtils.toKebab(s);
     }
 
     private static Object getParamFromMap(Map<String, ?> map, String value, boolean merge, Parameter parameter, boolean required) throws BadRequestException {
@@ -213,7 +214,7 @@ class ScxMappingHandler implements Handler<RoutingContext> {
 
     private String getUrl() {
         return methodScxMapping.useMethodNameAsUrl() && "".equals(methodScxMapping.value()) ?
-                StringUtils.clearHttpUrl("api", getApiNameByControllerName(clazz), method.getName())
+                StringUtils.clearHttpUrl("api", getApiNameByControllerName(clazz), CaseUtils.toKebab(method.getName()))
                 : StringUtils.clearHttpUrl(classScxMapping.value(), methodScxMapping.value());
     }
 

@@ -180,25 +180,6 @@ public class BaseController {
      * @return a {@link cool.scx.vo.Binary} object.
      * @throws cool.scx.exception.HttpRequestException if any.
      */
-    @Deprecated
-    @ScxMapping(value = "/showPicture/:fileId", method = {Method.GET, Method.HEAD})
-    public Image showPicture(@FromPath String fileId,
-                             @FromQuery(value = "w", required = false) Integer width,
-                             @FromQuery(value = "h", required = false) Integer height,
-                             @FromQuery(value = "t", required = false) String type) throws HttpRequestException {
-        return picture(fileId, width, height, type);
-    }
-
-    /**
-     * 通用查看图片方法
-     *
-     * @param fileId 文件 id
-     * @param width  a {@link java.lang.Integer} object.
-     * @param height a {@link java.lang.Integer} object.
-     * @param type   a {@link java.lang.String} object
-     * @return a {@link cool.scx.vo.Binary} object.
-     * @throws cool.scx.exception.HttpRequestException if any.
-     */
     @ScxMapping(value = "/picture/:fileId", method = {Method.GET, Method.HEAD})
     public Image picture(@FromPath String fileId,
                          @FromQuery(value = "w", required = false) Integer width,
@@ -291,7 +272,7 @@ public class BaseController {
      * @param fileIds a {@link java.util.Map} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = "/uploadFile/listFile", method = Method.POST)
+    @ScxMapping(value = "/upload-file/list-file", method = Method.POST)
     public Json listFile(List<String> fileIds) {
         var param = new Param<>(new UploadFile());
         if (StringUtils.isNotEmpty(fileIds)) {
@@ -309,7 +290,7 @@ public class BaseController {
      * @param fileId a {@link java.lang.String} object.
      * @return a {@link cool.scx.vo.Json} object.
      */
-    @ScxMapping(value = "/uploadFile/deleteFile", method = Method.DELETE)
+    @ScxMapping(value = "/upload-file/delete-file", method = Method.DELETE)
     public Json deleteFile(String fileId) {
         //先获取文件的基本信息
         var param = new Param<>(new UploadFile());

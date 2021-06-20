@@ -9,6 +9,7 @@ import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.Ansi;
+import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
@@ -181,11 +182,11 @@ public final class BaseDao<Entity extends BaseModel> {
     private String[] getWhereColumns(Entity entity, boolean ignoreLike) {
         if (ignoreLike) {
             return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
-                    .map(field -> StringUtils.camelToUnderscore(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
+                    .map(field -> CaseUtils.toSnake(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
         } else {
             return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
                     .map(field -> {
-                        var columnName = StringUtils.camelToUnderscore(field.getName());
+                        var columnName = CaseUtils.toSnake(field.getName());
                         var column = field.getAnnotation(Column.class);
                         if (column != null && column.useLike()) {
                             return columnName + " LIKE  CONCAT('%',:" + field.getName() + ",'%')";

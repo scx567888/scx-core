@@ -176,7 +176,7 @@ public class CrudController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws cool.scx.exception.HttpRequestException if any.
      */
-    @ScxMapping(value = ":modelName/batchDelete", method = Method.DELETE)
+    @ScxMapping(value = ":modelName/batch-delete", method = Method.DELETE)
     public Json batchDelete(String modelName, @FromBody("deleteIds") List<Long> deleteIds) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var deletedCount = baseService.deleteByIds(deleteIds.toArray(Long[]::new));
@@ -191,7 +191,7 @@ public class CrudController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws cool.scx.exception.HttpRequestException if any.
      */
-    @ScxMapping(value = ":modelName/revokeDelete/:id", method = Method.GET)
+    @ScxMapping(value = ":modelName/revoke-delete/:id", method = Method.GET)
     public Json revokeDelete(String modelName, Integer id) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var revokeDeleteCount = baseService.revokeDeleteByIds(Long.valueOf(id));
@@ -206,7 +206,7 @@ public class CrudController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws cool.scx.exception.HttpRequestException if any.
      */
-    @ScxMapping(value = ":modelName/getAutoComplete/:fieldName", method = Method.POST)
+    @ScxMapping(value = ":modelName/get-auto-complete/:fieldName", method = Method.POST)
     public Json getAutoComplete(String modelName, String fieldName) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var fieldList = baseService.getFieldList(fieldName);
@@ -221,7 +221,7 @@ public class CrudController {
      * @return a {@link cool.scx.vo.Json} object.
      * @throws cool.scx.exception.HttpRequestException if any.
      */
-    @ScxMapping(value = ":modelName/checkUnique", method = Method.POST)
+    @ScxMapping(value = ":modelName/check-unique", method = Method.POST)
     public Json checkUnique(String modelName, Map<String, Object> params) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, null, null, null, null, params);

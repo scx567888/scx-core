@@ -46,34 +46,6 @@ public final class StringUtils {
     }
 
     /**
-     * 驼峰模式字符串转换为下划线字符串 <br>
-     * 如：UserInfo 结果为 user_info
-     *
-     * @param camelStr 驼峰字符串
-     * @return str
-     */
-    public static String camelToUnderscore(String camelStr) {
-        if (isEmpty(camelStr)) {
-            return camelStr;
-        }
-        var stringBuilder = new StringBuilder();
-        char[] strChar = camelStr.toCharArray();
-        for (int i = 0, len = strChar.length; i < len; i++) {
-            char c = strChar[i];
-            if (!Character.isLowerCase(c)) {
-                if (i == 0) {
-                    stringBuilder.append(Character.toLowerCase(c));
-                    continue;
-                }
-                stringBuilder.append('_').append(Character.toLowerCase(c));
-                continue;
-            }
-            stringBuilder.append(c);
-        }
-        return stringBuilder.toString();
-    }
-
-    /**
      * 获取UUID
      *
      * @return a {@link java.lang.String} object.

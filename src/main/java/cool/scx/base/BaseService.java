@@ -7,7 +7,7 @@ import cool.scx.dao.BaseDao;
 import cool.scx.enumeration.SortType;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
-import cool.scx.util.StringUtils;
+import cool.scx.util.CaseUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
@@ -393,7 +393,7 @@ public abstract class BaseService<Entity extends BaseModel> {
      */
     public List<Map<String, Object>> getFieldList(String fieldName) {
         if (Arrays.stream(baseDao.table().allFields).filter(field -> field.getName().equals(fieldName)).count() == 1) {
-            var sql = SQLBuilder.Select(baseDao.table().tableName).SelectColumns(new String[]{StringUtils.camelToUnderscore(fieldName) + " As value "})
+            var sql = SQLBuilder.Select(baseDao.table().tableName).SelectColumns(new String[]{CaseUtils.toSnake(fieldName) + " As value "})
                     .WhereSql(ScxConfig.realDelete() ? "" : " tombstone = FALSE").GroupBy(new HashSet<>() {{
                         add("value");
                     }}).GetSQL();

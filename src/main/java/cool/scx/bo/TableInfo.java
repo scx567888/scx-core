@@ -4,6 +4,7 @@ import cool.scx.annotation.Column;
 import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;
 import cool.scx.config.ScxConfig;
+import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -76,7 +77,7 @@ public final class TableInfo {
 
     private static String[] getSelectColumns(Field[] allFields) {
         return Stream.of(allFields).filter(field -> ScxConfig.realDelete() || !"tombstone".equals(field.getName())).map(field -> {
-            var underscore = StringUtils.camelToUnderscore(field.getName());
+            var underscore = CaseUtils.toSnake(field.getName());
             return underscore.contains("_") ? underscore + " AS " + field.getName() : underscore;
         }).toArray(String[]::new);
     }
@@ -87,9 +88,9 @@ public final class TableInfo {
             return scxModel.tableName();
         }
         if (scxModel != null && StringUtils.isNotEmpty(scxModel.tablePrefix())) {
-            return scxModel.tablePrefix() + "_" + StringUtils.camelToUnderscore(clazz.getSimpleName());
+            return scxModel.tablePrefix() + "_" + CaseUtils.toSnake(clazz.getSimpleName());
         }
-        return "scx_" + StringUtils.camelToUnderscore(clazz.getSimpleName());
+        return "scx_" + CaseUtils.toSnake(clazz.getSimpleName());
     }
 
 }
