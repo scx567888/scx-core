@@ -135,7 +135,8 @@ public final class ScxModuleHandler {
      *
      * @param jarFileUrl a {@link java.net.URL} object.
      * @return a {@link java.util.List} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException         if any.
+     * @throws java.net.URISyntaxException if any.
      */
     public static ArrayList<Class<?>> getClassListByJar(URL jarFileUrl) throws IOException, URISyntaxException {
         var classList = new ArrayList<Class<?>>();
