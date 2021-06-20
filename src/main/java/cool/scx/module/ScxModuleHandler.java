@@ -137,9 +137,9 @@ public final class ScxModuleHandler {
      * @return a {@link java.util.List} object.
      * @throws java.io.IOException if any.
      */
-    public static ArrayList<Class<?>> getClassListByJar(URL jarFileUrl) throws IOException {
+    public static ArrayList<Class<?>> getClassListByJar(URL jarFileUrl) throws IOException, URISyntaxException {
         var classList = new ArrayList<Class<?>>();
-        var entries = new JarFile(jarFileUrl.getFile()).entries();
+        var entries = new JarFile(jarFileUrl.toURI().getPath()).entries();
         var jarClassLoader = new URLClassLoader(new URL[]{jarFileUrl});//获得类加载器
         while (entries.hasMoreElements()) {
             var jarEntry = entries.nextElement();
