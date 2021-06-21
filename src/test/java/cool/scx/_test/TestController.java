@@ -169,6 +169,10 @@ public class TestController {
      */
     @ScxMapping(method = Method.GET)
     public BaseVo testSelectJson() throws Exception {
+
+
+//        carService.count(new Param<>())
+
         var count = carService.count(new Param<>(new Car()));
         if (count < 20) {
             var list = new ArrayList<Car>();

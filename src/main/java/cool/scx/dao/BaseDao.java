@@ -1,17 +1,12 @@
 package cool.scx.dao;
 
-import cool.scx.annotation.Column;
 import cool.scx.base.BaseModel;
-import cool.scx.bo.Param;
-import cool.scx.bo.TableInfo;
-import cool.scx.bo.UpdateResult;
+import cool.scx.bo.*;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.Ansi;
-import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
-import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -105,96 +100,83 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     /**
-     * <p>list.</p>
+     * 获取列表
      *
-     * @param param      参数对象.
-     * @param ignoreLike a boolean.
+     * @param where      查询过滤条件.
+     * @param groupBy    a 分组条件.
+     * @param orderBy    a 排序条件.
+     * @param pagination 分页条件
      * @return a {@link java.util.List} object.
      */
-    public List<Entity> select(Param<Entity> param, boolean ignoreLike) {
-        var sql = SQLBuilder.Select(table.tableName).SelectColumns(table.selectColumns)
-                .Where(getWhereColumns(param.o, ignoreLike))
-                .WhereSql(param.whereSql)
-                .GroupBy(param.groupBy)
-                .OrderBy(param.orderBy)
-                .Pagination(param.getPage(), param.getLimit())
-                .GetSQL();
-        return SQLRunner.query(sql, ObjectUtils.beanToMap(param.o), entityClass);
+    public List<Entity> select(Where where, GroupBy groupBy, OrderBy orderBy, Pagination pagination) {
+        var sqlBuilder = SQLBuilder.Select(table.tableName).SelectColumns(table.selectColumns)
+                .Where(where)
+                .GroupBy(groupBy)
+                .OrderBy(orderBy)
+                .Pagination(pagination);
+
+        var whereParamMap = sqlBuilder.GetWhereParamMap();
+        var sql = sqlBuilder.GetSQL();
+
+        return SQLRunner.query(sql, whereParamMap, entityClass);
     }
 
     /**
-     * <p>count.</p>
+     * 获取条数
      *
-     * @param param      参数对象
-     * @param ignoreLike a boolean.
+     * @param where   查询条件
+     * @param groupBy 分组条件
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer count(Param<Entity> param, boolean ignoreLike) {
-        var sql = SQLBuilder.Select(table.tableName).SelectColumns(new String[]{"COUNT(*)"})
-                .Where(getWhereColumns(param.o, ignoreLike))
-                .WhereSql(param.whereSql)
-                .GroupBy(param.groupBy)
-                .GetSQL();
-        return Integer.parseInt(SQLRunner.query(sql, ObjectUtils.beanToMap(param.o)).get(0).get("COUNT(*)").toString());
+    public Integer count(Where where, GroupBy groupBy) {
+        var sqlBuilder = SQLBuilder.Select(table.tableName)
+                .SelectColumns(new String[]{"COUNT(*)"})
+                .Where(where)
+                .GroupBy(groupBy);
+        var whereParamMap = sqlBuilder.GetWhereParamMap();
+        var sql = sqlBuilder.GetSQL();
+        return Integer.parseInt(SQLRunner.query(sql, whereParamMap).get(0).get("COUNT(*)").toString());
     }
 
     /**
-     * <p>update.</p>
+     * 更新数据
      *
-     * @param param       参数对象
+     * @param entity      要更新的数据
+     * @param where       更新的过滤条件
      * @param includeNull a boolean.
      * @return a {@link cool.scx.bo.UpdateResult} object.
      */
-    public UpdateResult update(Param<Entity> param, boolean includeNull) {
-        var entityMap = ObjectUtils.beanToMap(param.o);
-        var setColumns = Stream.of(table.canUpdateFields)
-                .filter(field -> (!includeNull && ObjectUtils.getFieldValue(field, param.o) != null))
-                .toArray(Field[]::new);
-        var sql = SQLBuilder.Update(table.tableName).UpdateColumns(setColumns);
-        if (param.o.id != null) {
-            sql.WhereSql(" id = :id ");
-        } else if (!StringUtils.isEmpty(param.whereSql)) {
-            sql.WhereSql(param.whereSql);
-        } else {
-            throw new RuntimeException("更新数据时必须指定 id 或 自定义的 where 语句 !!!");
+    public UpdateResult update(Entity entity, Where where, boolean includeNull) {
+        if (where.isEmpty()) {
+            throw new RuntimeException("更新数据时必须指定 id,删除条件 或 自定义的 where 语句 !!!");
         }
-        return SQLRunner.update(sql.GetSQL(), entityMap);
+        var entityMap = ObjectUtils.beanToMap(entity);
+        var setColumns = Stream.of(table.canUpdateFields)
+                .filter(field -> (!includeNull && ObjectUtils.getFieldValue(field, entity) != null))
+                .toArray(Field[]::new);
+        var sqlBuilder = SQLBuilder.Update(table.tableName).UpdateColumns(setColumns).Where(where);
+
+        var whereParamMap = sqlBuilder.GetWhereParamMap();
+        var sql = sqlBuilder.GetSQL();
+        //合并两个 map 包括更新数据的 map 和 where 条件的 map
+        entityMap.putAll(whereParamMap);
+        return SQLRunner.update(sql, entityMap);
     }
 
     /**
-     * <p>delete.</p>
+     * 删除数据
      *
-     * @param param a 参数对象
+     * @param where where 条件
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer delete(Param<Entity> param) {
-        var entityMap = ObjectUtils.beanToMap(param.o);
-        var sql = SQLBuilder.Delete(table.tableName);
-        var whereColumns = getWhereColumns(param.o, false);
-        if (whereColumns.length > 0 || StringUtils.isNotEmpty(param.whereSql)) {
-            sql.Where(whereColumns).WhereSql(param.whereSql);
-        } else {
-            throw new RuntimeException("删除数据时必须指定 删除条件(queryObject) 或 自定义的 where 语句 !!!");
+    public Integer delete(Where where) {
+        if (where.isEmpty()) {
+            throw new RuntimeException("更新数据时必须指定 id,删除条件 或 自定义的 where 语句 !!!");
         }
-        return SQLRunner.update(sql.GetSQL(), entityMap).affectedLength;
-    }
-
-    private String[] getWhereColumns(Entity entity, boolean ignoreLike) {
-        if (ignoreLike) {
-            return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
-                    .map(field -> CaseUtils.toSnake(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
-        } else {
-            return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
-                    .map(field -> {
-                        var columnName = CaseUtils.toSnake(field.getName());
-                        var column = field.getAnnotation(Column.class);
-                        if (column != null && column.useLike()) {
-                            return columnName + " LIKE  CONCAT('%',:" + field.getName() + ",'%')";
-                        } else {
-                            return columnName + " = :" + field.getName();
-                        }
-                    }).toArray(String[]::new);
-        }
+        var sqlBuilder = SQLBuilder.Delete(table.tableName).Where(where);
+        var whereParamMap = sqlBuilder.GetWhereParamMap();
+        var sql = sqlBuilder.GetSQL();
+        return SQLRunner.update(sql, whereParamMap).affectedLength;
     }
 
     /**

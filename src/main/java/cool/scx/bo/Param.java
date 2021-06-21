@@ -1,15 +1,10 @@
 package cool.scx.bo;
 
 import cool.scx.enumeration.SortType;
-import cool.scx.util.Ansi;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
- * 查询参数类
+ * 查询参数类 方便传递参数使用<br>
+ * 只是针对  GroupBy OrderBy Pagination Where 等进行的简单封装 <br>
  *
  * @author 司昌旭
  * @version 1.0.10
@@ -19,37 +14,27 @@ public final class Param<Entity> {
     /**
      * 排序的字段
      */
-    public Map<String, SortType> orderBy = new HashMap<>();
+    public OrderBy orderBy = new OrderBy();
 
     /**
      * 自定义分组 SQL 添加
      */
-    public Set<String> groupBy = new HashSet<>();
+    public GroupBy groupBy = new GroupBy();
 
     /**
-     * 自定义WHERE SQL添加
+     * 自定义WHERE 添加
      */
-    public String whereSql = "";
+    public Where where = new Where();
+
     /**
-     * 查询对象
+     * 分页参数
      */
-    public Entity o;
-    /**
-     * 分页 页码
-     */
-    private Integer page = 0;
-    /**
-     * 分页 每页数量
-     */
-    private Integer limit = 0;
+    public Pagination pagination = new Pagination();
 
     /**
      * <p>Constructor for Param.</p>
-     *
-     * @param queryObject a Entity object.
      */
-    public Param(Entity queryObject) {
-        this.o = queryObject;
+    public Param() {
     }
 
     /**
@@ -60,12 +45,7 @@ public final class Param<Entity> {
      * @return a 当前实例
      */
     public Param<Entity> addOrderBy(String orderByColumn, SortType sortType) {
-        try {
-            o.getClass().getField(orderByColumn);
-            this.orderBy.put(orderByColumn, sortType);
-        } catch (NoSuchFieldException e) {
-            Ansi.OUT.brightRed(orderByColumn + " 不存在于 " + o.getClass() + " 的 field 内 请检查 orderBy 字段是否正确 或直接采用 param.orderBy 进行赋值 !!!").ln();
-        }
+        this.orderBy.add(orderByColumn, sortType);
         return this;
     }
 
@@ -76,12 +56,7 @@ public final class Param<Entity> {
      * @return a 当前实例
      */
     public Param<Entity> addGroupBy(String groupByColumn) {
-        try {
-            o.getClass().getField(groupByColumn);
-            this.groupBy.add(groupByColumn);
-        } catch (NoSuchFieldException e) {
-            Ansi.OUT.brightRed(groupByColumn + " 不存在于 " + o.getClass() + " 的 field 内 请检查 groupBy 字段是否正确 或直接采用 param.groupBy 进行赋值 !!!").ln();
-        }
+        this.groupBy.add(groupByColumn);
         return this;
     }
 
@@ -93,12 +68,7 @@ public final class Param<Entity> {
      * @return p
      */
     public Param<Entity> setPagination(Integer page, Integer limit) {
-        if (page >= 0 && limit >= 0) {
-            this.page = page;
-            this.limit = limit;
-        } else {
-            throw new RuntimeException("分页参数错误!!!");
-        }
+        pagination.set(page, limit);
         return this;
     }
 
@@ -109,31 +79,8 @@ public final class Param<Entity> {
      * @return a 当前实例
      */
     public Param<Entity> setPagination(Integer limit) {
-        if (limit >= 0) {
-            this.page = 1;
-            this.limit = limit;
-        } else {
-            throw new RuntimeException("分页参数错误!!!");
-        }
+        pagination.set(limit);
         return this;
-    }
-
-    /**
-     * 获取 分页索引
-     *
-     * @return a 分页索引
-     */
-    public Integer getPage() {
-        return page;
-    }
-
-    /**
-     * 获取分页大小
-     *
-     * @return a 分页大小
-     */
-    public Integer getLimit() {
-        return limit;
     }
 
 }

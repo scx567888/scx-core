@@ -1,10 +1,12 @@
 package cool.scx.base;
 
 import cool.scx.bo.Param;
+import cool.scx.bo.Where;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.dao.BaseDao;
 import cool.scx.enumeration.SortType;
+import cool.scx.enumeration.WhereType;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.CaseUtils;
@@ -76,51 +78,44 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return 被删除的数据条数 用于前台分页优化
      */
     public Integer deleteByIds(Long... ids) {
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
         if (ScxConfig.realDelete()) {
-            defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-            return baseDao.delete(defaultParam);
+            Where where = new Where().add("id", WhereType.IN, ids);
+            return baseDao.delete(where);
         } else {
-            defaultParam.o.tombstone = true;
-            defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ") AND tombstone = false";
-            return baseDao.update(defaultParam, false).affectedLength;
+            var needUpdateModel = ScxContext.getBean(entityClass);
+            needUpdateModel.tombstone = true;
+            var where = new Where().add("id", WhereType.IN, ids)
+                    .add("tombstone", WhereType.EQUAL, false);
+            return baseDao.update(needUpdateModel, where, false).affectedLength;
         }
     }
 
     /**
      * 根据条件删除
      *
-     * @param param e
+     * @param where e
      * @return e
      */
-    public Integer delete(Param<Entity> param) {
+    public Integer delete(Where where) {
         if (ScxConfig.realDelete()) {
-            return baseDao.delete(param);
+            return baseDao.delete(where);
         } else {
-            param.o.tombstone = true;
-            return baseDao.update(param, false).affectedLength;
+            var needUpdateModel = ScxContext.getBean(entityClass);
+            needUpdateModel.tombstone = true;
+            return baseDao.update(needUpdateModel, where, false).affectedLength;
         }
     }
 
     /**
      * 批量删除
      *
-     * @param entityList a {@link java.util.List} object.
-     * @return a {@link java.lang.Integer} object.
+     * @param whereList a {@link java.util.List} object.
+     * @return 一共删除的数量
      */
-    public Integer deleteList(List<Entity> entityList) {
+    public Integer deleteList(Where... whereList) {
         var deleteCount = 0;
-        if (ScxConfig.realDelete()) {
-            for (Entity entity : entityList) {
-                var defaultParam = new Param<>(entity);
-                deleteCount += baseDao.delete(defaultParam);
-            }
-        } else {
-            for (Entity entity : entityList) {
-                var defaultParam = new Param<>(entity);
-                defaultParam.o.tombstone = true;
-                deleteCount += baseDao.update(defaultParam, false).affectedLength;
-            }
+        for (Where where : whereList) {
+            deleteCount += delete(where);
         }
         return deleteCount;
     }
@@ -135,43 +130,42 @@ public abstract class BaseService<Entity extends BaseModel> {
         if (ScxConfig.realDelete()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
-            var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-            defaultParam.o.tombstone = false;
-            defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-            return baseDao.update(defaultParam, false).affectedLength;
+            var needRevokeDeleteModel = ScxContext.getBean(entityClass);
+            needRevokeDeleteModel.tombstone = false;
+            Where where = new Where().add("id", WhereType.IN, ids);
+            return baseDao.update(needRevokeDeleteModel, where, false).affectedLength;
         }
     }
 
     /**
      * 根据条件恢复删除
      *
-     * @param param e
+     * @param where e
      * @return e
      */
-    public Integer revokeDelete(Param<Entity> param) {
+    public Integer revokeDelete(Where where) {
         if (ScxConfig.realDelete()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
-            param.o.tombstone = false;
-            return baseDao.update(param, false).affectedLength;
+            var needRevokeDeleteModel = ScxContext.getBean(entityClass);
+            needRevokeDeleteModel.tombstone = false;
+            return baseDao.update(needRevokeDeleteModel, where, false).affectedLength;
         }
     }
 
     /**
      * 批量恢复数据
      *
-     * @param entityList a {@link java.util.List} object.
+     * @param whereList a {@link java.util.List} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer revokeDeleteList(List<Entity> entityList) {
+    public Integer revokeDeleteList(Where... whereList) {
         var deleteCount = 0;
         if (ScxConfig.realDelete()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
-            for (Entity entity : entityList) {
-                var defaultParam = new Param<>(entity);
-                defaultParam.o.tombstone = false;
-                deleteCount += baseDao.update(defaultParam, false).affectedLength;
+            for (Where where : whereList) {
+                deleteCount += revokeDelete(where);
             }
         }
         return deleteCount;
@@ -184,32 +178,30 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return 被删除的数据条数 用于前台分页优化
      */
     public Integer deleteByIdsIgnoreConfig(Long... ids) {
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        return baseDao.delete(defaultParam);
+        Where where = new Where().add("id", WhereType.IN, ids);
+        return baseDao.delete(where);
     }
 
     /**
      * 根据条件删除
      *
-     * @param param e
+     * @param where e
      * @return e
      */
-    public Integer deleteIgnoreConfig(Param<Entity> param) {
-        return baseDao.delete(param);
+    public Integer deleteIgnoreConfig(Where where) {
+        return baseDao.delete(where);
     }
 
     /**
      * 批量删除 强制使用 物理删除
      *
-     * @param entityList a {@link java.util.List} object.
+     * @param whereList a {@link java.util.List} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer deleteListIgnoreConfig(List<Entity> entityList) {
+    public Integer deleteListIgnoreConfig(Where... whereList) {
         var deleteCount = 0;
-        for (Entity entity : entityList) {
-            var defaultParam = new Param<>(entity);
-            deleteCount += baseDao.delete(defaultParam);
+        for (Where where : whereList) {
+            deleteCount += deleteIgnoreConfig(where);
         }
         return deleteCount;
     }
@@ -217,16 +209,20 @@ public abstract class BaseService<Entity extends BaseModel> {
     /**
      * <p>update.</p>
      *
-     * @param param a {@link cool.scx.bo.Param} object.
+     * @param entity a {@link cool.scx.bo.Param} object.
+     * @param where  a {@link cool.scx.bo.Param} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Entity> update(Param<Entity> param) {
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        var ids = baseDao.update(param, false);
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.o.tombstone = ScxConfig.realDelete() ? null : false;
-        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        return baseDao.select(defaultParam, false);
+    public List<Entity> update(Entity entity, Where where) {
+        entity.tombstone = ScxConfig.realDelete() ? null : false;
+        var ids = baseDao.update(entity, where, false);
+        //此处重新查询一遍是为了保证数据的一致性
+        Where selectWhere = new Where();
+        if (!ScxConfig.realDelete()) {
+            selectWhere.add("tombstone", WhereType.EQUAL, false);
+        }
+        selectWhere.add("id", WhereType.IN, ids.generatedKeys);
+        return baseDao.select(selectWhere, null, null, null);
     }
 
     /**

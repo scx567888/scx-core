@@ -1,5 +1,9 @@
 package cool.scx.sql;
 
+import cool.scx.bo.GroupBy;
+import cool.scx.bo.OrderBy;
+import cool.scx.bo.Pagination;
+import cool.scx.bo.Where;
 import cool.scx.enumeration.SQLType;
 import cool.scx.enumeration.SortType;
 import cool.scx.util.CaseUtils;
@@ -184,7 +188,7 @@ public final class SQLBuilder {
      * @param whereColumns an array of {@link java.lang.String} objects.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
-    public SQLBuilder Where(String[] whereColumns) {
+    public SQLBuilder Where(Where where) {
         _whereColumns = whereColumns;
         return this;
     }
@@ -195,7 +199,7 @@ public final class SQLBuilder {
      * @param groupBy a {@link java.util.Set} object.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
-    public SQLBuilder GroupBy(Set<String> groupBy) {
+    public SQLBuilder GroupBy(GroupBy groupBy) {
         _groupBySet = groupBy;
         return this;
     }
@@ -206,7 +210,7 @@ public final class SQLBuilder {
      * @param orderBys a {@link java.util.Map} object.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
-    public SQLBuilder OrderBy(Map<String, SortType> orderBys) {
+    public SQLBuilder OrderBy(OrderBy orderBys) {
         _orderByMap = orderBys;
         return this;
     }
@@ -218,7 +222,7 @@ public final class SQLBuilder {
      * @param limit a {@link java.lang.Integer} object.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
-    public SQLBuilder Pagination(Integer page, Integer limit) {
+    public SQLBuilder Pagination(Pagination pagination) {
         _page = page;
         _limit = limit;
         return this;
@@ -304,5 +308,29 @@ public final class SQLBuilder {
                 return "";
         }
     }
+
+    public Map<String,Object> GetWhereParamMap(){
+        return new HashMap<>();
+    }
+
+
+//
+//    private String[] getWhereColumns(Where where, boolean ignoreLike) {
+//        if (ignoreLike) {
+//            return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
+//                    .map(field -> CaseUtils.toSnake(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
+//        } else {
+//            return Stream.of(table.allFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null)
+//                    .map(field -> {
+//                        var columnName = CaseUtils.toSnake(field.getName());
+//                        var column = field.getAnnotation(Column.class);
+//                        if (column != null && column.useLike()) {
+//                            return columnName + " LIKE  CONCAT('%',:" + field.getName() + ",'%')";
+//                        } else {
+//                            return columnName + " = :" + field.getName();
+//                        }
+//                    }).toArray(String[]::new);
+//        }
+//    }
 
 }
