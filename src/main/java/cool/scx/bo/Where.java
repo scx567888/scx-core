@@ -17,28 +17,44 @@ public final class Where {
 
     public List<String> whereSQL = new ArrayList<>();
 
+    /**
+     * where 连接的类型 有 and (0) 和 or (1) 两种
+     */
+    private int connectType=0;
+
     public Where add(String fieldName, WhereType whereType, Object value) {
-        whereBodyList.add(new WhereBody(fieldName, whereType, value));
+        whereBodyList.add(new WhereBody(fieldName, whereType, value, connectType));
         return this;
     }
 
-    public Where whereSql(String whereSql) {
+    public Where add(String whereSql) {
         whereSQL.add(whereSql);
         return this;
     }
 
+    public Where and(){
+
+    }
+
+    public Where or(){
+
+    }
+
     public static class WhereBody {
 
-        public String fieldName;
+        public final String fieldName;
 
-        public WhereType whereType;
+        public final  WhereType whereType;
 
-        public Object value;
+        public final Object value;
 
-        public WhereBody(String fieldName, WhereType whereType, Object value) {
+        public final int connectType;
+
+        public WhereBody(String fieldName, WhereType whereType, Object value, int connectType) {
             this.fieldName = fieldName;
             this.whereType = whereType;
             this.value = value;
+            this.connectType = connectType;
         }
     }
 
