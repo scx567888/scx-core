@@ -17,13 +17,10 @@ import java.util.List;
  */
 public class ScxMappingHandlerRegister {
 
-    /**
-     * <p>register.</p>
-     *
-     * @param router a {@link io.vertx.ext.web.Router} object
-     */
-    public static void register(Router router) {
-        var scxMappingHandlers = new ArrayList<ScxMappingHandler>();
+    private static final List<ScxMappingHandler> SCX_MAPPING_HANDLER_LIST = new ArrayList<ScxMappingHandler>();
+
+    public static void ScanScxMappingHandlers() {
+        SCX_MAPPING_HANDLER_LIST.clear();
         ScxModuleHandler.iterateClass(clazz -> {
             if (clazz.isAnnotationPresent(ScxMapping.class)) {
                 for (var method : clazz.getMethods()) {
@@ -32,17 +29,30 @@ public class ScxMappingHandlerRegister {
                         //现根据 注解 和 方法等创建一个路由
                         var s = new ScxMappingHandler(clazz, method);
                         //此处校验路由是否已经存在
-                        var b = checkRouteExists(scxMappingHandlers, s);
+                        var b = checkRouteExists(s);
                         if (!b) {
-                            scxMappingHandlers.add(s);
+                            SCX_MAPPING_HANDLER_LIST.add(s);
                         }
                     }
                 }
             }
             return true;
         });
+    }
+
+    public static List<ScxMappingHandler> getAllScxMappingHandler() {
+        return SCX_MAPPING_HANDLER_LIST;
+    }
+
+    /**
+     * <p>register.</p>
+     *
+     * @param router a {@link io.vertx.ext.web.Router} object
+     */
+    public static void register(Router router) {
+        ScanScxMappingHandlers();
         //此处排序的意义在于将 需要正则表达式匹配的 放在最后 防止匹配错误
-        scxMappingHandlers.stream().sorted(Comparator.comparing(s -> s.order)).forEachOrdered(c -> {
+        SCX_MAPPING_HANDLER_LIST.stream().sorted(Comparator.comparing(s -> s.order)).forEachOrdered(c -> {
             var route = router.route(c.url);
             c.httpMethods.forEach(route::method);
             route.blockingHandler(c);
@@ -53,12 +63,11 @@ public class ScxMappingHandlerRegister {
     /**
      * 校验路由是否已经存在
      *
-     * @param list    l
      * @param handler h
      * @return true 为存在 false 为不存在
      */
-    private static boolean checkRouteExists(List<ScxMappingHandler> list, ScxMappingHandler handler) {
-        for (var a : list) {
+    private static boolean checkRouteExists(ScxMappingHandler handler) {
+        for (var a : SCX_MAPPING_HANDLER_LIST) {
             if (a.url.equals(handler.url)) {
                 for (var h : handler.httpMethods) {
                     if (a.httpMethods.contains(h)) {

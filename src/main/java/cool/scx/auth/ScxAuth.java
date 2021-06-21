@@ -7,6 +7,7 @@ import cool.scx.exception.AuthException;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.StringUtils;
+import cool.scx.web.handler.ScxMappingHandlerRegister;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.ArrayList;
@@ -275,6 +276,15 @@ public final class ScxAuth {
      */
     public static void addLoginItem(LoginItem loginItem) {
         LOGIN_ITEMS.add(loginItem);
+    }
+
+    /**
+     * 获取所有 ScxMapping 注解上的权限
+     *
+     * @return s
+     */
+    public static String[] getAllScxMappingPerms() {
+        return ScxMappingHandlerRegister.getAllScxMappingHandler().stream().map(s -> s.permStr).toArray(String[]::new);
     }
 
 }

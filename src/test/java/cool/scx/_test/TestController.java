@@ -3,6 +3,7 @@ package cool.scx._test;
 import cool.scx._core._auth.user.User;
 import cool.scx._core._auth.user.UserService;
 import cool.scx.annotation.ScxMapping;
+import cool.scx.auth.ScxAuth;
 import cool.scx.bo.Param;
 import cool.scx.enumeration.Method;
 import cool.scx.util.FileTypeUtils;
@@ -132,6 +133,31 @@ public class TestController {
     public BaseVo bigJson() throws Exception {
         var users = userService.listAll();
         return Json.ok().put("items", users);
+    }
+
+    /**
+     * 测试!!!
+     */
+    @ScxMapping(method = Method.GET)
+    public BaseVo allPerms() throws Exception {
+        var perms = ScxAuth.getAllScxMappingPerms();
+        return Json.ok().put("items", perms);
+    }
+
+    /**
+     * 测试!!!
+     */
+    @ScxMapping(method = Method.GET)
+    public BaseVo a() throws Exception {
+        return Json.ok().put("items", "a");
+    }
+
+    /**
+     * 测试!!!
+     */
+    @ScxMapping(value = "a", method = Method.GET)
+    public BaseVo b() throws Exception {
+        return Json.ok().put("items", "b");
     }
 
 }
