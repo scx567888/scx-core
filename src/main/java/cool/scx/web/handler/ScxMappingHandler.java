@@ -199,13 +199,13 @@ class ScxMappingHandler implements Handler<RoutingContext> {
     private String getUrl() {
         var urlList = new ArrayList<String>();
         //获取父级的 url
-        if (classScxMapping.useMethodNameAsUrl() && "".equals(classScxMapping.value())) {
+        if (classScxMapping.useNameAsUrl() && "".equals(classScxMapping.value())) {
             urlList.add(CaseUtils.toKebab(clazz.getSimpleName().replace("Controller", "")));
         } else {
             urlList.add(classScxMapping.value());
         }
         //获取方法的 url
-        if (methodScxMapping.useMethodNameAsUrl() && "".equals(methodScxMapping.value())) {
+        if (methodScxMapping.useNameAsUrl() && "".equals(methodScxMapping.value())) {
             urlList.add(CaseUtils.toKebab(method.getName()));
         } else {
             urlList.add(methodScxMapping.value());

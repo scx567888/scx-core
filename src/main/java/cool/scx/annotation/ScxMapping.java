@@ -40,13 +40,15 @@ public @interface ScxMapping {
     String value() default "";
 
     /**
-     * 是否使用方法名称作为 mapping 名称
-     * 如 方法名为  getUserList
-     * 则 api为 api/user/getUserList
+     * 是否使用类名(方法名)称作为 url 路径 <br>
+     * 仅当 value 为 "" 时生效 <br>
+     * 规则为 去除类名的 controller 后缀 (如果有) 并获取方法名称 然后转换为 短横线命名法 <br>
+     * 如 类名为  UserController 方法名为  getUserList <br>
+     * 则 url 为 /user/get-user-list
      *
      * @return 标识
      */
-    boolean useMethodNameAsUrl() default true;
+    boolean useNameAsUrl() default true;
 
     /**
      * 请求标识 默认只支持 get 请求

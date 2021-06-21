@@ -16,7 +16,7 @@ import java.util.Map;
  * @author 司昌旭
  * @version 0.3.6
  */
-@ScxMapping
+@ScxMapping("/api/auth")
 public class AuthController {
 
     /**
