@@ -2,20 +2,20 @@ package cool.scx._test;
 
 import cool.scx._core._auth.user.User;
 import cool.scx._core._auth.user.UserService;
+import cool.scx._test.car.Car;
+import cool.scx._test.car.CarService;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.ScxAuth;
 import cool.scx.bo.Param;
 import cool.scx.enumeration.Method;
-import cool.scx.util.FileTypeUtils;
-import cool.scx.util.HttpUtils;
-import cool.scx.util.MD5Utils;
-import cool.scx.util.StringUtils;
+import cool.scx.util.*;
 import cool.scx.vo.*;
 
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 简单测试
@@ -28,13 +28,17 @@ public class TestController {
 
     private final UserService userService;
 
+    private final CarService carService;
+
     /**
      * TestController
      *
      * @param userService a
+     * @param carService
      */
-    public TestController(UserService userService) {
+    public TestController(UserService userService, CarService carService) {
         this.userService = userService;
+        this.carService = carService;
     }
 
     /**
@@ -158,6 +162,37 @@ public class TestController {
     @ScxMapping(value = "a", method = Method.GET)
     public BaseVo b() throws Exception {
         return Json.ok().put("items", "b");
+    }
+
+    /**
+     * 测试!!!
+     */
+    @ScxMapping(method = Method.GET)
+    public BaseVo testSelectJson() throws Exception {
+        var count = carService.count(new Param<>(new Car()));
+        if (count < 20) {
+            var list = new ArrayList<Car>();
+            for (int i = 0; i < 30; i++) {
+                Car car = new Car();
+                car.name = "小汽车" + i;
+                car.tags = List.of("tag" + i, "tag" + (i + 1));
+                list.add(car);
+            }
+            carService.saveList(list);
+        }
+
+        var p = new Param<>(new Car());
+        //不用考虑顺序
+        var s = new ArrayList<String>();
+        s.add("tag21");
+        s.add("tag20");
+        //可以直接构建字符串
+//        p.whereSql = " JSON_CONTAINS (tags,'[\"tag21\",\"tag20\"]' ) ";
+        //也可以构建 对象并序列化
+        p.whereSql = " JSON_CONTAINS (tags,'" + ObjectUtils.beanToJson(s) + "' ) ";
+        var g = carService.list(p);
+
+        return Json.ok().put("items", g);
     }
 
 }
