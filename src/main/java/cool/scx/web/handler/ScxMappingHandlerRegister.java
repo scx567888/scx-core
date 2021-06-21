@@ -19,6 +19,9 @@ public class ScxMappingHandlerRegister {
 
     private static final List<ScxMappingHandler> SCX_MAPPING_HANDLER_LIST = new ArrayList<ScxMappingHandler>();
 
+    /**
+     * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.</p>
+     */
     public static void ScanScxMappingHandlers() {
         SCX_MAPPING_HANDLER_LIST.clear();
         ScxModuleHandler.iterateClass(clazz -> {
@@ -40,6 +43,11 @@ public class ScxMappingHandlerRegister {
         });
     }
 
+    /**
+     * 获取所有被ScxMapping注解标记的方法的 handler
+     *
+     * @return 所有 handler
+     */
     public static List<ScxMappingHandler> getAllScxMappingHandler() {
         return SCX_MAPPING_HANDLER_LIST;
     }
