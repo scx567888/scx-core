@@ -4,10 +4,10 @@ import cool.scx.annotation.FromBody;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.base.BaseModel;
 import cool.scx.base.BaseService;
-import cool.scx.bo.Param;
+import cool.scx.bo.QueryParam;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
-import cool.scx.enumeration.SortType;
+import cool.scx.enumeration.OrderByType;
 import cool.scx.exception.BadRequestException;
 import cool.scx.exception.CustomHttpRequestException;
 import cool.scx.exception.HttpRequestException;
@@ -55,7 +55,7 @@ public class CrudController {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends BaseModel> Param<T> getParam(String modelName, Integer limit, Integer page, String orderByColumn, String sortType, Map<String, Object> queryObject) {
+    private <T extends BaseModel> QueryParam getParam(String modelName, Integer limit, Integer page, String orderByColumn, String sortType, Map<String, Object> queryObject) {
         var modelClass = (Class<T>) ScxContext.getClassByName(modelName);
         T o = ObjectUtils.mapToBean(queryObject, modelClass);
         if (o == null) {
@@ -65,15 +65,15 @@ public class CrudController {
 
             }
         }
-        var p = new Param<>(o);
+        var p = new QueryParam();
         if (limit != null && limit != -1) {
             p.setPagination(page, limit);
         }
         if (orderByColumn != null) {
             if (sortType == null || "desc".equals(sortType)) {
-                p.addOrderBy(orderByColumn, SortType.DESC);
+                p.addOrderBy(orderByColumn, OrderByType.DESC);
             } else {
-                p.addOrderBy(orderByColumn, SortType.ASC);
+                p.addOrderBy(orderByColumn, OrderByType.ASC);
             }
         }
         return p;
@@ -102,8 +102,8 @@ public class CrudController {
     ) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, limit, page, orderByColumn, sortType, queryObject);
-        var list = baseService.listWithLike(param);
-        var count = baseService.countWithLike(param);
+        var list = baseService.list(param);
+        var count = baseService.count(param);
         return Json.ok().put("items", list).put("total", count);
     }
 
@@ -225,10 +225,10 @@ public class CrudController {
     public Json checkUnique(String modelName, Map<String, Object> params) throws HttpRequestException {
         var baseService = getBaseService(modelName);
         var param = getParam(modelName, null, null, null, null, params);
-        if (param.o.id != null) {
-            param.whereSql = "id != " + param.o.id;
-        }
-        param.o.id = null;
+//        if (param.o.id != null) {
+//            param.whereSql = "id != " + param.o.id;
+//        }
+//        param.o.id = null;
         var b = baseService.count(param) == 0;
         return Json.ok().put("isUnique", b);
     }

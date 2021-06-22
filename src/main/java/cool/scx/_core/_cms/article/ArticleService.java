@@ -2,7 +2,7 @@ package cool.scx._core._cms.article;
 
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
-import cool.scx.bo.Param;
+import cool.scx.bo.QueryParam;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class ArticleService extends BaseService<Article> {
      */
     public Object testListAll(Map<String, Object> params) {
         var author = params.get("author") != null ? params.get("author").toString() : "";
-        var p = new Param<>(new Article());
+        var p = new QueryParam();
         Integer count = count(p);
         if (count < 20) {
             var l = new ArrayList<Article>();

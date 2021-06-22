@@ -1,28 +1,29 @@
 package cool.scx.enumeration;
 
 /**
- * <p>HttpMethod class.</p>
+ * 排序类型
  *
  * @author 司昌旭
  * @version 0.3.6
  */
-public enum Method {
+public enum OrderByType {
 
-    POST("POST"),
-    GET("GET"),
-    PUT("PUT"),
-    DELETE("DELETE"),
-    HEAD("HEAD"),
-    TRANCE("TRANCE"),
-    CONNECT("CONNECT"),
-    PATCH("PATCH"),
-    OPTION("OPTION");
+    /**
+     * 正序 : 也就是从小到大 (1,2,3,4,5,6)
+     */
+    ASC("ASC"),
+
+    /**
+     * 倒序 : 也就是从大到小 (6,5,4,3,2,1)
+     */
+    DESC("DESC");
 
     private final String value;
 
-    Method(String value) {
+    OrderByType(String value) {
         this.value = value;
     }
+
 
     /**
      * {@inheritDoc}
@@ -33,4 +34,5 @@ public enum Method {
     public String toString() {
         return this.value;
     }
+
 }

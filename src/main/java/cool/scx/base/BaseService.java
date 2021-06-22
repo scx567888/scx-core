@@ -1,17 +1,17 @@
 package cool.scx.base;
 
-import cool.scx.bo.Param;
+import cool.scx.bo.*;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.dao.BaseDao;
-import cool.scx.enumeration.SortType;
+import cool.scx.enumeration.OrderByType;
+import cool.scx.enumeration.WhereType;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.CaseUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * 最基本的 service 类
@@ -76,51 +76,45 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return 被删除的数据条数 用于前台分页优化
      */
     public Integer deleteByIds(Long... ids) {
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
+        //分逻辑删除和物理删除
         if (ScxConfig.realDelete()) {
-            defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-            return baseDao.delete(defaultParam);
+            var where = new Where().add("id", WhereType.IN, ids);
+            return baseDao.delete(where);
         } else {
-            defaultParam.o.tombstone = true;
-            defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ") AND tombstone = false";
-            return baseDao.update(defaultParam, false).affectedLength;
+            var needUpdateModel = ScxContext.getBean(entityClass);
+            needUpdateModel.tombstone = true;
+            var where = new Where().add("id", WhereType.IN, ids)
+                    .add("tombstone", WhereType.EQUAL, false);
+            return baseDao.update(needUpdateModel, where, false).affectedLength;
         }
     }
 
     /**
      * 根据条件删除
      *
-     * @param param e
+     * @param where e
      * @return e
      */
-    public Integer delete(Param<Entity> param) {
+    public Integer delete(Where where) {
         if (ScxConfig.realDelete()) {
-            return baseDao.delete(param);
+            return baseDao.delete(where);
         } else {
-            param.o.tombstone = true;
-            return baseDao.update(param, false).affectedLength;
+            var needUpdateModel = ScxContext.getBean(entityClass);
+            needUpdateModel.tombstone = true;
+            return baseDao.update(needUpdateModel, where, false).affectedLength;
         }
     }
 
     /**
      * 批量删除
      *
-     * @param entityList a {@link java.util.List} object.
-     * @return a {@link java.lang.Integer} object.
+     * @param whereList a {@link java.util.List} object.
+     * @return 一共删除的数量
      */
-    public Integer deleteList(List<Entity> entityList) {
+    public Integer deleteList(Where... whereList) {
         var deleteCount = 0;
-        if (ScxConfig.realDelete()) {
-            for (Entity entity : entityList) {
-                var defaultParam = new Param<>(entity);
-                deleteCount += baseDao.delete(defaultParam);
-            }
-        } else {
-            for (Entity entity : entityList) {
-                var defaultParam = new Param<>(entity);
-                defaultParam.o.tombstone = true;
-                deleteCount += baseDao.update(defaultParam, false).affectedLength;
-            }
+        for (Where where : whereList) {
+            deleteCount += delete(where);
         }
         return deleteCount;
     }
@@ -135,43 +129,42 @@ public abstract class BaseService<Entity extends BaseModel> {
         if (ScxConfig.realDelete()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
-            var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-            defaultParam.o.tombstone = false;
-            defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-            return baseDao.update(defaultParam, false).affectedLength;
+            var needRevokeDeleteModel = ScxContext.getBean(entityClass);
+            needRevokeDeleteModel.tombstone = false;
+            Where where = new Where().add("id", WhereType.IN, ids);
+            return baseDao.update(needRevokeDeleteModel, where, false).affectedLength;
         }
     }
 
     /**
      * 根据条件恢复删除
      *
-     * @param param e
+     * @param where e
      * @return e
      */
-    public Integer revokeDelete(Param<Entity> param) {
+    public Integer revokeDelete(Where where) {
         if (ScxConfig.realDelete()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
-            param.o.tombstone = false;
-            return baseDao.update(param, false).affectedLength;
+            var needRevokeDeleteModel = ScxContext.getBean(entityClass);
+            needRevokeDeleteModel.tombstone = false;
+            return baseDao.update(needRevokeDeleteModel, where, false).affectedLength;
         }
     }
 
     /**
      * 批量恢复数据
      *
-     * @param entityList a {@link java.util.List} object.
+     * @param whereList a {@link java.util.List} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer revokeDeleteList(List<Entity> entityList) {
+    public Integer revokeDeleteList(Where... whereList) {
         var deleteCount = 0;
         if (ScxConfig.realDelete()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
-            for (Entity entity : entityList) {
-                var defaultParam = new Param<>(entity);
-                defaultParam.o.tombstone = false;
-                deleteCount += baseDao.update(defaultParam, false).affectedLength;
+            for (Where where : whereList) {
+                deleteCount += revokeDelete(where);
             }
         }
         return deleteCount;
@@ -184,32 +177,30 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return 被删除的数据条数 用于前台分页优化
      */
     public Integer deleteByIdsIgnoreConfig(Long... ids) {
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        return baseDao.delete(defaultParam);
+        Where where = new Where().add("id", WhereType.IN, ids);
+        return baseDao.delete(where);
     }
 
     /**
      * 根据条件删除
      *
-     * @param param e
+     * @param where e
      * @return e
      */
-    public Integer deleteIgnoreConfig(Param<Entity> param) {
-        return baseDao.delete(param);
+    public Integer deleteIgnoreConfig(Where where) {
+        return baseDao.delete(where);
     }
 
     /**
      * 批量删除 强制使用 物理删除
      *
-     * @param entityList a {@link java.util.List} object.
+     * @param whereList a {@link java.util.List} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer deleteListIgnoreConfig(List<Entity> entityList) {
+    public Integer deleteListIgnoreConfig(Where... whereList) {
         var deleteCount = 0;
-        for (Entity entity : entityList) {
-            var defaultParam = new Param<>(entity);
-            deleteCount += baseDao.delete(defaultParam);
+        for (Where where : whereList) {
+            deleteCount += deleteIgnoreConfig(where);
         }
         return deleteCount;
     }
@@ -217,64 +208,83 @@ public abstract class BaseService<Entity extends BaseModel> {
     /**
      * <p>update.</p>
      *
-     * @param param a {@link cool.scx.bo.Param} object.
+     * @param entity a {@link QueryParam} object.
+     * @param where  a {@link QueryParam} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Entity> update(Param<Entity> param) {
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        var ids = baseDao.update(param, false);
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.o.tombstone = ScxConfig.realDelete() ? null : false;
-        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        return baseDao.select(defaultParam, false);
+    public List<Entity> update(Entity entity, Where where) {
+        entity.tombstone = ScxConfig.realDelete() ? null : false;
+        var ids = baseDao.update(entity, where, false);
+        //此处重新查询一遍是为了保证数据的一致性
+        Where selectWhere = new Where();
+        if (!ScxConfig.realDelete()) {
+            selectWhere.add("tombstone", WhereType.EQUAL, false);
+        }
+        return baseDao.select(selectWhere, null, null, null);
     }
 
     /**
-     * <p>update.</p>
+     * 根据 id 更新
      *
      * @param entity a Entity object.
      * @return a Entity object.
      */
     public Entity update(Entity entity) {
-        var param = new Param<>(entity);
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        var ids = baseDao.update(param, false);
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.o.tombstone = ScxConfig.realDelete() ? null : false;
-        defaultParam.setPagination(1).whereSql = "id = " + entity.id;
-        var list = baseDao.select(defaultParam, false);
+        var id = entity.id;
+        if (id == null) {
+            throw new RuntimeException("根据 id 更新时 id 不能为空");
+        }
+        var where = new Where().add("id", WhereType.EQUAL, id);
+        if (!ScxConfig.realDelete()) {
+            where.add("tombstone", WhereType.EQUAL, false);
+        }
+        var ids = baseDao.update(entity, where, false);
+        var list = baseDao.select(
+                new Where().add("id", WhereType.EQUAL, id),
+                null,
+                null,
+                new Pagination().set(1));
         return list.size() > 0 ? list.get(0) : null;
     }
 
     /**
-     * 根据 whereSql 更新 保护 null
+     * 根据 where 更新 包含 null
      *
-     * @param param 更新的参数
+     * @param where 更新条件
      * @return 更新后的数据
      */
-    public List<Entity> updateIncludeNull(Param<Entity> param) {
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        var ids = baseDao.update(param, true);
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.o.tombstone = ScxConfig.realDelete() ? null : false;
-        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        return baseDao.select(defaultParam, false);
+    public List<Entity> updateIncludeNull(Entity entity, Where where) {
+        entity.tombstone = ScxConfig.realDelete() ? null : false;
+        var ids = baseDao.update(entity, where, true);
+        //此处重新查询一遍是为了保证数据的一致性
+        Where selectWhere = new Where();
+        if (!ScxConfig.realDelete()) {
+            selectWhere.add("tombstone", WhereType.EQUAL, false);
+        }
+        return baseDao.select(selectWhere, null, null, null);
     }
 
     /**
-     * <p>updateIncludeNull.</p>
+     * 根据 id 更新 同时包含 null 值
      *
      * @param entity a Entity object.
      * @return a Entity object.
      */
     public Entity updateIncludeNull(Entity entity) {
-        var param = new Param<>(entity);
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        var ids = baseDao.update(param, true);
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.o.tombstone = ScxConfig.realDelete() ? null : false;
-        defaultParam.setPagination(1).whereSql = "id = " + ids.generatedKeys.get(0);
-        var list = baseDao.select(defaultParam, false);
+        var id = entity.id;
+        if (id == null) {
+            throw new RuntimeException("根据 id 更新时 id 不能为空");
+        }
+        var where = new Where().add("id", WhereType.EQUAL, id);
+        if (!ScxConfig.realDelete()) {
+            where.add("tombstone", WhereType.EQUAL, false);
+        }
+        var ids = baseDao.update(entity, where, true);
+        var list = baseDao.select(
+                new Where().add("id", WhereType.EQUAL, id),
+                null,
+                null,
+                new Pagination().set(1));
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -285,69 +295,55 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return e
      */
     public Entity getById(Long id) {
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.whereSql = "id = " + id;
-        return get(defaultParam);
+        var where = new Where("id", WhereType.EQUAL, id);
+        var pagination = new Pagination(1);
+        if (!ScxConfig.realDelete()) {
+            where.add("tombstone", WhereType.EQUAL, false);
+        }
+        var list = baseDao.select(where, null, null, pagination);
+        return list.size() > 0 ? list.get(0) : null;
     }
 
     /**
      * 根据条件获取单个对象
      *
-     * @param param a
-     * @return e
+     * @param queryParam a
+     * @return 查到多个则返回第一个 没有则返回 null
      */
-    public Entity get(Param<Entity> param) {
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        param.setPagination(1);
-        var list = baseDao.select(param, true);
-        return list.size() > 0 ? list.get(0) : null;
-    }
-
-    /**
-     * <p>getWithLike.</p>
-     *
-     * @param param a {@link cool.scx.bo.Param} object.
-     * @return a Entity object.
-     */
-    public Entity getWithLike(Param<Entity> param) {
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        param.setPagination(1);
-        var list = baseDao.select(param, false);
+    public Entity get(QueryParam queryParam) {
+        queryParam.setPagination(1);
+        if (!ScxConfig.realDelete()) {
+            queryParam.where.add("tombstone", WhereType.EQUAL, false);
+        }
+        var list = baseDao.select(queryParam.where, queryParam.groupBy, queryParam.orderBy, queryParam.pagination);
         return list.size() > 0 ? list.get(0) : null;
     }
 
     /**
      * 根据条件统计实体数 不提供模糊查询
      *
-     * @param param e
+     * @param queryParam e
      * @return e
      */
-    public Integer count(Param<Entity> param) {
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        return baseDao.count(param, true);
-    }
-
-    /**
-     * <p>countWithLike.</p>
-     *
-     * @param param a {@link cool.scx.bo.Param} object.
-     * @return a {@link java.lang.Integer} object.
-     */
-    public Integer countWithLike(Param<Entity> param) {
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        return baseDao.count(param, false);
+    public Integer count(QueryParam queryParam) {
+        if (!ScxConfig.realDelete()) {
+            queryParam.where.add("tombstone", WhereType.EQUAL, false);
+        }
+        return baseDao.count(queryParam.where, null);
     }
 
     /**
      * 根据实体条件查询实体列表带 Like 条件 需要在实体类上注解@Like
      * 查询分页数据（提供模糊查询）
      *
-     * @param param e
+     * @param queryParam e
      * @return e
      */
-    public List<Entity> list(Param<Entity> param) {
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        return baseDao.select(param, true);
+    public List<Entity> list(QueryParam queryParam) {
+        if (!ScxConfig.realDelete()) {
+            queryParam.where.add("tombstone", WhereType.EQUAL, false);
+        }
+        return baseDao.select(queryParam.where, queryParam.groupBy, queryParam.orderBy, queryParam.pagination);
     }
 
     /**
@@ -357,21 +353,11 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return a {@link java.util.List} object.
      */
     public List<Entity> listByIds(Long... ids) {
-        var defaultParam = new Param<>(ScxContext.getBean(entityClass));
-        defaultParam.o.tombstone = ScxConfig.realDelete() ? null : false;
-        defaultParam.whereSql = " id IN (" + String.join(",", Stream.of(ids).map(String::valueOf).toArray(String[]::new)) + ")";
-        return baseDao.select(defaultParam, true);
-    }
-
-    /**
-     * 查询 包含 like
-     *
-     * @param param a {@link cool.scx.bo.Param} object.
-     * @return a {@link java.util.List} object.
-     */
-    public List<Entity> listWithLike(Param<Entity> param) {
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        return baseDao.select(param, false);
+        var where = new Where("id", WhereType.IN, ids);
+        if (!ScxConfig.realDelete()) {
+            where.add("tombstone", WhereType.EQUAL, false);
+        }
+        return baseDao.select(where, null, null, null);
     }
 
     /**
@@ -380,9 +366,9 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return a {@link java.util.List} object.
      */
     public List<Entity> listAll() {
-        var param = new Param<>(ScxContext.getBean(entityClass)).addOrderBy("id", SortType.DESC);
-        param.o.tombstone = ScxConfig.realDelete() ? null : false;
-        return baseDao.select(param, false);
+        var where = ScxConfig.realDelete() ? null : new Where("tombstone", WhereType.EQUAL, false);
+        var orderBy = new OrderBy("id", OrderByType.DESC);
+        return baseDao.select(where, null, orderBy, null);
     }
 
     /**
@@ -392,11 +378,10 @@ public abstract class BaseService<Entity extends BaseModel> {
      * @return 以 value 为键值的 list 集合
      */
     public List<Map<String, Object>> getFieldList(String fieldName) {
-        if (Arrays.stream(baseDao.table().allFields).filter(field -> field.getName().equals(fieldName)).count() == 1) {
-            var sql = SQLBuilder.Select(baseDao.table().tableName).SelectColumns(new String[]{CaseUtils.toSnake(fieldName) + " As value "})
-                    .WhereSql(ScxConfig.realDelete() ? "" : " tombstone = FALSE").GroupBy(new HashSet<>() {{
-                        add("value");
-                    }}).GetSQL();
+        //确保查询字段在 数据库字段内 防止 sql 注入
+        if (Arrays.stream(baseDao.tableInfo().allFields).filter(field -> field.getName().equals(fieldName)).count() == 1) {
+            var sql = SQLBuilder.Select(baseDao.tableInfo().tableName).SelectColumns(new String[]{CaseUtils.toSnake(fieldName) + " As value "})
+                    .Where(new Where(ScxConfig.realDelete() ? "" : " tombstone = FALSE")).GroupBy(new GroupBy("value")).GetSQL();
             return SQLRunner.query(sql, new HashMap<>());
         } else {
             return new ArrayList<>();

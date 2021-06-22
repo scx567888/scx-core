@@ -15,11 +15,11 @@ import cool.scx.auth.ScxAuth;
 import cool.scx.auth.exception.UnknownDeviceException;
 import cool.scx.auth.exception.UnknownUserException;
 import cool.scx.auth.exception.WrongPasswordException;
-import cool.scx.bo.Param;
+import cool.scx.bo.QueryParam;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.DeviceType;
-import cool.scx.enumeration.SortType;
+import cool.scx.enumeration.OrderByType;
 import cool.scx.exception.AuthException;
 import cool.scx.exception.UnauthorizedException;
 import cool.scx.util.Ansi;
@@ -149,15 +149,15 @@ public class CoreAuthHandler implements AuthHandler {
      * @return a {@link cool.scx.vo.Json} object
      */
     public Json signup(String username, String password) {
-        var newUser = new Param<>(new User());
-        newUser.addOrderBy("id", SortType.ASC).o.username = username;
+        var newUser = new QueryParam();
+//        newUser.addOrderBy("id", OrderByType.ASC).o.username = username;
         User user = userService.get(newUser);
         if (user != null) {
             return Json.fail("userAlreadyExists");
         } else {
-            newUser.o.isAdmin = false;
-            newUser.o.password = password;
-            registeredUser(newUser.o);
+//            newUser.o.isAdmin = false;
+//            newUser.o.password = password;
+//            registeredUser(newUser.o);
             return Json.fail("registerSuccess");
         }
     }

@@ -8,16 +8,35 @@ package cool.scx.enumeration;
  */
 public enum DeviceType {
 
+    /**
+     * 安卓设备
+     */
     ANDROID("ANDROID"),
+
+    /**
+     * 苹果设备
+     */
     APPLE("APPLE"),
+
+    /**
+     * 后台管理
+     */
     ADMIN("ADMIN"),
+
+    /**
+     * 网页
+     */
     WEBSITE("WEBSITE"),
+
+    /**
+     * 未知
+     */
     UNKNOWN("UNKNOWN");
 
-    private final String device_str;
+    private final String value;
 
-    DeviceType(String device_str) {
-        this.device_str = device_str;
+    DeviceType(String value) {
+        this.value = value;
     }
 
     /**
@@ -27,6 +46,7 @@ public enum DeviceType {
      */
     @Override
     public String toString() {
-        return this.device_str;
+        return this.value;
     }
+
 }
