@@ -35,8 +35,8 @@ public class ArticleService extends BaseService<Article> {
                 a.articleContent = "文章内容" + i;
                 l.add(a);
             }
-            saveList(l);
+            save(l);
         }
-        return listAll();
+        return list();
     }
 }

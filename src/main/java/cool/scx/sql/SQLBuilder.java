@@ -364,7 +364,7 @@ public final class SQLBuilder {
      * @param selectColumns an array of {@link java.lang.String} objects.
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
-    public SQLBuilder SelectColumns(String[] selectColumns) {
+    public SQLBuilder SelectColumns(String... selectColumns) {
         _selectColumns = selectColumns;
         return this;
     }

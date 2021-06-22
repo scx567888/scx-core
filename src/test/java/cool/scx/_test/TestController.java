@@ -65,7 +65,7 @@ public class TestController {
                 s.isAdmin = false;
                 s1.add(s);
             }
-            userService.saveList(s1);
+            userService.save(s1);
             for (int i = 0; i < 25; i++) {
                 var s = new User();
                 var uuid = StringUtils.getUUID();
@@ -138,7 +138,7 @@ public class TestController {
      */
     @ScxMapping(method = Method.GET)
     public BaseVo bigJson() throws Exception {
-        var users = userService.listAll();
+        var users = userService.list();
         return Json.ok().put("items", users);
     }
 
@@ -173,6 +173,40 @@ public class TestController {
     @ScxMapping(method = Method.GET)
     public BaseVo testSelectJson() throws Exception {
 
+//        //查询
+//        carService.list();
+//
+//        //查询条数
+//        carService.count();
+//
+//        //保存
+//        carService.saveList();
+//        carService.save();
+//
+//        //更新
+//        carService.update();
+//        carService.update();
+//        carService.updateIncludeNull();
+//        carService.updateIncludeNull();
+//
+//        //删除
+//        carService.revokeDeleteList();
+//        carService.deleteByIds();
+//        carService.deleteList();
+//        carService.deleteIgnoreConfig();
+//        carService.deleteByIdsIgnoreConfig();
+//        carService.deleteListIgnoreConfig();
+//
+//        //恢复删除
+//        carService.revokeDelete();
+//        carService.revokeDeleteByIds();
+//        carService.revokeDeleteList();
+//
+//        //other
+//        carService.getFieldList();
+//
+//
+//        carService.getFieldList()
 
 //        carService.count(new Param<>())
 
@@ -185,7 +219,7 @@ public class TestController {
                 car.tags = List.of("tag" + i, "tag" + (i + 1));
                 list.add(car);
             }
-            carService.saveList(list);
+            carService.save(list);
         }
 
         var p = new QueryParam();

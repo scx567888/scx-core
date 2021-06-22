@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 public class UserService extends BaseService<User> {
 
 
+    private  BaseService<User> a=new BaseService<>(User.class);
+
     /**
      * 部门 service
      */

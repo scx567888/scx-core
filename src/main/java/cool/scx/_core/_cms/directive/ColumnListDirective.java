@@ -33,7 +33,7 @@ public class ColumnListDirective implements BaseTemplateDirective {
      */
     @Override
     public Object getResults(Map<String, Object> params) {
-        return columnService.listAll();
+        return columnService.list();
     }
 
     /**

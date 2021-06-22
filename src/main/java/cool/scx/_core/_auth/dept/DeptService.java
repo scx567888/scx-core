@@ -65,7 +65,7 @@ public class DeptService extends BaseService<Dept> {
                         return userDept;
                     }
             ).collect(Collectors.toList());
-            userDeptService.saveList(idArr);
+            userDeptService.save(idArr);
         }
     }
 

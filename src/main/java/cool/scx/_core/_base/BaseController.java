@@ -8,6 +8,7 @@ import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.FileUpload;
 import cool.scx.bo.QueryParam;
 import cool.scx.enumeration.Method;
+import cool.scx.enumeration.WhereType;
 import cool.scx.exception.HttpRequestException;
 import cool.scx.exception.NotFoundException;
 import cool.scx.util.*;
@@ -23,7 +24,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>UploadController class.</p>
@@ -133,8 +133,7 @@ public class BaseController {
      */
     @ScxMapping(value = "/download/:fileId", method = {Method.GET, Method.HEAD})
     public Download download(String fileId) throws HttpRequestException {
-        var param = new QueryParam();
-//        param.o.fileId = fileId;
+        var param = new QueryParam().addWhere("fileId",WhereType.EQUAL,fileId);
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
@@ -157,8 +156,7 @@ public class BaseController {
      */
     @ScxMapping(value = "/binary/:fileId", method = {Method.GET, Method.HEAD})
     public Binary binary(String fileId) throws HttpRequestException {
-        var param = new QueryParam();
-//        param.o.fileId = fileId;
+        var param = new QueryParam().addWhere("fileId",WhereType.EQUAL,fileId);
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
@@ -185,8 +183,7 @@ public class BaseController {
                          @FromQuery(value = "w", required = false) Integer width,
                          @FromQuery(value = "h", required = false) Integer height,
                          @FromQuery(value = "t", required = false) String type) throws HttpRequestException {
-        var param = new QueryParam();
-//        param.o.fileId = fileId;
+        var param = new QueryParam().addWhere("fileId",WhereType.EQUAL,fileId);
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
@@ -276,10 +273,9 @@ public class BaseController {
     public Json listFile(List<String> fileIds) {
         var param = new QueryParam();
         if (StringUtils.isNotEmpty(fileIds)) {
-            String collect = fileIds.stream().map(s -> "'" + s + "'").collect(Collectors.joining(","));
-//            param.whereSql = " file_id in (" + collect + ")";
+            param.addWhere("fileId", WhereType.IN, fileIds);
         } else {
-//            param.whereSql = " file_id = -1";
+            param.addWhere("fileId", WhereType.EQUAL, -1);
         }
         return Json.ok().put("items", uploadFileService.list(param));
     }
@@ -299,8 +295,7 @@ public class BaseController {
 
         if (needDeleteFile != null) {
             //判断文件是否被其他人引用过
-            var param1 = new QueryParam();
-//            param1.o.fileMD5 = needDeleteFile.fileMD5;
+            var param1 = new QueryParam().addWhere("fileMD5", WhereType.EQUAL, needDeleteFile.fileMD5);
             Integer count = uploadFileService.count(param1);
 
             //没有被其他人引用过 可以删除物理文件
@@ -315,7 +310,7 @@ public class BaseController {
                 }
             }
             //删除数据库中的文件数据
-            uploadFileService.deleteByIds(needDeleteFile.id);
+            uploadFileService.delete(needDeleteFile.id);
         }
 
         return Json.ok();

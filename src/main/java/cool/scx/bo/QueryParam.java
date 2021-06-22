@@ -1,10 +1,12 @@
 package cool.scx.bo;
 
 import cool.scx.enumeration.OrderByType;
+import cool.scx.enumeration.WhereType;
 
 /**
- * 查询参数类 方便传递参数使用<br>
- * 只是针对  GroupBy OrderBy Pagination Where 等进行的简单封装 <br>
+ * 查询参数类<br>
+ * 针对  GroupBy OrderBy Pagination Where 等进行的简单封装 <br>
+ * 只是 为了方便传递参数使用<br>
  *
  * @author 司昌旭
  * @version 1.0.10
@@ -35,17 +37,17 @@ public final class QueryParam {
      * <p>Constructor for Param.</p>
      */
     public QueryParam() {
+
     }
 
-    /**
-     * 添加排序项
-     *
-     * @param orderByColumn a {@link java.lang.String} object.
-     * @param orderByType   a {@link cool.scx.enumeration.OrderByType} object.
-     * @return a 当前实例
-     */
-    public QueryParam addOrderBy(String orderByColumn, OrderByType orderByType) {
-        this.orderBy.add(orderByColumn, orderByType);
+
+    public QueryParam addWhere(String fieldName, WhereType whereType, Object value1, Object value2) {
+        this.where.add(fieldName, whereType, value1, value2);
+        return this;
+    }
+
+    public QueryParam addWhere(String fieldName, WhereType whereType, Object value1) {
+        this.where.add(fieldName, whereType, value1);
         return this;
     }
 
@@ -80,6 +82,18 @@ public final class QueryParam {
      */
     public QueryParam setPagination(Integer limit) {
         pagination.set(limit);
+        return this;
+    }
+
+    /**
+     * 添加排序项
+     *
+     * @param orderByColumn a {@link java.lang.String} object.
+     * @param orderByType   a {@link cool.scx.enumeration.OrderByType} object.
+     * @return a 当前实例
+     */
+    public QueryParam addOrderBy(String orderByColumn, OrderByType orderByType) {
+        this.orderBy.add(orderByColumn, orderByType);
         return this;
     }
 

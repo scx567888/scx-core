@@ -247,7 +247,7 @@ public class BaseService<Entity extends BaseModel> {
      */
     public Entity get(QueryParam queryParam) {
         if (!ScxConfig.realDelete()) {
-            queryParam.where.add("tombstone", WhereType.EQUAL, false);
+            queryParam.addWhere("tombstone", WhereType.EQUAL, false);
         }
         queryParam.setPagination(1);
         var list = this.baseDao.select(queryParam.where, queryParam.groupBy, queryParam.orderBy, queryParam.pagination);
@@ -262,7 +262,7 @@ public class BaseService<Entity extends BaseModel> {
      */
     public Integer count(QueryParam queryParam) {
         if (!ScxConfig.realDelete()) {
-            queryParam.where.add("tombstone", WhereType.EQUAL, false);
+            queryParam.addWhere("tombstone", WhereType.EQUAL, false);
         }
         return this.baseDao.count(queryParam.where, queryParam.groupBy);
     }
@@ -275,7 +275,7 @@ public class BaseService<Entity extends BaseModel> {
      */
     public List<Entity> list(QueryParam queryParam) {
         if (!ScxConfig.realDelete()) {
-            queryParam.where.add("tombstone", WhereType.EQUAL, false);
+            queryParam.addWhere("tombstone", WhereType.EQUAL, false);
         }
         return this.baseDao.select(queryParam.where, queryParam.groupBy, queryParam.orderBy, queryParam.pagination);
     }

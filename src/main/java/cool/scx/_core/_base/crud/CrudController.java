@@ -119,7 +119,7 @@ public class CrudController {
     @ScxMapping(value = ":modelName/:id", method = Method.GET)
     public Json info(String modelName, Long id) throws HttpRequestException {
         var baseService = getBaseService(modelName);
-        var info = baseService.getById(id);
+        var info = baseService.get(id);
         return Json.ok().put("info", info);
     }
 
@@ -164,7 +164,7 @@ public class CrudController {
     @ScxMapping(value = ":modelName/:id", method = Method.DELETE)
     public Json delete(String modelName, Integer id) throws Exception {
         var baseService = getBaseService(modelName);
-        var deleteByIds = baseService.deleteByIds(Long.valueOf(id));
+        var deleteByIds = baseService.delete(Long.valueOf(id));
         return Json.ok().put("delete-result", deleteByIds == 1);
     }
 
@@ -179,7 +179,7 @@ public class CrudController {
     @ScxMapping(value = ":modelName/batch-delete", method = Method.DELETE)
     public Json batchDelete(String modelName, @FromBody("deleteIds") List<Long> deleteIds) throws HttpRequestException {
         var baseService = getBaseService(modelName);
-        var deletedCount = baseService.deleteByIds(deleteIds.toArray(Long[]::new));
+        var deletedCount = baseService.delete(deleteIds.toArray(Long[]::new));
         return Json.ok().put("deletedCount", deletedCount);
     }
 
@@ -194,7 +194,7 @@ public class CrudController {
     @ScxMapping(value = ":modelName/revoke-delete/:id", method = Method.GET)
     public Json revokeDelete(String modelName, Integer id) throws HttpRequestException {
         var baseService = getBaseService(modelName);
-        var revokeDeleteCount = baseService.revokeDeleteByIds(Long.valueOf(id));
+        var revokeDeleteCount = baseService.revokeDelete(Long.valueOf(id));
         return revokeDeleteCount == 1 ? Json.ok() : Json.fail();
     }
 

@@ -42,7 +42,7 @@ public class LicenseService extends BaseService<License> {
      * @return a boolean.
      */
     public boolean passLicense() {
-        var myLicense = getById(1L);
+        var myLicense = get(1L);
 
         var now = new Date();
         var simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");

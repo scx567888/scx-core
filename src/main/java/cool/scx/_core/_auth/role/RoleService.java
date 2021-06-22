@@ -82,7 +82,7 @@ public class RoleService extends BaseService<Role> {
                         return userRole;
                     }
             ).collect(Collectors.toList());
-            userRoleService.saveList(idArr);
+            userRoleService.save(idArr);
         }
     }
 
