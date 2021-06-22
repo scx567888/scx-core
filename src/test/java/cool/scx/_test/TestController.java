@@ -8,6 +8,7 @@ import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.ScxAuth;
 import cool.scx.bo.QueryParam;
 import cool.scx.enumeration.Method;
+import cool.scx.enumeration.WhereType;
 import cool.scx.util.FileTypeUtils;
 import cool.scx.util.HttpUtils;
 import cool.scx.util.MD5Utils;
@@ -51,7 +52,7 @@ public class TestController {
      */
     @ScxMapping(value = "/", method = Method.GET)
     public Html TestIndex() {
-        Integer count = userService.count(new QueryParam());
+        Long count = userService.count(new QueryParam());
         if (count < 50) {
             var s1 = new ArrayList<User>();
             for (int i = 0; i < 25; i++) {
@@ -173,6 +174,10 @@ public class TestController {
     @ScxMapping(method = Method.GET)
     public BaseVo testSelectJson() throws Exception {
 
+        carService.count();
+
+//        list
+
 //        //查询
 //        carService.list();
 //
@@ -211,27 +216,40 @@ public class TestController {
 //        carService.count(new Param<>())
 
         var count = carService.count(new QueryParam());
-        if (count < 20) {
+        if (count < 1000) {
             var list = new ArrayList<Car>();
-            for (int i = 0; i < 30; i++) {
+            for (int i = 0; i < 100000; i++) {
                 Car car = new Car();
                 car.name = "小汽车" + i;
                 car.tags = List.of("tag" + i, "tag" + (i + 1));
                 list.add(car);
             }
             carService.save(list);
+
         }
 
-        var p = new QueryParam();
+
         //不用考虑顺序
-        var s = new ArrayList<String>();
-        s.add("tag21");
-        s.add("tag20");
+//        var s = new ArrayList<String>();
+//        s.add("12");
+//        var p = new QueryParam().addWhere("id", WhereType.IN, new Long[]{1L, 2L, 3L, 4L});
+
+        var list = new ArrayList<String>();
+        list.add("1");
+        list.add("2");
+        list.add("3");
+        list.add("4");
+//        var p = new QueryParam().addWhere("id", WhereType.IN, list);
+//        var g = carService.list(p);
+        Car car = carService.get(2L);
+        Car car1 = carService.get(20L);
+        var p = new QueryParam().addWhere("createDate", WhereType.BETWEEN,"2021-06-22 23:42:23" ,car1.createDate);
+        var g = carService.list(p);
         //可以直接构建字符串
 //        p.whereSql = " JSON_CONTAINS (tags,'[\"tag21\",\"tag20\"]' ) ";
         //也可以构建 对象并序列化
 //        p.whereSql = " JSON_CONTAINS (tags,'" + ObjectUtils.beanToJson(s) + "' ) ";
-        var g = carService.list(p);
+
 
         return Json.ok().put("items", g);
     }

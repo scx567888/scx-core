@@ -84,11 +84,6 @@ public enum WhereType {
     NOT_IN(1),
 
     /**
-     * NOT
-     */
-    NOT(1),
-
-    /**
      * 在之间
      */
     BETWEEN(2),
@@ -96,17 +91,7 @@ public enum WhereType {
     /**
      * 不在之间
      */
-    NOT_BETWEEN(2),
-
-    /**
-     * 存在
-     */
-    EXISTS(1),
-
-    /**
-     * 不存在
-     */
-    NOT_EXISTS(1);
+    NOT_BETWEEN(2);
 
     /**
      * 参数数量 用于校验

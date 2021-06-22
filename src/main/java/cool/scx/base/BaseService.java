@@ -260,11 +260,21 @@ public class BaseService<Entity extends BaseModel> {
      * @param queryParam 聚合查询参数对象
      * @return 数据条数
      */
-    public Integer count(QueryParam queryParam) {
+    public Long count(QueryParam queryParam) {
         if (!ScxConfig.realDelete()) {
             queryParam.addWhere("tombstone", WhereType.EQUAL, false);
         }
         return this.baseDao.count(queryParam.where, queryParam.groupBy);
+    }
+
+    /**
+     * 获取所有数据的条数
+     *
+     * @return 所有数据的条数
+     */
+    public Long count() {
+        var where = ScxConfig.realDelete() ? null : new Where("tombstone", WhereType.EQUAL, false);
+        return this.baseDao.count(where, null);
     }
 
     /**

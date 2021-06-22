@@ -296,7 +296,7 @@ public class BaseController {
         if (needDeleteFile != null) {
             //判断文件是否被其他人引用过
             var param1 = new QueryParam().addWhere("fileMD5", WhereType.EQUAL, needDeleteFile.fileMD5);
-            Integer count = uploadFileService.count(param1);
+            Long count = uploadFileService.count(param1);
 
             //没有被其他人引用过 可以删除物理文件
             if (count == 1) {

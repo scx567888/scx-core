@@ -382,39 +382,6 @@ public final class Where {
     }
 
     /**
-     * 不等于
-     *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
-     * @return this 方便链式调用
-     */
-    public Where not(String fieldName, Object value) {
-        return add(fieldName, WhereType.NOT, value);
-    }
-
-    /**
-     * 存在
-     *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
-     * @return this 方便链式调用
-     */
-    public Where exists(String fieldName, Object value) {
-        return add(fieldName, WhereType.NOT, value);
-    }
-
-    /**
-     * 不存在
-     *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
-     * @return this 方便链式调用
-     */
-    public Where notExists(String fieldName, Object value) {
-        return add(fieldName, WhereType.NOT_EXISTS, value);
-    }
-
-    /**
      * where 封装体
      */
     public static class WhereBody {

@@ -46,8 +46,18 @@ public final class QueryParam {
         return this;
     }
 
+    public QueryParam setWhereSQL(String whereSQL) {
+        this.where.whereSQL(whereSQL);
+        return this;
+    }
+
     public QueryParam addWhere(String fieldName, WhereType whereType, Object value1) {
         this.where.add(fieldName, whereType, value1);
+        return this;
+    }
+
+    public QueryParam addWhere(String fieldName, WhereType whereType) {
+        this.where.add(fieldName, whereType);
         return this;
     }
 

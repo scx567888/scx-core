@@ -212,23 +212,6 @@ public final class ObjectUtils {
     }
 
     /**
-     * 将实体类转为 map 并添加索引
-     * 注意 此方法只能转换第一层
-     *
-     * @param index a {@link java.lang.Integer} object.
-     * @param o     a {@link java.lang.Object} object.
-     * @return a {@link java.util.Map} object.
-     */
-    public static Map<String, Object> beanToMapWithIndex(Integer index, Object o) {
-        var clazzFields = o.getClass().getFields(); // 获取所有方法
-        var objectMap = new HashMap<String, Object>(1 + (int) (clazzFields.length / 0.75));
-        for (var field : clazzFields) {
-            objectMap.put("list" + index + "." + field.getName(), getFieldValue(field, o));
-        }
-        return objectMap;
-    }
-
-    /**
      * 获取字段值
      *
      * @param field  字段

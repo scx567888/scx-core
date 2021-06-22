@@ -9,9 +9,7 @@ import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -91,7 +89,7 @@ public final class BaseDao<Entity extends BaseModel> {
                 values[i][j] = ":list" + i + "." + tableInfo.canInsertFields[j].getName();
             }
             //将 list 集合降级为 一维 map 结构 key 为  list{index}.{field} index 为索引 field 为字段名称
-            map.putAll(ObjectUtils.beanToMapWithIndex(i, entityList.get(i)));
+            map.putAll(beanToMapWithIndex(i, entityList.get(i)));
         }
 
         var sql = SQLBuilder.Insert(tableInfo.tableName).InsertColumns(tableInfo.canInsertFields).Values(values).GetSQL();
@@ -109,15 +107,14 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link java.util.List} object.
      */
     public List<Entity> select(Where where, GroupBy groupBy, OrderBy orderBy, Pagination pagination) {
-        var sqlBuilder = SQLBuilder.Select(tableInfo.tableName).SelectColumns(tableInfo.selectColumns)
+        var sqlBuilder = SQLBuilder.Select(tableInfo.tableName)
+                .SelectColumns(tableInfo.selectColumns)
                 .Where(where)
                 .GroupBy(groupBy)
                 .OrderBy(orderBy)
                 .Pagination(pagination);
-
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var sql = sqlBuilder.GetSQL();
-
         return SQLRunner.query(sql, whereParamMap, entityClass);
     }
 
@@ -128,14 +125,14 @@ public final class BaseDao<Entity extends BaseModel> {
      * @param groupBy 分组条件
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer count(Where where, GroupBy groupBy) {
+    public Long count(Where where, GroupBy groupBy) {
         var sqlBuilder = SQLBuilder.Select(tableInfo.tableName)
-                .SelectColumns(new String[]{"COUNT(*)"})
+                .SelectColumns("COUNT(*)")
                 .Where(where)
                 .GroupBy(groupBy);
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var sql = sqlBuilder.GetSQL();
-        return Integer.parseInt(SQLRunner.query(sql, whereParamMap).get(0).get("COUNT(*)").toString());
+        return Long.parseLong(SQLRunner.query(sql, whereParamMap).get(0).get("COUNT(*)").toString());
     }
 
     /**
@@ -150,13 +147,12 @@ public final class BaseDao<Entity extends BaseModel> {
         if (where.isEmpty()) {
             throw new RuntimeException("更新数据时必须指定 id,删除条件 或 自定义的 where 语句 !!!");
         }
-        var entityMap = ObjectUtils.beanToMap(entity);
-        var setColumns = Stream.of(tableInfo.canUpdateFields)
-                .filter(field -> (!includeNull && ObjectUtils.getFieldValue(field, entity) != null))
-                .toArray(Field[]::new);
-        var sqlBuilder = SQLBuilder.Update(tableInfo.tableName).UpdateColumns(setColumns).Where(where);
-
+        var sqlBuilder = SQLBuilder.Update(tableInfo.tableName)
+                .UpdateColumns(includeNull ? tableInfo.canUpdateFields : Stream.of(tableInfo.canUpdateFields).
+                        filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new))
+                .Where(where);
         var whereParamMap = sqlBuilder.GetWhereParamMap();
+        var entityMap = ObjectUtils.beanToMap(entity);
         var sql = sqlBuilder.GetSQL();
         //合并两个 map 包括更新数据的 map 和 where 条件的 map
         entityMap.putAll(whereParamMap);
@@ -186,6 +182,23 @@ public final class BaseDao<Entity extends BaseModel> {
      */
     public TableInfo tableInfo() {
         return tableInfo;
+    }
+
+    /**
+     * 将实体类转为 map 并添加索引
+     * 注意 此方法只能转换第一层
+     *
+     * @param index a {@link java.lang.Integer} object.
+     * @param o     a {@link java.lang.Object} object.
+     * @return a {@link java.util.Map} object.
+     */
+    private static Map<String, Object> beanToMapWithIndex(Integer index, Object o) {
+        var clazzFields = o.getClass().getFields(); // 获取所有方法
+        var objectMap = new HashMap<String, Object>(1 + (int) (clazzFields.length / 0.75));
+        for (var field : clazzFields) {
+            objectMap.put("list" + index + "." + field.getName(), ObjectUtils.getFieldValue(field, o));
+        }
+        return objectMap;
     }
 
 }
