@@ -22,12 +22,12 @@ public final class Where {
     public List<WhereBody> whereBodyList = new ArrayList<>();
 
     /**
-     * 存储查询语句
+     * 自定义的查询语句
      */
-    public List<String> whereSQLList = new ArrayList<>();
+    public String whereSQL;
 
     /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #addWhereSql(String)} })
+     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(String)} })
      *
      * @param fieldName 字段名称 (注意不是数据库名称)
      * @param whereType where 类型
@@ -44,7 +44,7 @@ public final class Where {
     }
 
     /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #addWhereSql(String)} })
+     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(String)} })
      *
      * @param fieldName 字段名称 (注意不是数据库名称)
      * @param whereType where 类型
@@ -60,7 +60,7 @@ public final class Where {
     }
 
     /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #addWhereSql(String)} })
+     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(String)} })
      *
      * @param fieldName 字段名称 (注意不是数据库名称)
      * @param whereType where 类型
@@ -77,11 +77,11 @@ public final class Where {
     /**
      * 添加一个 whereSql 适用于 复杂查询的自定义 where 子句
      *
-     * @param whereSql sql 语句
+     * @param whereSQL sql 语句
      * @return 本身 , 方便链式调用
      */
-    public Where addWhereSql(String whereSql) {
-        whereSQLList.add(whereSql);
+    public Where whereSQL(String whereSQL) {
+        this.whereSQL = whereSQL;
         return this;
     }
 
@@ -89,11 +89,27 @@ public final class Where {
      * 查询条件是否为空
      */
     public boolean isEmpty() {
-        return whereBodyList.size() + whereSQLList.size() == 0;
+        return whereBodyList.size() == 0 && whereSQL == null;
     }
 
     public Where() {
 
+    }
+
+    public Where(String whereSQL) {
+        whereSQL(whereSQL);
+    }
+
+    public Where(String fieldName, WhereType whereType, Object value1, Object value2) {
+        add(fieldName, whereType, value1, value2);
+    }
+
+    public Where(String fieldName, WhereType whereType, Object value) {
+        add(fieldName, whereType, value);
+    }
+
+    public Where(String fieldName, WhereType whereType) {
+        add(fieldName, whereType);
     }
 
     /**

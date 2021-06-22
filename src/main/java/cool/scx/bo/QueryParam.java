@@ -9,7 +9,7 @@ import cool.scx.enumeration.OrderByType;
  * @author 司昌旭
  * @version 1.0.10
  */
-public final class QueryParam<Entity> {
+public final class QueryParam {
 
     /**
      * 排序的字段
@@ -44,7 +44,7 @@ public final class QueryParam<Entity> {
      * @param orderByType      a {@link OrderByType} object.
      * @return a 当前实例
      */
-    public QueryParam<Entity> addOrderBy(String orderByColumn, OrderByType orderByType) {
+    public QueryParam addOrderBy(String orderByColumn, OrderByType orderByType) {
         this.orderBy.add(orderByColumn, orderByType);
         return this;
     }
@@ -55,7 +55,7 @@ public final class QueryParam<Entity> {
      * @param groupByColumn a {@link java.lang.String} object.
      * @return a 当前实例
      */
-    public QueryParam<Entity> addGroupBy(String groupByColumn) {
+    public QueryParam addGroupBy(String groupByColumn) {
         this.groupBy.add(groupByColumn);
         return this;
     }
@@ -67,7 +67,7 @@ public final class QueryParam<Entity> {
      * @param limit 每页数量
      * @return p
      */
-    public QueryParam<Entity> setPagination(Integer page, Integer limit) {
+    public QueryParam setPagination(Integer page, Integer limit) {
         pagination.set(page, limit);
         return this;
     }
@@ -78,7 +78,7 @@ public final class QueryParam<Entity> {
      * @param limit a {@link java.lang.Integer} object.
      * @return a 当前实例
      */
-    public QueryParam<Entity> setPagination(Integer limit) {
+    public QueryParam setPagination(Integer limit) {
         pagination.set(limit);
         return this;
     }

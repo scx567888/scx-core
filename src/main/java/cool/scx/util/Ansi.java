@@ -36,7 +36,7 @@ public final class Ansi {
      * @param ansiColor 颜色枚举
      */
     private static void print(Object o, AnsiColor ansiColor) {
-        System.out.print("\u001B[" + ansiColor.code + "m" + o.toString() + "\u001B[0m");
+        System.out.print("\u001B[" + ansiColor.value() + "m" + o.toString() + "\u001B[0m");
     }
 
     /**

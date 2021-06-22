@@ -6,7 +6,7 @@ import cool.scx._test.car.Car;
 import cool.scx._test.car.CarService;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.ScxAuth;
-import cool.scx.bo.Param;
+import cool.scx.bo.QueryParam;
 import cool.scx.enumeration.Method;
 import cool.scx.util.*;
 import cool.scx.vo.*;
@@ -48,7 +48,7 @@ public class TestController {
      */
     @ScxMapping(value = "/", method = Method.GET)
     public Html TestIndex() {
-        Integer count = userService.count(new Param<>(new User()));
+        Integer count = userService.count(new QueryParam());
         if (count < 50) {
             var s1 = new ArrayList<User>();
             for (int i = 0; i < 25; i++) {
@@ -72,7 +72,7 @@ public class TestController {
                 userService.save(s);
             }
         }
-        var users = userService.list(new Param<>(new User()).setPagination(100));
+        var users = userService.list(new QueryParam().setPagination(100));
         Html index = Html.ofTemplate("index");
         index.add("userList", users);
         index.add("name", "小明");
@@ -173,7 +173,7 @@ public class TestController {
 
 //        carService.count(new Param<>())
 
-        var count = carService.count(new Param<>(new Car()));
+        var count = carService.count(new QueryParam());
         if (count < 20) {
             var list = new ArrayList<Car>();
             for (int i = 0; i < 30; i++) {
@@ -185,7 +185,7 @@ public class TestController {
             carService.saveList(list);
         }
 
-        var p = new Param<>(new Car());
+        var p = new QueryParam();
         //不用考虑顺序
         var s = new ArrayList<String>();
         s.add("tag21");
@@ -193,7 +193,7 @@ public class TestController {
         //可以直接构建字符串
 //        p.whereSql = " JSON_CONTAINS (tags,'[\"tag21\",\"tag20\"]' ) ";
         //也可以构建 对象并序列化
-        p.whereSql = " JSON_CONTAINS (tags,'" + ObjectUtils.beanToJson(s) + "' ) ";
+//        p.whereSql = " JSON_CONTAINS (tags,'" + ObjectUtils.beanToJson(s) + "' ) ";
         var g = carService.list(p);
 
         return Json.ok().put("items", g);

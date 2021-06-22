@@ -3,7 +3,7 @@ package cool.scx._core._auth.dept;
 import cool.scx._core._auth.user.User;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
-import cool.scx.bo.Param;
+import cool.scx.bo.QueryParam;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
@@ -37,13 +37,13 @@ public class DeptService extends BaseService<Dept> {
      * @return a {@link java.util.List} object
      */
     public List<Dept> getDeptListByUser(User user) {
-        var userDeptParam = new Param<>(new UserDept());
-        userDeptParam.o.userId = user.id;
+        var userDeptParam = new QueryParam();
+//        userDeptParam.o.userId = user.id;
 
         var collect = userDeptService.list(userDeptParam).stream().map(UserDept -> UserDept.deptId.toString()).collect(Collectors.joining(","));
         if (!"".equals(collect)) {
-            var deptParam = new Param<>(new Dept());
-            deptParam.whereSql = " id in (" + collect + ")";
+            var deptParam = new QueryParam();
+//            deptParam.whereSql = " id in (" + collect + ")";
             return list(deptParam);
         } else {
             return new ArrayList<>();
@@ -75,9 +75,9 @@ public class DeptService extends BaseService<Dept> {
      * @param id a {@link java.lang.Long} object
      */
     public void deleteByUserId(Long id) {
-        var userDept = new Param<>(new UserDept());
-        userDept.o.userId = id;
-        userDeptService.delete(userDept);
+        var userDept = new QueryParam();
+//        userDept.o.userId = id;
+//        userDeptService.delete(userDept);
     }
 
     /**
@@ -88,8 +88,8 @@ public class DeptService extends BaseService<Dept> {
      */
     public List<UserDept> findDeptByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {
-            var ud = new Param<>(new UserDept());
-            ud.o.userId = userId;
+            var ud = new QueryParam();
+//            ud.o.userId = userId;
             return userDeptService.list(ud);
         }
         return new ArrayList<>();
@@ -102,10 +102,10 @@ public class DeptService extends BaseService<Dept> {
      * @return a {@link java.util.List} object
      */
     public List<UserDept> getUserDeptByUserIds(List<Long> userIds) {
-        var p = new Param<>(new UserDept());
+        var p = new QueryParam();
         var userIdsStr = userIds.stream().map(Object::toString).collect(Collectors.joining(","));
         if (!"".equals(userIdsStr)) {
-            p.whereSql = " user_id in (" + userIdsStr + ")";
+//            p.whereSql = " user_id in (" + userIdsStr + ")";
             return userDeptService.list(p);
         } else {
             return new ArrayList<>();

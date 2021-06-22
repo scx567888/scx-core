@@ -2,8 +2,8 @@ package cool.scx._core._base.uploadfile;
 
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
-import cool.scx.bo.Param;
-import cool.scx.enumeration.SortType;
+import cool.scx.bo.QueryParam;
+import cool.scx.enumeration.OrderByType;
 
 /**
  * UploadFileService
@@ -20,8 +20,8 @@ public class UploadFileService extends BaseService<UploadFile> {
      * @return a {@link cool.scx._core._base.uploadfile.UploadFile} object.
      */
     public UploadFile findFileByMd5(String fileMD5) {
-        var p = new Param<>(new UploadFile()).addOrderBy("uploadTime", SortType.DESC);
-        p.o.fileMD5 = fileMD5;
+        var p = new QueryParam().addOrderBy("uploadTime", OrderByType.DESC);
+//        p.o.fileMD5 = fileMD5;
         return get(p);
     }
 

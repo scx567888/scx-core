@@ -36,7 +36,7 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * 实体类对应的 table 结构
      */
-    private final TableInfo table;
+    private final TableInfo tableInfo;
 
     /**
      * 实体类 class 用于泛型转换
@@ -49,7 +49,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * @param clazz a {@link java.lang.Class} object.
      */
     public BaseDao(Class<Entity> clazz) {
-        table = SQLHelper.getTableInfo(clazz);
+        tableInfo = SQLHelper.getTableInfo(clazz);
         entityClass = clazz;
     }
 
@@ -60,8 +60,8 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link java.lang.Long} object.
      */
     public Long insert(Entity entity) {
-        var c = Stream.of(table.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
-        var sql = SQLBuilder.Insert(table.tableName).Columns(c).Values(c).GetSQL();
+        var c = Stream.of(tableInfo.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
+        var sql = SQLBuilder.Insert(tableInfo.tableName).InsertColumns(c).Values(c).GetSQL();
         var updateResult = SQLRunner.update(sql, ObjectUtils.beanToMap(entity));
         return updateResult.generatedKeys.size() > 0 ? updateResult.generatedKeys.get(0) : -1;
     }
@@ -83,18 +83,18 @@ public final class BaseDao<Entity extends BaseModel> {
             }
             return generatedKeys;
         }
-        var values = new String[entityList.size()][table.canInsertFields.length];
+        var values = new String[entityList.size()][tableInfo.canInsertFields.length];
         var map = new LinkedHashMap<String, Object>();
 
         for (int i = 0; i < entityList.size(); i++) {
-            for (int j = 0; j < table.canInsertFields.length; j++) {
-                values[i][j] = ":list" + i + "." + table.canInsertFields[j].getName();
+            for (int j = 0; j < tableInfo.canInsertFields.length; j++) {
+                values[i][j] = ":list" + i + "." + tableInfo.canInsertFields[j].getName();
             }
             //将 list 集合降级为 一维 map 结构 key 为  list{index}.{field} index 为索引 field 为字段名称
             map.putAll(ObjectUtils.beanToMapWithIndex(i, entityList.get(i)));
         }
 
-        var sql = SQLBuilder.Insert(table.tableName).Columns(table.canInsertFields).Values(values).GetSQL();
+        var sql = SQLBuilder.Insert(tableInfo.tableName).InsertColumns(tableInfo.canInsertFields).Values(values).GetSQL();
 
         return SQLRunner.update(sql, map).generatedKeys;
     }
@@ -109,7 +109,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link java.util.List} object.
      */
     public List<Entity> select(Where where, GroupBy groupBy, OrderBy orderBy, Pagination pagination) {
-        var sqlBuilder = SQLBuilder.Select(table.tableName).SelectColumns(table.selectColumns)
+        var sqlBuilder = SQLBuilder.Select(tableInfo.tableName).SelectColumns(tableInfo.selectColumns)
                 .Where(where)
                 .GroupBy(groupBy)
                 .OrderBy(orderBy)
@@ -129,7 +129,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link java.lang.Integer} object.
      */
     public Integer count(Where where, GroupBy groupBy) {
-        var sqlBuilder = SQLBuilder.Select(table.tableName)
+        var sqlBuilder = SQLBuilder.Select(tableInfo.tableName)
                 .SelectColumns(new String[]{"COUNT(*)"})
                 .Where(where)
                 .GroupBy(groupBy);
@@ -151,10 +151,10 @@ public final class BaseDao<Entity extends BaseModel> {
             throw new RuntimeException("更新数据时必须指定 id,删除条件 或 自定义的 where 语句 !!!");
         }
         var entityMap = ObjectUtils.beanToMap(entity);
-        var setColumns = Stream.of(table.canUpdateFields)
+        var setColumns = Stream.of(tableInfo.canUpdateFields)
                 .filter(field -> (!includeNull && ObjectUtils.getFieldValue(field, entity) != null))
                 .toArray(Field[]::new);
-        var sqlBuilder = SQLBuilder.Update(table.tableName).UpdateColumns(setColumns).Where(where);
+        var sqlBuilder = SQLBuilder.Update(tableInfo.tableName).UpdateColumns(setColumns).Where(where);
 
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var sql = sqlBuilder.GetSQL();
@@ -173,7 +173,7 @@ public final class BaseDao<Entity extends BaseModel> {
         if (where.isEmpty()) {
             throw new RuntimeException("更新数据时必须指定 id,删除条件 或 自定义的 where 语句 !!!");
         }
-        var sqlBuilder = SQLBuilder.Delete(table.tableName).Where(where);
+        var sqlBuilder = SQLBuilder.Delete(tableInfo.tableName).Where(where);
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var sql = sqlBuilder.GetSQL();
         return SQLRunner.update(sql, whereParamMap).affectedLength;
@@ -184,8 +184,8 @@ public final class BaseDao<Entity extends BaseModel> {
      *
      * @return a {@link cool.scx.bo.TableInfo} object
      */
-    public TableInfo table() {
-        return table;
+    public TableInfo tableInfo() {
+        return tableInfo;
     }
 
 }

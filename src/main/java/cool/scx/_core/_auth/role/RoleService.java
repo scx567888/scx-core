@@ -3,7 +3,7 @@ package cool.scx._core._auth.role;
 import cool.scx._core._auth.user.User;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
-import cool.scx.bo.Param;
+import cool.scx.bo.QueryParam;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
@@ -37,12 +37,12 @@ public class RoleService extends BaseService<Role> {
      * @return a {@link java.util.List} object
      */
     public List<Role> getRoleListByUser(User user) {
-        var userRoleParam = new Param<>(new UserRole());
-        userRoleParam.o.userId = user.id;
+        var userRoleParam = new QueryParam();
+//        userRoleParam.o.userId = user.id;
         var collect = userRoleService.list(userRoleParam).stream().map(userRole -> userRole.roleId.toString()).collect(Collectors.joining(","));
         if (!"".equals(collect)) {
-            var roleParam = new Param<>(new Role());
-            roleParam.whereSql = " id in (" + collect + ")";
+            var roleParam = new QueryParam();
+//            roleParam.whereSql = " id in (" + collect + ")";
             return list(roleParam);
         } else {
             return new ArrayList<>();
@@ -56,10 +56,10 @@ public class RoleService extends BaseService<Role> {
      * @return a {@link java.util.List} object
      */
     public List<UserRole> getUserRoleByUserIds(List<Long> userIds) {
-        var p = new Param<>(new UserRole());
+        var p = new QueryParam();
         var userIdsStr = userIds.stream().map(Object::toString).collect(Collectors.joining(","));
         if (!"".equals(userIdsStr)) {
-            p.whereSql = " user_id in (" + userIdsStr + ")";
+//            p.whereSql = " user_id in (" + userIdsStr + ")";
             return userRoleService.list(p);
         } else {
             return new ArrayList<>();
@@ -92,9 +92,9 @@ public class RoleService extends BaseService<Role> {
      * @param id a {@link java.lang.Long} object
      */
     public void deleteByUserId(Long id) {
-        var userDept = new Param<>(new UserRole());
-        userDept.o.userId = id;
-        userRoleService.delete(userDept);
+        var userDept = new QueryParam();
+//        userDept.o.userId = id;
+//        userRoleService.delete(userDept);
     }
 
     /**
@@ -105,8 +105,8 @@ public class RoleService extends BaseService<Role> {
      */
     public List<UserRole> findRoleByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {
-            var userRole = new Param<>(new UserRole());
-            userRole.o.userId = userId;
+            var userRole = new QueryParam();
+//            userRole.o.userId = userId;
             return userRoleService.list(userRole);
         }
         return new ArrayList<>();

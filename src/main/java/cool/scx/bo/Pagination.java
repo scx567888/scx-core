@@ -8,16 +8,25 @@ public class Pagination {
     /**
      * 分页 页码
      */
-    private Integer page = 0;
+    private int page = 0;
 
     /**
      * 分页 每页数量
      */
-    private Integer limit = 0;
+    private int limit = 0;
 
     public Pagination() {
 
     }
+
+    public Pagination(int page, int limit) {
+        set(page, limit);
+    }
+
+    public Pagination(int limit) {
+        set(limit);
+    }
+
 
     /**
      * 设置分页参数
@@ -26,7 +35,7 @@ public class Pagination {
      * @param limit 每页数量
      * @return p
      */
-    public Pagination set(Integer page, Integer limit) {
+    public Pagination set(int page, int limit) {
         if (page >= 0 && limit >= 0) {
             this.page = page;
             this.limit = limit;
@@ -42,7 +51,7 @@ public class Pagination {
      * @param limit a {@link java.lang.Integer} object.
      * @return a 当前实例
      */
-    public Pagination set(Integer limit) {
+    public Pagination set(int limit) {
         if (limit >= 0) {
             this.page = 1;
             this.limit = limit;
@@ -52,4 +61,22 @@ public class Pagination {
         }
     }
 
+    /**
+     * 分页内容是否正确
+     * <br>
+     * 是否可用
+     *
+     * @return 是否正确
+     */
+    public boolean canUse() {
+        return limit > 0 && page > 0;
+    }
+
+    public int page() {
+        return page;
+    }
+
+    public int limit() {
+        return limit;
+    }
 }
