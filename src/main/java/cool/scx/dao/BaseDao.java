@@ -52,6 +52,23 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     /**
+     * 将实体类转为 map 并添加索引
+     * 注意 此方法只能转换第一层
+     *
+     * @param index a {@link java.lang.Integer} object.
+     * @param o     a {@link java.lang.Object} object.
+     * @return a {@link java.util.Map} object.
+     */
+    private static Map<String, Object> beanToMapWithIndex(Integer index, Object o) {
+        var clazzFields = o.getClass().getFields(); // 获取所有方法
+        var objectMap = new HashMap<String, Object>(1 + (int) (clazzFields.length / 0.75));
+        for (var field : clazzFields) {
+            objectMap.put("list" + index + "." + field.getName(), ObjectUtils.getFieldValue(field, o));
+        }
+        return objectMap;
+    }
+
+    /**
      * 保存单条数据
      *
      * @param entity a Entity object.
@@ -182,23 +199,6 @@ public final class BaseDao<Entity extends BaseModel> {
      */
     public TableInfo tableInfo() {
         return tableInfo;
-    }
-
-    /**
-     * 将实体类转为 map 并添加索引
-     * 注意 此方法只能转换第一层
-     *
-     * @param index a {@link java.lang.Integer} object.
-     * @param o     a {@link java.lang.Object} object.
-     * @return a {@link java.util.Map} object.
-     */
-    private static Map<String, Object> beanToMapWithIndex(Integer index, Object o) {
-        var clazzFields = o.getClass().getFields(); // 获取所有方法
-        var objectMap = new HashMap<String, Object>(1 + (int) (clazzFields.length / 0.75));
-        for (var field : clazzFields) {
-            objectMap.put("list" + index + "." + field.getName(), ObjectUtils.getFieldValue(field, o));
-        }
-        return objectMap;
     }
 
 }

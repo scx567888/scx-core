@@ -3,9 +3,9 @@ package cool.scx._test;
 import cool.scx._core._auth.user.User;
 import cool.scx._core._auth.user.UserService;
 import cool.scx._test.car.Car;
-import cool.scx._test.car.CarService;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.ScxAuth;
+import cool.scx.base.BaseService;
 import cool.scx.bo.QueryParam;
 import cool.scx.enumeration.Method;
 import cool.scx.enumeration.WhereType;
@@ -19,7 +19,6 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * 简单测试
@@ -32,17 +31,15 @@ public class TestController {
 
     private final UserService userService;
 
-    private final CarService carService;
+    private BaseService<Car> carService = new BaseService<>(Car.class);
 
     /**
      * TestController
      *
      * @param userService a
-     * @param carService  c
      */
-    public TestController(UserService userService, CarService carService) {
+    public TestController(UserService userService) {
         this.userService = userService;
-        this.carService = carService;
     }
 
     /**
@@ -175,23 +172,29 @@ public class TestController {
     public BaseVo testSelectJson() throws Exception {
 
         var count = carService.count();
-        if (count < 100) {
-            var list = new ArrayList<Car>();
-            for (int i = 0; i < 100; i++) {
-                Car car = new Car();
-                car.name = "小汽车" + i;
-                car.tags = List.of("tag" + i, "tag" + (i + 1));
-                list.add(car);
-            }
-            carService.save(list);
-        }
+//        if (count < 100) {
+//            var list = new ArrayList<Car>();
+//            for (int i = 0; i < 100; i++) {
+//                Car car = new Car();
+//                car.name = "小汽车" + i;
+//                car.tags = List.of("tag" + i, "tag" + (i + 1));
+//                list.add(car);
+//            }
+//            carService.save(list);
+//        }
 
         var s = new ArrayList<String>();
         s.add("tag21");
         var queryParam = new QueryParam()
                 .addWhere("id", WhereType.IN, "1,2,3,4,5,6");
 
-        var carList = carService.list(queryParam);
+        var carList = carService.list();
+
+//        var s1 = new Long[1000];
+//        for (int i = 0; i < s1.length; i++) {
+//            s1[i] = (long) i;
+//        }
+//        Integer delete = carService.revokeDelete(s1);
 
         return Json.ok().put("items", carList);
     }

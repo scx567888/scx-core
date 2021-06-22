@@ -133,7 +133,7 @@ public class BaseController {
      */
     @ScxMapping(value = "/download/:fileId", method = {Method.GET, Method.HEAD})
     public Download download(String fileId) throws HttpRequestException {
-        var param = new QueryParam().addWhere("fileId",WhereType.EQUAL,fileId);
+        var param = new QueryParam().addWhere("fileId", WhereType.EQUAL, fileId);
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
@@ -156,7 +156,7 @@ public class BaseController {
      */
     @ScxMapping(value = "/binary/:fileId", method = {Method.GET, Method.HEAD})
     public Binary binary(String fileId) throws HttpRequestException {
-        var param = new QueryParam().addWhere("fileId",WhereType.EQUAL,fileId);
+        var param = new QueryParam().addWhere("fileId", WhereType.EQUAL, fileId);
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
@@ -183,7 +183,7 @@ public class BaseController {
                          @FromQuery(value = "w", required = false) Integer width,
                          @FromQuery(value = "h", required = false) Integer height,
                          @FromQuery(value = "t", required = false) String type) throws HttpRequestException {
-        var param = new QueryParam().addWhere("fileId",WhereType.EQUAL,fileId);
+        var param = new QueryParam().addWhere("fileId", WhereType.EQUAL, fileId);
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
