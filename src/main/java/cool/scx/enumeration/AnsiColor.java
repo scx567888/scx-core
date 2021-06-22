@@ -100,6 +100,11 @@ public enum AnsiColor {
         this.value = value;
     }
 
+    /**
+     * <p>value.</p>
+     *
+     * @return a int
+     */
     public int value() {
         return value;
     }

@@ -81,7 +81,7 @@ public class AuthConfig {
          */
         final int loginErrorLockSecond;
 
-        public AuthEasyToUse() {
+        AuthEasyToUse() {
 
             confusionLoginError = ScxConfig.get("core.auth.confusion-login-error", false,
                     s -> Ansi.OUT.magenta("Y 是否混淆登录错误                     \t -->\t " + (s ? "是" : "否")).ln(),

@@ -8,7 +8,10 @@ import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.ScxAuth;
 import cool.scx.bo.QueryParam;
 import cool.scx.enumeration.Method;
-import cool.scx.util.*;
+import cool.scx.util.FileTypeUtils;
+import cool.scx.util.HttpUtils;
+import cool.scx.util.MD5Utils;
+import cool.scx.util.StringUtils;
 import cool.scx.vo.*;
 
 import java.net.http.HttpResponse;
@@ -34,7 +37,7 @@ public class TestController {
      * TestController
      *
      * @param userService a
-     * @param carService
+     * @param carService c
      */
     public TestController(UserService userService, CarService carService) {
         this.userService = userService;

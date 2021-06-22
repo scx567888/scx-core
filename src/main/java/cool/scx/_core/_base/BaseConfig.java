@@ -41,7 +41,7 @@ public class BaseConfig {
          */
         final File uploadFilePath;
 
-        public BaseEasyToUse() {
+        BaseEasyToUse() {
 
             String tempUploadFilePath = ScxConfig.get("core.base.upload-file-path", "AppRoot:/ScxUploadFiles/",
                     s -> Ansi.OUT.magenta("Y 文件上传目录                         \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),

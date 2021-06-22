@@ -5,6 +5,9 @@ import java.util.Set;
 
 /**
  * 分组
+ *
+ * @author scx56
+ * @version $Id: $Id
  */
 public class GroupBy {
 
@@ -13,10 +16,18 @@ public class GroupBy {
      */
     public Set<String> groupByList = new HashSet<>();
 
+    /**
+     * <p>Constructor for GroupBy.</p>
+     */
     public GroupBy() {
 
     }
 
+    /**
+     * <p>Constructor for GroupBy.</p>
+     *
+     * @param fieldName a {@link java.lang.String} object
+     */
     public GroupBy(String fieldName) {
         add(fieldName);
     }

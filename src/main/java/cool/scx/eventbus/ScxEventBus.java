@@ -3,6 +3,7 @@ package cool.scx.eventbus;
 import cool.scx.Scx;
 import cool.scx.eventbus.handler.LoginByWebSocketHandler;
 import cool.scx.eventbus.handler.SendMessageByWebsocketHandler;
+import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 import cool.scx.web.ScxRouter;
 import io.vertx.core.Handler;
@@ -72,6 +73,7 @@ public class ScxEventBus {
 
     private static void initDefaultHandler() {
         consumer("login", (Message<JsonObject> m) -> {
+            Ansi.OUT.print("login").ln();
             LoginByWebSocketHandler.loginByWebSocket(m.body());
         });
         consumer("hello", (Message<JsonObject> m) -> {

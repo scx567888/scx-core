@@ -2,6 +2,9 @@ package cool.scx.bo;
 
 /**
  * 分页参数
+ *
+ * @author scx56
+ * @version $Id: $Id
  */
 public class Pagination {
 
@@ -15,14 +18,28 @@ public class Pagination {
      */
     private int limit = 0;
 
+    /**
+     * <p>Constructor for Pagination.</p>
+     */
     public Pagination() {
 
     }
 
+    /**
+     * <p>Constructor for Pagination.</p>
+     *
+     * @param page  a int
+     * @param limit a int
+     */
     public Pagination(int page, int limit) {
         set(page, limit);
     }
 
+    /**
+     * <p>Constructor for Pagination.</p>
+     *
+     * @param limit a int
+     */
     public Pagination(int limit) {
         set(limit);
     }
@@ -72,10 +89,20 @@ public class Pagination {
         return limit > 0 && page > 0;
     }
 
+    /**
+     * <p>page.</p>
+     *
+     * @return a int
+     */
     public int page() {
         return page;
     }
 
+    /**
+     * <p>limit.</p>
+     *
+     * @return a int
+     */
     public int limit() {
         return limit;
     }

@@ -33,56 +33,45 @@ public final class SQLBuilder {
      * 表名
      */
     private final String _tableName;
-
+    /**
+     * 根据 where 条件对象生成的 map 防止 sql 注入
+     */
+    private final Map<String, Object> _whereParamMap = new HashMap<>();
     /**
      * 所有查询列 类似 user_name AS userName <br>
      * 注意 : 只有 _sqlBuilderType 为 select 时生效
      */
     private String[] _selectColumns;
-
-
     /**
      * 插入数据时的列名 <br>
      * 注意 : 只有 _sqlBuilderType 为 insert 时生效
      */
     private String[] _insertColumns;
-
     /**
      * 更新的 列名 <br>
      * 注意 : 只有 _sqlBuilderType 为 update 时生效
      */
     private String[] _updateColumns;
-
     /**
      * 所有 where 条件字符串 由 where 生成  类似 [ id = :id , age >= :age ]
      */
     private String[] _whereColumns;
-
     /**
      * whereSQL 由 where 生成
      */
     private String _whereSQL;
-
     /**
      * 所有列名
      */
     private GroupBy _groupBy;
-
     /**
      * 所有列名
      */
     private OrderBy _orderBy;
-
     /**
      * 起始分页(此值需要进行计算)
      */
     private Pagination _pagination;
-
-    /**
-     * 根据 where 条件对象生成的 map 防止 sql 注入
-     */
-    private final Map<String, Object> _whereParamMap = new HashMap<>();
-
     /**
      * 所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
      */
@@ -400,6 +389,11 @@ public final class SQLBuilder {
         }
     }
 
+    /**
+     * <p>GetWhereParamMap.</p>
+     *
+     * @return a {@link java.util.Map} object
+     */
     public Map<String, Object> GetWhereParamMap() {
         return _whereParamMap;
     }

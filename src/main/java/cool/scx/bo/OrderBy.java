@@ -7,6 +7,9 @@ import java.util.Map;
 
 /**
  * 排序
+ *
+ * @author scx56
+ * @version $Id: $Id
  */
 public class OrderBy {
 
@@ -15,10 +18,19 @@ public class OrderBy {
      */
     public Map<String, OrderByType> orderByList = new HashMap<>();
 
+    /**
+     * <p>Constructor for OrderBy.</p>
+     */
     public OrderBy() {
 
     }
 
+    /**
+     * <p>Constructor for OrderBy.</p>
+     *
+     * @param orderByColumn a {@link java.lang.String} object
+     * @param orderByType   a {@link cool.scx.enumeration.OrderByType} object
+     */
     public OrderBy(String orderByColumn, OrderByType orderByType) {
         add(orderByColumn, orderByType);
     }

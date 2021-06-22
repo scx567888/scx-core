@@ -28,7 +28,7 @@ class BodyBufferHandler implements Handler<Buffer> {
      *
      * @param context a {@link io.vertx.ext.web.RoutingContext} object
      */
-    public BodyBufferHandler(RoutingContext context) {
+    BodyBufferHandler(RoutingContext context) {
         this.context = context;
         var contentType = context.request().getHeader(HttpHeaders.CONTENT_TYPE);
 

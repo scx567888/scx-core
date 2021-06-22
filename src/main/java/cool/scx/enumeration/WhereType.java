@@ -1,5 +1,11 @@
 package cool.scx.enumeration;
 
+/**
+ * <p>WhereType class.</p>
+ *
+ * @author scx56
+ * @version $Id: $Id
+ */
 public enum WhereType {
 
     /**
@@ -127,6 +133,11 @@ public enum WhereType {
         return this.value;
     }
 
+    /**
+     * <p>paramSize.</p>
+     *
+     * @return a int
+     */
     public int paramSize() {
         return paramSize;
     }

@@ -208,8 +208,8 @@ public abstract class BaseService<Entity extends BaseModel> {
     /**
      * <p>update.</p>
      *
-     * @param entity a {@link QueryParam} object.
-     * @param where  a {@link QueryParam} object.
+     * @param entity a {@link cool.scx.bo.QueryParam} object.
+     * @param where  a {@link cool.scx.bo.QueryParam} object.
      * @return a {@link java.util.List} object.
      */
     public List<Entity> update(Entity entity, Where where) {
@@ -250,7 +250,8 @@ public abstract class BaseService<Entity extends BaseModel> {
     /**
      * 根据 where 更新 包含 null
      *
-     * @param where 更新条件
+     * @param where  更新条件
+     * @param entity a Entity object
      * @return 更新后的数据
      */
     public List<Entity> updateIncludeNull(Entity entity, Where where) {

@@ -13,6 +13,9 @@ import java.util.stream.Stream;
 
 /**
  * where 查询条件封装类
+ *
+ * @author scx56
+ * @version $Id: $Id
  */
 public final class Where {
 
@@ -25,6 +28,55 @@ public final class Where {
      * 自定义的查询语句
      */
     public String whereSQL;
+
+    /**
+     * <p>Constructor for Where.</p>
+     */
+    public Where() {
+
+    }
+
+    /**
+     * <p>Constructor for Where.</p>
+     *
+     * @param whereSQL a {@link java.lang.String} object
+     */
+    public Where(String whereSQL) {
+        whereSQL(whereSQL);
+    }
+
+    /**
+     * <p>Constructor for Where.</p>
+     *
+     * @param fieldName a {@link java.lang.String} object
+     * @param whereType a {@link cool.scx.enumeration.WhereType} object
+     * @param value1    a {@link java.lang.Object} object
+     * @param value2    a {@link java.lang.Object} object
+     */
+    public Where(String fieldName, WhereType whereType, Object value1, Object value2) {
+        add(fieldName, whereType, value1, value2);
+    }
+
+    /**
+     * <p>Constructor for Where.</p>
+     *
+     * @param fieldName a {@link java.lang.String} object
+     * @param whereType a {@link cool.scx.enumeration.WhereType} object
+     * @param value     a {@link java.lang.Object} object
+     */
+    public Where(String fieldName, WhereType whereType, Object value) {
+        add(fieldName, whereType, value);
+    }
+
+    /**
+     * <p>Constructor for Where.</p>
+     *
+     * @param fieldName a {@link java.lang.String} object
+     * @param whereType a {@link cool.scx.enumeration.WhereType} object
+     */
+    public Where(String fieldName, WhereType whereType) {
+        add(fieldName, whereType);
+    }
 
     /**
      * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(String)} })
@@ -87,29 +139,11 @@ public final class Where {
 
     /**
      * 查询条件是否为空
+     *
+     * @return a boolean
      */
     public boolean isEmpty() {
         return whereBodyList.size() == 0 && whereSQL == null;
-    }
-
-    public Where() {
-
-    }
-
-    public Where(String whereSQL) {
-        whereSQL(whereSQL);
-    }
-
-    public Where(String fieldName, WhereType whereType, Object value1, Object value2) {
-        add(fieldName, whereType, value1, value2);
-    }
-
-    public Where(String fieldName, WhereType whereType, Object value) {
-        add(fieldName, whereType, value);
-    }
-
-    public Where(String fieldName, WhereType whereType) {
-        add(fieldName, whereType);
     }
 
     /**

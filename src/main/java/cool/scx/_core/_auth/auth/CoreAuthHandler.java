@@ -19,7 +19,6 @@ import cool.scx.bo.QueryParam;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.DeviceType;
-import cool.scx.enumeration.OrderByType;
 import cool.scx.exception.AuthException;
 import cool.scx.exception.UnauthorizedException;
 import cool.scx.util.Ansi;

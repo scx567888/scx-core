@@ -41,7 +41,7 @@ public final class QueryParam {
      * 添加排序项
      *
      * @param orderByColumn a {@link java.lang.String} object.
-     * @param orderByType      a {@link OrderByType} object.
+     * @param orderByType   a {@link cool.scx.enumeration.OrderByType} object.
      * @return a 当前实例
      */
     public QueryParam addOrderBy(String orderByColumn, OrderByType orderByType) {
