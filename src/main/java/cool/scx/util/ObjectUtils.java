@@ -145,6 +145,14 @@ public final class ObjectUtils {
         }
     }
 
+    public static <T> T JsonToBean(String json, Type type) {
+        try {
+            return OBJECT_MAPPER.readValue(json, TYPE_FACTORY.constructType(type));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /**
      * <p>jsonToMap.</p>
      *

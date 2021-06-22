@@ -97,7 +97,9 @@ public final class SQLRunner {
                     var field = allField[i];
                     if (field != null) {
                         var filedType = field.getType();
-                        var o = SQLHelper.isSupportedType(filedType) ? rs.getObject(i, filedType) : ObjectUtils.JsonToBean(rs.getString(i), filedType);
+                        var o = SQLHelper.isSupportedType(filedType) ?
+                                rs.getObject(i, filedType) :
+                                ObjectUtils.JsonToBean(rs.getString(i), field.getGenericType());
                         field.set(t, o);
                     }
                 }
