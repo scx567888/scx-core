@@ -174,84 +174,26 @@ public class TestController {
     @ScxMapping(method = Method.GET)
     public BaseVo testSelectJson() throws Exception {
 
-        carService.count();
-
-//        list
-
-//        //查询
-//        carService.list();
-//
-//        //查询条数
-//        carService.count();
-//
-//        //保存
-//        carService.saveList();
-//        carService.save();
-//
-//        //更新
-//        carService.update();
-//        carService.update();
-//        carService.updateIncludeNull();
-//        carService.updateIncludeNull();
-//
-//        //删除
-//        carService.revokeDeleteList();
-//        carService.deleteByIds();
-//        carService.deleteList();
-//        carService.deleteIgnoreConfig();
-//        carService.deleteByIdsIgnoreConfig();
-//        carService.deleteListIgnoreConfig();
-//
-//        //恢复删除
-//        carService.revokeDelete();
-//        carService.revokeDeleteByIds();
-//        carService.revokeDeleteList();
-//
-//        //other
-//        carService.getFieldList();
-//
-//
-//        carService.getFieldList()
-
-//        carService.count(new Param<>())
-
-        var count = carService.count(new QueryParam());
-        if (count < 1000) {
+        var count = carService.count();
+        if (count < 100) {
             var list = new ArrayList<Car>();
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < 100; i++) {
                 Car car = new Car();
                 car.name = "小汽车" + i;
                 car.tags = List.of("tag" + i, "tag" + (i + 1));
                 list.add(car);
             }
             carService.save(list);
-
         }
 
+        var s = new ArrayList<String>();
+        s.add("tag21");
+        var queryParam = new QueryParam()
+                .addWhere("id", WhereType.IN, "1,2,3,4,5,6");
 
-        //不用考虑顺序
-//        var s = new ArrayList<String>();
-//        s.add("12");
-//        var p = new QueryParam().addWhere("id", WhereType.IN, new Long[]{1L, 2L, 3L, 4L});
+        var carList = carService.list(queryParam);
 
-        var list = new ArrayList<String>();
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        list.add("4");
-//        var p = new QueryParam().addWhere("id", WhereType.IN, list);
-//        var g = carService.list(p);
-        Car car = carService.get(2L);
-        Car car1 = carService.get(20L);
-        var p = new QueryParam().addWhere("createDate", WhereType.BETWEEN,"2021-06-22 23:42:23" ,car1.createDate);
-        var g = carService.list(p);
-        //可以直接构建字符串
-//        p.whereSql = " JSON_CONTAINS (tags,'[\"tag21\",\"tag20\"]' ) ";
-        //也可以构建 对象并序列化
-//        p.whereSql = " JSON_CONTAINS (tags,'" + ObjectUtils.beanToJson(s) + "' ) ";
-
-
-        return Json.ok().put("items", g);
+        return Json.ok().put("items", carList);
     }
 
 }

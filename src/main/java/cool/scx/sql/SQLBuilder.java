@@ -5,6 +5,7 @@ import cool.scx.bo.OrderBy;
 import cool.scx.bo.Pagination;
 import cool.scx.bo.Where;
 import cool.scx.enumeration.SQLBuilderType;
+import cool.scx.enumeration.WhereType;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
@@ -196,44 +197,28 @@ public final class SQLBuilder {
                     tempWhereColumnsList.add(str);
                     break;
                 }
-                case EQUAL: {
-                    var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + " = :" + placeholder;
-                    _whereParamMap.put(placeholder, value1);
-                    tempWhereColumnsList.add(str);
-                    break;
-                }
-                case NOT_EQUAL: {
-                    var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + " <> :" + placeholder;
-                    _whereParamMap.put(placeholder, value1);
-                    tempWhereColumnsList.add(str);
-                    break;
-                }
-                case LESS_THAN: {
-                    var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + " < :" + placeholder;
-                    _whereParamMap.put(placeholder, value1);
-                    tempWhereColumnsList.add(str);
-                    break;
-                }
-                case LESS_THAN_OR_EQUAL: {
-                    var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + " <= :" + placeholder;
-                    _whereParamMap.put(placeholder, value1);
-                    tempWhereColumnsList.add(str);
-                    break;
-                }
-                case GREATER_THAN: {
-                    var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + " > :" + placeholder;
-                    _whereParamMap.put(placeholder, value1);
-                    tempWhereColumnsList.add(str);
-                    break;
-                }
+                case EQUAL:
+                case NOT_EQUAL:
+                case LESS_THAN:
+                case LESS_THAN_OR_EQUAL:
+                case GREATER_THAN:
                 case GREATER_THAN_OR_EQUAL: {
+                    String keyWord;
+                    if (w.whereType == WhereType.EQUAL) {
+                        keyWord = " = ";
+                    } else if (w.whereType == WhereType.NOT_EQUAL) {
+                        keyWord = " <> ";
+                    } else if (w.whereType == WhereType.LESS_THAN) {
+                        keyWord = " < ";
+                    } else if (w.whereType == WhereType.LESS_THAN_OR_EQUAL) {
+                        keyWord = " <= ";
+                    } else if (w.whereType == WhereType.GREATER_THAN) {
+                        keyWord = " > ";
+                    } else {
+                        keyWord = " >= ";
+                    }
                     var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + " >= :" + placeholder;
+                    var str = columnName + keyWord + ":" + placeholder;
                     _whereParamMap.put(placeholder, value1);
                     tempWhereColumnsList.add(str);
                     break;
@@ -245,122 +230,53 @@ public final class SQLBuilder {
                     tempWhereColumnsList.add(str);
                     break;
                 }
-                case LIKE: {
-                    var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + " LIKE CONCAT('%',:" + placeholder + ",'%')";
-                    _whereParamMap.put(placeholder, value1);
-                    tempWhereColumnsList.add(str);
-                    break;
-                }
+                case LIKE:
                 case NOT_LIKE: {
+                    var keyWord = w.whereType == WhereType.LIKE ? " LIKE" : " NOT LIKE";
                     var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + " NOT LIKE CONCAT('%',:" + placeholder + ",'%')";
+                    var str = columnName + keyWord + " CONCAT('%',:" + placeholder + ",'%')";
                     _whereParamMap.put(placeholder, value1);
                     tempWhereColumnsList.add(str);
                     break;
                 }
-                case LIKE_REGEX: {
-                    var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + " LIKE :" + placeholder;
-                    _whereParamMap.put(placeholder, value1);
-                    tempWhereColumnsList.add(str);
-                    break;
-                }
+                case LIKE_REGEX:
                 case NOT_LIKE_REGEX: {
+                    var keyWord = w.whereType == WhereType.LIKE_REGEX ? " LIKE" : " NOT LIKE";
                     var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + " NOT LIKE :" + placeholder;
+                    var str = columnName + keyWord + " :" + placeholder;
                     _whereParamMap.put(placeholder, value1);
                     tempWhereColumnsList.add(str);
                     break;
                 }
-                case IN: {
-                    if (value1.getClass().isArray()) {
-                        var t = ((Object[]) value1);
-                        var sList = new String[t.length];
-                        for (int i = 0; i < t.length; i++) {
-                            var placeholder = getPlaceholder(fieldName);
-                            sList[i] = ":" + placeholder;
-                            _whereParamMap.put(placeholder, t[i]);
-                        }
-                        var str = columnName + " IN ( " + String.join(",", sList) + " )";
-                        tempWhereColumnsList.add(str);
-                        break;
-                    } else if (value1 instanceof List) {
-                        var t = ((List<?>) value1);
-                        var sList = new String[t.size()];
-                        for (int i = 0; i < t.size(); i++) {
-                            var placeholder = getPlaceholder(fieldName);
-                            sList[i] = ":" + placeholder;
-                            _whereParamMap.put(placeholder, t.get(i));
-                        }
-                        var str = columnName + " IN ( " + String.join(",", sList) + " )";
-                        tempWhereColumnsList.add(str);
-                        break;
-                    } else if (value1 instanceof String) {
-                        var t = ((String) value1).split(",");
-                        var sList = new String[t.length];
-                        for (int i = 0; i < t.length; i++) {
-                            var placeholder = getPlaceholder(fieldName);
-                            sList[i] = ":" + placeholder;
-                            _whereParamMap.put(placeholder, t[i]);
-                        }
-                        var str = columnName + " IN ( " + String.join(",", sList) + " )";
-                        tempWhereColumnsList.add(str);
-                        break;
-                    }
-                    break;
-                }
+                case IN:
                 case NOT_IN: {
+                    var keyWord = w.whereType == WhereType.IN ? " IN" : " NOT IN";
+                    Object[] inParams = new Object[0];
                     if (value1.getClass().isArray()) {
-                        var t = ((Object[]) value1);
-                        var sList = new String[t.length];
-                        for (int i = 0; i < t.length; i++) {
-                            var placeholder = getPlaceholder(fieldName);
-                            sList[i] = ":" + placeholder;
-                            _whereParamMap.put(placeholder, t[i]);
-                        }
-                        var str = columnName + " NOT IN ( " + String.join(",", sList) + " )";
-                        tempWhereColumnsList.add(str);
-                        break;
+                        inParams = ((Object[]) value1);
                     } else if (value1 instanceof List) {
-                        var t = ((List<?>) value1);
-                        var sList = new String[t.size()];
-                        for (int i = 0; i < t.size(); i++) {
-                            var placeholder = getPlaceholder(fieldName);
-                            sList[i] = ":" + placeholder;
-                            _whereParamMap.put(placeholder, t.get(i));
-                        }
-                        var str = columnName + " NOT IN ( " + String.join(",", sList) + " )";
-                        tempWhereColumnsList.add(str);
-                        break;
+                        inParams = ((List<?>) value1).toArray(new Object[0]);
                     } else if (value1 instanceof String) {
-                        var t = ((String) value1).split(",");
-                        var sList = new String[t.length];
-                        for (int i = 0; i < t.length; i++) {
+                        inParams = ((String) value1).split(",");
+                    }
+                    if (inParams.length > 0) {
+                        var sList = new String[inParams.length];
+                        for (int i = 0; i < inParams.length; i++) {
                             var placeholder = getPlaceholder(fieldName);
                             sList[i] = ":" + placeholder;
-                            _whereParamMap.put(placeholder, t[i]);
+                            _whereParamMap.put(placeholder, inParams[i]);
                         }
-                        var str = columnName + " NOT IN ( " + String.join(",", sList) + " )";
+                        var str = columnName + keyWord + " ( " + String.join(",", sList) + " )";
                         tempWhereColumnsList.add(str);
-                        break;
-                    } else {
-                        break;
                     }
-                }
-                case BETWEEN: {
-                    var placeholder1 = getPlaceholder(fieldName);
-                    var placeholder2 = getPlaceholder(fieldName);
-                    var str = columnName + " BETWEEN :" + placeholder1 + " AND :" + placeholder2;
-                    _whereParamMap.put(placeholder1, value1);
-                    _whereParamMap.put(placeholder2, value2);
-                    tempWhereColumnsList.add(str);
                     break;
                 }
+                case BETWEEN:
                 case NOT_BETWEEN: {
+                    var keyWord = w.whereType == WhereType.BETWEEN ? " BETWEEN" : " NOT BETWEEN";
                     var placeholder1 = getPlaceholder(fieldName);
                     var placeholder2 = getPlaceholder(fieldName);
-                    var str = columnName + " NOT BETWEEN :" + placeholder1 + " AND :" + placeholder2;
+                    var str = columnName + keyWord + placeholder1 + " AND :" + placeholder2;
                     _whereParamMap.put(placeholder1, value1);
                     _whereParamMap.put(placeholder2, value2);
                     tempWhereColumnsList.add(str);
