@@ -3,8 +3,8 @@ package cool.scx.enumeration;
 /**
  * <p>WhereType class.</p>
  *
- * @author scx56
- * @version $Id: $Id
+ * @author 司昌旭
+ * @version 1.2.0
  */
 public enum WhereType {
 
