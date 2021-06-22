@@ -1,12 +1,12 @@
 package cool.scx.enumeration;
 
 /**
- * sql 类型
+ * SQLBuilder 构造的类型
  *
  * @author 司昌旭
  * @version 1.0.10
  */
-public enum SQLType {
+public enum SQLBuilderType {
     INSERT,
     DELETE,
     UPDATE,

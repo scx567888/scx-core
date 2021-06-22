@@ -1,6 +1,6 @@
 package cool.scx.bo;
 
-import cool.scx.enumeration.SortType;
+import cool.scx.enumeration.OrderByType;
 
 /**
  * 查询参数类 方便传递参数使用<br>
@@ -9,7 +9,7 @@ import cool.scx.enumeration.SortType;
  * @author 司昌旭
  * @version 1.0.10
  */
-public final class Param<Entity> {
+public final class QueryParam<Entity> {
 
     /**
      * 排序的字段
@@ -34,18 +34,18 @@ public final class Param<Entity> {
     /**
      * <p>Constructor for Param.</p>
      */
-    public Param() {
+    public QueryParam() {
     }
 
     /**
      * 添加排序项
      *
      * @param orderByColumn a {@link java.lang.String} object.
-     * @param sortType      a {@link cool.scx.enumeration.SortType} object.
+     * @param orderByType      a {@link OrderByType} object.
      * @return a 当前实例
      */
-    public Param<Entity> addOrderBy(String orderByColumn, SortType sortType) {
-        this.orderBy.add(orderByColumn, sortType);
+    public QueryParam<Entity> addOrderBy(String orderByColumn, OrderByType orderByType) {
+        this.orderBy.add(orderByColumn, orderByType);
         return this;
     }
 
@@ -55,7 +55,7 @@ public final class Param<Entity> {
      * @param groupByColumn a {@link java.lang.String} object.
      * @return a 当前实例
      */
-    public Param<Entity> addGroupBy(String groupByColumn) {
+    public QueryParam<Entity> addGroupBy(String groupByColumn) {
         this.groupBy.add(groupByColumn);
         return this;
     }
@@ -67,7 +67,7 @@ public final class Param<Entity> {
      * @param limit 每页数量
      * @return p
      */
-    public Param<Entity> setPagination(Integer page, Integer limit) {
+    public QueryParam<Entity> setPagination(Integer page, Integer limit) {
         pagination.set(page, limit);
         return this;
     }
@@ -78,7 +78,7 @@ public final class Param<Entity> {
      * @param limit a {@link java.lang.Integer} object.
      * @return a 当前实例
      */
-    public Param<Entity> setPagination(Integer limit) {
+    public QueryParam<Entity> setPagination(Integer limit) {
         pagination.set(limit);
         return this;
     }

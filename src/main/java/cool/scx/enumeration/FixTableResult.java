@@ -7,7 +7,19 @@ package cool.scx.enumeration;
  * @version 1.0.10
  */
 public enum FixTableResult {
+
+    /**
+     * 不需要修复
+     */
     NO_NEED_TO_FIX,
+
+    /**
+     * 修复成功
+     */
     FIX_SUCCESS,
+
+    /**
+     * 修复失败
+     */
     FIX_FAIL
 }
