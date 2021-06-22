@@ -50,7 +50,7 @@ public class BaseService<Entity extends BaseModel> {
     /**
      * 手动创建 entityClass
      *
-     * @param entityClass 继承自 {@link BaseModel} 的实体类 class
+     * @param entityClass 继承自 {@link cool.scx.base.BaseModel} 的实体类 class
      */
     public BaseService(Class<Entity> entityClass) {
         this.entityClass = entityClass;
@@ -240,7 +240,7 @@ public class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link QueryParam} 获取单条数据
+     * 根据聚合查询条件 {@link cool.scx.bo.QueryParam} 获取单条数据
      *
      * @param queryParam 聚合查询参数对象
      * @return 查到多个则返回第一个 没有则返回 null
@@ -255,7 +255,7 @@ public class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link QueryParam} 获取数据条数
+     * 根据聚合查询条件 {@link cool.scx.bo.QueryParam} 获取数据条数
      *
      * @param queryParam 聚合查询参数对象
      * @return 数据条数
@@ -278,7 +278,7 @@ public class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link QueryParam} 获取数据列表
+     * 根据聚合查询条件 {@link cool.scx.bo.QueryParam} 获取数据列表
      *
      * @param queryParam 聚合查询参数对象
      * @return 数据列表
@@ -305,7 +305,7 @@ public class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * 获取所有数据 (注意 : 默认根据最后更新时间 {@link BaseModel#updateDate} 排序)
+     * 获取所有数据 (注意 : 默认根据最后更新时间 {@link cool.scx.base.BaseModel#updateDate} 排序)
      *
      * @return 所有数据
      */

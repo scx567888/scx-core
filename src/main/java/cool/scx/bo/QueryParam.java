@@ -41,21 +41,51 @@ public final class QueryParam {
     }
 
 
+    /**
+     * <p>addWhere.</p>
+     *
+     * @param fieldName a {@link java.lang.String} object
+     * @param whereType a {@link cool.scx.enumeration.WhereType} object
+     * @param value1    a {@link java.lang.Object} object
+     * @param value2    a {@link java.lang.Object} object
+     * @return a {@link cool.scx.bo.QueryParam} object
+     */
     public QueryParam addWhere(String fieldName, WhereType whereType, Object value1, Object value2) {
         this.where.add(fieldName, whereType, value1, value2);
         return this;
     }
 
+    /**
+     * <p>setWhereSQL.</p>
+     *
+     * @param whereSQL a {@link java.lang.String} object
+     * @return a {@link cool.scx.bo.QueryParam} object
+     */
     public QueryParam setWhereSQL(String whereSQL) {
         this.where.whereSQL(whereSQL);
         return this;
     }
 
+    /**
+     * <p>addWhere.</p>
+     *
+     * @param fieldName a {@link java.lang.String} object
+     * @param whereType a {@link cool.scx.enumeration.WhereType} object
+     * @param value1    a {@link java.lang.Object} object
+     * @return a {@link cool.scx.bo.QueryParam} object
+     */
     public QueryParam addWhere(String fieldName, WhereType whereType, Object value1) {
         this.where.add(fieldName, whereType, value1);
         return this;
     }
 
+    /**
+     * <p>addWhere.</p>
+     *
+     * @param fieldName a {@link java.lang.String} object
+     * @param whereType a {@link cool.scx.enumeration.WhereType} object
+     * @return a {@link cool.scx.bo.QueryParam} object
+     */
     public QueryParam addWhere(String fieldName, WhereType whereType) {
         this.where.add(fieldName, whereType);
         return this;
