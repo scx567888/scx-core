@@ -7,8 +7,10 @@ package cool.scx.enumeration;
  * @version 1.0.10
  */
 public enum SQLBuilderType {
+
     INSERT,
     DELETE,
     UPDATE,
     SELECT
+
 }

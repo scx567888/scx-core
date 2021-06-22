@@ -11,42 +11,26 @@ public enum DeviceType {
     /**
      * 安卓设备
      */
-    ANDROID("ANDROID"),
+    ANDROID,
 
     /**
      * 苹果设备
      */
-    APPLE("APPLE"),
+    APPLE,
 
     /**
      * 后台管理
      */
-    ADMIN("ADMIN"),
+    ADMIN,
 
     /**
      * 网页
      */
-    WEBSITE("WEBSITE"),
+    WEBSITE,
 
     /**
      * 未知
      */
-    UNKNOWN("UNKNOWN");
-
-    private final String value;
-
-    DeviceType(String value) {
-        this.value = value;
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * 重写方法
-     */
-    @Override
-    public String toString() {
-        return this.value;
-    }
+    UNKNOWN
 
 }

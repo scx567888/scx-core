@@ -22,4 +22,5 @@ public enum FixTableResult {
      * 修复失败
      */
     FIX_FAIL
+
 }

@@ -90,23 +90,26 @@ public enum AnsiColor {
     DEFAULT(39),
 
     /**
-     * 亮白色 (这个是真的白)
+     * 亮白色 (这个是真正的白色)
      */
     BRIGHT_WHITE(97);
 
-    private final int value;
+    /**
+     * code 码
+     */
+    private final int code;
 
-    AnsiColor(int value) {
-        this.value = value;
+    AnsiColor(int code) {
+        this.code = code;
     }
 
     /**
-     * <p>value.</p>
+     * 获取代码
      *
-     * @return a int
+     * @return code 码
      */
-    public int value() {
-        return value;
+    public int code() {
+        return code;
     }
 
 }

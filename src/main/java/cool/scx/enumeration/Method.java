@@ -8,29 +8,14 @@ package cool.scx.enumeration;
  */
 public enum Method {
 
-    POST("POST"),
-    GET("GET"),
-    PUT("PUT"),
-    DELETE("DELETE"),
-    HEAD("HEAD"),
-    TRANCE("TRANCE"),
-    CONNECT("CONNECT"),
-    PATCH("PATCH"),
-    OPTION("OPTION");
+    POST,
+    GET,
+    PUT,
+    DELETE,
+    HEAD,
+    TRANCE,
+    CONNECT,
+    PATCH,
+    OPTION
 
-    private final String value;
-
-    Method(String value) {
-        this.value = value;
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * 重写方法
-     */
-    @Override
-    public String toString() {
-        return this.value;
-    }
 }
