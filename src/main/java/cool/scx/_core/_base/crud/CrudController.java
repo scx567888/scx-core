@@ -14,7 +14,6 @@ import cool.scx.exception.HttpRequestException;
 import cool.scx.util.ObjectUtils;
 import cool.scx.vo.Json;
 
-import java.util.List;
 import java.util.Map;
 
 /**

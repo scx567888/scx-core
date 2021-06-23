@@ -2,7 +2,6 @@ package cool.scx._core._cms.article;
 
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
-import cool.scx.bo.QueryParam;
 
 import java.util.ArrayList;
 import java.util.Map;

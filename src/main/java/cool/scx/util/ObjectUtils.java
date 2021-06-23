@@ -146,6 +146,14 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * <p>JsonToBean.</p>
+     *
+     * @param json a {@link java.lang.String} object
+     * @param type a {@link java.lang.reflect.Type} object
+     * @param <T>  a T class
+     * @return a T object
+     */
     public static <T> T JsonToBean(String json, Type type) {
         try {
             return OBJECT_MAPPER.readValue(json, TYPE_FACTORY.constructType(type));

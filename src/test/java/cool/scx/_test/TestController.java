@@ -8,7 +8,6 @@ import cool.scx.auth.ScxAuth;
 import cool.scx.base.BaseService;
 import cool.scx.bo.QueryParam;
 import cool.scx.enumeration.Method;
-import cool.scx.enumeration.WhereType;
 import cool.scx.util.FileTypeUtils;
 import cool.scx.util.HttpUtils;
 import cool.scx.util.MD5Utils;

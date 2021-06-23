@@ -137,6 +137,15 @@ public final class SQLBuilder {
     }
 
     /**
+     * 获取占位符
+     *
+     * @param name n
+     */
+    private static String getPlaceholder(String name) {
+        return name + "_" + StringUtils.getRandomCode(6, true);
+    }
+
+    /**
      * 设置更新列
      *
      * @param fields an array of {@link java.lang.reflect.Field} objects.
@@ -409,15 +418,6 @@ public final class SQLBuilder {
             }
         }
         return whereSql;
-    }
-
-    /**
-     * 获取占位符
-     *
-     * @param name n
-     */
-    private static String getPlaceholder(String name) {
-        return name + "_" + StringUtils.getRandomCode(6, true);
     }
 
 }
