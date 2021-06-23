@@ -37,9 +37,9 @@ public class BaseController {
     private final UploadFileService uploadFileService;
 
     /**
-     * <p>Constructor for UploadController.</p>
+     * 构造函数
      *
-     * @param uploadFileService a {@link cool.scx._core._base.uploadfile.UploadFileService} object.
+     * @param uploadFileService u
      */
     public BaseController(UploadFileService uploadFileService) {
         this.uploadFileService = uploadFileService;
@@ -289,14 +289,12 @@ public class BaseController {
     @ScxMapping(value = "/upload-file/delete-file", method = Method.DELETE)
     public Json deleteFile(String fileId) {
         //先获取文件的基本信息
-        var param = new QueryParam();
-//        param.o.fileId = fileId;
-        UploadFile needDeleteFile = uploadFileService.get(param);
-
+        var param = new QueryParam().addWhere("fileId", WhereType.EQUAL, fileId);
+        var needDeleteFile = uploadFileService.get(param);
         if (needDeleteFile != null) {
             //判断文件是否被其他人引用过
             var param1 = new QueryParam().addWhere("fileMD5", WhereType.EQUAL, needDeleteFile.fileMD5);
-            Long count = uploadFileService.count(param1);
+            long count = uploadFileService.count(param1);
 
             //没有被其他人引用过 可以删除物理文件
             if (count == 1) {

@@ -354,8 +354,8 @@ public final class Where {
      * @param value     比较值
      * @return this 方便链式调用
      */
-    public Where contain(String fieldName, Object value) {
-        return add(fieldName, WhereType.CONTAIN, value);
+    public Where jsonContains(String fieldName, Object value) {
+        return add(fieldName, WhereType.JSON_CONTAINS, value);
     }
 
 

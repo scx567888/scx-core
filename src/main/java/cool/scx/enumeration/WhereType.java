@@ -50,12 +50,7 @@ public enum WhereType {
     GREATER_THAN_OR_EQUAL(1, ">="),
 
     /**
-     * 包含
-     */
-    CONTAIN(1, "CONTAINS"),
-
-    /**
-     * json 包含
+     * json 包含 一般用于 数组判断
      */
     JSON_CONTAINS(1, "JSON_CONTAINS"),
 

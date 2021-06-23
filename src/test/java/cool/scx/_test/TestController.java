@@ -19,6 +19,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 简单测试
@@ -172,29 +173,18 @@ public class TestController {
     public BaseVo testSelectJson() throws Exception {
 
         var count = carService.count();
-//        if (count < 100) {
-//            var list = new ArrayList<Car>();
-//            for (int i = 0; i < 100; i++) {
-//                Car car = new Car();
-//                car.name = "小汽车" + i;
-//                car.tags = List.of("tag" + i, "tag" + (i + 1));
-//                list.add(car);
-//            }
-//            carService.save(list);
-//        }
-
-        var s = new ArrayList<String>();
-        s.add("tag21");
-        var queryParam = new QueryParam()
-                .addWhere("id", WhereType.IN, "1,2,3,4,5,6");
+        if (count < 100) {
+            var list = new ArrayList<Car>();
+            for (int i = 0; i < 100; i++) {
+                Car car = new Car();
+                car.name = "小汽车" + i;
+                car.tags = List.of("tag" + i, "tag" + (i + 1));
+                list.add(car);
+            }
+            carService.save(list);
+        }
 
         var carList = carService.list();
-
-//        var s1 = new Long[1000];
-//        for (int i = 0; i < s1.length; i++) {
-//            s1[i] = (long) i;
-//        }
-//        Integer delete = carService.revokeDelete(s1);
 
         return Json.ok().put("items", carList);
     }

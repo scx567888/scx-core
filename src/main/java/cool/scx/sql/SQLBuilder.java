@@ -223,16 +223,9 @@ public final class SQLBuilder {
                     tempWhereColumnsList.add(str);
                     break;
                 }
-                case CONTAIN: {
-                    var placeholder = getPlaceholder(fieldName);
-                    var str = " CONTAINS (" + columnName + ", :" + placeholder + " )";
-                    _whereParamMap.put(placeholder, value1);
-                    tempWhereColumnsList.add(str);
-                    break;
-                }
                 case JSON_CONTAINS: {
                     var placeholder = getPlaceholder(fieldName);
-                    var str = " JSON_CONTAINS (" + columnName + ", :" + placeholder + " )";
+                    var str = keyWord + " ( " + columnName + ", :" + placeholder + " )";
                     _whereParamMap.put(placeholder, value1);
                     tempWhereColumnsList.add(str);
                     break;
@@ -269,7 +262,7 @@ public final class SQLBuilder {
                 case NOT_BETWEEN: {
                     var placeholder1 = getPlaceholder(fieldName);
                     var placeholder2 = getPlaceholder(fieldName);
-                    var str = columnName + " " + keyWord + placeholder1 + " AND :" + placeholder2;
+                    var str = columnName + " " + keyWord + " :" + placeholder1 + " AND :" + placeholder2;
                     _whereParamMap.put(placeholder1, value1);
                     _whereParamMap.put(placeholder2, value2);
                     tempWhereColumnsList.add(str);

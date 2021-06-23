@@ -164,7 +164,7 @@ public class CrudController {
     @ScxMapping(value = ":modelName/:id", method = Method.DELETE)
     public Json delete(String modelName, Integer id) throws Exception {
         var baseService = getBaseService(modelName);
-        var deleteByIds = baseService.delete(Long.valueOf(id));
+        var deleteByIds = baseService.delete(id);
         return Json.ok().put("delete-result", deleteByIds == 1);
     }
 
@@ -177,9 +177,9 @@ public class CrudController {
      * @throws cool.scx.exception.HttpRequestException if any.
      */
     @ScxMapping(value = ":modelName/batch-delete", method = Method.DELETE)
-    public Json batchDelete(String modelName, @FromBody("deleteIds") List<Long> deleteIds) throws HttpRequestException {
+    public Json batchDelete(String modelName, @FromBody("deleteIds") long[] deleteIds) throws HttpRequestException {
         var baseService = getBaseService(modelName);
-        var deletedCount = baseService.delete(deleteIds.toArray(Long[]::new));
+        var deletedCount = baseService.delete(deleteIds);
         return Json.ok().put("deletedCount", deletedCount);
     }
 
