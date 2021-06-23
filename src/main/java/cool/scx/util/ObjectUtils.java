@@ -17,7 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 处理对象的工具类
+ * 处理对象的工具类<br>
+ * 本质上就是对 ObjectMapper 进行了一些简单的封装
  *
  * @author 司昌旭
  * @version 0.3.6
