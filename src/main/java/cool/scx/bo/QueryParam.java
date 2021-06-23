@@ -6,7 +6,7 @@ import cool.scx.enumeration.WhereType;
 
 /**
  * 查询参数类<br>
- * 针对  GroupBy OrderBy Pagination Where 等进行的简单封装 <br>
+ * 针对  GroupBy , OrderBy , Pagination , Where 等进行的简单封装 <br>
  * 只是 为了方便传递参数使用<br>
  *
  * @author 司昌旭
