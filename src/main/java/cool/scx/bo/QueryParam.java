@@ -67,13 +67,20 @@ public final class QueryParam {
         return this;
     }
 
+    /**
+     * <p>addWhereByObject.</p>
+     *
+     * @param entity   a Entity object
+     * @param <Entity> a Entity class
+     * @return a {@link cool.scx.bo.QueryParam} object
+     */
     public <Entity extends BaseModel> QueryParam addWhereByObject(Entity entity) {
         this.where.addByObject(entity);
         return this;
     }
 
     /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link Where#whereSQL(String)} })
+     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link cool.scx.bo.Where#whereSQL(String)} })
      *
      * @param fieldName 字段名称 (注意不是数据库名称)
      * @param whereType where 类型
@@ -143,6 +150,13 @@ public final class QueryParam {
         return this;
     }
 
+    /**
+     * <p>addOrderBy.</p>
+     *
+     * @param orderByColumn a {@link java.lang.String} object
+     * @param str           a {@link java.lang.String} object
+     * @return a {@link cool.scx.bo.QueryParam} object
+     */
     public QueryParam addOrderBy(String orderByColumn, String str) {
         this.orderBy.add(orderByColumn, str);
         return this;
