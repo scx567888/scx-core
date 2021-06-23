@@ -88,15 +88,14 @@ public class BaseService<Entity extends BaseModel> {
      * @param ids 要删除的数据的 id 集合
      * @return 删除成功的数据条数
      */
-    public Integer delete(Long... ids) {
+    public long delete(long... ids) {
         //物理删除
         if (ScxConfig.realDelete()) {
             return this.baseDao.delete(new Where("id", WhereType.IN, ids));
         } else {// 逻辑删除
             var needTombstoneEntity = ScxContext.getBean(entityClass);
             needTombstoneEntity.tombstone = true;
-            var where = new Where("id", WhereType.IN, ids)
-                    .add("tombstone", WhereType.EQUAL, false);
+            var where = new Where("id", WhereType.IN, ids).add("tombstone", WhereType.EQUAL, false);
             return this.baseDao.update(needTombstoneEntity, where, false).affectedLength;
         }
     }
@@ -107,7 +106,7 @@ public class BaseService<Entity extends BaseModel> {
      * @param where 删除条件
      * @return 被删除的数据条数
      */
-    public Integer delete(Where where) {
+    public long delete(Where where) {
         //物理删除
         if (ScxConfig.realDelete()) {
             return this.baseDao.delete(where);
@@ -124,7 +123,7 @@ public class BaseService<Entity extends BaseModel> {
      * @param ids 要删除的数据的 id 集合
      * @return 删除成功的数据条数
      */
-    public Integer deleteIgnoreConfig(Long... ids) {
+    public long deleteIgnoreConfig(long... ids) {
         return this.baseDao.delete(new Where("id", WhereType.IN, ids));
     }
 
@@ -134,7 +133,7 @@ public class BaseService<Entity extends BaseModel> {
      * @param where 删除条件
      * @return 被删除的数据条数
      */
-    public Integer deleteIgnoreConfig(Where where) {
+    public long deleteIgnoreConfig(Where where) {
         return this.baseDao.delete(where);
     }
 
@@ -144,7 +143,7 @@ public class BaseService<Entity extends BaseModel> {
      * @param ids 待恢复的数据 id 集合
      * @return 恢复删除成功的数据条数
      */
-    public Integer revokeDelete(Long... ids) {
+    public long revokeDelete(long... ids) {
         return this.revokeDelete(new Where("id", WhereType.IN, ids));
     }
 
@@ -154,7 +153,7 @@ public class BaseService<Entity extends BaseModel> {
      * @param where 指定的条件
      * @return 恢复删除成功的数据条数
      */
-    public Integer revokeDelete(Where where) {
+    public long revokeDelete(Where where) {
         if (ScxConfig.realDelete()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
@@ -169,15 +168,15 @@ public class BaseService<Entity extends BaseModel> {
      *
      * @param entity 待更新的数据
      * @param where  更新的条件
-     * @return 更新成功的数据 ID (主键) 列表
+     * @return 更新成功的数据条数
      */
-    public List<Long> update(Entity entity, Where where) {
+    public long update(Entity entity, Where where) {
         //逻辑删除时不更新 处于逻辑删除状态的数据
         if (!ScxConfig.realDelete()) {
             where.add("tombstone", WhereType.EQUAL, false);
         }
         //更新成功的条数
-        return this.baseDao.update(entity, where, false).generatedKeys;
+        return this.baseDao.update(entity, where, false).affectedLength;
     }
 
     /**
@@ -190,8 +189,8 @@ public class BaseService<Entity extends BaseModel> {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
-        var ids = this.update(entity, new Where("id", WhereType.EQUAL, entity.id));
-        return ids.size() >= 1 ? this.get(ids.get(0)) : null;
+        var l = this.update(entity, new Where("id", WhereType.EQUAL, entity.id));
+        return l == 1 ? this.get(entity.id) : null;
     }
 
     /**
@@ -199,15 +198,15 @@ public class BaseService<Entity extends BaseModel> {
      *
      * @param entity 待更新的数据
      * @param where  更新的条件
-     * @return 更新成功的数据 ID (主键) 列表
+     * @return 更新成功的数据条数
      */
-    public List<Long> updateIncludeNull(Entity entity, Where where) {
+    public long updateIncludeNull(Entity entity, Where where) {
         //逻辑删除时不更新 处于逻辑删除状态的数据
         if (!ScxConfig.realDelete()) {
             where.add("tombstone", WhereType.EQUAL, false);
         }
         //更新成功的条数
-        return this.baseDao.update(entity, where, true).generatedKeys;
+        return this.baseDao.update(entity, where, true).affectedLength;
     }
 
     /**
@@ -220,8 +219,8 @@ public class BaseService<Entity extends BaseModel> {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
-        var ids = this.updateIncludeNull(entity, new Where("id", WhereType.EQUAL, entity.id));
-        return ids.size() >= 1 ? this.get(ids.get(0)) : null;
+        var l = this.updateIncludeNull(entity, new Where("id", WhereType.EQUAL, entity.id));
+        return l == 1 ? this.get(entity.id) : null;
     }
 
     /**
@@ -230,7 +229,7 @@ public class BaseService<Entity extends BaseModel> {
      * @param id id ( 主键 )
      * @return 查到多个则返回第一个 没有则返回 null
      */
-    public Entity get(Long id) {
+    public Entity get(long id) {
         var where = new Where("id", WhereType.EQUAL, id);
         if (!ScxConfig.realDelete()) {
             where.add("tombstone", WhereType.EQUAL, false);
@@ -260,7 +259,7 @@ public class BaseService<Entity extends BaseModel> {
      * @param queryParam 聚合查询参数对象
      * @return 数据条数
      */
-    public Long count(QueryParam queryParam) {
+    public long count(QueryParam queryParam) {
         if (!ScxConfig.realDelete()) {
             queryParam.addWhere("tombstone", WhereType.EQUAL, false);
         }
@@ -272,7 +271,7 @@ public class BaseService<Entity extends BaseModel> {
      *
      * @return 所有数据的条数
      */
-    public Long count() {
+    public long count() {
         var where = ScxConfig.realDelete() ? null : new Where("tombstone", WhereType.EQUAL, false);
         return this.baseDao.count(where, null);
     }
@@ -296,7 +295,7 @@ public class BaseService<Entity extends BaseModel> {
      * @param ids ID (主键) 列表
      * @return 数据列表
      */
-    public List<Entity> list(Long... ids) {
+    public List<Entity> list(long... ids) {
         var where = new Where("id", WhereType.IN, ids);
         if (!ScxConfig.realDelete()) {
             where.add("tombstone", WhereType.EQUAL, false);
