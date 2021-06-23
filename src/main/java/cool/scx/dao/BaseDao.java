@@ -71,8 +71,8 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * 保存单条数据
      *
-     * @param entity a Entity object.
-     * @return a {@link java.lang.Long} object.
+     * @param entity 待插入的数据
+     * @return 插入成功的主键 ID 如果插入失败则返回 null
      */
     public Long insert(Entity entity) {
         var c = Stream.of(tableInfo.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
@@ -84,13 +84,13 @@ public final class BaseDao<Entity extends BaseModel> {
     /**
      * 保存多条数据
      *
-     * @param entityList a {@link java.util.List} object.
-     * @return a {@link java.util.List} object.
+     * @param entityList 待保存的列表
+     * @return 保存成功的主键 (ID) 列表
      */
     public List<Long> insertList(List<Entity> entityList) {
         var size = entityList.size();
         if (size > splitSize) {
-            Ansi.OUT.brightRed("批量插入数据量过大 , 达到" + size + "条 !!! 已按照" + splitSize + "条进行切分 !!!").ln();
+            Ansi.OUT.brightRed("批量插入数据量过大 , 达到" + size + "条 !!! 已按照 " + splitSize + " 条一组进行切割并分段插入 !!!").ln();
             var generatedKeys = new ArrayList<Long>(splitSize);
             double number = Math.ceil(1.0 * size / splitSize);
             for (int i = 0; i < number; i++) {
@@ -100,7 +100,6 @@ public final class BaseDao<Entity extends BaseModel> {
         }
         var values = new String[entityList.size()][tableInfo.canInsertFields.length];
         var map = new LinkedHashMap<String, Object>();
-
         for (int i = 0; i < entityList.size(); i++) {
             for (int j = 0; j < tableInfo.canInsertFields.length; j++) {
                 values[i][j] = ":list" + i + "." + tableInfo.canInsertFields[j].getName();
@@ -108,9 +107,8 @@ public final class BaseDao<Entity extends BaseModel> {
             //将 list 集合降级为 一维 map 结构 key 为  list{index}.{field} index 为索引 field 为字段名称
             map.putAll(beanToMapWithIndex(i, entityList.get(i)));
         }
-
-        var sql = SQLBuilder.Insert(tableInfo.tableName).InsertColumns(tableInfo.canInsertFields).Values(values).GetSQL();
-
+        var sql = SQLBuilder.Insert(tableInfo.tableName).InsertColumns(tableInfo.canInsertFields)
+                .Values(values).GetSQL();
         return SQLRunner.update(sql, map).generatedKeys;
     }
 
@@ -124,12 +122,8 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link java.util.List} object.
      */
     public List<Entity> select(Where where, GroupBy groupBy, OrderBy orderBy, Pagination pagination) {
-        var sqlBuilder = SQLBuilder.Select(tableInfo.tableName)
-                .SelectColumns(tableInfo.selectColumns)
-                .Where(where)
-                .GroupBy(groupBy)
-                .OrderBy(orderBy)
-                .Pagination(pagination);
+        var sqlBuilder = SQLBuilder.Select(tableInfo.tableName).SelectColumns(tableInfo.selectColumns)
+                .Where(where).GroupBy(groupBy).OrderBy(orderBy).Pagination(pagination);
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var sql = sqlBuilder.GetSQL();
         return SQLRunner.query(sql, whereParamMap, entityClass);
@@ -140,13 +134,11 @@ public final class BaseDao<Entity extends BaseModel> {
      *
      * @param where   查询条件
      * @param groupBy 分组条件
-     * @return a {@link java.lang.Integer} object.
+     * @return 条数
      */
     public long count(Where where, GroupBy groupBy) {
-        var sqlBuilder = SQLBuilder.Select(tableInfo.tableName)
-                .SelectColumns("COUNT(*) AS count")
-                .Where(where)
-                .GroupBy(groupBy);
+        var sqlBuilder = SQLBuilder.Select(tableInfo.tableName).SelectColumns("COUNT(*) AS count")
+                .Where(where).GroupBy(groupBy);
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var sql = sqlBuilder.GetSQL();
         return (Long) SQLRunner.query(sql, whereParamMap).get(0).get("count");
@@ -158,22 +150,22 @@ public final class BaseDao<Entity extends BaseModel> {
      * @param entity      要更新的数据
      * @param where       更新的过滤条件
      * @param includeNull a boolean.
-     * @return a {@link cool.scx.bo.UpdateResult} object.
+     * @return 受影响的条数
      */
-    public UpdateResult update(Entity entity, Where where, boolean includeNull) {
-        if (where.isEmpty()) {
-            throw new RuntimeException("更新数据时必须指定 id,删除条件 或 自定义的 where 语句 !!!");
+    public long update(Entity entity, Where where, boolean includeNull) {
+        if (where == null || where.isEmpty()) {
+            throw new RuntimeException("更新数据时 必须指定 id , 删除条件 或 自定义的 where 语句 !!!");
         }
-        var sqlBuilder = SQLBuilder.Update(tableInfo.tableName)
-                .UpdateColumns(includeNull ? tableInfo.canUpdateFields : Stream.of(tableInfo.canUpdateFields).
-                        filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new))
-                .Where(where);
+        var u = includeNull ? tableInfo.canUpdateFields : Stream.of(tableInfo.canUpdateFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
+        if (u.length == 0) {
+            throw new RuntimeException("更新数据时 待更新的数据 [实体类中除被 @Column(excludeOnUpdate = true) 修饰以外的字段] 不能全部为 null !!!");
+        }
+        var sqlBuilder = SQLBuilder.Update(tableInfo.tableName).UpdateColumns(u).Where(where);
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var entityMap = ObjectUtils.beanToMap(entity);
-        var sql = sqlBuilder.GetSQL();
-        //合并两个 map 包括更新数据的 map 和 where 条件的 map
         entityMap.putAll(whereParamMap);
-        return SQLRunner.update(sql, entityMap);
+        var sql = sqlBuilder.GetSQL();
+        return SQLRunner.update(sql, entityMap).affectedLength;
     }
 
     /**
@@ -183,7 +175,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return 受影响的条数
      */
     public long delete(Where where) {
-        if (where.isEmpty()) {
+        if (where == null || where.isEmpty()) {
             throw new RuntimeException("更新数据时必须指定 id,删除条件 或 自定义的 where 语句 !!!");
         }
         var sqlBuilder = SQLBuilder.Delete(tableInfo.tableName).Where(where);
