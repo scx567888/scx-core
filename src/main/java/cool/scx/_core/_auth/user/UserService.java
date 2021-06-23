@@ -75,7 +75,7 @@ public class UserService extends BaseService<User> {
      */
     public User findByUsername(String username) {
         var param = new QueryParam();
-        param.where.equal("username", username);
+        param.equal("username", username);
         return get(param);
     }
 

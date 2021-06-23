@@ -127,8 +127,9 @@ public final class Where {
     }
 
     /**
-     * 添加一个 whereSql 适用于 复杂查询的自定义 where 子句
-     *
+     * 设置 whereSql 适用于 复杂查询的自定义 where 子句<br>
+     * 在最终 sql 中会拼接到 where 子句的最后<br>
+     * 注意 :  除特殊语法外不需要手动在头部添加 AND
      * @param whereSQL sql 语句
      * @return 本身 , 方便链式调用
      */
@@ -302,9 +303,8 @@ public final class Where {
         return add(fieldName, WhereType.NOT_BETWEEN, value1, value2);
     }
 
-
     /**
-     * like : 根据 表达式进行判断
+     * like : 根据 SQL 表达式进行判断
      *
      * @param fieldName 字段名称 (注意 : 不是数据库名称)
      * @param value     SQL 表达式
@@ -315,7 +315,7 @@ public final class Where {
     }
 
     /**
-     * 不 like : 根据 表达式进行判断
+     * not like : 根据 SQL 表达式进行判断
      *
      * @param fieldName 字段名称 (注意 : 不是数据库名称)
      * @param value     SQL 表达式
@@ -337,7 +337,7 @@ public final class Where {
     }
 
     /**
-     * 不 like : 默认会在首尾添加 %
+     * not like : 默认会在首尾添加 %
      *
      * @param fieldName 字段名称 (注意 : 不是数据库名称)
      * @param value     默认会在首尾添加 %
@@ -358,9 +358,8 @@ public final class Where {
         return add(fieldName, WhereType.JSON_CONTAINS, value);
     }
 
-
     /**
-     * 包含
+     * 在其中
      *
      * @param fieldName 字段名称 (注意 : 不是数据库名称)
      * @param value     比较值
@@ -371,7 +370,7 @@ public final class Where {
     }
 
     /**
-     * 不包含
+     * 不在其中
      *
      * @param fieldName 字段名称 (注意 : 不是数据库名称)
      * @param value     比较值

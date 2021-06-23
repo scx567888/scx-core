@@ -249,7 +249,7 @@ public class BaseService<Entity extends BaseModel> {
             queryParam.addWhere("tombstone", WhereType.EQUAL, false);
         }
         queryParam.setPagination(1);
-        var list = this.baseDao.select(queryParam.where, queryParam.groupBy, queryParam.orderBy, queryParam.pagination);
+        var list = this.baseDao.select(queryParam.where(), queryParam.groupBy(), queryParam.orderBy(), queryParam.pagination());
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -263,7 +263,7 @@ public class BaseService<Entity extends BaseModel> {
         if (!ScxConfig.realDelete()) {
             queryParam.addWhere("tombstone", WhereType.EQUAL, false);
         }
-        return this.baseDao.count(queryParam.where, queryParam.groupBy);
+        return this.baseDao.count(queryParam.where(), queryParam.groupBy());
     }
 
     /**
@@ -286,7 +286,7 @@ public class BaseService<Entity extends BaseModel> {
         if (!ScxConfig.realDelete()) {
             queryParam.addWhere("tombstone", WhereType.EQUAL, false);
         }
-        return this.baseDao.select(queryParam.where, queryParam.groupBy, queryParam.orderBy, queryParam.pagination);
+        return this.baseDao.select(queryParam.where(), queryParam.groupBy(), queryParam.orderBy(), queryParam.pagination());
     }
 
     /**
