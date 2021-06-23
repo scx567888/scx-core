@@ -20,7 +20,7 @@ public class ScxMappingHandlerRegister {
     private static final List<ScxMappingHandler> SCX_MAPPING_HANDLER_LIST = new ArrayList<>();
 
     /**
-     * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.</p>
+     * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
      */
     public static void ScanScxMappingHandlers() {
         SCX_MAPPING_HANDLER_LIST.clear();
