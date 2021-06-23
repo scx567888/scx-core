@@ -24,9 +24,7 @@ public class ArticleService extends BaseService<Article> {
      */
     public Object testListAll(Map<String, Object> params) {
         var author = params.get("author") != null ? params.get("author").toString() : "";
-        var p = new QueryParam();
-        Long count = count(p);
-        if (count < 20) {
+        if (count() < 20) {
             var l = new ArrayList<Article>();
             for (int i = 0; i < 50; i++) {
                 var a = new Article();
