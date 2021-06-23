@@ -13,6 +13,14 @@ import java.io.Serializable;
 public final class LoginItem implements Serializable {
 
     /**
+     * 唯一 ID 用于标识用户
+     */
+    public final String uniqueID;
+    /**
+     * 登陆的设备类型
+     */
+    public final DeviceType loginDevice;
+    /**
      * 本质上一个是一个随机字符串
      * <p>
      * 前端 通过此值获取登录用户
@@ -20,16 +28,6 @@ public final class LoginItem implements Serializable {
      * 来源可以多种 header , cookie ,url 等
      */
     public String token;
-
-    /**
-     * 唯一 ID 用于标识用户
-     */
-    public String uniqueID;
-
-    /**
-     * 登陆的设备类型
-     */
-    public DeviceType loginDevice;
 
     /**
      * 构造函数

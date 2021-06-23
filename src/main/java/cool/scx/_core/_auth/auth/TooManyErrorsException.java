@@ -10,7 +10,7 @@ import cool.scx.exception.AuthException;
  */
 public class TooManyErrorsException extends AuthException {
 
-    public long remainingTime;
+    public final long remainingTime;
 
     /**
      * 构造函数 设置剩余错误次数

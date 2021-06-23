@@ -19,6 +19,8 @@ import cool.scx.bo.QueryParam;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.DeviceType;
+import cool.scx.enumeration.OrderByType;
+import cool.scx.enumeration.WhereType;
 import cool.scx.exception.AuthException;
 import cool.scx.exception.UnauthorizedException;
 import cool.scx.util.Ansi;
@@ -148,15 +150,17 @@ public class CoreAuthHandler implements AuthHandler {
      * @return a {@link cool.scx.vo.Json} object
      */
     public Json signup(String username, String password) {
-        var newUser = new QueryParam();
-//        newUser.addOrderBy("id", OrderByType.ASC).o.username = username;
-        User user = userService.get(newUser);
+        var queryParam = new QueryParam()
+                .addOrderBy("id", OrderByType.ASC)
+                .addWhere("username", WhereType.EQUAL, username);
+        var user = userService.get(queryParam);
         if (user != null) {
             return Json.fail("userAlreadyExists");
         } else {
-//            newUser.o.isAdmin = false;
-//            newUser.o.password = password;
-//            registeredUser(newUser.o);
+            var newUser = new User();
+            newUser.isAdmin = false;
+            newUser.password = password;
+            registeredUser(newUser);
             return Json.fail("registerSuccess");
         }
     }
@@ -203,13 +207,13 @@ public class CoreAuthHandler implements AuthHandler {
             loginError = le;
         }
         if (notHaveLoginError(ip, loginError)) {
-            var user = (User) userService.findByUsername(username.toString());
+            var user = (User) userService.findByUsername(username);
             if (user == null) {
                 var le = new LoginError(now, loginError.errorTimes + 1);
                 loginErrorMap.put(ip, le);
                 throw new UnknownUserException();
             }
-            if (!AuthUtils.verifyPassword(user.password, user.salt, password.toString())) {
+            if (!AuthUtils.verifyPassword(user.password, user.salt, password)) {
                 var le = new LoginError(now, loginError.errorTimes + 1);
                 loginErrorMap.put(ip, le);
                 throw new WrongPasswordException();

@@ -4,6 +4,8 @@ import cool.scx._core._auth.user.User;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
 import cool.scx.bo.QueryParam;
+import cool.scx.bo.Where;
+import cool.scx.enumeration.WhereType;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
@@ -75,9 +77,8 @@ public class DeptService extends BaseService<Dept> {
      * @param id a {@link java.lang.Long} object
      */
     public void deleteByUserId(Long id) {
-        var userDept = new QueryParam();
-//        userDept.o.userId = id;
-//        userDeptService.delete(userDept);
+        var where = new Where("userId", WhereType.EQUAL, id);
+        userDeptService.delete(where);
     }
 
     /**
@@ -88,9 +89,8 @@ public class DeptService extends BaseService<Dept> {
      */
     public List<UserDept> findDeptByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {
-            var ud = new QueryParam();
-//            ud.o.userId = userId;
-            return userDeptService.list(ud);
+            var queryParam = new QueryParam().addWhere("userId", WhereType.EQUAL, userId);
+            return userDeptService.list(queryParam);
         }
         return new ArrayList<>();
     }
@@ -102,11 +102,9 @@ public class DeptService extends BaseService<Dept> {
      * @return a {@link java.util.List} object
      */
     public List<UserDept> getUserDeptByUserIds(List<Long> userIds) {
-        var p = new QueryParam();
-        var userIdsStr = userIds.stream().map(Object::toString).collect(Collectors.joining(","));
-        if (!"".equals(userIdsStr)) {
-//            p.whereSql = " user_id in (" + userIdsStr + ")";
-            return userDeptService.list(p);
+        if (userIds != null && userIds.size() > 0) {
+            var queryParam = new QueryParam().addWhere("userId", WhereType.IN, userIds);
+            return userDeptService.list(queryParam);
         } else {
             return new ArrayList<>();
         }

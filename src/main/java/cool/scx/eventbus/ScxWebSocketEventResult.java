@@ -7,8 +7,8 @@ package cool.scx.eventbus;
  * @version 1.1.17
  */
 public class ScxWebSocketEventResult {
-    public String callBackID;
-    public Object data;
+    public final String callBackID;
+    public final Object data;
 
     /**
      * <p>Constructor for ScxWebSocketEventResult.</p>

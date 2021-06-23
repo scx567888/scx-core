@@ -14,7 +14,7 @@ public class GroupBy {
     /**
      * 分组字段列表
      */
-    public Set<String> groupByList = new HashSet<>();
+    public final Set<String> groupByList = new HashSet<>();
 
     /**
      * <p>Constructor for GroupBy.</p>

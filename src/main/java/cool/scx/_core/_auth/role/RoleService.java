@@ -4,6 +4,8 @@ import cool.scx._core._auth.user.User;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
 import cool.scx.bo.QueryParam;
+import cool.scx.bo.Where;
+import cool.scx.enumeration.WhereType;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
@@ -92,9 +94,8 @@ public class RoleService extends BaseService<Role> {
      * @param id a {@link java.lang.Long} object
      */
     public void deleteByUserId(Long id) {
-        var userDept = new QueryParam();
-//        userDept.o.userId = id;
-//        userRoleService.delete(userDept);
+        var where = new Where("userId", WhereType.EQUAL, id);
+        userRoleService.delete(where);
     }
 
     /**

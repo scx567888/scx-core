@@ -7,7 +7,7 @@ import cool.scx.base.BaseService;
 import cool.scx.bo.QueryParam;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
-import cool.scx.enumeration.OrderByType;
+import cool.scx.enumeration.WhereType;
 import cool.scx.exception.BadRequestException;
 import cool.scx.exception.CustomHttpRequestException;
 import cool.scx.exception.HttpRequestException;
@@ -53,31 +53,6 @@ public class CrudController {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends BaseModel> QueryParam getParam(String modelName, Integer limit, Integer page, String orderByColumn, String sortType, Map<String, Object> queryObject) {
-        var modelClass = (Class<T>) ScxContext.getClassByName(modelName);
-        T o = ObjectUtils.mapToBean(queryObject, modelClass);
-        if (o == null) {
-            try {
-                o = modelClass.getDeclaredConstructor().newInstance();
-            } catch (Exception ignored) {
-
-            }
-        }
-        var p = new QueryParam();
-        if (limit != null && limit != -1) {
-            p.setPagination(page, limit);
-        }
-        if (orderByColumn != null) {
-            if (sortType == null || "desc".equals(sortType)) {
-                p.addOrderBy(orderByColumn, OrderByType.DESC);
-            } else {
-                p.addOrderBy(orderByColumn, OrderByType.ASC);
-            }
-        }
-        return p;
-    }
-
 
     /**
      * 列表查询
@@ -100,9 +75,12 @@ public class CrudController {
                      @FromBody("queryObject") Map<String, Object> queryObject
     ) throws HttpRequestException {
         var baseService = getBaseService(modelName);
-        var param = getParam(modelName, limit, page, orderByColumn, sortType, queryObject);
-        var list = baseService.list(param);
-        var count = baseService.count(param);
+        var queryParam = new QueryParam().
+                setPagination(page, limit).
+                addOrderBy(orderByColumn, sortType).
+                addWhereByObject(getBaseModel(queryObject, modelName));
+        var list = baseService.list(queryParam);
+        var count = baseService.count(queryParam);
         return Json.ok().put("items", list).put("total", count);
     }
 
@@ -223,12 +201,14 @@ public class CrudController {
     @ScxMapping(value = ":modelName/check-unique", method = Method.POST)
     public Json checkUnique(String modelName, Map<String, Object> params) throws HttpRequestException {
         var baseService = getBaseService(modelName);
-        var param = getParam(modelName, null, null, null, null, params);
-//        if (param.o.id != null) {
-//            param.whereSql = "id != " + param.o.id;
-//        }
-//        param.o.id = null;
-        var b = baseService.count(param) == 0;
+        var model = getBaseModel(params, modelName);
+        var modelID = model.id;
+        model.id = null;
+        var queryParam = new QueryParam().addWhereByObject(model);
+        if (modelID != null) {
+            queryParam.addWhere("id", WhereType.NOT_EQUAL, modelID);
+        }
+        var b = baseService.count(queryParam) == 0;
         return Json.ok().put("isUnique", b);
     }
 

@@ -14,7 +14,7 @@ public class OnlineItem {
     /**
      * 连接
      */
-    public ServerWebSocket webSocket;
+    public final ServerWebSocket webSocket;
 
     /**
      * 此连接对应的用户名

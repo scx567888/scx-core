@@ -31,7 +31,7 @@ public class TestController {
 
     private final UserService userService;
 
-    private BaseService<Car> carService = new BaseService<>(Car.class);
+    private final BaseService<Car> carService = new BaseService<>(Car.class);
 
     /**
      * TestController
@@ -49,7 +49,7 @@ public class TestController {
      */
     @ScxMapping(value = "/", method = Method.GET)
     public Html TestIndex() {
-        Long count = userService.count(new QueryParam());
+        long count = userService.count(new QueryParam());
         if (count < 50) {
             var s1 = new ArrayList<User>();
             for (int i = 0; i < 25; i++) {

@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
  */
 class LoginError {
 
-    LocalDateTime lastErrorDate;
+    final LocalDateTime lastErrorDate;
 
-    Integer errorTimes;
+    final Integer errorTimes;
 
     /**
      * <p>Constructor for LoginError.</p>

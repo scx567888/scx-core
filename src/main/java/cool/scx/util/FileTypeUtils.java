@@ -320,7 +320,7 @@ public final class FileTypeUtils {
         add("mpg", "video/mpeg", "000001ba210001000180", "mpg 文件");
         add("mpe", "video/mpeg");
         add("m1v", "video/mpeg");
-        add("m2v", "video/mpeg");
+        add("m2v", "video/mpeg", "");
         add("ogv", "video/ogg");
         add("qt", "video/quicktime");
         add("mov", "video/quicktime");

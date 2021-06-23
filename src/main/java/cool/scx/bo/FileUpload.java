@@ -13,22 +13,22 @@ public final class FileUpload {
     /**
      * 表单中的名称
      */
-    public String name;
+    public final String name;
 
     /**
      * 上传的文件的真实名称
      */
-    public String fileName;
+    public final String fileName;
 
     /**
      * 文件大小
      */
-    public long fileSize;
+    public final long fileSize;
 
     /**
      * 文件内容
      */
-    public Buffer buffer;
+    public final Buffer buffer;
 
     /**
      * 构造函数

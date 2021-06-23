@@ -1,5 +1,6 @@
 package cool.scx.bo;
 
+import cool.scx.base.BaseModel;
 import cool.scx.enumeration.OrderByType;
 import cool.scx.enumeration.WhereType;
 
@@ -16,22 +17,22 @@ public final class QueryParam {
     /**
      * 排序的字段
      */
-    public OrderBy orderBy = new OrderBy();
+    public final OrderBy orderBy = new OrderBy();
 
     /**
      * 自定义分组 SQL 添加
      */
-    public GroupBy groupBy = new GroupBy();
+    public final GroupBy groupBy = new GroupBy();
 
     /**
      * 自定义WHERE 添加
      */
-    public Where where = new Where();
+    public final Where where = new Where();
 
     /**
      * 分页参数
      */
-    public Pagination pagination = new Pagination();
+    public final Pagination pagination = new Pagination();
 
     /**
      * <p>Constructor for Param.</p>
@@ -66,13 +67,18 @@ public final class QueryParam {
         return this;
     }
 
+    public <Entity extends BaseModel> QueryParam addWhereByObject(Entity entity) {
+        this.where.addByObject(entity);
+        return this;
+    }
+
     /**
-     * <p>addWhere.</p>
+     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link Where#whereSQL(String)} })
      *
-     * @param fieldName a {@link java.lang.String} object
-     * @param whereType a {@link cool.scx.enumeration.WhereType} object
-     * @param value1    a {@link java.lang.Object} object
-     * @return a {@link cool.scx.bo.QueryParam} object
+     * @param fieldName 字段名称 (注意不是数据库名称)
+     * @param whereType where 类型
+     * @param value1    参数1
+     * @return 本身 , 方便链式调用
      */
     public QueryParam addWhere(String fieldName, WhereType whereType, Object value1) {
         this.where.add(fieldName, whereType, value1);
@@ -134,6 +140,11 @@ public final class QueryParam {
      */
     public QueryParam addOrderBy(String orderByColumn, OrderByType orderByType) {
         this.orderBy.add(orderByColumn, orderByType);
+        return this;
+    }
+
+    public QueryParam addOrderBy(String orderByColumn, String str) {
+        this.orderBy.add(orderByColumn, str);
         return this;
     }
 

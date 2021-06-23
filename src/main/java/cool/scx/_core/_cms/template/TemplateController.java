@@ -42,7 +42,8 @@ public class TemplateController {
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                 var fileInfo = new FileInfo();
                 fileInfo.type = "Directory";
-                return getFileVisitResult(dir, fileInfo, path, fileList);
+                getFileVisitResult(dir, fileInfo, path, fileList);
+                return FileVisitResult.CONTINUE;
             }
 
             //访问文件时自动调用此方法
@@ -50,7 +51,8 @@ public class TemplateController {
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                 var fileInfo = new FileInfo();
                 fileInfo.type = "File";
-                return getFileVisitResult(file, fileInfo, path, fileList);
+                getFileVisitResult(file, fileInfo, path, fileList);
+                return FileVisitResult.CONTINUE;
             }
 
             //访问文件失败时自动调用此方法
@@ -68,7 +70,7 @@ public class TemplateController {
         return fileList;
     }
 
-    private static FileVisitResult getFileVisitResult(Path file, FileInfo fileInfo, Path path, LinkedList<FileInfo> fileList) {
+    private static void getFileVisitResult(Path file, FileInfo fileInfo, Path path, LinkedList<FileInfo> fileList) {
         fileInfo.id = file.getFileName().toString();
         fileInfo.parentId = file.getParent().toFile().getPath();
         if (path.toString().equals(fileInfo.parentId)) {
@@ -78,7 +80,6 @@ public class TemplateController {
         }
         fileInfo.filePath = file.toFile().getPath();
         fileList.add(fileInfo);
-        return FileVisitResult.CONTINUE;
     }
 
     /**

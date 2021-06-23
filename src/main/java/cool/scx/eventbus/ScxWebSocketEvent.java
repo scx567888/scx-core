@@ -11,10 +11,10 @@ import io.vertx.core.json.JsonObject;
  */
 public class ScxWebSocketEvent {
 
-    public String eventName;
-    public String callBackID;
-    public JsonObject data;
-    public ServerWebSocket webSocket;
+    public final String eventName;
+    public final String callBackID;
+    public final JsonObject data;
+    public final ServerWebSocket webSocket;
 
 
     /**

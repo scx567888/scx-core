@@ -22,7 +22,7 @@ public final class Where {
     /**
      * 存储查询条件
      */
-    public List<WhereBody> whereBodyList = new ArrayList<>();
+    public final List<WhereBody> whereBodyList = new ArrayList<>();
 
     /**
      * 自定义的查询语句
