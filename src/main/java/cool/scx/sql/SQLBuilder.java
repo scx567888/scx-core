@@ -343,7 +343,7 @@ public final class SQLBuilder {
             case SELECT:
                 return GetSelectSQL();
             default:
-                return "";
+                return null;
         }
     }
 
@@ -366,7 +366,11 @@ public final class SQLBuilder {
     }
 
     private String GetUpdateSQL() {
-        return " UPDATE " + _tableName + " SET " + String.join(", ", _updateColumns) + " " + getWhereSql();
+        if (_updateColumns.length > 0) {
+            return " UPDATE " + _tableName + " SET " + String.join(", ", _updateColumns) + getWhereSql();
+        } else {
+            return null;
+        }
     }
 
     private String GetDeleteSQL() {

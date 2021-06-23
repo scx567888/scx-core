@@ -96,7 +96,7 @@ public class BaseService<Entity extends BaseModel> {
             var needTombstoneEntity = ScxContext.getBean(entityClass);
             needTombstoneEntity.tombstone = true;
             var where = new Where("id", WhereType.IN, ids).add("tombstone", WhereType.EQUAL, false);
-            return this.baseDao.update(needTombstoneEntity, where, false).affectedLength;
+            return this.baseDao.update(needTombstoneEntity, where, false);
         }
     }
 
@@ -113,7 +113,7 @@ public class BaseService<Entity extends BaseModel> {
         } else {//逻辑删除
             var needTombstoneEntity = ScxContext.getBean(entityClass);
             needTombstoneEntity.tombstone = true;
-            return this.baseDao.update(needTombstoneEntity, where, false).affectedLength;
+            return this.baseDao.update(needTombstoneEntity, where, false);
         }
     }
 
@@ -159,7 +159,7 @@ public class BaseService<Entity extends BaseModel> {
         } else {
             var needRevokeDeleteModel = ScxContext.getBean(entityClass);
             needRevokeDeleteModel.tombstone = false;
-            return this.baseDao.update(needRevokeDeleteModel, where, false).affectedLength;
+            return this.baseDao.update(needRevokeDeleteModel, where, false);
         }
     }
 
@@ -176,7 +176,7 @@ public class BaseService<Entity extends BaseModel> {
             where.add("tombstone", WhereType.EQUAL, false);
         }
         //更新成功的条数
-        return this.baseDao.update(entity, where, false).affectedLength;
+        return this.baseDao.update(entity, where, false);
     }
 
     /**
@@ -206,7 +206,7 @@ public class BaseService<Entity extends BaseModel> {
             where.add("tombstone", WhereType.EQUAL, false);
         }
         //更新成功的条数
-        return this.baseDao.update(entity, where, true).affectedLength;
+        return this.baseDao.update(entity, where, true);
     }
 
     /**
