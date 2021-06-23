@@ -142,14 +142,14 @@ public final class BaseDao<Entity extends BaseModel> {
      * @param groupBy 分组条件
      * @return a {@link java.lang.Integer} object.
      */
-    public Long count(Where where, GroupBy groupBy) {
+    public long count(Where where, GroupBy groupBy) {
         var sqlBuilder = SQLBuilder.Select(tableInfo.tableName)
-                .SelectColumns("COUNT(*)")
+                .SelectColumns("COUNT(*) AS count")
                 .Where(where)
                 .GroupBy(groupBy);
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var sql = sqlBuilder.GetSQL();
-        return Long.parseLong(SQLRunner.query(sql, whereParamMap).get(0).get("COUNT(*)").toString());
+        return (Long) SQLRunner.query(sql, whereParamMap).get(0).get("count");
     }
 
     /**
@@ -180,9 +180,9 @@ public final class BaseDao<Entity extends BaseModel> {
      * 删除数据
      *
      * @param where where 条件
-     * @return a {@link java.lang.Integer} object.
+     * @return 受影响的条数
      */
-    public Integer delete(Where where) {
+    public long delete(Where where) {
         if (where.isEmpty()) {
             throw new RuntimeException("更新数据时必须指定 id,删除条件 或 自定义的 where 语句 !!!");
         }
@@ -193,9 +193,9 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     /**
-     * <p>table.</p>
+     * 获取 tableInfo 方便细粒度操作
      *
-     * @return a {@link cool.scx.bo.TableInfo} object
+     * @return 当前 baseDao 的 tableInfo
      */
     public TableInfo tableInfo() {
         return tableInfo;

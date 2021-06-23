@@ -13,7 +13,7 @@ public final class UpdateResult {
     /**
      * 受影响的行数
      */
-    public final Integer affectedLength;
+    public final long affectedLength;
 
     /**
      * 主键 id 集合
@@ -26,7 +26,7 @@ public final class UpdateResult {
      * @param affectedLength a {@link java.lang.Integer} object.
      * @param generatedKeys  a {@link java.util.List} object.
      */
-    public UpdateResult(Integer affectedLength, List<Long> generatedKeys) {
+    public UpdateResult(long affectedLength, List<Long> generatedKeys) {
         this.affectedLength = affectedLength;
         this.generatedKeys = generatedKeys;
     }

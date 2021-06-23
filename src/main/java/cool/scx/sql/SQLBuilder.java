@@ -5,8 +5,8 @@ import cool.scx.bo.OrderBy;
 import cool.scx.bo.Pagination;
 import cool.scx.bo.Where;
 import cool.scx.enumeration.SQLBuilderType;
-import cool.scx.enumeration.WhereType;
 import cool.scx.util.CaseUtils;
+import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -31,51 +31,66 @@ public final class SQLBuilder {
      * 表名
      */
     private final String _tableName;
+
     /**
      * 根据 where 条件对象生成的 map 防止 sql 注入
      */
     private final Map<String, Object> _whereParamMap = new HashMap<>();
+
     /**
      * 所有查询列 类似 user_name AS userName <br>
      * 注意 : 只有 _sqlBuilderType 为 select 时生效
      */
     private String[] _selectColumns;
+
     /**
      * 插入数据时的列名 <br>
      * 注意 : 只有 _sqlBuilderType 为 insert 时生效
      */
     private String[] _insertColumns;
+
     /**
      * 更新的 列名 <br>
      * 注意 : 只有 _sqlBuilderType 为 update 时生效
      */
     private String[] _updateColumns;
+
     /**
      * 所有 where 条件字符串 由 where 生成  类似 [ id = :id , age >= :age ]
      */
     private String[] _whereColumns;
+
     /**
      * whereSQL 由 where 生成
      */
     private String _whereSQL;
+
     /**
      * 所有列名
      */
     private GroupBy _groupBy;
+
     /**
      * 所有列名
      */
     private OrderBy _orderBy;
+
     /**
      * 起始分页(此值需要进行计算)
      */
     private Pagination _pagination;
+
     /**
      * 所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
      */
     private String[][] _values;
 
-
+    /**
+     * 初始化
+     *
+     * @param sqlBuilderType sql 类型
+     * @param tableName      表名
+     */
     private SQLBuilder(SQLBuilderType sqlBuilderType, String tableName) {
         _sqlBuilderType = sqlBuilderType;
         _tableName = tableName;
@@ -182,18 +197,15 @@ public final class SQLBuilder {
         this._whereSQL = where.whereSQL;
         for (var w : where.whereBodyList) {
             var columnName = CaseUtils.toSnake(w.fieldName);
+            var keyWord = w.whereType.keyWord();
             var fieldName = w.fieldName;
             var value1 = w.value1;
             var value2 = w.value2;
 
             switch (w.whereType) {
-                case IS_NULL: {
-                    var str = columnName + " IS NULL";
-                    tempWhereColumnsList.add(str);
-                    break;
-                }
+                case IS_NULL:
                 case IS_NOT_NULL: {
-                    var str = columnName + " IS NOT NULL";
+                    var str = columnName + " " + keyWord;
                     tempWhereColumnsList.add(str);
                     break;
                 }
@@ -202,28 +214,23 @@ public final class SQLBuilder {
                 case LESS_THAN:
                 case LESS_THAN_OR_EQUAL:
                 case GREATER_THAN:
-                case GREATER_THAN_OR_EQUAL: {
-                    String keyWord;
-                    if (w.whereType == WhereType.EQUAL) {
-                        keyWord = " = ";
-                    } else if (w.whereType == WhereType.NOT_EQUAL) {
-                        keyWord = " <> ";
-                    } else if (w.whereType == WhereType.LESS_THAN) {
-                        keyWord = " < ";
-                    } else if (w.whereType == WhereType.LESS_THAN_OR_EQUAL) {
-                        keyWord = " <= ";
-                    } else if (w.whereType == WhereType.GREATER_THAN) {
-                        keyWord = " > ";
-                    } else {
-                        keyWord = " >= ";
-                    }
+                case GREATER_THAN_OR_EQUAL:
+                case LIKE_REGEX:
+                case NOT_LIKE_REGEX: {
                     var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + keyWord + ":" + placeholder;
+                    var str = columnName + " " + keyWord + " :" + placeholder;
                     _whereParamMap.put(placeholder, value1);
                     tempWhereColumnsList.add(str);
                     break;
                 }
                 case CONTAIN: {
+                    var placeholder = getPlaceholder(fieldName);
+                    var str = " CONTAINS (" + columnName + ", :" + placeholder + " )";
+                    _whereParamMap.put(placeholder, value1);
+                    tempWhereColumnsList.add(str);
+                    break;
+                }
+                case JSON_CONTAINS: {
                     var placeholder = getPlaceholder(fieldName);
                     var str = " JSON_CONTAINS (" + columnName + ", :" + placeholder + " )";
                     _whereParamMap.put(placeholder, value1);
@@ -232,30 +239,17 @@ public final class SQLBuilder {
                 }
                 case LIKE:
                 case NOT_LIKE: {
-                    var keyWord = w.whereType == WhereType.LIKE ? " LIKE" : " NOT LIKE";
                     var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + keyWord + " CONCAT('%',:" + placeholder + ",'%')";
-                    _whereParamMap.put(placeholder, value1);
-                    tempWhereColumnsList.add(str);
-                    break;
-                }
-                case LIKE_REGEX:
-                case NOT_LIKE_REGEX: {
-                    var keyWord = w.whereType == WhereType.LIKE_REGEX ? " LIKE" : " NOT LIKE";
-                    var placeholder = getPlaceholder(fieldName);
-                    var str = columnName + keyWord + " :" + placeholder;
+                    var str = columnName + " " + keyWord + " CONCAT('%',:" + placeholder + ",'%')";
                     _whereParamMap.put(placeholder, value1);
                     tempWhereColumnsList.add(str);
                     break;
                 }
                 case IN:
                 case NOT_IN: {
-                    var keyWord = w.whereType == WhereType.IN ? " IN" : " NOT IN";
-                    Object[] inParams = new Object[0];
-                    if (value1.getClass().isArray()) {
-                        inParams = ((Object[]) value1);
-                    } else if (value1 instanceof List) {
-                        inParams = ((List<?>) value1).toArray(new Object[0]);
+                    var inParams = new Object[0];
+                    if (value1.getClass().isArray() || value1 instanceof List) {
+                        inParams = ObjectUtils.parseSimpleType(value1, inParams.getClass());
                     } else if (value1 instanceof String) {
                         inParams = ((String) value1).split(",");
                     }
@@ -266,17 +260,16 @@ public final class SQLBuilder {
                             sList[i] = ":" + placeholder;
                             _whereParamMap.put(placeholder, inParams[i]);
                         }
-                        var str = columnName + keyWord + " ( " + String.join(",", sList) + " )";
+                        var str = columnName + " " + keyWord + " ( " + String.join(",", sList) + " )";
                         tempWhereColumnsList.add(str);
                     }
                     break;
                 }
                 case BETWEEN:
                 case NOT_BETWEEN: {
-                    var keyWord = w.whereType == WhereType.BETWEEN ? " BETWEEN" : " NOT BETWEEN";
                     var placeholder1 = getPlaceholder(fieldName);
                     var placeholder2 = getPlaceholder(fieldName);
-                    var str = columnName + keyWord + placeholder1 + " AND :" + placeholder2;
+                    var str = columnName + " " + keyWord + placeholder1 + " AND :" + placeholder2;
                     _whereParamMap.put(placeholder1, value1);
                     _whereParamMap.put(placeholder2, value2);
                     tempWhereColumnsList.add(str);
@@ -430,7 +423,7 @@ public final class SQLBuilder {
      *
      * @param name n
      */
-    private String getPlaceholder(String name) {
+    private static String getPlaceholder(String name) {
         return name + "_" + StringUtils.getRandomCode(6, true);
     }
 
