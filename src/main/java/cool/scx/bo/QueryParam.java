@@ -42,7 +42,7 @@ public final class QueryParam {
     }
 
     /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link Where#whereSQL(String)} })
+     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link cool.scx.bo.Where#whereSQL(String)} })
      *
      * @param fieldName 字段名称 (注意不是数据库名称)
      * @param whereType where 类型
@@ -95,7 +95,7 @@ public final class QueryParam {
     }
 
     /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link Where#whereSQL(String)} })
+     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link cool.scx.bo.Where#whereSQL(String)} })
      *
      * @param fieldName 字段名称 (注意不是数据库名称)
      * @param whereType where 类型
@@ -372,18 +372,38 @@ public final class QueryParam {
         return this;
     }
 
+    /**
+     * <p>orderBy.</p>
+     *
+     * @return a {@link cool.scx.bo.OrderBy} object
+     */
     public OrderBy orderBy() {
         return orderBy;
     }
 
+    /**
+     * <p>groupBy.</p>
+     *
+     * @return a {@link cool.scx.bo.GroupBy} object
+     */
     public GroupBy groupBy() {
         return groupBy;
     }
 
+    /**
+     * <p>where.</p>
+     *
+     * @return a {@link cool.scx.bo.Where} object
+     */
     public Where where() {
         return where;
     }
 
+    /**
+     * <p>pagination.</p>
+     *
+     * @return a {@link cool.scx.bo.Pagination} object
+     */
     public Pagination pagination() {
         return pagination;
     }

@@ -130,6 +130,7 @@ public final class Where {
      * 设置 whereSql 适用于 复杂查询的自定义 where 子句<br>
      * 在最终 sql 中会拼接到 where 子句的最后<br>
      * 注意 :  除特殊语法外不需要手动在头部添加 AND
+     *
      * @param whereSQL sql 语句
      * @return 本身 , 方便链式调用
      */
