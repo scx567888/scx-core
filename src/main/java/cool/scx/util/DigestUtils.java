@@ -9,7 +9,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * 摘要算法工具类
+ * 摘要算法工具类<br>
+ * 只是针对 jdk 中自带的 {@link MessageDigest} 进行的简单封装<br>
+ * 注意 : SHA 和 MD5 为单向散列函数,
+ * 只适用于防篡改 或单项加密(如密码) 等 .
+ * 如有加密后需要解密的需求 , 建议使用 {@link CryptoUtils}
  */
 public class DigestUtils {
 
@@ -114,7 +118,7 @@ public class DigestUtils {
      * @param byteArray an array of {@link byte} objects.
      * @return a {@link java.lang.String} object.
      */
-    private static String toHex(byte[] byteArray) {
+    private static String toHex(final byte[] byteArray) {
         char[] resultCharArray = new char[byteArray.length * 2];
         int index = 0;
         for (byte b : byteArray) {
@@ -124,7 +128,7 @@ public class DigestUtils {
         return new String(resultCharArray);
     }
 
-    private static MessageDigest getDigest(DigestType digestType) {
+    private static MessageDigest getDigest(final DigestType digestType) {
         try {
             return MessageDigest.getInstance(digestType.algorithmsName());
         } catch (NoSuchAlgorithmException exception) {
