@@ -8,9 +8,9 @@ import cool.scx.auth.ScxAuth;
 import cool.scx.base.BaseService;
 import cool.scx.bo.QueryParam;
 import cool.scx.enumeration.Method;
+import cool.scx.util.DigestUtils;
 import cool.scx.util.FileTypeUtils;
 import cool.scx.util.HttpUtils;
-import cool.scx.util.MD5Utils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.*;
 
@@ -120,7 +120,7 @@ public class TestController {
      */
     @ScxMapping(value = "/md5", method = Method.GET)
     public String TestMd5() {
-        return MD5Utils.md5("123");
+        return DigestUtils.md5("123");
     }
 
     /**

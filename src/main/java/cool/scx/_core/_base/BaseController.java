@@ -231,7 +231,7 @@ public class BaseController {
             //获取文件真实的存储路径
             var fileStoragePath = BaseConfig.uploadFilePath().getPath() + "\\" + uploadFile.filePath;
             //计算 md5 只有前后台 md5 相同文件才算 正确
-            var serverMd5Str = MD5Utils.md5(new File(uploadTempFile));
+            var serverMd5Str = DigestUtils.md5(new File(uploadTempFile));
             if (!fileMD5.equalsIgnoreCase(serverMd5Str)) {
                 //md5 不相同 说明临时文件可能损坏 删除临时文件
                 FileUtils.deleteFiles(Path.of(uploadTempFile).getParent());

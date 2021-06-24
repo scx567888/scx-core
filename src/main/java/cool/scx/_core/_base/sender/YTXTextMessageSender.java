@@ -4,8 +4,8 @@ import cool.scx.annotation.ScxService;
 import cool.scx.config.ScxConfig;
 import cool.scx.message.BaseSender;
 import cool.scx.util.Base64Utils;
+import cool.scx.util.DigestUtils;
 import cool.scx.util.HttpUtils;
-import cool.scx.util.MD5Utils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -76,7 +76,7 @@ public class YTXTextMessageSender implements BaseSender<List<String>, Map<String
     }
 
     private String getSigParameter(String TimeStampStr) {
-        return MD5Utils.md5(YTX_ACCOUNT_SID + YTX_AUTH_TOKEN + TimeStampStr);
+        return DigestUtils.md5(YTX_ACCOUNT_SID + YTX_AUTH_TOKEN + TimeStampStr);
     }
 
     private String getAuthorization(String TimeStampStr) {
