@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 /**
  * where 查询条件封装类
+ * todo 数据校验
  *
  * @author 司昌旭
  * @version 1.2.0

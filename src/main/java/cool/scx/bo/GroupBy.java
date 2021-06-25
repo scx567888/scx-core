@@ -5,6 +5,7 @@ import java.util.Set;
 
 /**
  * 分组
+ * todo 数据校验
  *
  * @author 司昌旭
  * @version 1.2.0

@@ -7,6 +7,7 @@ import cool.scx.enumeration.WhereType;
 /**
  * 查询参数类<br>
  * 针对  GroupBy , OrderBy , Pagination , Where 等进行的简单封装 <br>
+ * 同时附带一些简单的参数校验 <br>
  * 只是 为了方便传递参数使用<br>
  *
  * @author 司昌旭
@@ -17,17 +18,17 @@ public final class QueryParam {
     /**
      * 排序的字段
      */
-    private final OrderBy orderBy = new OrderBy();
+    private final OrderBy orderBy;
 
     /**
      * 自定义分组 SQL 添加
      */
-    private final GroupBy groupBy = new GroupBy();
+    private final GroupBy groupBy;
 
     /**
      * 自定义WHERE 添加
      */
-    private final Where where = new Where();
+    private final Where where;
 
     /**
      * 分页参数
@@ -38,7 +39,18 @@ public final class QueryParam {
      * <p>Constructor for Param.</p>
      */
     public QueryParam() {
+        this.orderBy = new OrderBy();
+        this.where = new Where();
+        this.groupBy = new GroupBy();
+    }
 
+    /**
+     * 传递一个实体类 class 用于做字段校验
+     */
+    public QueryParam(Class<? extends BaseModel> entityClass) {
+        this.orderBy = new OrderBy(entityClass);
+        this.where = new Where();
+        this.groupBy = new GroupBy();
     }
 
     /**
@@ -161,6 +173,30 @@ public final class QueryParam {
      */
     public QueryParam addOrderBy(String orderByColumn, String orderByStr) {
         this.orderBy.add(orderByColumn, orderByStr);
+        return this;
+    }
+
+    /**
+     * 添加一个排序 SQL
+     *
+     * @param orderByColumn 排序 SQL ( SQL 表达式 )
+     * @param orderByStr    排序类型 正序或倒序
+     * @return 本身, 方便链式调用
+     */
+    public QueryParam addOrderBySQL(String orderByColumn, String orderByStr) {
+        this.orderBy.addSQL(orderByColumn, orderByStr);
+        return this;
+    }
+
+    /**
+     * 添加一个排序 SQL
+     *
+     * @param orderByColumn 排序 SQL ( SQL 表达式 )
+     * @param orderByType   排序类型 正序或倒序
+     * @return 本身, 方便链式调用
+     */
+    public QueryParam addOrderBySQL(String orderByColumn, OrderByType orderByType) {
+        this.orderBy.addSQL(orderByColumn, orderByType);
         return this;
     }
 

@@ -390,7 +390,7 @@ public final class SQLBuilder {
 
         var orderBySql = "";
         if (_orderBy != null && _orderBy.orderByList.size() != 0) {
-            orderBySql = " ORDER BY " + _orderBy.orderByList.entrySet().stream().map((entry) -> entry.getKey() + " " + entry.getValue().toString()).collect(Collectors.joining(",", "", ""));
+            orderBySql = " ORDER BY " + _orderBy.orderByList.stream().map((entry) -> (entry.isSQL ? entry.orderByColumn : CaseUtils.toSnake(entry.orderByColumn)) + " " + entry.orderByType.name()).collect(Collectors.joining(",", "", ""));
         }
 
         var limitSql = "";
