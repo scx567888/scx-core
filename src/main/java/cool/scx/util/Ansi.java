@@ -43,7 +43,7 @@ public final class Ansi {
      * 红色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi red(Object o) {
         print(o, AnsiColor.RED);
@@ -54,7 +54,7 @@ public final class Ansi {
      * 绿色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi green(Object o) {
         print(o, AnsiColor.GREEN);
@@ -65,7 +65,7 @@ public final class Ansi {
      * 亮青色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi brightCyan(Object o) {
         print(o, AnsiColor.BRIGHT_CYAN);
@@ -76,7 +76,7 @@ public final class Ansi {
      * 蓝色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi blue(Object o) {
         print(o, AnsiColor.BLUE);
@@ -87,7 +87,7 @@ public final class Ansi {
      * 青色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi cyan(Object o) {
         print(o, AnsiColor.CYAN);
@@ -98,7 +98,7 @@ public final class Ansi {
      * 亮蓝色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi brightBlue(Object o) {
         print(o, AnsiColor.BRIGHT_BLUE);
@@ -109,7 +109,7 @@ public final class Ansi {
      * 亮紫色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi brightMagenta(Object o) {
         print(o, AnsiColor.BRIGHT_MAGENTA);
@@ -120,7 +120,7 @@ public final class Ansi {
      * 亮红色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi brightRed(Object o) {
         print(o, AnsiColor.BRIGHT_RED);
@@ -131,7 +131,7 @@ public final class Ansi {
      * 亮绿色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi brightGreen(Object o) {
         print(o, AnsiColor.BRIGHT_GREEN);
@@ -139,10 +139,32 @@ public final class Ansi {
     }
 
     /**
+     * 黑色
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return Ansi 方便链式调用
+     */
+    public Ansi black(Object o) {
+        print(o, AnsiColor.BLACK);
+        return this;
+    }
+
+    /**
+     * 亮黑色 ( 真的存在这种颜色吗 ? )
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return Ansi 方便链式调用
+     */
+    public Ansi brightBlack(Object o) {
+        print(o, AnsiColor.BRIGHT_BLACK);
+        return this;
+    }
+
+    /**
      * 亮黄色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi brightYellow(Object o) {
         print(o, AnsiColor.BRIGHT_YELLOW);
@@ -153,7 +175,7 @@ public final class Ansi {
      * 黄色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi yellow(Object o) {
         print(o, AnsiColor.YELLOW);
@@ -164,10 +186,32 @@ public final class Ansi {
      * 紫色
      *
      * @param o a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.util.Ansi} object.
+     * @return Ansi 方便链式调用
      */
     public Ansi magenta(Object o) {
         print(o, AnsiColor.MAGENTA);
+        return this;
+    }
+
+    /**
+     * 白色
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return Ansi 方便链式调用
+     */
+    public Ansi white(Object o) {
+        print(o, AnsiColor.WHITE);
+        return this;
+    }
+
+    /**
+     * 默认颜色
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return Ansi 方便链式调用
+     */
+    public Ansi defaultColor(Object o) {
+        print(o, AnsiColor.DEFAULT_COLOR);
         return this;
     }
 

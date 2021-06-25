@@ -87,7 +87,7 @@ public enum AnsiColor {
     /**
      * 默认 (一般是白色)
      */
-    DEFAULT(39),
+    DEFAULT_COLOR(39),
 
     /**
      * 亮白色 (这个是真正的白色)
