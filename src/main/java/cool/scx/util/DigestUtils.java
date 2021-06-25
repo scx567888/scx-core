@@ -10,10 +10,13 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * 摘要算法工具类<br>
- * 只是针对 jdk 中自带的 {@link MessageDigest} 进行的简单封装<br>
+ * 只是针对 jdk 中自带的 {@link java.security.MessageDigest} 进行的简单封装<br>
  * 注意 : SHA 和 MD5 为单向散列函数,
  * 只适用于防篡改 或单项加密(如密码) 等 .
- * 如有加密后需要解密的需求 , 建议使用 {@link CryptoUtils}
+ * 如有加密后需要解密的需求 , 建议使用 {@link cool.scx.util.CryptoUtils}
+ *
+ * @author 司昌旭
+ * @version 1.2.1
  */
 public class DigestUtils {
 
@@ -24,18 +27,39 @@ public class DigestUtils {
 
     private static final char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
+    /**
+     * <p>digest.</p>
+     *
+     * @param data       a {@link java.lang.String} object
+     * @param digestType a {@link cool.scx.enumeration.DigestType} object
+     * @return a {@link java.lang.String} object
+     */
     public static String digest(final String data, DigestType digestType) {
         var digest = getDigest(digestType);
         var bytes = digest.digest(getBytes(data));
         return toHex(bytes);
     }
 
+    /**
+     * <p>digest.</p>
+     *
+     * @param data       an array of {@link byte} objects
+     * @param digestType a {@link cool.scx.enumeration.DigestType} object
+     * @return a {@link java.lang.String} object
+     */
     public static String digest(final byte[] data, DigestType digestType) {
         var digest = getDigest(digestType);
         var bytes = digest.digest(data);
         return toHex(bytes);
     }
 
+    /**
+     * <p>digest.</p>
+     *
+     * @param data       a {@link java.io.File} object
+     * @param digestType a {@link cool.scx.enumeration.DigestType} object
+     * @return a {@link java.lang.String} object
+     */
     public static String digest(final File data, DigestType digestType) {
         var digest = getDigest(digestType);
         try (var file = new RandomAccessFile(data, "r")) {
@@ -52,62 +76,152 @@ public class DigestUtils {
         }
     }
 
+    /**
+     * <p>sha1.</p>
+     *
+     * @param data a {@link java.lang.String} object
+     * @return a {@link java.lang.String} object
+     */
     public static String sha1(final String data) {
         return digest(data, DigestType.SHA_1);
     }
 
+    /**
+     * <p>sha1.</p>
+     *
+     * @param data an array of {@link byte} objects
+     * @return a {@link java.lang.String} object
+     */
     public static String sha1(final byte[] data) {
         return digest(data, DigestType.SHA_1);
     }
 
+    /**
+     * <p>sha1.</p>
+     *
+     * @param data a {@link java.io.File} object
+     * @return a {@link java.lang.String} object
+     */
     public static String sha1(final File data) {
         return digest(data, DigestType.SHA_1);
     }
 
+    /**
+     * <p>sha256.</p>
+     *
+     * @param data a {@link java.lang.String} object
+     * @return a {@link java.lang.String} object
+     */
     public static String sha256(final String data) {
         return digest(data, DigestType.SHA_256);
     }
 
+    /**
+     * <p>sha256.</p>
+     *
+     * @param data an array of {@link byte} objects
+     * @return a {@link java.lang.String} object
+     */
     public static String sha256(final byte[] data) {
         return digest(data, DigestType.SHA_256);
     }
 
+    /**
+     * <p>sha256.</p>
+     *
+     * @param data a {@link java.io.File} object
+     * @return a {@link java.lang.String} object
+     */
     public static String sha256(final File data) {
         return digest(data, DigestType.SHA_256);
     }
 
+    /**
+     * <p>sha384.</p>
+     *
+     * @param data a {@link java.lang.String} object
+     * @return a {@link java.lang.String} object
+     */
     public static String sha384(final String data) {
         return digest(data, DigestType.SHA_384);
     }
 
+    /**
+     * <p>sha384.</p>
+     *
+     * @param data an array of {@link byte} objects
+     * @return a {@link java.lang.String} object
+     */
     public static String sha384(final byte[] data) {
         return digest(data, DigestType.SHA_384);
     }
 
+    /**
+     * <p>sha384.</p>
+     *
+     * @param data a {@link java.io.File} object
+     * @return a {@link java.lang.String} object
+     */
     public static String sha384(final File data) {
         return digest(data, DigestType.SHA_384);
     }
 
+    /**
+     * <p>sha512.</p>
+     *
+     * @param data a {@link java.lang.String} object
+     * @return a {@link java.lang.String} object
+     */
     public static String sha512(final String data) {
         return digest(data, DigestType.SHA_512);
     }
 
+    /**
+     * <p>sha512.</p>
+     *
+     * @param data an array of {@link byte} objects
+     * @return a {@link java.lang.String} object
+     */
     public static String sha512(final byte[] data) {
         return digest(data, DigestType.SHA_512);
     }
 
+    /**
+     * <p>sha512.</p>
+     *
+     * @param data a {@link java.io.File} object
+     * @return a {@link java.lang.String} object
+     */
     public static String sha512(final File data) {
         return digest(data, DigestType.SHA_512);
     }
 
+    /**
+     * <p>md5.</p>
+     *
+     * @param data a {@link java.lang.String} object
+     * @return a {@link java.lang.String} object
+     */
     public static String md5(final String data) {
         return digest(data, DigestType.MD5);
     }
 
+    /**
+     * <p>md5.</p>
+     *
+     * @param data an array of {@link byte} objects
+     * @return a {@link java.lang.String} object
+     */
     public static String md5(final byte[] data) {
         return digest(data, DigestType.MD5);
     }
 
+    /**
+     * <p>md5.</p>
+     *
+     * @param data a {@link java.io.File} object
+     * @return a {@link java.lang.String} object
+     */
     public static String md5(final File data) {
         return digest(data, DigestType.MD5);
     }

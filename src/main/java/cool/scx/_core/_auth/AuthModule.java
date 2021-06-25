@@ -46,6 +46,9 @@ public class AuthModule implements ScxModule {
         AuthConfig.initConfig();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String appKey() {
         return "H8QS91GcuNGP9735";

@@ -21,6 +21,9 @@ public class BaseModule implements ScxModule {
         BaseConfig.initConfig();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String appKey() {
         return "H8QS91GcuNGP9735";

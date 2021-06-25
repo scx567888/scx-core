@@ -10,6 +10,9 @@ import cool.scx.ScxModule;
  */
 public class CmsModule implements ScxModule {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String appKey() {
         return "H8QS91GcuNGP9735";

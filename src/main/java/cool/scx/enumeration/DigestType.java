@@ -1,5 +1,11 @@
 package cool.scx.enumeration;
 
+/**
+ * 摘要算法的类型枚举
+ *
+ * @author 司昌旭
+ * @version 1.2.1
+ */
 public enum DigestType {
 
     MD5("MD5"),

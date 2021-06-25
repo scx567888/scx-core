@@ -32,23 +32,19 @@ public final class ScxModuleHandler {
      * plugin (插件模块) 也会注册到这里
      */
     private static final List<ModuleItem> MODULE_ITEM_LIST = new ArrayList<>();
-
+    /**
+     * 默认的核心包 APP KEY (密码) , 注意请不要在您自己的模块中使用此常量 , 非常不安全
+     */
+    private static final String DEFAULT_APP_KEY = "SCX-123456";
     /**
      * 原始模块 数组
      */
     private static ScxModule[] BASE_MODULE_ARRAY;
-
     /**
      * 项目根模块 所在路径
      * 默认取 所有自定义模块的最后一个 所在的文件根目录
      */
     private static File APP_ROOT_PATH;
-
-    /**
-     * 默认的核心包 APP KEY (密码) , 注意请不要在您自己的模块中使用此常量 , 非常不安全
-     */
-    private static final String DEFAULT_APP_KEY = "SCX-123456";
-
     /**
      * 项目的 appKey
      * 默认取 所有自定义模块的最后一个的AppKey
@@ -323,6 +319,11 @@ public final class ScxModuleHandler {
         }
     }
 
+    /**
+     * 获取 appKey.
+     *
+     * @return a {@link java.lang.String} object
+     */
     public static String appKey() {
         return APP_KEY;
     }
