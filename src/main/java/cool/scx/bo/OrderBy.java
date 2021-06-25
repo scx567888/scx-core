@@ -24,19 +24,19 @@ public class OrderBy {
     /**
      * 一个实体类的 class 对象 当不为空时可以对传进来的参数进行数据校验
      */
-    private Class<? extends BaseModel> entityClass = null;
+    private final Class<?> entityClass;
 
     /**
      * 创建一个 OrderBy 对象 (添加排序字段时不会校验数据)
      */
     public OrderBy() {
-
+        this.entityClass = null;
     }
 
     /**
      * 创建一个 OrderBy 对象 (添加排序字段时会根据 entityClass 校验数据)
      */
-    public OrderBy(Class<? extends BaseModel> entityClass) {
+    public OrderBy(final Class<?> entityClass) {
         this.entityClass = entityClass;
     }
 
@@ -46,7 +46,8 @@ public class OrderBy {
      * @param orderByColumn a {@link java.lang.String} object
      * @param orderByType   a {@link cool.scx.enumeration.OrderByType} object
      */
-    public OrderBy(String orderByColumn, OrderByType orderByType) {
+    public OrderBy(final String orderByColumn, final OrderByType orderByType) {
+        this.entityClass = null;
         add(orderByColumn, orderByType);
     }
 
@@ -56,8 +57,8 @@ public class OrderBy {
      * @param orderByColumn a {@link java.lang.String} object
      * @param orderByType   a {@link cool.scx.enumeration.OrderByType} object
      */
-    public OrderBy(String orderByColumn, OrderByType orderByType, Class<? extends BaseModel> entityClass) {
-        this(entityClass);
+    public OrderBy(final String orderByColumn, final OrderByType orderByType, final Class<? extends BaseModel> entityClass) {
+        this.entityClass = entityClass;
         add(orderByColumn, orderByType);
     }
 
@@ -69,61 +70,11 @@ public class OrderBy {
      * @return 本身, 方便链式调用
      */
     public OrderBy add(final String orderByColumn, final OrderByType orderByType) {
-        OrderByBody orderByBody = new OrderByBody(orderByColumn.trim(), orderByType, false);
-        boolean b = checkOrderByBody(orderByBody);
-        if (b) {
+        var orderByBody = new OrderByBody(orderByColumn.trim(), orderByType, false);
+        if (checkOrderByBody(orderByBody)) {
             orderByList.add(orderByBody);
         }
         return this;
-    }
-
-    /**
-     * 添加一个排序字段
-     *
-     * @param orderByColumn 排序字段的名称 (注意是实体类的字段名 , 不是数据库中的字段名)
-     * @param orderByStr    排序类型 正序或倒序
-     * @return 本身, 方便链式调用
-     */
-    public OrderBy add(final String orderByColumn, final String orderByStr) {
-        if ("asc".equalsIgnoreCase(orderByStr.trim())) {
-            return add(orderByColumn, OrderByType.ASC);
-        } else if ("desc".equalsIgnoreCase(orderByStr.trim())) {
-            return add(orderByColumn, OrderByType.DESC);
-        } else {
-            Ansi.OUT.brightRed("排序类型有误 : " + orderByStr + " , 排序字段名称 : " + orderByColumn + " , 只能是 asc 或 desc (不区分大小写) !!!").ln();
-            return this;
-        }
-    }
-
-    /**
-     * 强制添加一个排序字段 (会将之前添加的覆盖掉)
-     *
-     * @param orderByColumn 排序字段的名称 (注意是实体类的字段名 , 不是数据库中的字段名)
-     * @param orderByType   排序类型 正序或倒序
-     * @return 本身, 方便链式调用
-     */
-    public OrderBy forceAdd(final String orderByColumn, final OrderByType orderByType) {
-        OrderByBody orderByBody = new OrderByBody(orderByColumn, orderByType, false);
-        orderByList.add(orderByBody);
-        return this;
-    }
-
-    /**
-     * 强制添加一个排序 SQL (会将之前添加的覆盖掉)
-     *
-     * @param orderByColumn 排序 SQL ( SQL 表达式 )
-     * @param orderByStr    排序类型 正序或倒序
-     * @return 本身, 方便链式调用
-     */
-    public OrderBy forceAdd(final String orderByColumn, final String orderByStr) {
-        if ("asc".equalsIgnoreCase(orderByStr.trim())) {
-            return forceAdd(orderByColumn, OrderByType.ASC);
-        } else if ("desc".equalsIgnoreCase(orderByStr.trim())) {
-            return forceAdd(orderByColumn, OrderByType.DESC);
-        } else {
-            Ansi.OUT.brightRed("排序类型有误 : " + orderByStr + " , 排序字段名称 : " + orderByColumn + " , 只能是 asc 或 desc (不区分大小写) !!!").ln();
-            return this;
-        }
     }
 
     /**
@@ -134,61 +85,11 @@ public class OrderBy {
      * @return 本身, 方便链式调用
      */
     public OrderBy addSQL(final String orderByColumn, final OrderByType orderByType) {
-        OrderByBody orderByBody = new OrderByBody(orderByColumn.trim(), orderByType, true);
-        boolean b = checkOrderByBody(orderByBody);
-        if (b) {
+        var orderByBody = new OrderByBody(orderByColumn.trim(), orderByType, true);
+        if (checkOrderByBody(orderByBody)) {
             orderByList.add(orderByBody);
         }
         return this;
-    }
-
-    /**
-     * 添加一个排序 SQL
-     *
-     * @param orderByColumn 排序 SQL ( SQL 表达式 )
-     * @param orderByStr    排序类型 正序或倒序
-     * @return 本身, 方便链式调用
-     */
-    public OrderBy addSQL(final String orderByColumn, final String orderByStr) {
-        if ("asc".equalsIgnoreCase(orderByStr.trim())) {
-            return addSQL(orderByColumn, OrderByType.ASC);
-        } else if ("desc".equalsIgnoreCase(orderByStr.trim())) {
-            return addSQL(orderByColumn, OrderByType.DESC);
-        } else {
-            Ansi.OUT.brightRed("排序类型有误 : " + orderByStr + " , 排序字段名称 : " + orderByColumn + " , 只能是 asc 或 desc (不区分大小写) !!!").ln();
-            return this;
-        }
-    }
-
-    /**
-     * 强制添加一个排序 SQL (会将之前添加的覆盖掉)
-     *
-     * @param orderByColumn 排序 SQL ( SQL 表达式 )
-     * @param orderByType   正序或倒序
-     * @return 本身, 方便链式调用
-     */
-    public OrderBy forceAddSQL(final String orderByColumn, final OrderByType orderByType) {
-        OrderByBody orderByBody = new OrderByBody(orderByColumn, orderByType, true);
-        orderByList.add(orderByBody);
-        return this;
-    }
-
-    /**
-     * 强制添加一个排序 SQL (会将之前添加的覆盖掉)
-     *
-     * @param orderByColumn 排序 SQL ( SQL 表达式 )
-     * @param orderByStr    排序类型 正序或倒序
-     * @return 本身, 方便链式调用
-     */
-    public OrderBy forceAddSQL(final String orderByColumn, final String orderByStr) {
-        if ("asc".equalsIgnoreCase(orderByStr.trim())) {
-            return forceAddSQL(orderByColumn, OrderByType.ASC);
-        } else if ("desc".equalsIgnoreCase(orderByStr.trim())) {
-            return forceAddSQL(orderByColumn, OrderByType.DESC);
-        } else {
-            Ansi.OUT.brightRed("排序类型有误 : " + orderByStr + " , 排序字段名称 : " + orderByColumn + " , 只能是 asc 或 desc (不区分大小写) !!!").ln();
-            return this;
-        }
     }
 
     /**
@@ -212,12 +113,10 @@ public class OrderBy {
         }
 
         boolean contains = orderByList.contains(orderByBody);
-        if (!contains) {
-            return true;
-        } else {
-            Ansi.OUT.brightRed("已经添加过相同的 OrderBy 字段 , 内容是: " + orderByBody.orderByColumn + " , 若要强行覆盖请使用 forceAdd 或 forceAddSQL !!!").ln();
-            return false;
+        if (contains) {
+            Ansi.OUT.brightRed("检测到相同的 OrderBy 字段 , 名称为: " + orderByBody.orderByColumn + " , 内容已覆盖 !!!").ln();
         }
+        return true;
 
     }
 
