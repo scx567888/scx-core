@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
- * <p>CoreUserService class.</p>
+ * 核心用户 service
  *
  * @author 司昌旭
  * @version 1.1.2
@@ -24,6 +24,7 @@ public class UserService extends BaseService<User> {
      * 部门 service
      */
     private final DeptService deptService;
+
     /**
      * 角色 service
      */
@@ -31,10 +32,10 @@ public class UserService extends BaseService<User> {
 
 
     /**
-     * <p>Constructor for CoreUserService.</p>
+     * c
      *
-     * @param deptService a {@link cool.scx._core._auth.dept.DeptService} object.
-     * @param roleService a {@link cool.scx._core._auth.role.RoleService} object.
+     * @param deptService c
+     * @param roleService c
      */
     public UserService(DeptService deptService, RoleService roleService) {
         this.deptService = deptService;
@@ -68,14 +69,13 @@ public class UserService extends BaseService<User> {
     }
 
     /**
-     * <p>findByUsername.</p>
+     * 根据用户名查询用户
      *
-     * @param username a {@link java.lang.String} object
-     * @return a {@link cool.scx._core._auth.user.User} object
+     * @param username 用户名
+     * @return 用户对象
      */
     public User findByUsername(String username) {
-        var param = new QueryParam();
-        param.equal("username", username);
+        var param = new QueryParam().equal("username", username);
         return get(param);
     }
 

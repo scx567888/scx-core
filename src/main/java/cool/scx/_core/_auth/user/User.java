@@ -11,40 +11,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * <p>CoreUser class.</p>
+ * 核心用户类 (演示用)
  *
  * @author 司昌旭
  * @version 1.1.2
  */
 @ScxModel(tablePrefix = "auth")
 public class User extends BaseModel implements AuthUser {
-
-    /**
-     * 性别
-     */
-    public String gender;
-
-    /**
-     * 昵称
-     */
-    @Column(useLike = true)
-    public String nickName;
-
-    /**
-     * 用户头像 id 此处存储的是 位于 uploadFile 表中的 id
-     */
-    public String avatar;
-
-    /**
-     * 电话号码
-     */
-    public String phone;
-
-    /**
-     * 最后一次登录时间
-     */
-    @JsonIgnore
-    public LocalDateTime lastLoginDate;
 
     /**
      * 登录名，创建后不可改
@@ -60,11 +33,21 @@ public class User extends BaseModel implements AuthUser {
     public String password;
 
     /**
-     * 随机加密盐值
+     * 昵称
      */
-    @Column(notNull = true)
+    @Column(useLike = true)
+    public String nickname;
+
+    /**
+     * 用户头像 id 此处存储的是 位于 uploadFile 表中的 id
+     */
+    public String avatar;
+
+    /**
+     * 最后一次登录时间
+     */
     @JsonIgnore
-    public String salt;
+    public LocalDateTime lastLoginDate;
 
     /**
      * 是否为超级管理员
