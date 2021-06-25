@@ -57,9 +57,8 @@ public class TestController {
                 var uuid = StringUtils.getUUID();
                 //测试表情符能否存储
                 s.username = uuid + "👶";
-                s.nickName = uuid + "🥝";
+                s.nickname = uuid + "🥝";
                 s.password = uuid;
-                s.salt = uuid;
                 s.isAdmin = false;
                 s1.add(s);
             }
@@ -68,8 +67,8 @@ public class TestController {
                 var s = new User();
                 var uuid = StringUtils.getUUID();
                 s.username = uuid;
+                s.nickname = uuid;
                 s.password = uuid;
-                s.salt = uuid;
                 userService.save(s);
             }
         }

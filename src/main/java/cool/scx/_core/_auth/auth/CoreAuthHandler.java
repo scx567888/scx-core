@@ -10,7 +10,6 @@ import cool.scx._core._auth.user.UserService;
 import cool.scx.annotation.ScxService;
 import cool.scx.auth.AuthHandler;
 import cool.scx.auth.AuthUser;
-import cool.scx.auth.AuthUtils;
 import cool.scx.auth.ScxAuth;
 import cool.scx.auth.exception.UnknownDeviceException;
 import cool.scx.auth.exception.UnknownUserException;
@@ -24,8 +23,8 @@ import cool.scx.enumeration.WhereType;
 import cool.scx.exception.AuthException;
 import cool.scx.exception.UnauthorizedException;
 import cool.scx.util.Ansi;
+import cool.scx.util.CryptoUtils;
 import cool.scx.util.NetUtils;
-import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
@@ -53,12 +52,12 @@ public class CoreAuthHandler implements AuthHandler {
     private final DeptService deptService;
 
     /**
-     * <p>Constructor for CoreAuthHandler.</p>
+     * c
      *
      * @param licenseService a
-     * @param userService    a {@link cool.scx._core._auth.user.UserService} object
-     * @param roleService    a {@link cool.scx._core._auth.role.RoleService} object
-     * @param deptService    a {@link cool.scx._core._auth.dept.DeptService} object
+     * @param userService    a
+     * @param roleService    a
+     * @param deptService    a
      */
     public CoreAuthHandler(LicenseService licenseService, UserService userService, RoleService roleService, DeptService deptService) {
         this.licenseService = licenseService;
@@ -68,7 +67,7 @@ public class CoreAuthHandler implements AuthHandler {
     }
 
     /**
-     * info
+     * 获取用户信息
      *
      * @return a {@link cool.scx.vo.Json} object
      * @throws cool.scx.exception.UnauthorizedException if any.
@@ -83,7 +82,7 @@ public class CoreAuthHandler implements AuthHandler {
             return Json.ok()
                     .put("id", user.id)
                     .put("username", user.username)
-                    .put("nickName", user.nickName)
+                    .put("nickname", user.nickname)
                     .put("avatar", user.avatar)
                     .put("perms", getPerms(user))
                     .put("realDelete", ScxConfig.realDelete());
@@ -91,20 +90,22 @@ public class CoreAuthHandler implements AuthHandler {
     }
 
     /**
-     * {@inheritDoc}
+     * 更新用户信息
      *
-     * @param params a {@link java.util.Map} object
-     * @return a {@link cool.scx.vo.Json} object
+     * @param newUserInfo a
+     * @return a
      */
-    public Json infoUpdate(Map<String, Object> params) {
-        var queryUser = ObjectUtils.mapToBean(params, User.class);
+    public Json infoUpdate(User newUserInfo) {
         var currentUser = (User) ScxAuth.getLoginUser();
-        queryUser.id = currentUser.id;
-        currentUser.password = queryUser.password;
-        currentUser.salt = null;
-        var b = updateUserPassword(currentUser) != null;
-        Ansi.OUT.print("更新了自己的信息 用户名是 :" + currentUser.username).ln();
-        return b ? Json.ok() : Json.fail();
+        //对密码进行特殊处理
+        currentUser.password = StringUtils.isEmpty(newUserInfo.password) ? null : CryptoUtils.encryptPassword(newUserInfo.password);
+        //更新成功
+        if (userService.update(currentUser) != null) {
+            Ansi.OUT.print("更新了自己的信息 用户名是 :" + currentUser.username).ln();
+            return Json.ok();
+        } else {
+            return Json.fail();
+        }
     }
 
     /**
@@ -213,7 +214,7 @@ public class CoreAuthHandler implements AuthHandler {
                 loginErrorMap.put(ip, le);
                 throw new UnknownUserException();
             }
-            if (!AuthUtils.verifyPassword(user.password, user.salt, password)) {
+            if (!CryptoUtils.checkPassword(password, user.password)) {
                 var le = new LoginError(now, loginError.errorTimes + 1);
                 loginErrorMap.put(ip, le);
                 throw new WrongPasswordException();
@@ -244,34 +245,11 @@ public class CoreAuthHandler implements AuthHandler {
      * @return a {@link cool.scx.auth.AuthUser} object.
      */
     public User registeredUser(User user) {
-        var deptIds = user.deptIds;
-        var roleIds = user.roleIds;
-        var passwordAndSalt = AuthUtils.getPasswordAndSalt(user.password);
-        var coreUser = new User();
-        coreUser.password = passwordAndSalt[0];
-        coreUser.salt = passwordAndSalt[1];
-        var newUser = userService.save(coreUser);
-        deptService.saveDeptListWithUserId(newUser.id, deptIds);
-        roleService.saveRoleListWithUserId(newUser.id, roleIds);
+        user.password = CryptoUtils.encryptPassword(user.password);
+        var newUser = userService.save(user);
+        deptService.saveDeptListWithUserId(newUser.id, user.deptIds);
+        roleService.saveRoleListWithUserId(newUser.id, user.roleIds);
         return newUser;
-    }
-
-    /**
-     * 更新用户密码
-     *
-     * @param newUser a {@link cool.scx._core._auth.user.User} object
-     * @return a {@link cool.scx._core._auth.user.User} object
-     */
-    public User updateUserPassword(User newUser) {
-        var user = new User();
-        if (!StringUtils.isEmpty(newUser.password)) {
-            var passwordAndSalt = AuthUtils.getPasswordAndSalt(newUser.password);
-            user.password = passwordAndSalt[0];
-            user.salt = passwordAndSalt[1];
-        } else {
-            user.password = null;
-        }
-        return userService.update(user);
     }
 
     /**
