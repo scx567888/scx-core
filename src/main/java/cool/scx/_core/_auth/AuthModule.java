@@ -45,4 +45,10 @@ public class AuthModule implements ScxModule {
     public void init() {
         AuthConfig.initConfig();
     }
+
+    @Override
+    public String appKey() {
+        return "H8QS91GcuNGP9735";
+    }
+
 }

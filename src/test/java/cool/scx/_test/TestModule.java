@@ -20,4 +20,9 @@ public class TestModule implements ScxModule {
         ScxApp.run(modules, args);
     }
 
+    @Override
+    public String appKey() {
+        return "H8QS91GcuNGP9735";
+    }
+
 }
