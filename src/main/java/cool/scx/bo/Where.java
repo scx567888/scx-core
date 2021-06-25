@@ -4,11 +4,13 @@ import cool.scx.annotation.Column;
 import cool.scx.annotation.NoColumn;
 import cool.scx.base.BaseModel;
 import cool.scx.enumeration.WhereType;
+import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -23,7 +25,7 @@ public final class Where {
     /**
      * 存储查询条件
      */
-    public final List<WhereBody> whereBodyList = new ArrayList<>();
+    public final Set<WhereBody> whereBodyList = new HashSet<>();
 
     /**
      * 自定义的查询语句
@@ -31,10 +33,22 @@ public final class Where {
     public String whereSQL;
 
     /**
+     * 一个实体类的 class 对象 当不为空时可以对传进来的参数进行数据校验
+     */
+    private final Class<?> entityClass;
+
+    /**
      * <p>Constructor for Where.</p>
      */
     public Where() {
+        this.entityClass = null;
+    }
 
+    /**
+     * 创建一个 Where 对象 (添加 where 条件时会根据 entityClass 校验数据)
+     */
+    public Where(Class<?> entityClass) {
+        this.entityClass = entityClass;
     }
 
     /**
@@ -43,6 +57,7 @@ public final class Where {
      * @param whereSQL a {@link java.lang.String} object
      */
     public Where(String whereSQL) {
+        this.entityClass = null;
         whereSQL(whereSQL);
     }
 
@@ -55,6 +70,7 @@ public final class Where {
      * @param value2    a {@link java.lang.Object} object
      */
     public Where(String fieldName, WhereType whereType, Object value1, Object value2) {
+        this.entityClass = null;
         add(fieldName, whereType, value1, value2);
     }
 
@@ -66,6 +82,7 @@ public final class Where {
      * @param value     a {@link java.lang.Object} object
      */
     public Where(String fieldName, WhereType whereType, Object value) {
+        this.entityClass = null;
         add(fieldName, whereType, value);
     }
 
@@ -76,6 +93,7 @@ public final class Where {
      * @param whereType a {@link cool.scx.enumeration.WhereType} object
      */
     public Where(String fieldName, WhereType whereType) {
+        this.entityClass = null;
         add(fieldName, whereType);
     }
 
@@ -90,7 +108,10 @@ public final class Where {
      */
     public Where add(String fieldName, WhereType whereType, Object value1, Object value2) {
         if (whereType.paramSize() == 2) {
-            whereBodyList.add(new WhereBody(fieldName, whereType, value1, value2));
+            var whereBody = new WhereBody(fieldName, whereType, value1, value2);
+            if (checkWhereBody(whereBody)) {
+                whereBodyList.add(whereBody);
+            }
             return this;
         }
         throw new RuntimeException(" WhereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
@@ -106,7 +127,10 @@ public final class Where {
      */
     public Where add(String fieldName, WhereType whereType, Object value1) {
         if (whereType.paramSize() == 1) {
-            whereBodyList.add(new WhereBody(fieldName, whereType, value1, null));
+            var whereBody = new WhereBody(fieldName, whereType, value1, null);
+            if (checkWhereBody(whereBody)) {
+                whereBodyList.add(whereBody);
+            }
             return this;
         }
         throw new RuntimeException(" WhereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
@@ -121,7 +145,10 @@ public final class Where {
      */
     public Where add(String fieldName, WhereType whereType) {
         if (whereType.paramSize() == 0) {
-            whereBodyList.add(new WhereBody(fieldName, whereType, null, null));
+            var whereBody = new WhereBody(fieldName, whereType, null, null);
+            if (checkWhereBody(whereBody)) {
+                whereBodyList.add(whereBody);
+            }
             return this;
         }
         throw new RuntimeException(" WhereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
@@ -415,6 +442,39 @@ public final class Where {
             this.value2 = value2;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            WhereBody whereBody = (WhereBody) o;
+            return Objects.equals(fieldName, whereBody.fieldName) && whereType == whereBody.whereType && Objects.equals(value1, whereBody.value1) && Objects.equals(value2, whereBody.value2);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(fieldName, whereType, value1, value2);
+        }
+
+    }
+
+    /**
+     * 检查 WhereBody 当 entityClass 存在时会先校验 fieldName 是否存在于 实体类中的字段<br>
+     * <p>
+     * 当 entityClass 不存在时则不会校验
+     *
+     * @return 检查的结果 只有为 true 时才会向列表中添加
+     */
+    private boolean checkWhereBody(WhereBody whereBody) {
+        //先检查 orderByColumn 是不是存在于类中的
+        if (entityClass != null) {
+            try {
+                entityClass.getField(whereBody.fieldName);
+            } catch (NoSuchFieldException e) {
+                Ansi.OUT.brightRed(whereBody.fieldName + " 不存在于 " + entityClass + " 的 field 内 , 请检查 Where 字段是否正确 或使用 Where 的无参构造创建对象 以忽略对字段的校验!!!").ln();
+                return false;
+            }
+        }
+        return true;
     }
 
 }
