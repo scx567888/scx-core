@@ -30,11 +30,6 @@ public final class ScxConfig {
     public static final String SCX_VERSION = "1.2.0";
 
     /**
-     * APP KEY 常量
-     */
-    public static final String SCX_APP_KEY = "H8QS91GcuNGP9735";
-
-    /**
      * 配置文件 路径
      */
     public static final String SCX_CONFIG_PATH = "AppRoot:scx-config.json";

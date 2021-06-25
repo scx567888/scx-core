@@ -3,7 +3,7 @@ package cool.scx._core._base.sender;
 import cool.scx.annotation.ScxService;
 import cool.scx.config.ScxConfig;
 import cool.scx.message.BaseSender;
-import cool.scx.util.Base64Utils;
+import cool.scx.util.CryptoUtils;
 import cool.scx.util.DigestUtils;
 import cool.scx.util.HttpUtils;
 
@@ -80,7 +80,7 @@ public class YTXTextMessageSender implements BaseSender<List<String>, Map<String
     }
 
     private String getAuthorization(String TimeStampStr) {
-        return Base64Utils.base64(YTX_ACCOUNT_SID + ":" + TimeStampStr);
+        return CryptoUtils.encodeBase64(YTX_ACCOUNT_SID + ":" + TimeStampStr);
     }
 
     private String getTimeStampStr() {

@@ -115,7 +115,7 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
                 }
             } catch (Exception e) {
                 if (required) {
-                    throw new BadRequestException();
+                    throw new BadRequestException(e);
                 } else {
                     return null;
                 }

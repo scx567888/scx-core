@@ -33,4 +33,13 @@ public interface ScxModule {
 
     }
 
+    /**
+     * appKey 密码 (强烈建议您重写此方法)
+     *
+     * @return app
+     */
+    default String appKey() {
+        return null;
+    }
+
 }
