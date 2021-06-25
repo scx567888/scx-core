@@ -143,7 +143,7 @@ public final class ScxAuth {
      */
     public static AuthUser getLoginUser() {
         var ctx = ScxContext.routingContext();
-        return getLoginUserByToken(getDevice(ctx), getTokenByDevice(ctx));
+        return getLoginUser(ctx);
     }
 
     /**
