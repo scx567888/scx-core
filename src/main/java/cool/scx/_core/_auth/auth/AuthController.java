@@ -1,13 +1,12 @@
 package cool.scx._core._auth.auth;
 
+import cool.scx._core._auth.user.User;
 import cool.scx.annotation.FromBody;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.Method;
 import cool.scx.exception.UnauthorizedException;
 import cool.scx.vo.Json;
 import io.vertx.ext.web.RoutingContext;
-
-import java.util.Map;
 
 /**
  * 默认认证 api 推荐使用
@@ -82,12 +81,12 @@ public class AuthController {
     /**
      * 用户自己更新的信息 (不包括权限)
      *
-     * @param params 用户信息
+     * @param user 用户信息
      * @return Json
      */
-    @ScxMapping(method = Method.POST)
-    public Json infoUpdate(Map<String, Object> params) {
-        return coreAuthHandler.infoUpdate(params);
+    @ScxMapping(method = Method.PUT)
+    public Json infoUpdate(User user) {
+        return coreAuthHandler.infoUpdate(user);
     }
 
 }
