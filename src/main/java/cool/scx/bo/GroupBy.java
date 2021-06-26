@@ -27,6 +27,8 @@ public class GroupBy {
 
     /**
      * 创建一个 OrderBy 对象
+     *
+     * @param fieldName a {@link java.lang.String} object
      */
     public GroupBy(String fieldName) {
         add(fieldName);

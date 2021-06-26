@@ -47,7 +47,7 @@ public class UserService extends BaseService<User> {
      * <p>
      * 重写方法
      *
-     * @param query a {@link Query} object
+     * @param query a {@link cool.scx.bo.Query} object
      * @return a {@link java.util.List} object
      */
     public List<User> listWithRoleAndDept(Query query) {

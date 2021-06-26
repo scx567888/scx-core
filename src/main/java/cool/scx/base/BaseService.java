@@ -239,7 +239,7 @@ public class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link Query} 获取单条数据
+     * 根据聚合查询条件 {@link cool.scx.bo.Query} 获取单条数据
      *
      * @param query 聚合查询参数对象
      * @return 查到多个则返回第一个 没有则返回 null
@@ -254,7 +254,7 @@ public class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link Query} 获取数据条数
+     * 根据聚合查询条件 {@link cool.scx.bo.Query} 获取数据条数
      *
      * @param query 聚合查询参数对象
      * @return 数据条数
@@ -277,7 +277,7 @@ public class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link Query} 获取数据列表
+     * 根据聚合查询条件 {@link cool.scx.bo.Query} 获取数据列表
      *
      * @param query 聚合查询参数对象
      * @return 数据列表
