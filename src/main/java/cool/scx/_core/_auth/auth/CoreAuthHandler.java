@@ -14,7 +14,7 @@ import cool.scx.auth.ScxAuth;
 import cool.scx.auth.exception.UnknownDeviceException;
 import cool.scx.auth.exception.UnknownUserException;
 import cool.scx.auth.exception.WrongPasswordException;
-import cool.scx.bo.QueryParam;
+import cool.scx.bo.Query;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.DeviceType;
@@ -151,7 +151,7 @@ public class CoreAuthHandler implements AuthHandler {
      * @return a {@link cool.scx.vo.Json} object
      */
     public Json signup(String username, String password) {
-        var queryParam = new QueryParam()
+        var queryParam = new Query()
                 .addOrderBy("id", OrderByType.ASC)
                 .addWhere("username", WhereType.EQUAL, username);
         var user = userService.get(queryParam);

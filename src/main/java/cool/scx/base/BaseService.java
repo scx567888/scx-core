@@ -239,31 +239,31 @@ public class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.bo.QueryParam} 获取单条数据
+     * 根据聚合查询条件 {@link Query} 获取单条数据
      *
-     * @param queryParam 聚合查询参数对象
+     * @param query 聚合查询参数对象
      * @return 查到多个则返回第一个 没有则返回 null
      */
-    public Entity get(QueryParam queryParam) {
+    public Entity get(Query query) {
         if (!ScxConfig.realDelete()) {
-            queryParam.addWhere("tombstone", WhereType.EQUAL, false);
+            query.addWhere("tombstone", WhereType.EQUAL, false);
         }
-        queryParam.setPagination(1);
-        var list = this.baseDao.select(queryParam.where(), queryParam.groupBy(), queryParam.orderBy(), queryParam.pagination());
+        query.setPagination(1);
+        var list = this.baseDao.select(query.where(), query.groupBy(), query.orderBy(), query.pagination());
         return list.size() > 0 ? list.get(0) : null;
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.bo.QueryParam} 获取数据条数
+     * 根据聚合查询条件 {@link Query} 获取数据条数
      *
-     * @param queryParam 聚合查询参数对象
+     * @param query 聚合查询参数对象
      * @return 数据条数
      */
-    public long count(QueryParam queryParam) {
+    public long count(Query query) {
         if (!ScxConfig.realDelete()) {
-            queryParam.addWhere("tombstone", WhereType.EQUAL, false);
+            query.addWhere("tombstone", WhereType.EQUAL, false);
         }
-        return this.baseDao.count(queryParam.where(), queryParam.groupBy());
+        return this.baseDao.count(query.where(), query.groupBy());
     }
 
     /**
@@ -277,16 +277,16 @@ public class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.bo.QueryParam} 获取数据列表
+     * 根据聚合查询条件 {@link Query} 获取数据列表
      *
-     * @param queryParam 聚合查询参数对象
+     * @param query 聚合查询参数对象
      * @return 数据列表
      */
-    public List<Entity> list(QueryParam queryParam) {
+    public List<Entity> list(Query query) {
         if (!ScxConfig.realDelete()) {
-            queryParam.addWhere("tombstone", WhereType.EQUAL, false);
+            query.addWhere("tombstone", WhereType.EQUAL, false);
         }
-        return this.baseDao.select(queryParam.where(), queryParam.groupBy(), queryParam.orderBy(), queryParam.pagination());
+        return this.baseDao.select(query.where(), query.groupBy(), query.orderBy(), query.pagination());
     }
 
     /**

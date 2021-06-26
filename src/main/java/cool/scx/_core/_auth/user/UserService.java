@@ -4,7 +4,7 @@ import cool.scx._core._auth.dept.DeptService;
 import cool.scx._core._auth.role.RoleService;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
-import cool.scx.bo.QueryParam;
+import cool.scx.bo.Query;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -47,11 +47,11 @@ public class UserService extends BaseService<User> {
      * <p>
      * 重写方法
      *
-     * @param queryParam a {@link cool.scx.bo.QueryParam} object
+     * @param query a {@link Query} object
      * @return a {@link java.util.List} object
      */
-    public List<User> listWithRoleAndDept(QueryParam queryParam) {
-        List<User> userList = super.list(queryParam);
+    public List<User> listWithRoleAndDept(Query query) {
+        List<User> userList = super.list(query);
         var userIds = userList.stream().map(user -> user.id).collect(Collectors.toList());
         var userDeptListFuture = CompletableFuture.supplyAsync(() -> deptService.getUserDeptByUserIds(userIds));
         var userRoleListFuture = CompletableFuture.supplyAsync(() -> roleService.getUserRoleByUserIds(userIds));
@@ -75,7 +75,7 @@ public class UserService extends BaseService<User> {
      * @return 用户对象
      */
     public User findByUsername(String username) {
-        var param = new QueryParam().equal("username", username);
+        var param = new Query().equal("username", username);
         return get(param);
     }
 

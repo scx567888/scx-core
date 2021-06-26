@@ -6,7 +6,7 @@ import cool.scx.annotation.FromPath;
 import cool.scx.annotation.FromQuery;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.bo.FileUpload;
-import cool.scx.bo.QueryParam;
+import cool.scx.bo.Query;
 import cool.scx.enumeration.Method;
 import cool.scx.enumeration.WhereType;
 import cool.scx.exception.HttpRequestException;
@@ -133,7 +133,7 @@ public class BaseController {
      */
     @ScxMapping(value = "/download/:fileId", method = {Method.GET, Method.HEAD})
     public Download download(String fileId) throws HttpRequestException {
-        var param = new QueryParam().addWhere("fileId", WhereType.EQUAL, fileId);
+        var param = new Query().addWhere("fileId", WhereType.EQUAL, fileId);
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
@@ -156,7 +156,7 @@ public class BaseController {
      */
     @ScxMapping(value = "/binary/:fileId", method = {Method.GET, Method.HEAD})
     public Binary binary(String fileId) throws HttpRequestException {
-        var param = new QueryParam().addWhere("fileId", WhereType.EQUAL, fileId);
+        var param = new Query().addWhere("fileId", WhereType.EQUAL, fileId);
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
@@ -183,7 +183,7 @@ public class BaseController {
                          @FromQuery(value = "w", required = false) Integer width,
                          @FromQuery(value = "h", required = false) Integer height,
                          @FromQuery(value = "t", required = false) String type) throws HttpRequestException {
-        var param = new QueryParam().addWhere("fileId", WhereType.EQUAL, fileId);
+        var param = new Query().addWhere("fileId", WhereType.EQUAL, fileId);
         UploadFile uploadFile = uploadFileService.get(param);
         if (uploadFile == null) {
             throw new NotFoundException();
@@ -271,7 +271,7 @@ public class BaseController {
      */
     @ScxMapping(value = "/upload-file/list-file", method = Method.POST)
     public Json listFile(List<String> fileIds) {
-        var param = new QueryParam();
+        var param = new Query();
         if (StringUtils.isNotEmpty(fileIds)) {
             param.addWhere("fileId", WhereType.IN, fileIds);
         } else {
@@ -289,11 +289,11 @@ public class BaseController {
     @ScxMapping(value = "/upload-file/delete-file", method = Method.DELETE)
     public Json deleteFile(String fileId) {
         //先获取文件的基本信息
-        var param = new QueryParam().addWhere("fileId", WhereType.EQUAL, fileId);
+        var param = new Query().addWhere("fileId", WhereType.EQUAL, fileId);
         var needDeleteFile = uploadFileService.get(param);
         if (needDeleteFile != null) {
             //判断文件是否被其他人引用过
-            var param1 = new QueryParam().addWhere("fileMD5", WhereType.EQUAL, needDeleteFile.fileMD5);
+            var param1 = new Query().addWhere("fileMD5", WhereType.EQUAL, needDeleteFile.fileMD5);
             long count = uploadFileService.count(param1);
 
             //没有被其他人引用过 可以删除物理文件

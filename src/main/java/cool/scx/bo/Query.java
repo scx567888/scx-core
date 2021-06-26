@@ -13,7 +13,7 @@ import cool.scx.enumeration.WhereType;
  * @author 司昌旭
  * @version 1.0.10
  */
-public final class QueryParam {
+public final class Query {
 
     /**
      * 排序的字段
@@ -38,7 +38,7 @@ public final class QueryParam {
     /**
      * 创建 QueryParam 对象
      */
-    public QueryParam() {
+    public Query() {
 
     }
 
@@ -51,7 +51,7 @@ public final class QueryParam {
      * @param value2    参数2
      * @return 本身 , 方便链式调用
      */
-    public QueryParam addWhere(String fieldName, WhereType whereType, Object value1, Object value2) {
+    public Query addWhere(String fieldName, WhereType whereType, Object value1, Object value2) {
         this.where.add(fieldName, whereType, value1, value2);
         return this;
     }
@@ -64,7 +64,7 @@ public final class QueryParam {
      * @param whereSQL sql 语句
      * @return 本身 , 方便链式调用
      */
-    public QueryParam setWhereSQL(String whereSQL) {
+    public Query setWhereSQL(String whereSQL) {
         this.where.whereSQL(whereSQL);
         return this;
     }
@@ -77,7 +77,7 @@ public final class QueryParam {
      * @param <Entity> e
      * @return 返回自己 方便链式调用
      */
-    public <Entity extends BaseModel> QueryParam addWhereByObject(Entity entity) {
+    public <Entity extends BaseModel> Query addWhereByObject(Entity entity) {
         this.where.addByObject(entity);
         return this;
     }
@@ -90,7 +90,7 @@ public final class QueryParam {
      * @param value1    参数1
      * @return 本身 , 方便链式调用
      */
-    public QueryParam addWhere(String fieldName, WhereType whereType, Object value1) {
+    public Query addWhere(String fieldName, WhereType whereType, Object value1) {
         this.where.add(fieldName, whereType, value1);
         return this;
     }
@@ -102,7 +102,7 @@ public final class QueryParam {
      * @param whereType where 类型
      * @return 本身 , 方便链式调用
      */
-    public QueryParam addWhere(String fieldName, WhereType whereType) {
+    public Query addWhere(String fieldName, WhereType whereType) {
         this.where.add(fieldName, whereType);
         return this;
     }
@@ -113,7 +113,7 @@ public final class QueryParam {
      * @param fieldName 分组字段的名称 (注意是实体类的字段名 , 不是数据库中的字段名)
      * @return 本身, 方便链式调用
      */
-    public QueryParam addGroupBy(String fieldName) {
+    public Query addGroupBy(String fieldName) {
         this.groupBy.add(fieldName);
         return this;
     }
@@ -125,7 +125,7 @@ public final class QueryParam {
      * @param limit 每页数量
      * @return p
      */
-    public QueryParam setPagination(Integer page, Integer limit) {
+    public Query setPagination(Integer page, Integer limit) {
         pagination.set(page, limit);
         return this;
     }
@@ -136,7 +136,7 @@ public final class QueryParam {
      * @param limit a {@link java.lang.Integer} object.
      * @return a 当前实例
      */
-    public QueryParam setPagination(Integer limit) {
+    public Query setPagination(Integer limit) {
         pagination.set(limit);
         return this;
     }
@@ -148,7 +148,7 @@ public final class QueryParam {
      * @param orderByType   排序类型 正序或倒序
      * @return 本身, 方便链式调用
      */
-    public QueryParam addOrderBy(String orderByColumn, OrderByType orderByType) {
+    public Query addOrderBy(String orderByColumn, OrderByType orderByType) {
         this.orderBy.add(orderByColumn, orderByType);
         return this;
     }
@@ -160,7 +160,7 @@ public final class QueryParam {
      * @param orderByStr    排序类型 正序或倒序
      * @return 本身, 方便链式调用
      */
-    public QueryParam addOrderBy(String orderByColumn, String orderByStr) {
+    public Query addOrderBy(String orderByColumn, String orderByStr) {
         this.orderBy.add(orderByColumn, orderByStr);
         return this;
     }
@@ -172,7 +172,7 @@ public final class QueryParam {
      * @param orderByStr    排序类型 正序或倒序
      * @return 本身, 方便链式调用
      */
-    public QueryParam addOrderBySQL(String orderByColumn, String orderByStr) {
+    public Query addOrderBySQL(String orderByColumn, String orderByStr) {
         this.orderBy.addSQL(orderByColumn, orderByStr);
         return this;
     }
@@ -184,7 +184,7 @@ public final class QueryParam {
      * @param orderByType   排序类型 正序或倒序
      * @return 本身, 方便链式调用
      */
-    public QueryParam addOrderBySQL(String orderByColumn, OrderByType orderByType) {
+    public Query addOrderBySQL(String orderByColumn, OrderByType orderByType) {
         this.orderBy.addSQL(orderByColumn, orderByType);
         return this;
     }
@@ -196,7 +196,7 @@ public final class QueryParam {
      * @param value     比较值
      * @return this 方便链式调用
      */
-    public QueryParam notIn(String fieldName, Object value) {
+    public Query notIn(String fieldName, Object value) {
         this.where.notIn(fieldName, value);
         return this;
     }
@@ -208,7 +208,7 @@ public final class QueryParam {
      * @param value     比较值
      * @return this 方便链式调用
      */
-    public QueryParam in(String fieldName, Object value) {
+    public Query in(String fieldName, Object value) {
         this.where.in(fieldName, value);
         return this;
     }
@@ -220,7 +220,7 @@ public final class QueryParam {
      * @param value     比较值
      * @return this 方便链式调用
      */
-    public QueryParam jsonContains(String fieldName, Object value) {
+    public Query jsonContains(String fieldName, Object value) {
         this.where.jsonContains(fieldName, value);
         return this;
     }
@@ -233,7 +233,7 @@ public final class QueryParam {
      * @param value     默认会在首尾添加 %
      * @return this 方便链式调用
      */
-    public QueryParam notLike(String fieldName, Object value) {
+    public Query notLike(String fieldName, Object value) {
         this.where.notLike(fieldName, value);
         return this;
     }
@@ -245,7 +245,7 @@ public final class QueryParam {
      * @param value     参数 默认会在首尾添加 %
      * @return this 方便链式调用
      */
-    public QueryParam like(String fieldName, Object value) {
+    public Query like(String fieldName, Object value) {
         this.where.like(fieldName, value);
         return this;
     }
@@ -258,7 +258,7 @@ public final class QueryParam {
      * @param value     SQL 表达式
      * @return this 方便链式调用
      */
-    public QueryParam notLikeRegex(String fieldName, String value) {
+    public Query notLikeRegex(String fieldName, String value) {
         this.where.notLikeRegex(fieldName, value);
         return this;
     }
@@ -271,7 +271,7 @@ public final class QueryParam {
      * @param value     SQL 表达式
      * @return this 方便链式调用
      */
-    public QueryParam likeRegex(String fieldName, String value) {
+    public Query likeRegex(String fieldName, String value) {
         this.where.likeRegex(fieldName, value);
         return this;
     }
@@ -284,7 +284,7 @@ public final class QueryParam {
      * @param value2    比较值2
      * @return this 方便链式调用
      */
-    public QueryParam notBetween(String fieldName, Object value1, Object value2) {
+    public Query notBetween(String fieldName, Object value1, Object value2) {
         this.where.notBetween(fieldName, value1, value2);
         return this;
     }
@@ -298,7 +298,7 @@ public final class QueryParam {
      * @param value2    比较值2
      * @return this 方便链式调用
      */
-    public QueryParam between(String fieldName, Object value1, Object value2) {
+    public Query between(String fieldName, Object value1, Object value2) {
         this.where.between(fieldName, value1, value2);
         return this;
     }
@@ -310,7 +310,7 @@ public final class QueryParam {
      * @param value     比较值
      * @return this 方便链式调用
      */
-    public QueryParam lessThanOrEqual(String fieldName, Object value) {
+    public Query lessThanOrEqual(String fieldName, Object value) {
         this.where.lessThanOrEqual(fieldName, value);
         return this;
     }
@@ -322,7 +322,7 @@ public final class QueryParam {
      * @param value     比较值
      * @return this 方便链式调用
      */
-    public QueryParam lessThan(String fieldName, Object value) {
+    public Query lessThan(String fieldName, Object value) {
         this.where.lessThan(fieldName, value);
         return this;
     }
@@ -334,7 +334,7 @@ public final class QueryParam {
      * @param value     比较值
      * @return this 方便链式调用
      */
-    public QueryParam greaterThanOrEqual(String fieldName, Object value) {
+    public Query greaterThanOrEqual(String fieldName, Object value) {
         this.where.greaterThanOrEqual(fieldName, value);
         return this;
     }
@@ -346,7 +346,7 @@ public final class QueryParam {
      * @param value     比较值
      * @return this 方便链式调用
      */
-    public QueryParam greaterThan(String fieldName, Object value) {
+    public Query greaterThan(String fieldName, Object value) {
         this.where.greaterThan(fieldName, value);
         return this;
     }
@@ -358,7 +358,7 @@ public final class QueryParam {
      * @param value     比较值
      * @return this 方便链式调用
      */
-    public QueryParam notEqual(String fieldName, Object value) {
+    public Query notEqual(String fieldName, Object value) {
         this.where.notEqual(fieldName, value);
         return this;
     }
@@ -370,7 +370,7 @@ public final class QueryParam {
      * @param value     比较值
      * @return this 方便链式调用
      */
-    public QueryParam equal(String fieldName, Object value) {
+    public Query equal(String fieldName, Object value) {
         this.where.equal(fieldName, value);
         return this;
     }
@@ -381,7 +381,7 @@ public final class QueryParam {
      * @param fieldName 字段名称 (注意 : 不是数据库名称)
      * @return this 方便链式调用
      */
-    public QueryParam isNotNull(String fieldName) {
+    public Query isNotNull(String fieldName) {
         this.where.isNotNull(fieldName);
         return this;
     }
@@ -392,7 +392,7 @@ public final class QueryParam {
      * @param fieldName 字段名称 (注意 : 不是数据库名称)
      * @return this 方便链式调用
      */
-    public QueryParam isNull(String fieldName) {
+    public Query isNull(String fieldName) {
         this.where.isNull(fieldName);
         return this;
     }

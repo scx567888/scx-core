@@ -2,7 +2,7 @@ package cool.scx._core._base.uploadfile;
 
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
-import cool.scx.bo.QueryParam;
+import cool.scx.bo.Query;
 import cool.scx.enumeration.OrderByType;
 import cool.scx.enumeration.WhereType;
 
@@ -22,7 +22,7 @@ public class UploadFileService extends BaseService<UploadFile> {
      * @return 找的的数据
      */
     public UploadFile findFileByMd5(String fileMD5) {
-        var p = new QueryParam()
+        var p = new Query()
                 .addOrderBy("uploadTime", OrderByType.DESC)
                 .addWhere("fileMD5", WhereType.EQUAL, fileMD5);
         return get(p);

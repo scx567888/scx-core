@@ -6,7 +6,7 @@ import cool.scx._test.car.Car;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.ScxAuth;
 import cool.scx.base.BaseService;
-import cool.scx.bo.QueryParam;
+import cool.scx.bo.Query;
 import cool.scx.enumeration.Method;
 import cool.scx.util.DigestUtils;
 import cool.scx.util.FileTypeUtils;
@@ -49,7 +49,7 @@ public class TestController {
      */
     @ScxMapping(value = "/", method = Method.GET)
     public Html TestIndex() {
-        long count = userService.count(new QueryParam());
+        long count = userService.count(new Query());
         if (count < 50) {
             var s1 = new ArrayList<User>();
             for (int i = 0; i < 25; i++) {
@@ -72,7 +72,7 @@ public class TestController {
                 userService.save(s);
             }
         }
-        var users = userService.list(new QueryParam().setPagination(100));
+        var users = userService.list(new Query().setPagination(100));
         Html index = Html.ofTemplate("index");
         index.add("userList", users);
         index.add("name", "小明");

@@ -3,7 +3,7 @@ package cool.scx._core._auth.role;
 import cool.scx._core._auth.user.User;
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseService;
-import cool.scx.bo.QueryParam;
+import cool.scx.bo.Query;
 import cool.scx.bo.Where;
 import cool.scx.enumeration.WhereType;
 import cool.scx.util.StringUtils;
@@ -39,11 +39,11 @@ public class RoleService extends BaseService<Role> {
      * @return a {@link java.util.List} object
      */
     public List<Role> getRoleListByUser(User user) {
-        var userRoleParam = new QueryParam();
+        var userRoleParam = new Query();
 //        userRoleParam.o.userId = user.id;
         var collect = userRoleService.list(userRoleParam).stream().map(userRole -> userRole.roleId.toString()).collect(Collectors.joining(","));
         if (!"".equals(collect)) {
-            var roleParam = new QueryParam();
+            var roleParam = new Query();
 //            roleParam.whereSql = " id in (" + collect + ")";
             return list(roleParam);
         } else {
@@ -58,7 +58,7 @@ public class RoleService extends BaseService<Role> {
      * @return a {@link java.util.List} object
      */
     public List<UserRole> getUserRoleByUserIds(List<Long> userIds) {
-        var p = new QueryParam();
+        var p = new Query();
         var userIdsStr = userIds.stream().map(Object::toString).collect(Collectors.joining(","));
         if (!"".equals(userIdsStr)) {
 //            p.whereSql = " user_id in (" + userIdsStr + ")";
@@ -106,7 +106,7 @@ public class RoleService extends BaseService<Role> {
      */
     public List<UserRole> findRoleByUserId(Long userId) {
         if (StringUtils.isNotEmpty(userId)) {
-            var userRole = new QueryParam();
+            var userRole = new Query();
 //            userRole.o.userId = userId;
             return userRoleService.list(userRole);
         }

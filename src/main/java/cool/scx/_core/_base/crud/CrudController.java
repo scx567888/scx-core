@@ -4,7 +4,7 @@ import cool.scx.annotation.FromBody;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.base.BaseModel;
 import cool.scx.base.BaseService;
-import cool.scx.bo.QueryParam;
+import cool.scx.bo.Query;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
 import cool.scx.enumeration.WhereType;
@@ -75,7 +75,7 @@ public class CrudController {
                      @FromBody("queryObject") Map<String, Object> queryObject
     ) throws HttpRequestException {
         var baseService = getBaseService(modelName);
-        var queryParam = new QueryParam().
+        var queryParam = new Query().
                 setPagination(page, limit).
                 addOrderBy(orderByColumn, sortType).
                 addWhereByObject(getBaseModel(queryObject, modelName));
@@ -204,7 +204,7 @@ public class CrudController {
         var model = getBaseModel(params, modelName);
         var modelID = model.id;
         model.id = null;
-        var queryParam = new QueryParam().addWhereByObject(model);
+        var queryParam = new Query().addWhereByObject(model);
         if (modelID != null) {
             queryParam.addWhere("id", WhereType.NOT_EQUAL, modelID);
         }
