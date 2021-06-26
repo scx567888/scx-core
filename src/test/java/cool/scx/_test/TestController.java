@@ -183,9 +183,6 @@ public class TestController {
         }
 
         var carList = carService.list();
-//
-//        OrderBy add = new OrderBy(User.class).add("id", "asc")
-//                .add("aaaa", "desc");
 
         return Json.ok().put("items", carList);
     }

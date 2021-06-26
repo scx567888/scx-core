@@ -18,17 +18,17 @@ public final class QueryParam {
     /**
      * 排序的字段
      */
-    private final OrderBy orderBy;
+    private final OrderBy orderBy = new OrderBy();
 
     /**
      * 自定义分组 SQL 添加
      */
-    private final GroupBy groupBy;
+    private final GroupBy groupBy = new GroupBy();
 
     /**
      * 自定义WHERE 添加
      */
-    private final Where where;
+    private final Where where = new Where();
 
     /**
      * 分页参数
@@ -36,21 +36,10 @@ public final class QueryParam {
     private final Pagination pagination = new Pagination();
 
     /**
-     * <p>Constructor for Param.</p>
+     * 创建 QueryParam 对象
      */
     public QueryParam() {
-        this.orderBy = new OrderBy();
-        this.where = new Where();
-        this.groupBy = new GroupBy();
-    }
 
-    /**
-     * 传递一个实体类 class 用于做字段校验
-     */
-    public QueryParam(Class<? extends BaseModel> entityClass) {
-        this.orderBy = new OrderBy(entityClass);
-        this.where = new Where();
-        this.groupBy = new GroupBy();
     }
 
     /**
