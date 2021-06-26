@@ -1,6 +1,5 @@
 package cool.scx.bo;
 
-import cool.scx.base.BaseModel;
 import cool.scx.util.Ansi;
 
 import java.util.HashSet;
@@ -25,28 +24,10 @@ public class GroupBy {
     private final Class<?> entityClass;
 
     /**
-     * <p>Constructor for GroupBy.</p>
+     * OrderBy 对象无参构造 只会对数据进行重复校验
      */
     public GroupBy() {
         this.entityClass = null;
-    }
-
-    /**
-     * <p>Constructor for GroupBy.</p>
-     *
-     * @param fieldName a {@link java.lang.String} object
-     */
-    public GroupBy(String fieldName) {
-        this.entityClass = null;
-        add(fieldName);
-    }
-
-    /**
-     * 创建一个 OrderBy 对象 (添加排序字段时会根据 entityClass 校验数据)
-     */
-    public GroupBy(String fieldName, Class<? extends BaseModel> entityClass) {
-        this(entityClass);
-        add(fieldName);
     }
 
     /**
@@ -63,24 +44,20 @@ public class GroupBy {
      * @return 本身, 方便链式调用
      */
     public GroupBy add(final String fieldName) {
-        boolean b = checkGroupByColumn(fieldName);
-        if (b) {
-            groupByList.add(fieldName);
+        if (checkGroupByColumn(fieldName) && !groupByList.add(fieldName)) {
+            Ansi.OUT.brightRed("已跳过添加过相同的 GroupBy 字段 , 内容是: " + fieldName + " !!!").ln();
         }
         return this;
     }
 
     /**
-     * 检查 OrderByBody 此处做两个校验<br>
-     * 第一个是 当 entityClass 存在时会先校验 orderByColumn 是否存在于 实体类中的字段<br>
+     * 检查 OrderByBody <br>
+     * 当 entityClass 存在时会先校验 orderByColumn 是否存在于 实体类中的字段<br>
      * 当 entityClass 不存在时则不会校验
-     * <br>
-     * 第二个是对 数据重复进行校验 理论上 GroupBy 不应该存在相同的字段
      *
-     * @return 检查的结果 只有为 true 时才会向列表中添加
+     * @return 检查的结果
      */
     private boolean checkGroupByColumn(final String groupByColumn) {
-        //先检查 orderByColumn 是不是存在于类中的
         if (entityClass != null) {
             try {
                 entityClass.getField(groupByColumn);
@@ -89,15 +66,7 @@ public class GroupBy {
                 return false;
             }
         }
-
-        boolean contains = groupByList.contains(groupByColumn);
-        if (!contains) {
-            return true;
-        } else {
-            Ansi.OUT.brightRed("已跳过添加过相同的 GroupBy 字段 , 内容是: " + groupByColumn + " !!!").ln();
-            return false;
-        }
-
+        return true;
     }
 
 }
