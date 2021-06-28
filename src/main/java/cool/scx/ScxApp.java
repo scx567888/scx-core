@@ -1,7 +1,6 @@
 package cool.scx;
 
 import cool.scx.auth.ScxAuth;
-import cool.scx.template.ScxTemplate;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.dao.ScxDBContext;
@@ -9,6 +8,7 @@ import cool.scx.eventbus.ScxEventBus;
 import cool.scx.message.ScxSender;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.plugin.ScxPlugin;
+import cool.scx.template.ScxTemplate;
 import cool.scx.util.Timer;
 import cool.scx.web.ScxRouter;
 import cool.scx.web.ScxServer;
