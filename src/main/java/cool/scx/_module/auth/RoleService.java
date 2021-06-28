@@ -25,7 +25,7 @@ public class RoleService extends BaseService<Role> {
     /**
      * <p>Constructor for CoreRoleService.</p>
      *
-     * @param userRoleService a {@link UserRoleService} object.
+     * @param userRoleService a {@link cool.scx._module.auth.UserRoleService} object.
      */
     public RoleService(UserRoleService userRoleService) {
         this.userRoleService = userRoleService;
@@ -34,7 +34,7 @@ public class RoleService extends BaseService<Role> {
     /**
      * getRoleListByUser
      *
-     * @param user a {@link User} object
+     * @param user a {@link cool.scx._module.auth.User} object
      * @return a {@link java.util.List} object
      */
     public List<Role> getRoleListByUser(User user) {
@@ -53,7 +53,7 @@ public class RoleService extends BaseService<Role> {
     /**
      * getUserRoleByUserIds
      *
-     * @param userIds a {@link User} object
+     * @param userIds a {@link cool.scx._module.auth.User} object
      * @return a {@link java.util.List} object
      */
     public List<UserRole> getUserRoleByUserIds(List<Long> userIds) {

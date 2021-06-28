@@ -25,7 +25,7 @@ public class DeptService extends BaseService<Dept> {
     /**
      * <p>Constructor for CoreDeptService.</p>
      *
-     * @param userDeptService a {@link UserDeptService} object.
+     * @param userDeptService a {@link cool.scx._module.auth.UserDeptService} object.
      */
     public DeptService(UserDeptService userDeptService) {
         this.userDeptService = userDeptService;
@@ -34,7 +34,7 @@ public class DeptService extends BaseService<Dept> {
     /**
      * getDeptListByUser
      *
-     * @param user a {@link User} object
+     * @param user a {@link cool.scx._module.auth.User} object
      * @return a {@link java.util.List} object
      */
     public List<Dept> getDeptListByUser(User user) {
