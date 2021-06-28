@@ -77,6 +77,7 @@ public class TestController {
         index.add("userList", users);
         index.add("name", "小明");
         index.add("age", 22);
+        index.add("loginUser", ScxAuth.getLoginUser());
         return index;
     }
 

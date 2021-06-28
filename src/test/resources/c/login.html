@@ -1,0 +1,49 @@
+[#if loginUser??]
+用户名 : ${loginUser.username!}
+<img src="/api/picture/${loginUser.avatar!}"/>
+<button onclick="logout()">退出登录</button>
+[#else]
+<input id="username"/>
+<input type="password" id="password"/>
+<button onclick="login()">点击登录</button>
+[/#if]
+<script>
+    function login() {
+        var username = document.querySelector("#username").value;
+        var password = document.querySelector("#password").value;
+        fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-type": 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            })
+        }).then(res => {
+            res.json().then((data) => {
+                if (data.message === "login-successful") {
+                    location.reload();
+                }
+            });
+        })
+    }
+
+    function logout() {
+        fetch("/api/auth/logout", {
+            method: "POST",
+            headers: {
+                "Content-type": 'application/json',
+                credentials: 'include',
+            },
+            body: JSON.stringify({})
+        }).then(res => {
+            res.json().then((data) => {
+                if (data.message === "ok") {
+                    location.reload();
+                }
+            });
+        })
+    }
+</script>
+
