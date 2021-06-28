@@ -1,6 +1,6 @@
 package cool.scx.vo;
 
-import cool.scx.cms.ScxCms;
+import cool.scx.template.ScxTemplate;
 import freemarker.template.Template;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerResponse;
@@ -46,7 +46,7 @@ public final class Html implements BaseVo {
      * @return a {@link cool.scx.vo.Html} object
      */
     public static Html ofTemplate(String templatePath) {
-        var template = ScxCms.getTemplateByPath(templatePath);
+        var template = ScxTemplate.getTemplateByPath(templatePath);
         return new Html(template, null);
     }
 

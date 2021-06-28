@@ -1,7 +1,7 @@
 package cool.scx;
 
 import cool.scx.auth.ScxAuth;
-import cool.scx.cms.ScxCms;
+import cool.scx.template.ScxTemplate;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.dao.ScxDBContext;
@@ -58,8 +58,8 @@ public final class ScxApp {
         ScxDBContext.initDB();
         // 初始化 认证
         ScxAuth.initAuth();
-        // 初始化 cms
-        ScxCms.initCms();
+        // 初始化 模板
+        ScxTemplate.initTemplate();
         // 初始化 消息发送模块
         ScxSender.initSender();
         // 初始化 监听器

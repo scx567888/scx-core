@@ -26,7 +26,7 @@ public class FaviconHandler implements Handler<RoutingContext> {
      * <p>Constructor for FaviconHandler.</p>
      */
     public FaviconHandler() {
-        var faviconPath = Path.of(ScxConfig.cmsRoot().getPath(), "favicon.ico");
+        var faviconPath = Path.of(ScxConfig.templateRoot().getPath(), "favicon.ico");
         if (Files.exists(faviconPath)) {
             faviconExists = true;
             try {

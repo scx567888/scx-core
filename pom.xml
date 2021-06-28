@@ -32,7 +32,7 @@
             <version>4.1.0</version>
         </dependency>
 
-        <!-- Freemarker 用于cms 前台页面渲染工作 -->
+        <!-- Freemarker 用于前台页面渲染工作 -->
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
@@ -184,7 +184,7 @@
                     </archive>
                     <!-- 在打包时排除不需要的文件 具体文件说明见下方 -->
                     <excludes>
-                        <!-- 默认 cms 模板测试文件 -->
+                        <!-- 默认模板测试文件 -->
                         <exclude>/c/</exclude>
                         <!-- 默认 插件 占位空文件 -->
                         <exclude>/plugins/</exclude>

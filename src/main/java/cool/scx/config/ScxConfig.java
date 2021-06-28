@@ -277,12 +277,12 @@ public final class ScxConfig {
     }
 
     /**
-     * <p>cmsRoot.</p>
+     * 获取模板根路径
      *
      * @return a {@link java.io.File} object.
      */
-    public static File cmsRoot() {
-        return easyToUseConfig.cmsRoot;
+    public static File templateRoot() {
+        return easyToUseConfig.templateRoot;
     }
 
     /**
@@ -305,21 +305,21 @@ public final class ScxConfig {
     }
 
     /**
-     * <p>cmsResourceUrl.</p>
+     * 获取模板资源前缀
      *
      * @return a {@link java.lang.String} object.
      */
-    public static String cmsResourceHttpUrl() {
-        return easyToUseConfig.cmsResourceHttpUrl;
+    public static String templateResourceHttpUrl() {
+        return easyToUseConfig.templateResourceHttpUrl;
     }
 
     /**
-     * <p>cmsResourceLocations.</p>
+     * 获取模板资源根路径
      *
      * @return a {@link java.io.File} object.
      */
-    public static File cmsResourceLocations() {
-        return easyToUseConfig.cmsResourceLocations;
+    public static File templateResourceRoot() {
+        return easyToUseConfig.templateResourceRoot;
     }
 
     /**

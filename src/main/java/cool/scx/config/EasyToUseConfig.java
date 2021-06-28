@@ -51,20 +51,20 @@ class EasyToUseConfig {
     final String sslPassword;
 
     /**
-     * cms 根目录 字符串值
+     * 模板 根目录 字符串值
      */
-    final File cmsRoot;
+    final File templateRoot;
 
     /**
-     * cms 静态资源目录
+     * 模板 静态资源目录
      */
-    final String cmsResourceHttpUrl;
+    final String templateResourceHttpUrl;
 
     /**
-     * cms 静态资源 路径 真实值
+     * 模板 静态资源 路径 真实值
      */
 
-    final File cmsResourceLocations;
+    final File templateResourceRoot;
 
     /**
      * 数据源地址
@@ -124,21 +124,21 @@ class EasyToUseConfig {
 
         disabledPluginList = new HashSet<>(tempDisabledPluginList);
 
-        String tempCmsRoot = ScxConfig.get("scx.cms.root", "AppRoot:/c/",
-                s -> Ansi.OUT.green("Y Cms 根目录                         \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.cms.root               \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
+        String tempTemplateRoot = ScxConfig.get("scx.template.root", "AppRoot:/c/",
+                s -> Ansi.OUT.green("Y 模板根目录                           \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
+                f -> Ansi.OUT.red("N 未检测到 scx.template.root           \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
 
-        cmsRoot = FileUtils.getFileByAppRoot(tempCmsRoot);
+        templateRoot = FileUtils.getFileByAppRoot(tempTemplateRoot);
 
-        cmsResourceHttpUrl = ScxConfig.get("scx.cms.resource-http-url", "/static/*",
-                s -> Ansi.OUT.green("Y Cms 静态资源 Url                     \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.cms.resource-http-url   \t -->\t 已采用默认值 : " + f).ln());
+        templateResourceHttpUrl = ScxConfig.get("scx.template.resource-http-url", "/static/*",
+                s -> Ansi.OUT.green("Y 模板静态资源 Url                     \t -->\t " + s).ln(),
+                f -> Ansi.OUT.red("N 未检测到 scx.template.resource-http-url   \t -->\t 已采用默认值 : " + f).ln());
 
-        String tempCmsResourceLocations = ScxConfig.get("scx.cms.resource-root", "AppRoot:/c/static",
-                s -> Ansi.OUT.green("Y Cms 静态资源目录                     \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.cms.resource-root       \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
+        String tempTemplateResourceRoot = ScxConfig.get("scx.template.resource-root", "AppRoot:/c/static",
+                s -> Ansi.OUT.green("Y 模板静态资源目录                     \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
+                f -> Ansi.OUT.red("N 未检测到 scx.template.resource-root       \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
 
-        cmsResourceLocations = FileUtils.getFileByAppRoot(tempCmsResourceLocations);
+        templateResourceRoot = FileUtils.getFileByAppRoot(tempTemplateResourceRoot);
 
         isOpenHttps = ScxConfig.get("scx.https.is-open", false,
                 s -> Ansi.OUT.green("Y 是否开启 https                       \t -->\t " + (s ? "是" : "否")).ln(),

@@ -89,7 +89,7 @@ public class TemplateController {
      * @return 结构
      */
     private static boolean checkPath(String path) {
-        return path.startsWith(ScxConfig.cmsRoot().getPath());
+        return path.startsWith(ScxConfig.templateRoot().getPath());
     }
 
     /**
@@ -100,7 +100,7 @@ public class TemplateController {
      */
     @ScxMapping(method = {Method.GET, Method.POST})
     public Json index() throws IOException {
-        var allFileList = getFileList(ScxConfig.cmsRoot().getPath());
+        var allFileList = getFileList(ScxConfig.templateRoot().getPath());
         // 让文件夹永远在前边
         var directoryList = allFileList.stream().filter(fileInfo -> "Directory".equals(fileInfo.type)).collect(Collectors.toList());
         var fileList = allFileList.stream().filter(fileInfo -> "File".equals(fileInfo.type)).collect(Collectors.toList());

@@ -18,9 +18,9 @@ public class StaticHandlerRegister {
      * @param router a {@link io.vertx.ext.web.Router} object
      */
     public static void register(Router router) {
-        router.route(ScxConfig.cmsResourceHttpUrl())
+        router.route(ScxConfig.templateResourceHttpUrl())
                 .handler(StaticHandler.create()
                         .setAllowRootFileSystemAccess(true)
-                        .setWebRoot(ScxConfig.cmsResourceLocations().getPath()));
+                        .setWebRoot(ScxConfig.templateRoot().getPath()));
     }
 }

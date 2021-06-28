@@ -1,4 +1,4 @@
-package cool.scx.cms;
+package cool.scx.template;
 
 import cool.scx.annotation.ScxTemplateDirective;
 import cool.scx.base.BaseTemplateDirective;
@@ -14,12 +14,12 @@ import freemarker.template.Version;
 import java.io.IOException;
 
 /**
- * ScxCms
+ * ScxTemplate
  *
  * @author 司昌旭
  * @version 0.3.6
  */
-public final class ScxCms {
+public final class ScxTemplate {
 
     /**
      * Freemarker 默认引擎版本
@@ -40,10 +40,10 @@ public final class ScxCms {
         wrapperBuilder.setExposeFields(true);
         configuration.setObjectWrapper(wrapperBuilder.build());
         try {
-            configuration.setDirectoryForTemplateLoading(ScxConfig.cmsRoot());
+            configuration.setDirectoryForTemplateLoading(ScxConfig.templateRoot());
         } catch (Exception e) {
-            Ansi.OUT.brightRed(ScxConfig.cmsRoot().getPath()).ln();
-            Ansi.OUT.brightRed("Cms 模板目录不存在!!! Cms 功能将不可用!!!").ln();
+            Ansi.OUT.brightRed(ScxConfig.templateRoot().getPath()).ln();
+            Ansi.OUT.brightRed("模板目录不存在!!!").ln();
         }
 
         //设置 字符集
@@ -71,10 +71,10 @@ public final class ScxCms {
     /**
      * 初始化 cms 配置文件
      */
-    public static void initCms() {
-        Ansi.OUT.blue("ScxCms 初始化中...").ln();
+    public static void initTemplate() {
+        Ansi.OUT.blue("ScxTemplate 初始化中...").ln();
         freemarkerConfig = initFreemarkerConfig();
-        Ansi.OUT.blue("ScxCms 初始化完成...").ln();
+        Ansi.OUT.blue("ScxTemplate 初始化完成...").ln();
     }
 
     /**
