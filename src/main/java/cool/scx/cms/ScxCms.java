@@ -85,7 +85,7 @@ public final class ScxCms {
      */
     public static Template getTemplateByPath(String pagePath) {
         try {
-            return freemarkerConfig.getTemplate(pagePath + ScxConfig.cmsTemplateSuffix());
+            return freemarkerConfig.getTemplate(pagePath + ".html");
         } catch (IOException e) {
             e.printStackTrace();
             return null;

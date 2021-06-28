@@ -322,17 +322,6 @@ public final class ScxConfig {
         return easyToUseConfig.cmsResourceLocations;
     }
 
-
-    /**
-     * <p>cmsResourceSuffix.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public static String cmsTemplateSuffix() {
-        return easyToUseConfig.cmsTemplateSuffix;
-    }
-
-
     /**
      * 获取 从外部传来的参数 (java -jar scx.jar  xxx)
      *

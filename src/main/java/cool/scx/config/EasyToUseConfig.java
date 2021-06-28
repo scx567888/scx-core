@@ -65,10 +65,6 @@ class EasyToUseConfig {
      */
 
     final File cmsResourceLocations;
-    /**
-     * cms 资源后缀
-     */
-    final String cmsTemplateSuffix;
 
     /**
      * 数据源地址
@@ -138,15 +134,11 @@ class EasyToUseConfig {
                 s -> Ansi.OUT.green("Y Cms 静态资源 Url                     \t -->\t " + s).ln(),
                 f -> Ansi.OUT.red("N 未检测到 scx.cms.resource-http-url   \t -->\t 已采用默认值 : " + f).ln());
 
-        String tempCmsResourceLocations = ScxConfig.get("scx.cms.resource-locations", "AppRoot:/c/static",
+        String tempCmsResourceLocations = ScxConfig.get("scx.cms.resource-root", "AppRoot:/c/static",
                 s -> Ansi.OUT.green("Y Cms 静态资源目录                     \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.cms.resource-locations  \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
+                f -> Ansi.OUT.red("N 未检测到 scx.cms.resource-root       \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
 
         cmsResourceLocations = FileUtils.getFileByAppRoot(tempCmsResourceLocations);
-
-        cmsTemplateSuffix = ScxConfig.get("scx.cms.template-suffix", ".html",
-                s -> Ansi.OUT.green("Y Cms 模板文件后缀                     \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.cms.template-suffix    \t -->\t 已采用默认值 : " + f).ln());
 
         isOpenHttps = ScxConfig.get("scx.https.is-open", false,
                 s -> Ansi.OUT.green("Y 是否开启 https                       \t -->\t " + (s ? "是" : "否")).ln(),

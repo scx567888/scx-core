@@ -20,14 +20,13 @@
     },
     "https": {
       "is-open": false,
-      "ssl-path": "AppRoot:/ssl/scx_dev.jks",
+      "ssl-path": "AppRoot:ssl\\scx_dev.jks",
       "ssl-password": "k8s6nDQxC5zCfUYChf1tRLwriOw66th8egQomJLwjnXJBE5aqgSSz5a2/vcV4zqZ"
     },
     "cms": {
-      "root": "AppRoot:/c/",
+      "root": "AppRoot:c",
       "resource-http-url": "/static/*",
-      "resource-locations": "AppRoot:/c/static/",
-      "template-suffix": ".html"
+      "resource-root": "AppRoot:c\\static"
     }
   },
   "core": {
