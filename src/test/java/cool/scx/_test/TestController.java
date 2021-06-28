@@ -85,7 +85,7 @@ public class TestController {
     /**
      * 测试!!!
      */
-    @ScxMapping(value = "/baidu", method = Method.GET)
+    @ScxMapping(value = "/baidu", method = Method.GET, checkedLogin = true)
     public Html TestHttpUtils() {
         HttpResponse<String> stringHttpResponse = HttpUtils.get("https://www.baidu.com/", new HashMap<>());
         return Html.ofString(stringHttpResponse.body());
