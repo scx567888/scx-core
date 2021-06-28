@@ -38,10 +38,7 @@
       "ytx-app-id": "xxx"
     },
     "auth": {
-      "confusion-login-error": false,
-      "license": "ka1D6mnOqqObLXkqXauvpcc3k6AIezPNodnqhPbWXc2fI4FuvLW9TY0hsYQzHyw/",
-      "login-error-lock-times": 3,
-      "login-error-lock-second": 60
+      "confusion-login-error": false
     }
   }
 }

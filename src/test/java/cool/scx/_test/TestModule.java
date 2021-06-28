@@ -2,9 +2,9 @@ package cool.scx._test;
 
 import cool.scx.ScxApp;
 import cool.scx.ScxModule;
-import cool.scx._core._auth.AuthModule;
-import cool.scx._core._base.BaseModule;
-import cool.scx._core._cms.CmsModule;
+import cool.scx._module.auth.AuthModule;
+import cool.scx._module.base.BaseModule;
+import cool.scx._module.cms.CmsModule;
 
 public class TestModule implements ScxModule {
 

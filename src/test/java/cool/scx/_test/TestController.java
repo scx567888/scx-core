@@ -1,7 +1,7 @@
 package cool.scx._test;
 
-import cool.scx._core._auth.user.User;
-import cool.scx._core._auth.user.UserService;
+import cool.scx._module.auth.User;
+import cool.scx._module.auth.UserService;
 import cool.scx._test.car.Car;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.ScxAuth;

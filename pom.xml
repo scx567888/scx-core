@@ -20,7 +20,7 @@
         <!-- 项目构建时的字符集 强烈建议采用默认值 UTF-8 -->
         <scx.encoding>UTF-8</scx.encoding>
         <!-- 构建项目时jar包的默认启动类 在您自己的项目中请覆写此值 -->
-        <scx.mainClass>cool.scx._core.CoreApp</scx.mainClass>
+        <scx.mainClass>cool.scx._module.CoreApp</scx.mainClass>
     </properties>
 
     <dependencies>
