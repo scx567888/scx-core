@@ -132,11 +132,11 @@ class EasyToUseConfig {
 
         templateResourceHttpUrl = ScxConfig.get("scx.template.resource-http-url", "/static/*",
                 s -> Ansi.OUT.green("Y 模板静态资源 Url                     \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.template.resource-http-url   \t -->\t 已采用默认值 : " + f).ln());
+                f -> Ansi.OUT.red("N 未检测到 scx.template.resource-http-url\t -->\t 已采用默认值 : " + f).ln());
 
         String tempTemplateResourceRoot = ScxConfig.get("scx.template.resource-root", "AppRoot:/c/static",
                 s -> Ansi.OUT.green("Y 模板静态资源目录                     \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.template.resource-root       \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
+                f -> Ansi.OUT.red("N 未检测到 scx.template.resource-root   \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
 
         templateResourceRoot = FileUtils.getFileByAppRoot(tempTemplateResourceRoot);
 
