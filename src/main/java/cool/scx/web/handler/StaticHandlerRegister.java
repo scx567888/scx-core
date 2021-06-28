@@ -21,6 +21,6 @@ public class StaticHandlerRegister {
         router.route(ScxConfig.templateResourceHttpUrl())
                 .handler(StaticHandler.create()
                         .setAllowRootFileSystemAccess(true)
-                        .setWebRoot(ScxConfig.templateRoot().getPath()));
+                        .setWebRoot(ScxConfig.templateResourceRoot().getPath()));
     }
 }
