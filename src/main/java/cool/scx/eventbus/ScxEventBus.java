@@ -33,6 +33,8 @@ public class ScxEventBus {
     }
 
     /**
+     * <p>wsConsumer.</p>
+     *
      * @param address a
      * @param handler h
      */
@@ -52,7 +54,7 @@ public class ScxEventBus {
     /**
      * <p>requestScxWebSocketEvent.</p>
      *
-     * @param WSBody a {@link WSBody} object
+     * @param WSBody a {@link cool.scx.bo.WSBody} object
      */
     public static void requestScxWebSocketEvent(WSBody WSBody) {
         VERTX_EVENTBUS.request(WSBody.eventName(), WSBody);

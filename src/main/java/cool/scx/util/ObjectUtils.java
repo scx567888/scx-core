@@ -244,6 +244,12 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * <p>valueToTree.</p>
+     *
+     * @param object a {@link java.lang.Object} object
+     * @return a {@link com.fasterxml.jackson.databind.JsonNode} object
+     */
     public static JsonNode valueToTree(Object object) {
         return OBJECT_MAPPER_USE_ANNOTATIONS.valueToTree(object);
     }

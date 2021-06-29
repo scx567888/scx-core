@@ -6,8 +6,17 @@ import io.vertx.core.eventbus.MessageCodec;
 
 import java.io.*;
 
+/**
+ * WSBody 编解码器
+ *
+ * @author 司昌旭
+ * @version 1.2.2
+ */
 public class WSBodyCodec implements MessageCodec<WSBody, WSBody> {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void encodeToWire(Buffer buffer, WSBody scxWSBody) {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -20,6 +29,9 @@ public class WSBodyCodec implements MessageCodec<WSBody, WSBody> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WSBody decodeFromWire(int pos, Buffer buffer) {
         final ByteArrayInputStream b = new ByteArrayInputStream(buffer.getBytes());
@@ -32,16 +44,25 @@ public class WSBodyCodec implements MessageCodec<WSBody, WSBody> {
         return msg;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WSBody transform(WSBody scxWSBody) {
         return scxWSBody;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String name() {
         return "ScxWSBodyCodec";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public byte systemCodecID() {
         return -1;

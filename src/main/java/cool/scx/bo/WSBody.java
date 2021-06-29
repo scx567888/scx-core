@@ -27,7 +27,7 @@ public class WSBody implements Serializable {
     /**
      * <p>Constructor for ScxWSBody.</p>
      *
-     * @param eventName      a {@link cool.scx.bo.WSBody} object
+     * @param eventName a {@link cool.scx.bo.WSBody} object
      * @param data      a {@link cool.scx.bo.WSBody} object
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object
      */
@@ -39,13 +39,49 @@ public class WSBody implements Serializable {
     /**
      * <p>Constructor for ScxWSBody.</p>
      *
-     * @param eventName      a {@link cool.scx.bo.WSBody} object
+     * @param eventName a {@link cool.scx.bo.WSBody} object
      * @param data      a {@link cool.scx.bo.WSBody} object
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object
      */
     public WSBody(String eventName, Object data, ServerWebSocket webSocket) {
         this.body = new Body(eventName, ObjectUtils.valueToTree(data));
         this.webSocket = webSocket;
+    }
+
+    /**
+     * <p>data.</p>
+     *
+     * @return a {@link com.fasterxml.jackson.databind.JsonNode} object
+     */
+    public JsonNode data() {
+        return body.data;
+    }
+
+    /**
+     * <p>eventName.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String eventName() {
+        return body.eventName;
+    }
+
+    /**
+     * <p>toJson.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String toJson() {
+        return ObjectUtils.beanToJsonUseAnnotations(this.body);
+    }
+
+    /**
+     * <p>webSocket.</p>
+     *
+     * @return a {@link io.vertx.core.http.ServerWebSocket} object
+     */
+    public ServerWebSocket webSocket() {
+        return webSocket;
     }
 
     /**
@@ -59,12 +95,12 @@ public class WSBody implements Serializable {
         /**
          * 事件名称 事件总线用
          */
-        public final String eventName;
+        final String eventName;
 
         /**
          * 消息体
          */
-        public final JsonNode data;
+        final JsonNode data;
 
         /**
          * <p>Constructor for WSBody.</p>
@@ -72,26 +108,10 @@ public class WSBody implements Serializable {
          * @param eventName a {@link java.lang.String} object
          * @param data      a {@link java.lang.Object} object
          */
-        public Body(String eventName, JsonNode data) {
+        Body(String eventName, JsonNode data) {
             this.eventName = eventName;
             this.data = data;
         }
 
-    }
-
-    public JsonNode data() {
-        return body.data;
-    }
-
-    public String eventName() {
-        return body.eventName;
-    }
-
-    public String toJson() {
-        return ObjectUtils.beanToJsonUseAnnotations(this.body);
-    }
-
-    public ServerWebSocket webSocket() {
-        return webSocket;
     }
 }

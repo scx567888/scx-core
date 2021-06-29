@@ -10,7 +10,6 @@ import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.eventbus.ScxEventBus;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.JsonObject;
 
 import java.time.LocalDateTime;
 
