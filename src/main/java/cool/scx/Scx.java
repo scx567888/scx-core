@@ -51,4 +51,13 @@ public final class Scx {
         GLOBAL_VERTX.nettyEventLoopGroup().schedule(runnable, pauseTime, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * 执行一个事件
+     *
+     * @param command 事件
+     */
+    public static void execute(Runnable command) {
+        GLOBAL_VERTX.nettyEventLoopGroup().execute(command);
+    }
+
 }
