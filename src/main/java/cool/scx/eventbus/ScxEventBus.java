@@ -46,7 +46,7 @@ public class ScxEventBus {
     /**
      * <p>requestScxWebSocketEvent.</p>
      *
-     * @param scxWSBody a {@link ScxWSBody} object
+     * @param scxWSBody a {@link cool.scx.eventbus.ScxWSBody} object
      */
     public static void requestScxWebSocketEvent(ScxWSBody scxWSBody) {
         VERTX_EVENTBUS.request(scxWSBody.wsBody.eventName,

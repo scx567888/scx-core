@@ -38,10 +38,21 @@ public class OnlineItem {
         this.username = username;
     }
 
+    /**
+     * <p>sendText.</p>
+     *
+     * @param str a {@link java.lang.String} object
+     */
     public void sendText(String str) {
         webSocket.writeTextMessage(str);
     }
 
+    /**
+     * <p>send.</p>
+     *
+     * @param eventName a {@link java.lang.String} object
+     * @param data      a {@link java.lang.Object} object
+     */
     public void send(String eventName, Object data) {
         WSBody scxWSEventResult = new WSBody(eventName, null, data);
         String s = ObjectUtils.beanToJsonUseAnnotations(scxWSEventResult);

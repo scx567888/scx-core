@@ -21,6 +21,12 @@ class ScxWSBody {
      */
     public final ServerWebSocket webSocket;
 
+    /**
+     * <p>Constructor for ScxWSBody.</p>
+     *
+     * @param wsBody    a {@link cool.scx.bo.WSBody} object
+     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object
+     */
     public ScxWSBody(WSBody wsBody, ServerWebSocket webSocket) {
         this.wsBody = wsBody;
         this.webSocket = webSocket;
