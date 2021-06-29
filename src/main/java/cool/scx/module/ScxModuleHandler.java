@@ -1,5 +1,6 @@
 package cool.scx.module;
 
+import cool.scx.Scx;
 import cool.scx.ScxModule;
 import cool.scx.util.Ansi;
 
@@ -56,7 +57,7 @@ public final class ScxModuleHandler {
      */
     public static void initModules() {
         for (ScxModule baseModule : BASE_MODULE_ARRAY) {
-            baseModule.init();
+            Scx.execute(baseModule::init);
             var tempScxModule = getModuleByBaseModule(baseModule);
             addModule(tempScxModule);
         }
@@ -306,7 +307,7 @@ public final class ScxModuleHandler {
      */
     public static void startModules() {
         for (ScxModule baseModule : BASE_MODULE_ARRAY) {
-            baseModule.start();
+            Scx.execute(baseModule::start);
         }
     }
 
@@ -315,7 +316,7 @@ public final class ScxModuleHandler {
      */
     public static void stopModules() {
         for (ScxModule baseModule : BASE_MODULE_ARRAY) {
-            baseModule.stop();
+            Scx.execute(baseModule::stop);
         }
     }
 

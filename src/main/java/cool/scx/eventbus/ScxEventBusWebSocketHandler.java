@@ -2,6 +2,7 @@ package cool.scx.eventbus;
 
 import cool.scx.annotation.ScxWebSocketRoute;
 import cool.scx.base.BaseWSHandler;
+import cool.scx.bo.WSBody;
 import cool.scx.context.ScxContext;
 import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
@@ -25,13 +26,18 @@ public class ScxEventBusWebSocketHandler implements BaseWSHandler {
      */
     private static final String LOVE = "❤";
 
-    private static ScxWebSocketEvent createScxWebSocketEvent(String text, ServerWebSocket webSocket) {
-        var map = ObjectUtils.jsonToMap(text);
-        Object eventName = map.get("eventName");
-        Object data = map.get("data");
-        Object callBackID = map.get("callBackID");
-        if (eventName != null) {
-            return new ScxWebSocketEvent(eventName.toString(), data, callBackID != null ? callBackID.toString() : null, webSocket);
+    /**
+     * 根据 前台发送的字符串封装实体
+     *
+     * @param text      text
+     * @param webSocket w
+     * @return w
+     */
+    private static WSBody createScxWebSocketEvent(String text, ServerWebSocket webSocket) {
+        var jsonNode = ObjectUtils.JsonToTree(text);
+        if (jsonNode != null && jsonNode.get("eventName") != null) {
+            String eventName = jsonNode.get("eventName").asText();
+            return new WSBody(eventName, jsonNode.get("data"), webSocket);
         } else {
             return null;
         }

@@ -1,5 +1,6 @@
 package cool.scx.context;
 
+import cool.scx.bo.WSBody;
 import io.vertx.core.http.ServerWebSocket;
 
 /**
@@ -34,6 +35,26 @@ public class OnlineItem {
     public OnlineItem(ServerWebSocket webSocket, String username) {
         this.webSocket = webSocket;
         this.username = username;
+    }
+
+    /**
+     * <p>sendText.</p>
+     *
+     * @param str a {@link java.lang.String} object
+     */
+    public void sendText(String str) {
+        webSocket.writeTextMessage(str);
+    }
+
+    /**
+     * <p>send.</p>
+     *
+     * @param eventName a {@link java.lang.String} object
+     * @param data      a {@link java.lang.Object} object
+     */
+    public void send(String eventName, Object data) {
+        WSBody scxWSEventResult = new WSBody(eventName, data, null);
+        webSocket.writeTextMessage(scxWSEventResult.toJson());
     }
 
 }

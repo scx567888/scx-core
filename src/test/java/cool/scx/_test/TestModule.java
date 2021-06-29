@@ -5,6 +5,13 @@ import cool.scx.ScxModule;
 import cool.scx._module.auth.AuthModule;
 import cool.scx._module.base.BaseModule;
 import cool.scx._module.cms.CmsModule;
+import cool.scx.bo.WSBody;
+import cool.scx.config.ScxConfig;
+import cool.scx.context.ScxContext;
+import cool.scx.eventbus.ScxEventBus;
+import io.vertx.core.eventbus.Message;
+
+import java.time.LocalDateTime;
 
 public class TestModule implements ScxModule {
 
@@ -25,4 +32,22 @@ public class TestModule implements ScxModule {
         return "H8QS91GcuNGP9735";
     }
 
+    @Override
+    public void start() {
+        //注册事件
+        ScxEventBus.wsConsumer("sendMessage", (Message<WSBody> m) -> SendMessageHandler.sendMessage(m.body()));
+
+        while (true) {
+            var onlineItemList = ScxContext.getOnlineItemList();
+            for (var onlineItem : onlineItemList) {
+                onlineItem.send("writeTime", ScxConfig.DATETIME_FORMATTER.format(LocalDateTime.now()));
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (Exception ignored) {
+
+            }
+        }
+
+    }
 }

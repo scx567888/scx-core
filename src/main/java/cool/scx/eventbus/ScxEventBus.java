@@ -1,18 +1,15 @@
 package cool.scx.eventbus;
 
 import cool.scx.Scx;
-import cool.scx.eventbus.handler.LoginByWebSocketHandler;
-import cool.scx.eventbus.handler.SendMessageByWebsocketHandler;
-import cool.scx.util.Ansi;
-import cool.scx.util.ObjectUtils;
+import cool.scx.bo.WSBody;
 import cool.scx.web.ScxRouter;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.JsonObject;
 
 /**
- * 事件总线
+ * 事件总线<br>
+ * 针对 vertx 的 eventbus 进行简单封装
  *
  * @author 司昌旭
  * @version 1.1.9
@@ -32,7 +29,17 @@ public class ScxEventBus {
      * @param <T>     t
      */
     public static <T> void consumer(String address, Handler<Message<T>> handler) {
-        VERTX_EVENTBUS.consumer(address, handler);
+        VERTX_EVENTBUS.localConsumer(address, handler);
+    }
+
+    /**
+     * <p>wsConsumer.</p>
+     *
+     * @param address a
+     * @param handler h
+     */
+    public static void wsConsumer(String address, Handler<Message<WSBody>> handler) {
+        VERTX_EVENTBUS.localConsumer(address, handler);
     }
 
     /**
@@ -40,26 +47,17 @@ public class ScxEventBus {
      */
     public static void initEventBus() {
         ScxRouter.addWebSocketRoute(new ScxEventBusWebSocketHandler());
+        VERTX_EVENTBUS.registerDefaultCodec(WSBody.class, new WSBodyCodec());
         initDefaultHandler();
     }
 
     /**
      * <p>requestScxWebSocketEvent.</p>
      *
-     * @param event a {@link cool.scx.eventbus.ScxWebSocketEvent} object
+     * @param WSBody a {@link cool.scx.bo.WSBody} object
      */
-    public static void requestScxWebSocketEvent(ScxWebSocketEvent event) {
-        VERTX_EVENTBUS.request(event.eventName, event.data, (c) -> {
-            if (c.succeeded()) {
-                Object body = c.result().body();
-                var result = new ScxWebSocketEventResult(event.callBackID, body);
-                var message = ObjectUtils.beanToJsonUseAnnotations(result);
-                event.webSocket.writeTextMessage(message);
-            } else {
-                Throwable cause = c.cause();
-                cause.printStackTrace();
-            }
-        });
+    public static void requestScxWebSocketEvent(WSBody WSBody) {
+        VERTX_EVENTBUS.request(WSBody.eventName(), WSBody);
     }
 
     /**
@@ -71,15 +69,11 @@ public class ScxEventBus {
         return VERTX_EVENTBUS;
     }
 
+    /**
+     * 初始化默认 handler
+     */
     private static void initDefaultHandler() {
-        consumer("login", (Message<JsonObject> m) -> {
-            Ansi.OUT.print("login").ln();
-            LoginByWebSocketHandler.loginByWebSocket(m.body());
-        });
-        consumer("hello", (Message<JsonObject> m) -> {
-            String s = SendMessageByWebsocketHandler.sendMessage(m.body());
-            m.reply(s);
-        });
+        ScxEventBus.wsConsumer("auth-token", (Message<WSBody> m) -> AuthLoginHandler.loginByWebSocket(m.body()));
     }
 
 }
