@@ -244,4 +244,8 @@ public final class ObjectUtils {
         }
     }
 
+    public static JsonNode valueToTree(Object object) {
+        return OBJECT_MAPPER_USE_ANNOTATIONS.valueToTree(object);
+    }
+
 }

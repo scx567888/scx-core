@@ -1,7 +1,7 @@
 package cool.scx._test;
 
+import cool.scx.bo.WSBody;
 import cool.scx.context.ScxContext;
-import io.vertx.core.json.JsonObject;
 
 /**
  * 发送消息测试 handler
@@ -14,12 +14,14 @@ public class SendMessageHandler {
     /**
      * 发送消息
      *
-     * @param json a {@link io.vertx.core.json.JsonObject} object
+     * @param wsBody a {@link io.vertx.core.json.JsonObject} object
      */
-    public static void sendMessage(JsonObject json) {
+    public static void sendMessage(WSBody wsBody) {
         //先获取消息
-        var message = json.getString("message").split("");
-
+        var message = wsBody.data().asText().split("");
+        System.out.println(wsBody.toJson());
+        wsBody.webSocket().writeTextMessage("123123123123");
+        System.out.println(wsBody.webSocket());
         //循环发送
         for (var aChar : message) {
             try {

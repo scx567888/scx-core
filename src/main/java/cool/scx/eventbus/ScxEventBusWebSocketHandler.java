@@ -33,11 +33,11 @@ public class ScxEventBusWebSocketHandler implements BaseWSHandler {
      * @param webSocket w
      * @return w
      */
-    private static ScxWSBody createScxWebSocketEvent(String text, ServerWebSocket webSocket) {
-        var map = ObjectUtils.jsonToMap(text);
-        Object eventName = map.get("eventName");
-        if (eventName != null) {
-            return new ScxWSBody(new WSBody(eventName.toString(), map.get("data")), webSocket);
+    private static WSBody createScxWebSocketEvent(String text, ServerWebSocket webSocket) {
+        var jsonNode = ObjectUtils.JsonToTree(text);
+        if (jsonNode != null && jsonNode.get("eventName") != null) {
+            String eventName = jsonNode.get("eventName").asText();
+            return new WSBody(eventName, jsonNode.get("data"), webSocket);
         } else {
             return null;
         }

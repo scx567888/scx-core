@@ -111,12 +111,11 @@ public final class ScxAuth {
     /**
      * 根据 token 获取用户
      *
-     * @param token  a {@link java.lang.String} object.
-     * @param device a {@link cool.scx.enumeration.DeviceType} object.
+     * @param token a {@link java.lang.String} object.
      * @return a {@link cool.scx.auth.AuthUser} object.
      */
-    public static AuthUser getLoginUserByToken(DeviceType device, String token) {
-        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token) && u.loginDevice == device).findAny().orElse(null);
+    public static AuthUser getLoginUserByToken(String token) {
+        var sessionItem = LOGIN_ITEMS.stream().filter(u -> u.token.equals(token)).findAny().orElse(null);
         if (sessionItem == null) {
             return null;
         }
@@ -131,7 +130,7 @@ public final class ScxAuth {
      * @return a {@link cool.scx.auth.AuthUser} object.
      */
     public static AuthUser getLoginUser(RoutingContext ctx) {
-        return getLoginUserByToken(getDevice(ctx), getTokenByDevice(ctx));
+        return getLoginUserByToken(getTokenByDevice(ctx));
     }
 
     /**

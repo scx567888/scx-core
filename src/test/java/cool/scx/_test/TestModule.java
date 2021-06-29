@@ -5,6 +5,7 @@ import cool.scx.ScxModule;
 import cool.scx._module.auth.AuthModule;
 import cool.scx._module.base.BaseModule;
 import cool.scx._module.cms.CmsModule;
+import cool.scx.bo.WSBody;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.eventbus.ScxEventBus;
@@ -35,7 +36,7 @@ public class TestModule implements ScxModule {
     @Override
     public void start() {
         //注册事件
-        ScxEventBus.consumer("sendMessage", (Message<JsonObject> m) -> SendMessageHandler.sendMessage(m.body()));
+        ScxEventBus.wsConsumer("sendMessage", (Message<WSBody> m) -> SendMessageHandler.sendMessage(m.body()));
 
         while (true) {
             var onlineItemList = ScxContext.getOnlineItemList();
