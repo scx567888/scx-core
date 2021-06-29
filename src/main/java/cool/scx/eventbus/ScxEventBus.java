@@ -1,9 +1,6 @@
 package cool.scx.eventbus;
 
 import cool.scx.Scx;
-import cool.scx.bo.WSBody;
-import cool.scx.handler.DefaultHandler;
-import cool.scx.util.ObjectUtils;
 import cool.scx.web.ScxRouter;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
@@ -40,7 +37,7 @@ public class ScxEventBus {
      */
     public static void initEventBus() {
         ScxRouter.addWebSocketRoute(new ScxEventBusWebSocketHandler());
-        DefaultHandler.initDefaultHandler();
+        initDefaultHandler();
     }
 
     /**
@@ -49,19 +46,7 @@ public class ScxEventBus {
      * @param scxWSBody a {@link cool.scx.eventbus.ScxWSBody} object
      */
     public static void requestScxWebSocketEvent(ScxWSBody scxWSBody) {
-        VERTX_EVENTBUS.request(scxWSBody.wsBody.eventName,
-                JsonObject.mapFrom(scxWSBody.wsBody.data),
-                (c) -> {
-                    if (c.succeeded()) {
-                        Object body = c.result().body();
-                        var result = new WSBody(null, scxWSBody.wsBody.callBackID, body);
-                        var message = ObjectUtils.beanToJsonUseAnnotations(result);
-                        scxWSBody.webSocket.writeTextMessage(message);
-                    } else {
-                        Throwable cause = c.cause();
-                        cause.printStackTrace();
-                    }
-                });
+        VERTX_EVENTBUS.request(scxWSBody.wsBody.eventName, JsonObject.mapFrom(scxWSBody.wsBody.data));
     }
 
     /**
@@ -71,6 +56,13 @@ public class ScxEventBus {
      */
     public static EventBus vertxEventbus() {
         return VERTX_EVENTBUS;
+    }
+
+    /**
+     * 初始化默认 handler
+     */
+    private static void initDefaultHandler() {
+        ScxEventBus.consumer("auth-token", (Message<JsonObject> m) -> AuthLoginHandler.loginByWebSocket(m.body()));
     }
 
 }

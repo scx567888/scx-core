@@ -5,6 +5,9 @@ import cool.scx.ScxModule;
 import cool.scx._module.auth.AuthModule;
 import cool.scx._module.base.BaseModule;
 import cool.scx._module.cms.CmsModule;
+import cool.scx.eventbus.ScxEventBus;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonObject;
 
 public class TestModule implements ScxModule {
 
@@ -25,4 +28,9 @@ public class TestModule implements ScxModule {
         return "H8QS91GcuNGP9735";
     }
 
+    @Override
+    public void start() {
+        //注册事件
+        ScxEventBus.consumer("sendMessage", (Message< JsonObject > m)-> SendMessageHandler.sendMessage(m.body()));
+    }
 }

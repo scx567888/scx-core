@@ -13,11 +13,6 @@ public class WSBody {
     public final String eventName;
 
     /**
-     * 回调 id
-     */
-    public final String callBackID;
-
-    /**
      * 消息体
      */
     public final Object data;
@@ -25,13 +20,11 @@ public class WSBody {
     /**
      * <p>Constructor for WSBody.</p>
      *
-     * @param eventName  a {@link java.lang.String} object
-     * @param callBackID a {@link java.lang.String} object
-     * @param data       a {@link java.lang.Object} object
+     * @param eventName a {@link java.lang.String} object
+     * @param data      a {@link java.lang.Object} object
      */
-    public WSBody(String eventName, String callBackID, Object data) {
+    public WSBody(String eventName, Object data) {
         this.eventName = eventName;
-        this.callBackID = callBackID;
         this.data = data;
     }
 

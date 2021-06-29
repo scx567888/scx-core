@@ -54,7 +54,7 @@ public class OnlineItem {
      * @param data      a {@link java.lang.Object} object
      */
     public void send(String eventName, Object data) {
-        WSBody scxWSEventResult = new WSBody(eventName, null, data);
+        WSBody scxWSEventResult = new WSBody(eventName, data);
         String s = ObjectUtils.beanToJsonUseAnnotations(scxWSEventResult);
         webSocket.writeTextMessage(s);
     }
