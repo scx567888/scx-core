@@ -1,6 +1,10 @@
 package cool.scx.eventbus.handler;
 
+import cool.scx.context.OnlineItem;
+import cool.scx.context.ScxContext;
 import io.vertx.core.json.JsonObject;
+
+import java.util.List;
 
 /**
  * <p>SendMessageByWebsocketHandler class.</p>
@@ -18,6 +22,12 @@ public class SendMessageByWebsocketHandler {
      * @return a {@link java.lang.String} object
      */
     public static String sendMessage(JsonObject json) {
+
+        List<OnlineItem> onlineItemList = ScxContext.getOnlineItemList();
+
+        for (OnlineItem onlineItem : onlineItemList) {
+            onlineItem.send("showMessage", "司昌旭");
+        }
 
         return json.toString() + "Test";
 //        System.out.println(args);
