@@ -95,12 +95,12 @@ public class WSBody implements Serializable {
         /**
          * 事件名称 事件总线用
          */
-        final String eventName;
+        public final String eventName;
 
         /**
          * 消息体
          */
-        final JsonNode data;
+        public final JsonNode data;
 
         /**
          * <p>Constructor for WSBody.</p>
@@ -108,7 +108,7 @@ public class WSBody implements Serializable {
          * @param eventName a {@link java.lang.String} object
          * @param data      a {@link java.lang.Object} object
          */
-        Body(String eventName, JsonNode data) {
+        public Body(String eventName, JsonNode data) {
             this.eventName = eventName;
             this.data = data;
         }
