@@ -173,7 +173,7 @@ public final class FileTypeUtils {
     private static String bytesToHexString(byte[] src) {
         var stringBuilder = new StringBuilder();
         if (src == null || src.length <= 0) {
-            return null;
+            return "";
         }
         for (byte b : src) {
             int v = b & 0xFF;
