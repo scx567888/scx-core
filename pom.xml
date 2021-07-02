@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
     <name>scx</name>
 
-    <version>1.2.2</version>
+    <version>1.2.3</version>
 
     <description>
         SCX是一个 "Web 开发框架"; 目标是提供简单快速的开发体验。
