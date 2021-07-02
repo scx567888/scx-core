@@ -6,7 +6,7 @@ import io.vertx.ext.web.RoutingContext;
  * BaseVo 接口
  * 所有需要向前台返回数据都需要基础
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.5.0
  */
 public interface BaseVo {

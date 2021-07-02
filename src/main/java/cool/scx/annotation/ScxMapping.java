@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * ScxMapping
  * 具体 http 请求映射
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 @Target({ElementType.METHOD, ElementType.TYPE})

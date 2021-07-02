@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 从路径 (Path) 参数
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.5.0
  */
 @Target(ElementType.PARAMETER)

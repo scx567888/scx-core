@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * <p>ScxRouter class.</p>
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.9
  */
 public final class ScxRouter {

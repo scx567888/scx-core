@@ -16,7 +16,7 @@ import java.util.Map;
  * Excel 操作类
  * 对 生成 excel 进行一些简单的封装 方便使用
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.9.1
  */
 public class Excel {

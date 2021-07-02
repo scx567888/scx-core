@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 /**
  * 用于描述根据 class 构建的对应的数据表结构
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.5.0
  */
 public final class TableInfo {

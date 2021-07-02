@@ -3,7 +3,7 @@ package cool.scx.enumeration;
 /**
  * 排序类型
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 public enum OrderByType {

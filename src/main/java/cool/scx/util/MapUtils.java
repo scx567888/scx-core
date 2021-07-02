@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * map 工具类
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.2
  */
 public final class MapUtils {

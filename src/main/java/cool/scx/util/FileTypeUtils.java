@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 文件类型工具类
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.4
  */
 public final class FileTypeUtils {

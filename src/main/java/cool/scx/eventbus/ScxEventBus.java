@@ -11,7 +11,7 @@ import io.vertx.core.eventbus.Message;
  * 事件总线<br>
  * 针对 vertx 的 eventbus 进行简单封装
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.9
  */
 public class ScxEventBus {

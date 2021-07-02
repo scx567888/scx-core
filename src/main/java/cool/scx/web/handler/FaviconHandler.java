@@ -13,7 +13,7 @@ import java.nio.file.Path;
 /**
  * 注册 FaviconIco 图标 handler
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.9
  */
 public class FaviconHandler implements Handler<RoutingContext> {

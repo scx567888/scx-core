@@ -5,7 +5,7 @@ package cool.scx.auth;
  * <p>
  * 自定义的用户类如需使用 "核心认证方式" 则需要实现此接口
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 public interface AuthUser {

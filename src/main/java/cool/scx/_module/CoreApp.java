@@ -9,7 +9,7 @@ import cool.scx._module.cms.CmsModule;
 /**
  * 运行所有核心包提供的模块 (演示用,不要用于生产环境)
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.11
  */
 public class CoreApp {

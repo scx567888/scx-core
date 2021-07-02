@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 从 query 获取参数
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.5.0
  */
 @Target(ElementType.PARAMETER)

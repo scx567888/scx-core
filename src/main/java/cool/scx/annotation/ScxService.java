@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * service 层映射
  * 设置此注解的方法 必须同时 继承 BaseService
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 @Target(ElementType.TYPE)

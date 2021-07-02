@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 简易计时器类 用来计算启动时间
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.0
  */
 public final class Timer {

@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 /**
  * SQLRunner 执行 sql 语句
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.0.10
  */
 public final class SQLRunner {

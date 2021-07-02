@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 /**
  * <p>ScxDBContext class.</p>
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.5
  */
 public final class ScxDBContext {

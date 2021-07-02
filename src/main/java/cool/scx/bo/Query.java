@@ -10,7 +10,7 @@ import cool.scx.enumeration.WhereType;
  * 同时附带一些简单的参数校验 <br>
  * 只是 为了方便传递参数使用<br>
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.0.10
  */
 public final class Query {

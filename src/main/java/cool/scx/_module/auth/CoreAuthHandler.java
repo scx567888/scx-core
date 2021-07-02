@@ -27,7 +27,7 @@ import java.util.HashSet;
  * 核心包的权限处理器
  * 如有需求可以自行实现 AuthHandler 接口
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.0.10
  */
 @ScxService

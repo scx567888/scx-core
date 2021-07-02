@@ -6,7 +6,7 @@ import cool.scx.base.BaseService;
 /**
  * UserRoleService
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 @ScxService

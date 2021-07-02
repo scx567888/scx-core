@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 部门
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 @ScxModel(tablePrefix = "auth")

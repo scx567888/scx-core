@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Json 格式的返回值
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 public final class Json implements BaseVo {

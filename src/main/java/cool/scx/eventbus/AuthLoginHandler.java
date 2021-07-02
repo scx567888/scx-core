@@ -9,7 +9,7 @@ import cool.scx.util.Ansi;
 /**
  * 通过 websocket 认证 token
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.17
  */
 public class AuthLoginHandler {

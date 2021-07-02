@@ -6,7 +6,7 @@ import io.vertx.ext.web.RoutingContext;
 /**
  * 请求错误异常
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.15
  */
 public class BadRequestException extends HttpRequestException {

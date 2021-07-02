@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * 添加此注解的 字段 在创建数据表是会采用 value 上的类型
  * 如果不添加 则会根据 字段的类型进行创建
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 @Target(ElementType.FIELD)

@@ -10,7 +10,7 @@ import java.util.HashSet;
 /**
  * 权限认证处理器
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.0
  */
 public interface AuthHandler {

@@ -4,7 +4,7 @@ package cool.scx.enumeration;
  * AnsiColor 颜色枚举
  * 枚举的顺序目前是按照渐变进行排列的
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.9.15
  */
 public enum AnsiColor {

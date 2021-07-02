@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * <p>UploadController class.</p>
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 @ScxMapping("/api")

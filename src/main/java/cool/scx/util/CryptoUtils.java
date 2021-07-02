@@ -10,7 +10,7 @@ import java.util.Base64;
 /**
  * 加密,解密工具类 <br>
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 public final class CryptoUtils {

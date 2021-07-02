@@ -17,7 +17,7 @@ import java.util.Arrays;
 /**
  * 文件下载 vo
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.0.10
  */
 public class Download implements BaseVo {

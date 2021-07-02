@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * 封装的 websocket 对象
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.17
  */
 public class WSBody implements Serializable {
@@ -87,7 +87,7 @@ public class WSBody implements Serializable {
     /**
      * 前台和后台发送 websocket 消息的 封装体
      *
-     * @author 司昌旭
+     * @author scx567888
      * @version 1.2.2
      */
     private static class Body {

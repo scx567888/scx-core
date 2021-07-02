@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 /**
  * 自定义 HttpRequestException 异常
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.14
  */
 public class CustomHttpRequestException extends HttpRequestException {

@@ -6,7 +6,7 @@ import cool.scx.util.Ansi;
 /**
  * 核心模块配置文件
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.2
  */
 public class AuthConfig {

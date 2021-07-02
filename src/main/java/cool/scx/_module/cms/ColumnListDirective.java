@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * 自定义标签测试
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 @ScxTemplateDirective

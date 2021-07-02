@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Scx 核心类
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.9
  */
 public final class Scx {

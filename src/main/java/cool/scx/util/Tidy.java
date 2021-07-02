@@ -3,7 +3,7 @@ package cool.scx.util;
 /**
  * 为了代码整洁
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.5.0
  */
 public final class Tidy {

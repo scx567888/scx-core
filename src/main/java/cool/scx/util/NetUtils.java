@@ -11,7 +11,7 @@ import java.util.Enumeration;
 /**
  * 基本网络操作工具类
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 public final class NetUtils {

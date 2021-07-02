@@ -9,7 +9,7 @@ import java.io.*;
 /**
  * WSBody 编解码器
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.2.2
  */
 public class WSBodyCodec implements MessageCodec<WSBody, WSBody> {

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * 云通讯短信发送功能
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.9
  */
 @ScxService

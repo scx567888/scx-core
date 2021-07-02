@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  * ScxTemplate
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 public final class ScxTemplate {

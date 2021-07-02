@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * 注册 跨域 处理器
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.9
  */
 public class CorsHandler implements Handler<RoutingContext> {

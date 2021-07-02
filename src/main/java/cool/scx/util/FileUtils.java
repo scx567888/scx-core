@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * 文件 操作类
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 public final class FileUtils {

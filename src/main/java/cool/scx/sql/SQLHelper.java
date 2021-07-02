@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 /**
  * 构建 SQL 的助手(常用方法) 类
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.0
  */
 public final class SQLHelper {

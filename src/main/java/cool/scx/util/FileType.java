@@ -3,7 +3,7 @@ package cool.scx.util;
 /**
  * 文件类型 存储常用文件的基本信息 主要用途是作为一个索引表对文件进行判断
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.0.10
  */
 public class FileType {

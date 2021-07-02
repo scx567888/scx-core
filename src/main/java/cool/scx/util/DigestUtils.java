@@ -15,7 +15,7 @@ import java.security.NoSuchAlgorithmException;
  * 只适用于防篡改 或单项加密(如密码) 等 .
  * 如有加密后需要解密的需求 , 建议使用 {@link cool.scx.util.CryptoUtils}
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.2.1
  */
 public class DigestUtils {

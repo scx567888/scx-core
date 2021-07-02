@@ -3,7 +3,7 @@ package cool.scx.enumeration;
 /**
  * 摘要算法的类型枚举
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.2.1
  */
 public enum DigestType {

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 /**
  * sql 语句构造器
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.0.10
  */
 public final class SQLBuilder {

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 核心用户类 (演示用,不要用于真实生产环境)
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.2
  */
 @ScxModel(tablePrefix = "auth")

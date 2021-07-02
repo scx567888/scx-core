@@ -3,7 +3,7 @@ package cool.scx.enumeration;
 /**
  * 登录设备类型
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.0.2
  */
 public enum DeviceType {

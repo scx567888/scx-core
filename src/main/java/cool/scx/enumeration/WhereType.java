@@ -4,7 +4,7 @@ package cool.scx.enumeration;
  * WhereType <br>
  * where 查询条件的一些类型 如果无法满足要求请使用 whereSQL
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.2.0
  */
 public enum WhereType {

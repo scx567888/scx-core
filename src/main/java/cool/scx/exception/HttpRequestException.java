@@ -9,7 +9,7 @@ import io.vertx.ext.web.RoutingContext;
  * <p>
  * 推荐创建 HttpRequestException 的实现类并抛出异常 , 而不是手动进行异常的处理与响应的返回
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.0.10
  */
 public abstract class HttpRequestException extends Exception {

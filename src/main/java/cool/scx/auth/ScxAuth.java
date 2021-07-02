@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * 提供基本的认证逻辑
  * todo 这里面的大部分方法逻辑有问题 需要修改
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.4
  */
 public final class ScxAuth {

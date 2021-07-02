@@ -15,7 +15,7 @@ import io.vertx.core.http.WebSocketFrame;
  * <p>
  * 负责维护前台和后台的事件总线通讯
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.0.16
  */
 @ScxWebSocketRoute("/scx")

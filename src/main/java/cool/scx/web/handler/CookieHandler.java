@@ -10,7 +10,7 @@ import io.vertx.ext.web.RoutingContext;
 /**
  * 设置 TOKEN_KEY 用于权限验证
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.9
  */
 public class CookieHandler implements Handler<RoutingContext> {

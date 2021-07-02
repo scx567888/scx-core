@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 处理 scxMapping 处理器
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.9
  */
 public class ScxMappingHandlerRegister {

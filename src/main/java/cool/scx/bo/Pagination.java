@@ -3,7 +3,7 @@ package cool.scx.bo;
 /**
  * 分页参数
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.2.0
  */
 public class Pagination {

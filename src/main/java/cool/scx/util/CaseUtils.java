@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
  * 命名方法转换工具类 <br>
  * 提供 驼峰 匈牙利 短横线 及 蛇形命名法的互相转换
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.19
  */
 public class CaseUtils {

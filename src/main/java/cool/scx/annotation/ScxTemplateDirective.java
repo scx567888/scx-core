@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * 使用此注解时 必须同时继承
  * BaseTemplateDirective
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.0.10
  */
 @Target(ElementType.TYPE)

@@ -23,7 +23,7 @@ import java.util.Map;
  * <p>
  * 业务 service 可以继承此类 或手动创建 : new BaseService()
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 public class BaseService<Entity extends BaseModel> {

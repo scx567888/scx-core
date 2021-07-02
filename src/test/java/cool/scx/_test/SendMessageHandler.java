@@ -6,7 +6,7 @@ import cool.scx.context.ScxContext;
 /**
  * 发送消息测试 handler
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.17
  */
 public class SendMessageHandler {

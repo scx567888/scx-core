@@ -7,7 +7,7 @@ import cool.scx.base.BaseModel;
 /**
  * 用户角色关联表
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 @ScxModel(tablePrefix = "auth")

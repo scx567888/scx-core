@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 /**
  * where 查询条件封装类
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.2.0
  */
 public final class Where {

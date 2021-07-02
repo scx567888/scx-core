@@ -14,7 +14,7 @@ import java.util.Map;
  * <p>
  * 让子类实现后，利用模版设计模式，委派给子类
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 public interface BaseTemplateDirective extends TemplateDirectiveModel {

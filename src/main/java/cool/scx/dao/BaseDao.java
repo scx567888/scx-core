@@ -21,7 +21,7 @@ import java.util.stream.Stream;
  * <p>
  * 可以考虑使用 {@link cool.scx.sql.SQLRunner}
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 public final class BaseDao<Entity extends BaseModel> {

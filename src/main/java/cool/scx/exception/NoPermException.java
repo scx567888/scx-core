@@ -5,7 +5,7 @@ import io.vertx.ext.web.RoutingContext;
 /**
  * <p>NoPermException class.</p>
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.19
  */
 public class NoPermException extends HttpRequestException {

@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * 二进制文件 但不需要下载的 vo
  * 比如 pdf 之类
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.7.0
  */
 public class Binary implements BaseVo {

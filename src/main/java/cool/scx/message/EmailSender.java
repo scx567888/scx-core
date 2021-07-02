@@ -3,7 +3,7 @@ package cool.scx.message;
 /**
  * <p>EmailSender class.</p>
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.9
  */
 public class EmailSender implements BaseSender<String, String, Object> {

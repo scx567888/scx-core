@@ -11,7 +11,7 @@ import java.io.File;
 /**
  * ScxPlugins 插件
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.1.0
  */
 public final class ScxPlugin {

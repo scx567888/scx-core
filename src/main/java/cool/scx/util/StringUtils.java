@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 /**
  * String工具类
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 0.3.6
  */
 public final class StringUtils {

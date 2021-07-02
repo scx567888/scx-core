@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * 已登录用户对象
  *
- * @author 司昌旭
+ * @author scx567888
  * @version 1.0.10
  */
 public final class LoginItem implements Serializable {
