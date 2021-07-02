@@ -29,7 +29,7 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web</artifactId>
-            <version>4.1.0</version>
+            <version>4.1.1</version>
         </dependency>
 
         <!-- Freemarker 用于前台页面渲染工作 -->
