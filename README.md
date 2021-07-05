@@ -20,7 +20,7 @@
 </p>
 <p align="center">
    <a target="_blank" href="https://github.com/eclipse-vertx/vert.x">
-        <img src="https://img.shields.io/badge/Vert.x-4.1.0-blue" alt="Vert.x"/>
+        <img src="https://img.shields.io/badge/Vert.x-4.1.1-blue" alt="Vert.x"/>
     </a>
     <a target="_blank" href="https://github.com/apache/freemarker">
         <img src="https://img.shields.io/badge/Freemarker-2.3.31-blue" alt="freemarker"/>
