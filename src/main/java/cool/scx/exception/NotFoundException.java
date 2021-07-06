@@ -15,6 +15,6 @@ public class NotFoundException extends HttpRequestException {
      */
     @Override
     public void exceptionHandler(RoutingContext ctx) {
-        ctx.response().setStatusCode(404).send("Not Found !!!");
+        ctx.response().setStatusCode(404).end("Not Found !!!");
     }
 }

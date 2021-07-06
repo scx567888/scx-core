@@ -35,7 +35,7 @@ public class BadRequestException extends HttpRequestException {
     @Override
     public void exceptionHandler(RoutingContext ctx) {
         if (throwable == null) {
-            ctx.response().setStatusCode(400).send("Bad Request !!!");
+            ctx.response().setStatusCode(400).end("Bad Request !!!");
         } else {
             ctx.response().setStatusCode(400);
             Json.fail("Request Parameter Wrong !!!").put("err-message", throwable.getMessage()).sendToClient(ctx);

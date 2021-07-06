@@ -19,7 +19,7 @@ public abstract class HttpRequestException extends Exception {
      * <p>
      * 可以进行设置状态码 重定向之类等操作
      * <p>
-     * 注意 方法中不需要进行 end  end 会在 会被ScxMappingHandler 中自动调用
+     * 注意 方法中需要进行 end
      *
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object
      */

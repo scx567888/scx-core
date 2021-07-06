@@ -148,7 +148,6 @@ public class ScxMappingHandler implements Handler<RoutingContext> {
         //在此处进行对异常进行截获处理
         if (exception instanceof HttpRequestException) {
             ((HttpRequestException) exception).exceptionHandler(context);
-            context.end();
             return;
         }
         context.response().setStatusCode(500).end("Internal Server Error !!!");
