@@ -6,12 +6,12 @@ import java.io.File;
 import java.util.List;
 
 /**
- * 模块实体
+ * 模块实体 , 注意和 ScxModule 接口区分开
  *
  * @author scx567888
  * @version 1.1.2
  */
-public class ModuleItem {
+public class ScxModuleItem {
 
     /**
      * 模块名称

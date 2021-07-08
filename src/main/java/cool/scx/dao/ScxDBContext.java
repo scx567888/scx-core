@@ -32,7 +32,7 @@ public final class ScxDBContext {
         if (!checkDataSource()) {
             return;
         }
-        Ansi.OUT.brightMagenta("修复数据表中...").ln();
+        Ansi.OUT.brightMagenta("检查数据表结构中...").ln();
         //已经显示过修复表的 gui 这里使用 flag 只显示一次
         boolean alreadyShowConfirmFixTable = false;
         //修复成功的表
@@ -130,4 +130,5 @@ public final class ScxDBContext {
     public static DataSource dataSource() {
         return dataSource;
     }
+
 }

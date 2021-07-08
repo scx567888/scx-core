@@ -32,20 +32,24 @@ public final class ScxModuleHandler {
      * 将 BASE_MODULE_ARRAY 进行初始化之后的 ModuleItem 集合
      * plugin (插件模块) 也会注册到这里
      */
-    private static final List<ModuleItem> MODULE_ITEM_LIST = new ArrayList<>();
+    private static final List<ScxModuleItem> SCX_MODULE_ITEMS = new ArrayList<>();
+
     /**
      * 默认的核心包 APP KEY (密码) , 注意请不要在您自己的模块中使用此常量 , 非常不安全
      */
     private static final String DEFAULT_APP_KEY = "SCX-123456";
+
     /**
      * 原始模块 数组
      */
     private static ScxModule[] BASE_MODULE_ARRAY;
+
     /**
      * 项目根模块 所在路径
      * 默认取 所有自定义模块的最后一个 所在的文件根目录
      */
     private static File APP_ROOT_PATH;
+
     /**
      * 项目的 appKey
      * 默认取 所有自定义模块的最后一个的AppKey
@@ -66,10 +70,10 @@ public final class ScxModuleHandler {
     /**
      * <p>addModule.</p>
      *
-     * @param module a {@link cool.scx.module.ModuleItem} object.
+     * @param module a {@link ScxModuleItem} object.
      */
-    public static void addModule(ModuleItem module) {
-        MODULE_ITEM_LIST.add(module);
+    public static void addModule(ScxModuleItem module) {
+        SCX_MODULE_ITEMS.add(module);
     }
 
     /**
@@ -79,18 +83,18 @@ public final class ScxModuleHandler {
      * @param <T>        a T object.
      */
     public static <T extends ScxModule> void addModule(T baseModule) {
-        MODULE_ITEM_LIST.add(getModuleByBaseModule(baseModule));
+        SCX_MODULE_ITEMS.add(getModuleByBaseModule(baseModule));
     }
 
     /**
      * todo
      *
      * @param file a {@link java.io.File} object.
-     * @return a {@link cool.scx.module.ModuleItem} object.
+     * @return a {@link ScxModuleItem} object.
      * @throws java.lang.Exception if any.
      */
-    public static ModuleItem getModuleByFile(File file) throws Exception {
-        ModuleItem tempModule = new ModuleItem();
+    public static ScxModuleItem getModuleByFile(File file) throws Exception {
+        ScxModuleItem tempModule = new ScxModuleItem();
         tempModule.moduleName = file.getName();
         tempModule.isPlugin = false;
         tempModule.classList = getClassListByJar(file.toURI().toURL());
@@ -98,8 +102,8 @@ public final class ScxModuleHandler {
         return tempModule;
     }
 
-    private static <T extends ScxModule> ModuleItem getModuleByBaseModule(T module) {
-        ModuleItem t = new ModuleItem();
+    private static <T extends ScxModule> ScxModuleItem getModuleByBaseModule(T module) {
+        ScxModuleItem t = new ScxModuleItem();
         t.moduleClass = module.getClass();
         t.moduleName = t.moduleClass.getSimpleName();
         t.isPlugin = false;
@@ -238,7 +242,7 @@ public final class ScxModuleHandler {
      * @return an array of {@link java.lang.String} objects.
      */
     public static String[] getAllModuleBasePackages() {
-        return MODULE_ITEM_LIST.stream().map(m -> m.basePackage).toArray(String[]::new);
+        return SCX_MODULE_ITEMS.stream().map(m -> m.basePackage).toArray(String[]::new);
     }
 
     /**
@@ -247,7 +251,7 @@ public final class ScxModuleHandler {
      * @param fun 执行的方法 返回是否中断处理
      */
     public static void iterateClass(Function<Class<?>, Boolean> fun) {
-        for (ModuleItem scxModule : MODULE_ITEM_LIST) {
+        for (ScxModuleItem scxModule : SCX_MODULE_ITEMS) {
             for (Class<?> clazz : scxModule.classList) {
                 var s = fun.apply(clazz);
                 if (!s) {
@@ -262,8 +266,8 @@ public final class ScxModuleHandler {
      *
      * @return a {@link java.util.List} object.
      */
-    public static List<ModuleItem> getAllModule() {
-        return MODULE_ITEM_LIST;
+    public static List<ScxModuleItem> getAllModule() {
+        return SCX_MODULE_ITEMS;
     }
 
     /**
@@ -271,8 +275,8 @@ public final class ScxModuleHandler {
      *
      * @return a {@link java.util.List} object.
      */
-    public static List<ModuleItem> getAllPluginModule() {
-        return MODULE_ITEM_LIST.stream().filter(scxModule -> scxModule.isPlugin).collect(Collectors.toList());
+    public static List<ScxModuleItem> getAllPluginModule() {
+        return SCX_MODULE_ITEMS.stream().filter(scxModule -> scxModule.isPlugin).collect(Collectors.toList());
     }
 
     /**

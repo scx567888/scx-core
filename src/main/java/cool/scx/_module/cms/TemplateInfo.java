@@ -7,7 +7,7 @@ package cool.scx._module.cms;
  * @author scx567888
  * @version 1.0.10
  */
-public class FileInfo {
+public class TemplateInfo {
 
     /**
      * 文件 ID

@@ -15,7 +15,7 @@ import java.io.*;
  * @author scx567888
  * @version 1.1.9
  */
-public final class ScxBoot {
+final class ScxBoot {
 
     /**
      * SESSION_CACHE 存储路径 默认为 AppRoot 下的  scx-session.cache 文件
@@ -25,7 +25,7 @@ public final class ScxBoot {
     /**
      * 在控制台上打印 banner
      */
-    public static void showBanner() {
+    static void showBanner() {
         Ansi.OUT.red("   ▄████████ ").green(" ▄████████ ").blue("▀████    ▐████▀ ").ln();
         Ansi.OUT.red("  ███    ███ ").green("███    ███ ").blue("  ███▌   ████▀  ").ln();
         Ansi.OUT.red("  ███    █▀  ").green("███    █▀  ").blue("   ███  ▐███    ").ln();
@@ -40,7 +40,7 @@ public final class ScxBoot {
      * 添加监听事件
      * 目前只监听项目停止事件
      */
-    public static void addListener() {
+    static void addListener() {
         var sessionCache = FileUtils.getFileByAppRoot(SESSION_CACHE_PATH);
         try (var f = new FileInputStream(sessionCache); var o = new ObjectInputStream(f)) {
             var loginItems = (LoginItem[]) o.readObject();

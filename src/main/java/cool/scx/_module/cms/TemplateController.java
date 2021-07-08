@@ -33,14 +33,14 @@ public class TemplateController {
      * @return 文件列表
      * @throws IOException if any.
      */
-    private static List<FileInfo> getFileList(String filePath) throws IOException {
-        var fileList = new LinkedList<FileInfo>();
+    private static List<TemplateInfo> getTemplateList(String filePath) throws IOException {
+        var fileList = new LinkedList<TemplateInfo>();
         var path = Paths.get(filePath);
         Files.walkFileTree(path, new FileVisitor<>() {
             //访问文件夹之前自动调用此方法
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-                var fileInfo = new FileInfo();
+                var fileInfo = new TemplateInfo();
                 fileInfo.type = "Directory";
                 getFileVisitResult(dir, fileInfo, path, fileList);
                 return FileVisitResult.CONTINUE;
@@ -49,7 +49,7 @@ public class TemplateController {
             //访问文件时自动调用此方法
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                var fileInfo = new FileInfo();
+                var fileInfo = new TemplateInfo();
                 fileInfo.type = "File";
                 getFileVisitResult(file, fileInfo, path, fileList);
                 return FileVisitResult.CONTINUE;
@@ -70,16 +70,16 @@ public class TemplateController {
         return fileList;
     }
 
-    private static void getFileVisitResult(Path file, FileInfo fileInfo, Path path, LinkedList<FileInfo> fileList) {
-        fileInfo.id = file.getFileName().toString();
-        fileInfo.parentId = file.getParent().toFile().getPath();
-        if (path.toString().equals(fileInfo.parentId)) {
-            fileInfo.parentId = "0";
+    private static void getFileVisitResult(Path file, TemplateInfo templateInfo, Path path, LinkedList<TemplateInfo> fileList) {
+        templateInfo.id = file.getFileName().toString();
+        templateInfo.parentId = file.getParent().toFile().getPath();
+        if (path.toString().equals(templateInfo.parentId)) {
+            templateInfo.parentId = "0";
         } else {
-            fileInfo.parentId = file.getParent().getFileName().toString();
+            templateInfo.parentId = file.getParent().getFileName().toString();
         }
-        fileInfo.filePath = file.toFile().getPath();
-        fileList.add(fileInfo);
+        templateInfo.filePath = file.toFile().getPath();
+        fileList.add(templateInfo);
     }
 
     /**
@@ -100,10 +100,10 @@ public class TemplateController {
      */
     @ScxMapping(method = {Method.GET, Method.POST})
     public Json index() throws IOException {
-        var allFileList = getFileList(ScxConfig.templateRoot().getPath());
+        var allTemplateList = getTemplateList(ScxConfig.templateRoot().getPath());
         // 让文件夹永远在前边
-        var directoryList = allFileList.stream().filter(fileInfo -> "Directory".equals(fileInfo.type)).collect(Collectors.toList());
-        var fileList = allFileList.stream().filter(fileInfo -> "File".equals(fileInfo.type)).collect(Collectors.toList());
+        var directoryList = allTemplateList.stream().filter(templateInfo -> "Directory".equals(templateInfo.type)).collect(Collectors.toList());
+        var fileList = allTemplateList.stream().filter(templateInfo -> "File".equals(templateInfo.type)).collect(Collectors.toList());
         directoryList.addAll(fileList);
         return Json.ok().put("cmsRootTreeList", directoryList);
     }
