@@ -70,7 +70,7 @@ public final class ScxModuleHandler {
     /**
      * <p>addModule.</p>
      *
-     * @param module a {@link ScxModuleItem} object.
+     * @param module a {@link cool.scx.module.ScxModuleItem} object.
      */
     public static void addModule(ScxModuleItem module) {
         SCX_MODULE_ITEMS.add(module);
@@ -90,7 +90,7 @@ public final class ScxModuleHandler {
      * todo
      *
      * @param file a {@link java.io.File} object.
-     * @return a {@link ScxModuleItem} object.
+     * @return a {@link cool.scx.module.ScxModuleItem} object.
      * @throws java.lang.Exception if any.
      */
     public static ScxModuleItem getModuleByFile(File file) throws Exception {

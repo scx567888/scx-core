@@ -1,8 +1,8 @@
 package cool.scx.plugin;
 
 import cool.scx.config.ScxConfig;
-import cool.scx.module.ScxModuleItem;
 import cool.scx.module.ScxModuleHandler;
+import cool.scx.module.ScxModuleItem;
 import cool.scx.util.Ansi;
 import cool.scx.util.FileUtils;
 
