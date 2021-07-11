@@ -1,8 +1,8 @@
 package cool.scx.plugin;
 
 import cool.scx.config.ScxConfig;
-import cool.scx.module.ModuleItem;
 import cool.scx.module.ScxModuleHandler;
+import cool.scx.module.ScxModuleItem;
 import cool.scx.util.Ansi;
 import cool.scx.util.FileUtils;
 
@@ -54,7 +54,7 @@ public final class ScxPlugin {
                         Ansi.OUT.brightRed("找到插件 名称 [" + file.getName() + "] 已禁用!!!").ln();
                     } else {
                         try {
-                            ModuleItem moduleByFile = ScxModuleHandler.getModuleByFile(file);
+                            ScxModuleItem moduleByFile = ScxModuleHandler.getModuleByFile(file);
                             moduleByFile.isPlugin = true;
                             ScxModuleHandler.addModule(moduleByFile);
                             Ansi.OUT.yellow("找到插件 文件名称 [" + file.getName() + "] 插件名称 [" + moduleByFile.moduleName + "] 已加载!!!").ln();
