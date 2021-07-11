@@ -1,5 +1,6 @@
 package cool.scx.vo;
 
+import cool.scx.exception.NotFoundException;
 import cool.scx.util.FileTypeUtils;
 import cool.scx.util.FixedMap;
 import io.vertx.core.buffer.Buffer;
@@ -15,7 +16,6 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +27,11 @@ import java.util.Map;
  */
 public class Image implements BaseVo {
 
+    /**
+     * 图片缓存
+     */
     private static final FixedMap<String, Buffer> imageCache = new FixedMap<>(100);
+
     /**
      * type 和裁剪类型 映射表
      */
@@ -58,21 +62,23 @@ public class Image implements BaseVo {
     }
 
     private final File file;
+
     /**
      * 裁剪的宽度
      */
     private final Integer width;
+
     /**
      * 裁剪的高度
      */
     private final Integer height;
+
     /**
      * 裁剪的类型 注意!!! 只有设置 width 和 height 时生效
      * 类型及简写请参照 TYPE_POSITIONS_MAP
      * TYPE_POSITIONS_MAP
      */
     private final String type;
-
 
     /**
      * <p>Constructor for Image.</p>
@@ -102,33 +108,6 @@ public class Image implements BaseVo {
     }
 
     /**
-     * <p>Constructor for Image.</p>
-     *
-     * @param _filePath a {@link java.lang.String} object.
-     */
-    public Image(String _filePath) {
-        file = new File(_filePath);
-        width = null;
-        height = null;
-        type = "z";
-    }
-
-    /**
-     * <p>Constructor for Image.</p>
-     *
-     * @param _filePath a {@link java.lang.String} object.
-     * @param _width    a {@link java.lang.Integer} object.
-     * @param _height   a {@link java.lang.Integer} object.
-     * @param _type     a {@link java.lang.String} object
-     */
-    public Image(String _filePath, Integer _width, Integer _height, String _type) {
-        file = new File(_filePath);
-        width = _width;
-        height = _height;
-        type = _type == null ? "z" : _type;
-    }
-
-    /**
      * <p>cleanCache.</p>
      */
     public static void cleanCache() {
@@ -141,25 +120,24 @@ public class Image implements BaseVo {
      * sendToClient
      */
     @Override
-    public void sendToClient(RoutingContext context) {
+    public void sendToClient(RoutingContext context) throws NotFoundException {
         var response = context.response();
         //设置缓存 减少服务器压力
         response.putHeader("cache-control", "public,immutable,max-age=2628000");
         response.putHeader("accept-ranges", "bytes");
-        boolean b = checkImageCache(response);
-        if (b) {
+        //命中缓存
+        if (checkImageCache(response)) {
             return;
         }
         // 图片不存在 这里抛出不存在异常
         if (!file.exists()) {
-            notFound(response);
-            return;
+            throw new NotFoundException();
         }
         var imageFileType = FileTypeUtils.getFileTypeForFile(file);
         if (imageFileType != null && imageFileType.isImage) {
             response.putHeader("content-type", imageFileType.mimeType);
             if (height == null && width == null) {
-                sendRawPicture(response);
+                response.sendFile(file.getPath());
             } else {
                 sendCroppedPicture(response);
             }
@@ -191,7 +169,7 @@ public class Image implements BaseVo {
      *
      * @param response r
      */
-    private void sendSystemIcon(HttpServerResponse response) {
+    private void sendSystemIcon(HttpServerResponse response) throws NotFoundException {
         try (var out = new ByteArrayOutputStream()) {
             var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file)).getImage();
             var myImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
@@ -203,17 +181,8 @@ public class Image implements BaseVo {
             imageCache.put(file.getPath() + ";" + height + ";" + width, b);
             response.end(b);
         } catch (Exception e) {
-            notFound(response);
+            throw new NotFoundException();
         }
-    }
-
-    /**
-     * 没找到图片
-     *
-     * @param response r
-     */
-    private void notFound(HttpServerResponse response) {
-        response.setStatusCode(404).end("No Found");
     }
 
     /**
@@ -221,7 +190,7 @@ public class Image implements BaseVo {
      *
      * @param response r
      */
-    private void sendCroppedPicture(HttpServerResponse response) {
+    private void sendCroppedPicture(HttpServerResponse response) throws NotFoundException {
         try (var out = new ByteArrayOutputStream()) {
             var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
             var imageHeight = image.getHeight();
@@ -230,38 +199,20 @@ public class Image implements BaseVo {
             var croppedHeight = (height == null || height > imageHeight || height <= 0) ? imageHeight : height;
             var croppedWidth = (width == null || width > imageHeight || width <= 0) ? imageWidth : width;
 
-            AbsoluteSize absoluteSize = new AbsoluteSize(croppedWidth, croppedHeight);
-            Positions positions = TYPE_POSITIONS_MAP.get(type.toLowerCase());
+            var absoluteSize = new AbsoluteSize(croppedWidth, croppedHeight);
+            var positions = TYPE_POSITIONS_MAP.get(type.toLowerCase());
             if (positions != null) {
                 Thumbnails.of(file).sourceRegion(positions, absoluteSize).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
             } else {
                 Thumbnails.of(file).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
             }
 
-            Buffer b = Buffer.buffer(out.toByteArray());
+            var b = Buffer.buffer(out.toByteArray());
             imageCache.put(file.getPath() + ";" + height + ";" + width + ";" + type, b);
             response.end(b);
         } catch (Exception e) {
-            notFound(response);
+            throw new NotFoundException();
         }
     }
 
-    /**
-     * 发送原始图片
-     *
-     * @param response r
-     */
-    private void sendRawPicture(HttpServerResponse response) {
-        // 没有宽高 直接返回图片本身
-        try (var input = new FileInputStream(file)) {
-            byte[] byt = new byte[input.available()];
-            int read = input.read(byt);
-            Buffer b = Buffer.buffer(byt);
-            imageCache.put(file.getPath() + ";" + height + ";" + width, b);
-            response.end(b);
-            byt = null;
-        } catch (Exception e) {
-            notFound(response);
-        }
-    }
 }

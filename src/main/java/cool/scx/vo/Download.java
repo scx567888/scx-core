@@ -1,6 +1,7 @@
 package cool.scx.vo;
 
 import cool.scx.Scx;
+import cool.scx.exception.NotFoundException;
 import cool.scx.util.FileTypeUtils;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
@@ -143,7 +144,7 @@ public class Download implements BaseVo {
     public void sendToClient(RoutingContext context) throws Exception {
         if (file != null) {
             if (!file.exists()) {
-                context.fail(404);
+                throw new NotFoundException();
             } else {
                 sendFile(context);
             }
@@ -156,7 +157,7 @@ public class Download implements BaseVo {
      * @param context c
      * @throws UnsupportedEncodingException c
      */
-    private void sendFile(RoutingContext context) throws UnsupportedEncodingException {
+    private void sendFile(RoutingContext context) throws UnsupportedEncodingException, NotFoundException {
         var request = context.request();
         var response = context.response();
         var mimeType = FileTypeUtils.getMimeTypeForFilename(file.getName());
@@ -191,7 +192,7 @@ public class Download implements BaseVo {
             var bucketSize0 = (int) Math.min(fileSize, bucketSize);
             writeFile(response, in, bucketSize0);
         } catch (IOException e) {
-            context.fail(404);
+            throw new NotFoundException();
         }
     }
 
@@ -248,7 +249,7 @@ public class Download implements BaseVo {
             var ary = range.replaceAll("bytes=", "").split("-");
             fromPos = Integer.parseInt(ary[0]);
         }
-        response.putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(downloadSize));
+        response.putHeader("content-length", String.valueOf(downloadSize));
         //分块的大小
         var bucketSize0 = Math.min(downloadSize, bucketSize);
         writeBytes(response, fromPos, bucketSize0);
