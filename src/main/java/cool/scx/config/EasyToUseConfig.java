@@ -30,12 +30,6 @@ class EasyToUseConfig {
     final boolean realDelete;
 
     /**
-     * 关闭的插件名称列表
-     */
-    final Set<String> disabledPluginList;
-
-
-    /**
      * 是否开启 https
      */
     final boolean isOpenHttps;
@@ -117,12 +111,6 @@ class EasyToUseConfig {
         allowedOrigin = ScxConfig.get("scx.allowed-origin", "*",
                 s -> Ansi.OUT.green("Y 允许的请求源                         \t -->\t " + s).ln(),
                 f -> Ansi.OUT.red("N 未检测到 scx.allowed-origin          \t -->\t 已采用默认值 : " + f).ln());
-
-        var tempDisabledPluginList = ScxConfig.get("scx.plugin-disabled-list", new ArrayList<String>(),
-                s -> Ansi.OUT.green("Y 禁用插件列表                         \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.plugin-disabled-list    \t -->\t 已采用默认值 : " + f).ln());
-
-        disabledPluginList = new HashSet<>(tempDisabledPluginList);
 
         String tempTemplateRoot = ScxConfig.get("scx.template.root", "AppRoot:/c/",
                 s -> Ansi.OUT.green("Y 模板根目录                           \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),

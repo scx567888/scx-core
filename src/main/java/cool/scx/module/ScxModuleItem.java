@@ -34,16 +34,6 @@ public class ScxModuleItem {
     public String basePackage;
 
     /**
-     * 是否为插件 (从 plugin 目录加载的)
-     */
-    public Boolean isPlugin;
-
-    /**
-     * 是否为根模块
-     */
-    public Boolean isRootModule;
-
-    /**
      * 模块根路径
      * 如果模块是 jar 就获取 jar 所在目录
      * 如果 模块不是 jar 就获取 所在 class 的目录

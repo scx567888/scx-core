@@ -7,7 +7,6 @@ import cool.scx.dao.ScxDBContext;
 import cool.scx.eventbus.ScxEventBus;
 import cool.scx.message.ScxSender;
 import cool.scx.module.ScxModuleHandler;
-import cool.scx.plugin.ScxPlugin;
 import cool.scx.template.ScxTemplate;
 import cool.scx.util.Timer;
 import cool.scx.web.ScxRouter;
@@ -50,8 +49,6 @@ public final class ScxApp {
         ScxConfig.initConfig(args);
         // 初始化 模块
         ScxModuleHandler.initModules();
-        // 初始化 插件
-        ScxPlugin.initPlugins();
         // 初始化 上下文
         ScxContext.initContext();
         // 初始化数据库 上下文

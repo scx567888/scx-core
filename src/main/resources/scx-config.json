@@ -4,10 +4,6 @@
     "allowed-origin": "*",
     "show-log": true,
     "real-delete": false,
-    "plugin-disabled-list": [
-      "scx-bole-0.0.1.jar",
-      "scx-cms-0.0.1.jar"
-    ],
     "data-source": {
       "host": "127.0.0.1",
       "port": 3306,

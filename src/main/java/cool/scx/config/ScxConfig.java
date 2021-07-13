@@ -286,16 +286,6 @@ public final class ScxConfig {
     }
 
     /**
-     * <p>pluginDisabledList.</p>
-     *
-     * @return a {@link java.util.Set} object.
-     */
-    public static Set<String> disabledPluginList() {
-        return easyToUseConfig.disabledPluginList;
-    }
-
-
-    /**
      * <p>allowedOrigin.</p>
      *
      * @return a {@link java.lang.String} object.

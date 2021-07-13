@@ -30,7 +30,6 @@ public final class ScxModuleHandler {
 
     /**
      * 将 BASE_MODULE_ARRAY 进行初始化之后的 ModuleItem 集合
-     * plugin (插件模块) 也会注册到这里
      */
     private static final List<ScxModuleItem> SCX_MODULE_ITEMS = new ArrayList<>();
 
@@ -86,27 +85,10 @@ public final class ScxModuleHandler {
         SCX_MODULE_ITEMS.add(getModuleByBaseModule(baseModule));
     }
 
-    /**
-     * todo
-     *
-     * @param file a {@link java.io.File} object.
-     * @return a {@link cool.scx.module.ScxModuleItem} object.
-     * @throws java.lang.Exception if any.
-     */
-    public static ScxModuleItem getModuleByFile(File file) throws Exception {
-        ScxModuleItem tempModule = new ScxModuleItem();
-        tempModule.moduleName = file.getName();
-        tempModule.isPlugin = false;
-        tempModule.classList = getClassListByJar(file.toURI().toURL());
-        tempModule.moduleRootPath = file.getParentFile();
-        return tempModule;
-    }
-
     private static <T extends ScxModule> ScxModuleItem getModuleByBaseModule(T module) {
         ScxModuleItem t = new ScxModuleItem();
         t.moduleClass = module.getClass();
         t.moduleName = t.moduleClass.getSimpleName();
-        t.isPlugin = false;
         t.basePackage = t.moduleClass.getPackageName();
         t.classList = getClassList(t.moduleClass, t.basePackage);
         t.moduleRootPath = getModuleRootPath(t.moduleClass);
@@ -268,15 +250,6 @@ public final class ScxModuleHandler {
      */
     public static List<ScxModuleItem> getAllModule() {
         return SCX_MODULE_ITEMS;
-    }
-
-    /**
-     * 所有插件 模块
-     *
-     * @return a {@link java.util.List} object.
-     */
-    public static List<ScxModuleItem> getAllPluginModule() {
-        return SCX_MODULE_ITEMS.stream().filter(scxModule -> scxModule.isPlugin).collect(Collectors.toList());
     }
 
     /**
