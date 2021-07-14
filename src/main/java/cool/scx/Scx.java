@@ -13,6 +13,18 @@ import java.util.concurrent.TimeUnit;
  */
 public final class Scx {
 
+
+    /**
+     * ScxModule 注册时事件名称
+     */
+    public static final String ON_SCX_MODULE_REGISTER_NAME = "onScxModuleRegister";
+
+    /**
+     * ScxModule 移除时事件名称
+     */
+    public static final String ON_SCX_MODULE_REMOVE_NAME = "onScxModuleRemove";
+
+
     /**
      * 全局 vert.x
      */
