@@ -1,0 +1,20 @@
+<scx-plugin>
+    <id>scx-core</id>
+    <name>Scx Core</name>
+    <version>0.0.1</version>
+    <vendor email="abc@edf.com" url="https://www.adbedf.com">avc</vendor>
+    <description>
+        <![CDATA[
+            abc
+            <h1>这里可以写 html</h1>
+        ]]>
+    </description>
+
+    <change-log>
+        <![CDATA[
+            ---0.0.1
+                修复了 bug
+        ]]>
+    </change-log>
+    <scx-version>1.1.10</scx-version>
+</scx-plugin>
