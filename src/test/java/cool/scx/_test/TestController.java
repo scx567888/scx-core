@@ -1,13 +1,14 @@
 package cool.scx._test;
 
-import cool.scx._module.auth.User;
-import cool.scx._module.auth.UserService;
+import cool.scx._ext.organization.User;
+import cool.scx._ext.organization.UserService;
 import cool.scx._test.car.Car;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.ScxAuth;
 import cool.scx.base.BaseService;
 import cool.scx.bo.Query;
 import cool.scx.enumeration.Method;
+import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.DigestUtils;
 import cool.scx.util.FileTypeUtils;
 import cool.scx.util.HttpUtils;
@@ -112,7 +113,7 @@ public class TestController {
         for (int i = 0; i < 9999; i++) {
             s.append("download ").append(i);
         }
-        return new Binary(s.toString().getBytes(StandardCharsets.UTF_8), FileTypeUtils.getFileTypeForExtension("txt"));
+        return new Binary(s.toString().getBytes(StandardCharsets.UTF_8), FileTypeUtils.byExt("txt"));
     }
 
     /**
@@ -186,6 +187,11 @@ public class TestController {
         var carList = carService.list();
 
         return Json.ok().put("items", carList);
+    }
+
+    @ScxMapping(method = Method.GET)
+    public Json aaaaa() {
+        return Json.ok().put("moduleList", ScxModuleHandler.getAllModule());
     }
 
 }

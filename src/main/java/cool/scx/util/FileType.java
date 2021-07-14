@@ -1,5 +1,7 @@
 package cool.scx.util;
 
+import cool.scx.enumeration.MediaType;
+
 /**
  * 文件类型 存储常用文件的基本信息 主要用途是作为一个索引表对文件进行判断
  *
@@ -14,9 +16,14 @@ public class FileType {
     public final String fileExtension;
 
     /**
-     * 此种文件类型 mimeType
+     * 对应的 mimeType
      */
     public final String mimeType;
+
+    /**
+     * 媒体类型
+     */
+    public final MediaType mediaType;
 
     /**
      * 文件头
@@ -28,26 +35,12 @@ public class FileType {
      */
     public final String description;
 
-
-    /**
-     * 是否为图片
-     */
-    public final boolean isImage;
-
-    /**
-     * <p>Constructor for FileType.</p>
-     *
-     * @param fileHeader    a {@link java.lang.String} object.
-     * @param fileExtension a {@link java.lang.String} object.
-     * @param mimeType      a {@link java.lang.String} object.
-     * @param description   a {@link java.lang.String} object.
-     * @param isImage       a boolean
-     */
-    public FileType(String fileExtension, String mimeType, String fileHeader, String description, boolean isImage) {
+    public FileType(String fileExtension, String mimeType, MediaType mediaType, String fileHeader, String description) {
         this.fileExtension = fileExtension;
         this.mimeType = mimeType;
+        this.mediaType = mediaType;
         this.fileHeader = fileHeader;
         this.description = description;
-        this.isImage = isImage;
     }
+
 }

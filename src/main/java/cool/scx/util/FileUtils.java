@@ -20,6 +20,10 @@ import java.util.regex.Pattern;
  */
 public final class FileUtils {
 
+    private static final String WINDOWS_FILE_SEPARATOR = "\\";
+    private static final String UNIX_FILE_SEPARATOR = "/";
+    private static final String FILE_EXTENSION = ".";
+
     /**
      * 文件大小格式化 正则表达式
      */
@@ -211,6 +215,47 @@ public final class FileUtils {
             channel.write(src);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取拓展名 (不包括 . )
+     */
+    public static String getExt(String fileName) {
+        if (fileName == null) {
+            return null;
+        }
+        String extension = "";
+        int indexOfLastExtension = fileName.lastIndexOf(FILE_EXTENSION);
+
+        // check last file separator, windows and unix
+        int lastSeparatorPosWindows = fileName.lastIndexOf(WINDOWS_FILE_SEPARATOR);
+        int lastSeparatorPosUnix = fileName.lastIndexOf(UNIX_FILE_SEPARATOR);
+
+        // takes the greater of the two values, which mean last file separator
+        int indexOflastSeparator = Math.max(lastSeparatorPosWindows, lastSeparatorPosUnix);
+
+        // make sure the file extension appear after the last file separator
+        if (indexOfLastExtension > indexOflastSeparator) {
+            extension = fileName.substring(indexOfLastExtension + 1);
+        }
+
+        return extension;
+    }
+
+    /**
+     * 获取 文件 head
+     *
+     * @param filePath f
+     * @return r
+     */
+    public static String getHead(String filePath) {
+        try (var accessFile = new RandomAccessFile(filePath, "r")) {
+            var b = new byte[10];
+            accessFile.read(b);
+            return DigestUtils.toHex(b);
+        } catch (Exception e) {
+            return "";
         }
     }
 

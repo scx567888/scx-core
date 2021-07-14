@@ -1,5 +1,6 @@
 package cool.scx.vo;
 
+import cool.scx.enumeration.MediaType;
 import cool.scx.exception.NotFoundException;
 import cool.scx.util.FileTypeUtils;
 import cool.scx.util.FixedMap;
@@ -133,8 +134,8 @@ public class Image implements BaseVo {
         if (!file.exists()) {
             throw new NotFoundException();
         }
-        var imageFileType = FileTypeUtils.getFileTypeForFile(file);
-        if (imageFileType != null && imageFileType.isImage) {
+        var imageFileType = FileTypeUtils.byName(file.getName());
+        if (imageFileType.mediaType == MediaType.IMAGE) {
             response.putHeader("content-type", imageFileType.mimeType);
             if (height == null && width == null) {
                 response.sendFile(file.getPath());

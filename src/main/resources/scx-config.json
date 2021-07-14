@@ -23,7 +23,8 @@
       "root": "AppRoot:c",
       "resource-http-url": "/static/*",
       "resource-root": "AppRoot:c\\static"
-    }
+    },
+    "disabled-plugins": []
   },
   "core": {
     "base": {

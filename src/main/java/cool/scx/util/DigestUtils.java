@@ -232,7 +232,7 @@ public class DigestUtils {
      * @param byteArray an array of {@link byte} objects.
      * @return a {@link java.lang.String} object.
      */
-    private static String toHex(final byte[] byteArray) {
+    public static String toHex(final byte[] byteArray) {
         char[] resultCharArray = new char[byteArray.length * 2];
         int index = 0;
         for (byte b : byteArray) {

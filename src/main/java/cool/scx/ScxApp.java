@@ -5,7 +5,6 @@ import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.dao.ScxDBContext;
 import cool.scx.eventbus.ScxEventBus;
-import cool.scx.message.ScxSender;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.template.ScxTemplate;
 import cool.scx.util.Timer;
@@ -27,8 +26,8 @@ public final class ScxApp {
      * @param args   外部参数
      * @param <T>    a T object.
      */
-    public static <T extends ScxModule> void run(T module, String... args) {
-        run(new ScxModule[]{module}, args);
+    public static <T extends BaseModule> void run(T module, String... args) {
+        run(new BaseModule[]{module}, args);
     }
 
     /**
@@ -38,7 +37,7 @@ public final class ScxApp {
      * @param args    外部参数
      * @param <T>     a T object.
      */
-    public static <T extends ScxModule> void run(T[] modules, String... args) {
+    public static <T extends BaseModule> void run(T[] modules, String... args) {
         // 启动 核心计时器
         Timer.start("ScxApp");
         // 显示 banner
@@ -57,8 +56,6 @@ public final class ScxApp {
         ScxAuth.initAuth();
         // 初始化 模板
         ScxTemplate.initTemplate();
-        // 初始化 消息发送模块
-        ScxSender.initSender();
         // 初始化 监听器
         ScxBoot.addListener();
         // 初始化 http 路由

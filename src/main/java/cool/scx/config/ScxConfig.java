@@ -3,13 +3,13 @@ package cool.scx.config;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cool.scx.Scx;
 import cool.scx.exception.ConfigFileMissingException;
-import cool.scx.util.Ansi;
-import cool.scx.util.FileUtils;
-import cool.scx.util.MapUtils;
-import cool.scx.util.Tidy;
+import cool.scx.module.ScxModuleHandler;
+import cool.scx.util.*;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +67,7 @@ public final class ScxConfig {
         loadJsonConfig();
         loadParamsConfig();
         loadEasyToUseConfig();
+        Scx.execute(() -> watchConfig());
         Ansi.OUT.green("ScxConfig 初始化完成...").ln();
     }
 
@@ -328,6 +329,33 @@ public final class ScxConfig {
      */
     public static Map<String, Object> getConfigExample() {
         return CONFIG_EXAMPLE;
+    }
+
+    /**
+     * <p>pluginDisabledList.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
+    public static Set<String> disabledPlugins() {
+        return easyToUseConfig.disabledPluginList;
+    }
+
+
+    private static void watchConfig() {
+        var path = ScxModuleHandler.appRootPath();
+        var configPath = FileUtils.getFileByAppRoot(SCX_CONFIG_PATH).toPath();
+        WatchFileUtils.watchDir(path.toPath(), new WatchFileEvent() {
+            @Override
+            public void onModify(Path path) {
+                if (path.equals(configPath)) {
+                    Ansi.OUT.green("ScxConfig 已修改,重新加载中...").ln();
+                    loadJsonConfig();
+                    loadEasyToUseConfig();
+                    Ansi.OUT.green("ScxConfig 重新加载完成...").ln();
+                }
+            }
+
+        });
     }
 
 }

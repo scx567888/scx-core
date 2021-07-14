@@ -160,7 +160,7 @@ public class Download implements BaseVo {
     private void sendFile(RoutingContext context) throws UnsupportedEncodingException, NotFoundException {
         var request = context.request();
         var response = context.response();
-        var mimeType = FileTypeUtils.getMimeTypeForFilename(file.getName());
+        var mimeType = FileTypeUtils.byName(file.getName()).mimeType;
         //文件的真实大小
         var fileSize = file.length();
         //通知 客户端 服务端支持断点续传
@@ -229,7 +229,7 @@ public class Download implements BaseVo {
     private void sendBytes(RoutingContext context) throws UnsupportedEncodingException {
         var request = context.request();
         var response = context.response();
-        var mimeType = FileTypeUtils.getMimeTypeForFilename(downloadName);
+        var mimeType = FileTypeUtils.byName(downloadName).mimeType;
         //通知 客户端 服务端支持断点续传
         response.putHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
         //通知客户端服务器端 文件的类型 如果未知就返回流

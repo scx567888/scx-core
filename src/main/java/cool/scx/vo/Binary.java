@@ -154,7 +154,7 @@ public class Binary implements BaseVo {
             headers.set("content-length", Long.toString(end + 1 - (offset == null ? 0 : offset)));
             //写入缓存
 
-            String contentType = FileTypeUtils.getMimeTypeForFilename(path);
+            String contentType = FileTypeUtils.byName(path).mimeType;
             if (contentType != null) {
                 if (contentType.startsWith("text")) {
                     response.putHeader("content-type", contentType + ";charset=UTF-8");
