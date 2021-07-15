@@ -1,7 +1,7 @@
 package cool.scx.web.handler;
 
 import cool.scx.annotation.ScxMapping;
-import cool.scx.module.ScxModuleHandler;
+import cool.scx.module.ScxModule;
 import cool.scx.util.Ansi;
 import io.vertx.ext.web.Router;
 
@@ -21,26 +21,29 @@ public class ScxMappingHandlerRegister {
 
     /**
      * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
+     *
+     * @param scxModuleList
      */
-    public static void ScanScxMappingHandlers() {
+    public static void ScanScxMappingHandlers(List<ScxModule> scxModuleList) {
         SCX_MAPPING_HANDLER_LIST.clear();
-        ScxModuleHandler.iterateClass(clazz -> {
-            if (clazz.isAnnotationPresent(ScxMapping.class)) {
-                for (var method : clazz.getMethods()) {
-                    method.setAccessible(true);
-                    if (method.isAnnotationPresent(ScxMapping.class)) {
-                        //现根据 注解 和 方法等创建一个路由
-                        var s = new ScxMappingHandler(clazz, method);
-                        //此处校验路由是否已经存在
-                        var b = checkRouteExists(s);
-                        if (!b) {
-                            SCX_MAPPING_HANDLER_LIST.add(s);
+        for (ScxModule scxModule : scxModuleList) {
+            for (Class<?> clazz : scxModule.classList) {
+                if (clazz.isAnnotationPresent(ScxMapping.class)) {
+                    for (var method : clazz.getMethods()) {
+                        method.setAccessible(true);
+                        if (method.isAnnotationPresent(ScxMapping.class)) {
+                            //现根据 注解 和 方法等创建一个路由
+                            var s = new ScxMappingHandler(clazz, method);
+                            //此处校验路由是否已经存在
+                            var b = checkRouteExists(s);
+                            if (!b) {
+                                SCX_MAPPING_HANDLER_LIST.add(s);
+                            }
                         }
                     }
                 }
             }
-            return true;
-        });
+        }
     }
 
     /**
@@ -55,10 +58,11 @@ public class ScxMappingHandlerRegister {
     /**
      * <p>register.</p>
      *
-     * @param router a {@link io.vertx.ext.web.Router} object
+     * @param router        a {@link Router} object
+     * @param scxModuleList
      */
-    public static void register(Router router) {
-        ScanScxMappingHandlers();
+    public static void register(Router router, List<ScxModule> scxModuleList) {
+        ScanScxMappingHandlers(scxModuleList);
         //此处排序的意义在于将 需要正则表达式匹配的 放在最后 防止匹配错误
         SCX_MAPPING_HANDLER_LIST.stream().sorted(Comparator.comparing(s -> s.order)).forEachOrdered(c -> {
             var route = router.route(c.url);

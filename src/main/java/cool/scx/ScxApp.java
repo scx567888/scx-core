@@ -47,26 +47,20 @@ public final class ScxApp {
         ScxConfig.initConfig(args);
         // 初始化 上下文
         ScxContext.initContext();
-
-
-
+        // 初始化 模板
+        ScxTemplate.initTemplate();
+        // 初始化 认证
+        ScxAuth.initAuth();
+        // 初始化 http 路由
+        ScxRouter.initRouter();
         // 加载内部捆绑的 modules
         ScxModuleHandler.loadBundledModules(modules);
         // 初始化 模块
         ScxModuleHandler.initModules();
-
         // 初始化数据库 上下文
         ScxDBContext.initDB();
-        // 初始化 认证
-        ScxAuth.initAuth();
-        // 初始化 模板
-        ScxTemplate.initTemplate();
         // 初始化 监听器
         ScxBoot.addListener();
-        // 初始化 http 路由
-        ScxRouter.initRouter();
-        // 初始化 websocket 路由
-        ScxRouter.initWebSocketRouter();
         // 初始化事件总线
         ScxEventBus.initConsumer();
         // 初始化 web 服务器

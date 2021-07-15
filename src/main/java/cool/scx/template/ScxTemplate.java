@@ -1,17 +1,20 @@
 package cool.scx.template;
 
+import cool.scx.ScxEventBus;
 import cool.scx.annotation.ScxTemplateDirective;
 import cool.scx.base.BaseTemplateDirective;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.module.ScxModuleHandler;
+import cool.scx.module.ScxModule;
 import cool.scx.util.Ansi;
+import cool.scx.util.ScxUtils;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
 import freemarker.template.Version;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * ScxTemplate
@@ -29,7 +32,22 @@ public final class ScxTemplate {
     /**
      * Constant <code>freemarkerConfig</code>
      */
-    private static Configuration freemarkerConfig;
+    private static final Configuration freemarkerConfig = initFreemarkerConfig();
+
+    static {
+        Ansi.OUT.blue("ScxTemplate 初始化中...").ln();
+
+        //Bean 加载完毕后的消费者
+        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REGISTER_NAME, o -> {
+            var scxModuleList = ScxUtils.cast(o);
+            addTemplateDirective(scxModuleList);
+        });
+
+        //Bean 销毁时的消费者
+        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REMOVE_NAME, scxModule -> {
+
+        });
+    }
 
 
     private static Configuration initFreemarkerConfig() {
@@ -50,21 +68,25 @@ public final class ScxTemplate {
         configuration.setDefaultEncoding("UTF-8");
         //设置 语法 为自动检测
         configuration.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
-        //自定义的指令就在这里添加
 
-        ScxModuleHandler.iterateClass(clazz -> {
-            if (clazz.isAnnotationPresent(ScxTemplateDirective.class) && BaseTemplateDirective.class.isAssignableFrom(clazz)) {
-                try {
-                    var myDirective = (BaseTemplateDirective) ScxContext.getBean(clazz);
-                    Ansi.OUT.blue("已加载自定义 Freemarker 标签 [" + myDirective._DirectiveName() + "] Class -> " + clazz.getName()).ln();
-                    configuration.setSharedVariable(myDirective._DirectiveName(), myDirective);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        return configuration;
+    }
+
+    //自定义的指令就在这里添加
+    public static void addTemplateDirective(List<ScxModule> scxModuleList) {
+        for (ScxModule scxModule : scxModuleList) {
+            for (Class<?> clazz : scxModule.classList) {
+                if (clazz.isAnnotationPresent(ScxTemplateDirective.class) && BaseTemplateDirective.class.isAssignableFrom(clazz)) {
+                    try {
+                        var myDirective = (BaseTemplateDirective) ScxContext.getBean(clazz);
+                        Ansi.OUT.blue("已加载自定义 Freemarker 标签 [" + myDirective._DirectiveName() + "] Class -> " + clazz.getName()).ln();
+                        freemarkerConfig.setSharedVariable(myDirective._DirectiveName(), myDirective);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            return true;
-        });
-        return configuration;
+        }
     }
 
 
@@ -72,8 +94,6 @@ public final class ScxTemplate {
      * 初始化 cms 配置文件
      */
     public static void initTemplate() {
-        Ansi.OUT.blue("ScxTemplate 初始化中...").ln();
-        freemarkerConfig = initFreemarkerConfig();
         Ansi.OUT.blue("ScxTemplate 初始化完成...").ln();
     }
 

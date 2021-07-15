@@ -2,7 +2,6 @@ package cool.scx.context;
 
 import cool.scx.ScxEventBus;
 import cool.scx.config.ScxConfig;
-import cool.scx.module.ScxModule;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.ScxUtils;
@@ -19,6 +18,16 @@ import java.util.*;
  * @version 0.3.6
  */
 public final class ScxContext {
+
+    /**
+     * bean 注册完成时事件名称
+     */
+    public static final String ON_CONTEXT_REGISTER_NAME = "onContextRegister";
+
+    /**
+     * bean 移除时事件名称
+     */
+    public static final String ON_CONTEXT_REMOVE_NAME = "onContextRemove";
 
     /**
      * 存储所有在线的 连接
@@ -46,13 +55,17 @@ public final class ScxContext {
         APPLICATION_CONTEXT.refresh();
         //模块加载时的消费者
         ScxEventBus.consumer(ScxModuleHandler.ON_SCX_MODULE_REGISTER_NAME, o -> {
-            var scxModule = (ScxModule) o;
-            var allBean = initScxAnnotationBean(scxModule.classList);
-            var beanNumber = Arrays.stream(allBean).filter(s -> s.startsWith(scxModule.basePackage)).count();
-            Ansi.OUT.brightBlue("模块 [" + scxModule.moduleName + "] 共加载 " + beanNumber + " 个 Bean !!!").ln();
-            if (ScxConfig.showLog()) {
-                Arrays.stream(allBean).filter(s -> s.startsWith(scxModule.basePackage)).forEach(c -> Ansi.OUT.brightYellow(c).ln());
+            var scxModuleList = ScxUtils.cast(o);
+            for (var scxModule : scxModuleList) {
+                var allBean = initScxAnnotationBean(scxModule.classList);
+                var beanNumber = Arrays.stream(allBean).filter(s -> s.startsWith(scxModule.basePackage)).count();
+                Ansi.OUT.brightBlue("模块 [" + scxModule.moduleName + "] 共加载 " + beanNumber + " 个 Bean !!!").ln();
+                if (ScxConfig.showLog()) {
+                    Arrays.stream(allBean).filter(s -> s.startsWith(scxModule.basePackage)).forEach(c -> Ansi.OUT.brightYellow(c).ln());
+                }
             }
+            //通知其他模块 bean 注册完毕,可正常使用
+            ScxEventBus.publish(ON_CONTEXT_REGISTER_NAME, scxModuleList);
         });
 
         //模块销毁时的消费者

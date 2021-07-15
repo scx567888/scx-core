@@ -2,7 +2,9 @@ package cool.scx._test;
 
 import cool.scx.BaseModule;
 import cool.scx.ScxApp;
+import cool.scx.ScxEventBus;
 import cool.scx._ext.cms.CmsModule;
+import cool.scx._ext.core.CoreModule;
 import cool.scx._ext.crud.CrudModule;
 import cool.scx._ext.media.MediaModule;
 import cool.scx._ext.message.MessageModule;
@@ -13,7 +15,6 @@ import cool.scx._ext.upload.UploadModule;
 import cool.scx.bo.WSBody;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.ScxEventBus;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +23,7 @@ public class TestModule implements BaseModule {
     public static void main(String[] args) {
         //引入模块
         BaseModule[] modules = {
+                new CoreModule(),
                 new CmsModule(),
                 new CrudModule(),
                 new MediaModule(),

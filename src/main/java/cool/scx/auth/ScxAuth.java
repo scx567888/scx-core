@@ -1,18 +1,19 @@
 package cool.scx.auth;
 
+import cool.scx.ScxEventBus;
 import cool.scx.auth.exception.UnknownDeviceException;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.DeviceType;
 import cool.scx.exception.AuthException;
-import cool.scx.module.ScxModuleHandler;
+import cool.scx.module.ScxModule;
 import cool.scx.util.Ansi;
+import cool.scx.util.ScxUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.web.handler.ScxMappingHandlerRegister;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 提供基本的认证逻辑
@@ -45,6 +46,21 @@ public final class ScxAuth {
      * AuthHandler 实例 主要用来 获取登录用户的 权限等信息
      */
     private static AuthHandler AUTH_HANDLER;
+
+    static {
+        Ansi.OUT.brightGreen("ScxAuth 初始化中...").ln();
+
+        //Bean 加载完毕后的消费者
+        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REGISTER_NAME, o -> {
+            var scxModuleList = ScxUtils.cast(o);
+            AUTH_HANDLER = getAuthHandlerImpl(scxModuleList);
+        });
+
+        //Bean 销毁时的消费者
+        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REMOVE_NAME, scxModule -> {
+
+        });
+    }
 
     /**
      * 获取 AuthHandler
@@ -232,35 +248,36 @@ public final class ScxAuth {
      * todo 这里还需要初始化一下用户多终端登录的情况是踢出还是共存 (用配置文件)
      */
     public static void initAuth() {
-        Ansi.OUT.brightGreen("ScxAuth 初始化中...").ln();
-        AUTH_HANDLER = getAuthHandlerImpl();
         Ansi.OUT.brightGreen("ScxAuth 初始化完成...").ln();
     }
 
     /**
      * 获取 AuthHandler 实现类
+     *
+     * @param scxModuleList scxModule
      */
     @SuppressWarnings("unchecked")
-    private static AuthHandler getAuthHandlerImpl() {
-        AtomicReference<Class<? extends AuthHandler>> authHandlerImplClass = new AtomicReference<>();
-        ScxModuleHandler.iterateClass(c -> {
-            if (!c.isInterface() && AuthHandler.class.isAssignableFrom(c)) {
-                if (authHandlerImplClass.get() == null) {
-                    Ansi.OUT.brightGreen("已找到 [ " + AuthHandler.class.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
-                } else {
-                    Ansi.OUT.brightGreen("已找到 [ " + AuthHandler.class.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + authHandlerImplClass.get().getName() + "] 已被覆盖").ln();
+    private static AuthHandler getAuthHandlerImpl(List<ScxModule> scxModuleList) {
+        Class<? extends AuthHandler> authHandlerImplClass = null;
+        for (ScxModule scxModule : scxModuleList) {
+            for (Class<?> c : scxModule.classList) {
+                if (!c.isInterface() && AuthHandler.class.isAssignableFrom(c)) {
+                    if (authHandlerImplClass == null) {
+                        Ansi.OUT.brightGreen("已找到 [ " + AuthHandler.class.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
+                    } else {
+                        Ansi.OUT.brightGreen("已找到 [ " + AuthHandler.class.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + authHandlerImplClass.getName() + "] 已被覆盖").ln();
+                    }
+                    authHandlerImplClass = (Class<? extends AuthHandler>) c;
                 }
-                authHandlerImplClass.set((Class<? extends AuthHandler>) c);
             }
-            return true;
-        });
+        }
 
-        if (authHandlerImplClass.get() == null) {
+        if (authHandlerImplClass == null) {
             Ansi.OUT.brightRed("Class [ " + AuthHandler.class.getName() + " ] 必须有一个实现类 !!!").ln();
             System.exit(0);
         }
 
-        return ScxContext.getBean(authHandlerImplClass.get());
+        return ScxContext.getBean(authHandlerImplClass);
 
     }
 

@@ -5,7 +5,6 @@ import cool.scx.Scx;
 import cool.scx.ScxEventBus;
 import cool.scx.util.Ansi;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -67,23 +66,6 @@ public final class ScxModuleHandler {
         }
     }
 
-
-    /**
-     * 按照模块顺序迭代 class list
-     *
-     * @param fun 执行的方法 返回是否中断处理
-     */
-    public static void iterateClass(Function<Class<?>, Boolean> fun) {
-        for (ScxModule scxModule : SCX_MODULE_LIST) {
-            for (Class<?> clazz : scxModule.classList) {
-                var s = fun.apply(clazz);
-                if (!s) {
-                    break;
-                }
-            }
-        }
-    }
-
     /**
      * 所有模块
      *
@@ -102,13 +84,12 @@ public final class ScxModuleHandler {
     public static <T extends BaseModule> void loadBundledModules(T[] modules) {
         for (T module : modules) {
             try {
-                var scxModule = new ScxModule(module);
                 SCX_MODULE_LIST.add(new ScxModule(module));
-                ScxEventBus.publish(ON_SCX_MODULE_REGISTER_NAME, scxModule);
             } catch (URISyntaxException | IOException e) {
                 e.printStackTrace();
             }
         }
+        ScxEventBus.publish(ON_SCX_MODULE_REGISTER_NAME, SCX_MODULE_LIST);
     }
 
     /**

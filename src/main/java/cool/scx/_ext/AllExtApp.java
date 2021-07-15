@@ -3,6 +3,7 @@ package cool.scx._ext;
 import cool.scx.BaseModule;
 import cool.scx.ScxApp;
 import cool.scx._ext.cms.CmsModule;
+import cool.scx._ext.core.CoreModule;
 import cool.scx._ext.crud.CrudModule;
 import cool.scx._ext.media.MediaModule;
 import cool.scx._ext.message.MessageModule;
@@ -27,6 +28,7 @@ public class AllExtApp {
      */
     public static void main(String[] args) {
         BaseModule[] modules = {
+                new CoreModule(),
                 new CmsModule(),
                 new CrudModule(),
                 new MediaModule(),
