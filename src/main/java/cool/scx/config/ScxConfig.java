@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.Scx;
 import cool.scx.exception.ConfigFileMissingException;
-import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.*;
 
 import java.io.File;
@@ -342,7 +341,7 @@ public final class ScxConfig {
 
 
     private static void watchConfig() {
-        var path = ScxModuleHandler.appRootPath();
+        var path = Scx.appRoot();
         var configPath = FileUtils.getFileByAppRoot(SCX_CONFIG_PATH).toPath();
         WatchFileUtils.watchDir(path.toPath(), new WatchFileEvent() {
             @Override

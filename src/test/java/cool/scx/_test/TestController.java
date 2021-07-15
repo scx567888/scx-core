@@ -8,6 +8,8 @@ import cool.scx.auth.ScxAuth;
 import cool.scx.base.BaseService;
 import cool.scx.bo.Query;
 import cool.scx.enumeration.Method;
+import cool.scx.ScxEventBus;
+import cool.scx.module.ScxModule;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.DigestUtils;
 import cool.scx.util.FileTypeUtils;
@@ -192,6 +194,27 @@ public class TestController {
     @ScxMapping(method = Method.GET)
     public Json aaaaa() {
         return Json.ok().put("moduleList", ScxModuleHandler.getAllModule());
+    }
+
+    boolean s=true;
+
+    @ScxMapping(method = Method.GET)
+    public void c() {
+        List<ScxModule> allModule = ScxModuleHandler.getAllModule();
+        if (s){
+            ScxEventBus.consumer("abc",c->{
+                var s=(List<ScxModule>)c;
+                System.out.println();
+            });
+            ScxEventBus.consumer("abc",c->{
+                var s=(List<ScxModule>)c;
+                System.out.println();
+            });
+            s=false;
+        }
+        ScxEventBus.publish("abc",allModule);
+
+//        return Json.ok().put("moduleList", ScxModuleHandler.getAllModule());
     }
 
 }

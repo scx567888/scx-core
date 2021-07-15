@@ -1,5 +1,6 @@
 package cool.scx.util;
 
+import cool.scx.Scx;
 import cool.scx.module.ScxModuleHandler;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jasypt.util.text.AES256TextEncryptor;
@@ -60,7 +61,7 @@ public final class CryptoUtils {
      * @return a 密文
      */
     public static String encryptText(String text) {
-        return getAES256TextEncryptor(ScxModuleHandler.appKey()).encrypt(text);
+        return getAES256TextEncryptor(Scx.appKey()).encrypt(text);
     }
 
     /**
@@ -70,7 +71,7 @@ public final class CryptoUtils {
      * @return a 解密后的数据
      */
     public static String decryptText(String text) {
-        return getAES256TextEncryptor(ScxModuleHandler.appKey()).decrypt(text);
+        return getAES256TextEncryptor(Scx.appKey()).decrypt(text);
     }
 
 

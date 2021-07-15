@@ -1,5 +1,6 @@
 package cool.scx.util;
 
+import cool.scx.Scx;
 import cool.scx.module.ScxModuleHandler;
 
 import java.io.File;
@@ -196,7 +197,7 @@ public final class FileUtils {
      */
     public static File getFileByAppRoot(String path) {
         if (path.startsWith("AppRoot:")) {
-            return new File(ScxModuleHandler.appRootPath(), path.replaceAll("AppRoot:", ""));
+            return new File(Scx.appRoot(), path.replaceAll("AppRoot:", ""));
         } else {
             return new File(path);
         }

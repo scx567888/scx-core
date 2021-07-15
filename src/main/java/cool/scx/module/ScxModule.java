@@ -5,6 +5,7 @@ import cool.scx.util.ScanClassUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -14,12 +15,17 @@ import java.util.List;
  * @author scx567888
  * @version 1.1.2
  */
-public class ScxModule {
+public class ScxModule implements Serializable {
 
     /**
      * 模块名称
      */
     public final String moduleName;
+
+    /**
+     * 基本包
+     */
+    public final String basePackage;
 
     /**
      *
@@ -54,6 +60,7 @@ public class ScxModule {
             //判断文件是否为 jar 包
             throw new IllegalArgumentException();
         }
+        this.basePackage = "";
         this.moduleName = jarFile.getName();
         this.baseModuleExample = null;
         this.isPlugin = isPlugin;
@@ -69,7 +76,7 @@ public class ScxModule {
      */
     public <T extends BaseModule> ScxModule(T baseModule) throws URISyntaxException, IOException {
         var moduleClass = baseModule.getClass();
-        var basePackage = moduleClass.getPackageName();
+        this.basePackage = moduleClass.getPackageName();
         this.moduleName = moduleClass.getSimpleName();
         this.baseModuleExample = baseModule;
         this.isPlugin = false;

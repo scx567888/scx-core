@@ -4,7 +4,6 @@ import cool.scx.auth.ScxAuth;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.dao.ScxDBContext;
-import cool.scx.eventbus.ScxEventBus;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.template.ScxTemplate;
 import cool.scx.util.Timer;
@@ -42,14 +41,20 @@ public final class ScxApp {
         Timer.start("ScxApp");
         // 显示 banner
         ScxBoot.showBanner();
-        // 装载 模块
-        ScxModuleHandler.loadModules(modules);
+        // 确定 appRoot 及 appKey
+        Scx.initScx(modules);
         // 初始化 配置文件
         ScxConfig.initConfig(args);
-        // 初始化 模块
-        ScxModuleHandler.initModules();
         // 初始化 上下文
         ScxContext.initContext();
+
+
+
+        // 加载内部捆绑的 modules
+        ScxModuleHandler.loadBundledModules(modules);
+        // 初始化 模块
+        ScxModuleHandler.initModules();
+
         // 初始化数据库 上下文
         ScxDBContext.initDB();
         // 初始化 认证
@@ -63,7 +68,7 @@ public final class ScxApp {
         // 初始化 websocket 路由
         ScxRouter.initWebSocketRouter();
         // 初始化事件总线
-        ScxEventBus.initEventBus();
+        ScxEventBus.initConsumer();
         // 初始化 web 服务器
         ScxServer.initServer();
         // 初始化 模块的 start 生命周期

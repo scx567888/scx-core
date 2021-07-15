@@ -1,5 +1,7 @@
-package cool.scx.eventbus;
+package cool.scx._ext.core;
 
+import cool.scx.annotation.ScxEventConsumer;
+import cool.scx.annotation.ScxService;
 import cool.scx.auth.AuthUser;
 import cool.scx.auth.ScxAuth;
 import cool.scx.bo.WSBody;
@@ -12,6 +14,7 @@ import cool.scx.util.Ansi;
  * @author scx567888
  * @version 1.1.17
  */
+@ScxService
 public class AuthLoginHandler {
 
     /**
@@ -19,7 +22,8 @@ public class AuthLoginHandler {
      *
      * @param wsBody {@link io.vertx.core.json.JsonObject} object
      */
-    public static void loginByWebSocket(WSBody wsBody) {
+    @ScxEventConsumer("auth-token")
+    public void loginByWebSocket(WSBody wsBody) {
         String token = wsBody.data().get("token").asText();
         if (token != null) {
             Ansi.OUT.green(token).ln();

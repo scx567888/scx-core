@@ -1,8 +1,11 @@
 package cool.scx.context;
 
-import cool.scx.annotation.*;
+import cool.scx.ScxEventBus;
+import cool.scx.config.ScxConfig;
+import cool.scx.module.ScxModule;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
+import cool.scx.util.ScxUtils;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -39,9 +42,24 @@ public final class ScxContext {
 
     static {
         Ansi.OUT.brightBlue("ScxContext 初始化中...").ln();
-        var allBean = initScxAnnotationBean();
-        var beanNumber = Arrays.stream(allBean).filter(s -> !s.startsWith("org.springframework")).count();
-        Ansi.OUT.brightBlue("共加载 " + beanNumber + " 个 Bean !!!").ln();
+        //刷新
+        APPLICATION_CONTEXT.refresh();
+        //模块加载时的消费者
+        ScxEventBus.consumer(ScxModuleHandler.ON_SCX_MODULE_REGISTER_NAME, o -> {
+            var scxModule = (ScxModule) o;
+            var allBean = initScxAnnotationBean(scxModule.classList);
+            var beanNumber = Arrays.stream(allBean).filter(s -> s.startsWith(scxModule.basePackage)).count();
+            Ansi.OUT.brightBlue("模块 [" + scxModule.moduleName + "] 共加载 " + beanNumber + " 个 Bean !!!").ln();
+            if (ScxConfig.showLog()) {
+                Arrays.stream(allBean).filter(s -> s.startsWith(scxModule.basePackage)).forEach(c -> Ansi.OUT.brightYellow(c).ln());
+            }
+        });
+
+        //模块销毁时的消费者
+        ScxEventBus.consumer(ScxModuleHandler.ON_SCX_MODULE_REMOVE_NAME, scxModule -> {
+
+        });
+
     }
 
     /**
@@ -54,31 +72,20 @@ public final class ScxContext {
         return SCX_BEAN_CLASS_NAME_MAPPING.get(str.toLowerCase());
     }
 
-    private static String[] initScxAnnotationBean() {
-        ScxModuleHandler.iterateClass((c) -> {
-            if (hasScxAnnotation(c)) {
-                APPLICATION_CONTEXT.register(c);
-                var className = c.getSimpleName().toLowerCase();
-                var aClass = SCX_BEAN_CLASS_NAME_MAPPING.get(className);
-                if (aClass == null) {
-                    SCX_BEAN_CLASS_NAME_MAPPING.put(c.getSimpleName().toLowerCase(), c);
-                } else {
-                    SCX_BEAN_CLASS_NAME_MAPPING.put(c.getName(), c);
-                    Ansi.OUT.brightRed("检测到重复名称的 class ").brightYellow("[" + aClass.getName() + "] ").blue("[" + c.getName() + "]").brightRed(" 可能会导致根据名称调用时意义不明确 !!! 建议修改 !!!").ln();
-                }
-            }
-            return true;
-        });
-        APPLICATION_CONTEXT.refresh();
-        return APPLICATION_CONTEXT.getBeanDefinitionNames();
-    }
+    private static String[] initScxAnnotationBean(List<Class<?>> classList) {
+        classList.stream().filter(ScxUtils::hasScxAnnotation).forEach(c -> APPLICATION_CONTEXT.registerBean(c.getName(), c));
 
-    private static boolean hasScxAnnotation(Class<?> clazz) {
-        return (clazz.isAnnotationPresent(ScxService.class)
-                || clazz.isAnnotationPresent(ScxMapping.class)
-                || clazz.isAnnotationPresent(ScxModel.class)
-                || clazz.isAnnotationPresent(ScxTemplateDirective.class)
-                || clazz.isAnnotationPresent(ScxWebSocketRoute.class));
+//        for (Class<?> c : needRegisterClassList) {
+//            var className = c.getSimpleName().toLowerCase();
+//            var aClass = SCX_BEAN_CLASS_NAME_MAPPING.get(className);
+//            if (aClass == null) {
+//                SCX_BEAN_CLASS_NAME_MAPPING.put(c.getSimpleName().toLowerCase(), c);
+//            } else {
+//                SCX_BEAN_CLASS_NAME_MAPPING.put(c.getName(), c);
+//                Ansi.OUT.brightRed("检测到重复名称的 class ").brightYellow("[" + aClass.getName() + "] ").blue("[" + c.getName() + "]").brightRed(" 可能会导致根据名称调用时意义不明确 !!! 建议修改 !!!").ln();
+//            }
+//        }
+        return APPLICATION_CONTEXT.getBeanDefinitionNames();
     }
 
     /**

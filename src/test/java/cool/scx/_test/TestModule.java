@@ -13,8 +13,7 @@ import cool.scx._ext.upload.UploadModule;
 import cool.scx.bo.WSBody;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.eventbus.ScxEventBus;
-import io.vertx.core.eventbus.Message;
+import cool.scx.ScxEventBus;
 
 import java.time.LocalDateTime;
 
@@ -45,7 +44,7 @@ public class TestModule implements BaseModule {
     @Override
     public void start() {
         //注册事件
-        ScxEventBus.wsConsumer("sendMessage", (Message<WSBody> m) -> SendMessageHandler.sendMessage(m.body()));
+        ScxEventBus.consumer("sendMessage", (m) -> SendMessageHandler.sendMessage((WSBody) m));
 
         while (true) {
             var onlineItemList = ScxContext.getOnlineItemList();

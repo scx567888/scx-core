@@ -1,5 +1,7 @@
 package cool.scx;
 
+import java.io.Serializable;
+
 /**
  * SCX 模块接口 , 自定义模块必须实现此接口
  * <p>
@@ -10,7 +12,7 @@ package cool.scx;
  * @author scx567888
  * @version 1.1.2
  */
-public interface BaseModule {
+public interface BaseModule extends Serializable {
 
     /**
      * 配置文件加载完成调用

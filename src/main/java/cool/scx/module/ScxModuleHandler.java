@@ -2,6 +2,7 @@ package cool.scx.module;
 
 import cool.scx.BaseModule;
 import cool.scx.Scx;
+import cool.scx.ScxEventBus;
 import cool.scx.util.Ansi;
 
 import java.io.File;
@@ -20,26 +21,19 @@ import java.util.function.Function;
 public final class ScxModuleHandler {
 
     /**
+     * ScxModule 注册时事件名称
+     */
+    public static final String ON_SCX_MODULE_REGISTER_NAME = "onScxModuleRegister";
+
+    /**
+     * ScxModule 移除时事件名称
+     */
+    public static final String ON_SCX_MODULE_REMOVE_NAME = "onScxModuleRemove";
+
+    /**
      * 将 BASE_MODULE_ARRAY 进行初始化之后的 ModuleItem 集合
      */
     private static final List<ScxModule> SCX_MODULE_LIST = new ArrayList<>();
-
-    /**
-     * 默认的核心包 APP KEY (密码) , 注意请不要在您自己的模块中使用此常量 , 非常不安全
-     */
-    private static final String DEFAULT_APP_KEY = "SCX-123456";
-
-    /**
-     * 项目根模块 所在路径
-     * 默认取 所有自定义模块的最后一个 所在的文件根目录
-     */
-    private static File APP_ROOT_PATH;
-
-    /**
-     * 项目的 appKey
-     * 默认取 所有自定义模块的最后一个的AppKey
-     */
-    private static String APP_KEY = DEFAULT_APP_KEY;
 
     /**
      * <p>initModules.</p>
@@ -100,36 +94,21 @@ public final class ScxModuleHandler {
     }
 
     /**
-     * 装载模块 并初始化项目所在目录(APP_ROOT_PATH)
+     * 装载捆绑的模块 并初始化项目所在目录(APP_ROOT_PATH)
      *
      * @param modules an array of T[] objects.
      * @param <T>     a T object.
      */
-    public static <T extends BaseModule> void loadModules(T[] modules) {
+    public static <T extends BaseModule> void loadBundledModules(T[] modules) {
         for (T module : modules) {
             try {
+                var scxModule = new ScxModule(module);
                 SCX_MODULE_LIST.add(new ScxModule(module));
+                ScxEventBus.publish(ON_SCX_MODULE_REGISTER_NAME, scxModule);
             } catch (URISyntaxException | IOException e) {
                 e.printStackTrace();
             }
         }
-        var lastModule = SCX_MODULE_LIST.get(SCX_MODULE_LIST.size() - 1);
-        APP_ROOT_PATH = lastModule.moduleRootPath;
-        if (lastModule.baseModuleExample.appKey() != null) {
-            APP_KEY = lastModule.baseModuleExample.appKey();
-        }
-        if (DEFAULT_APP_KEY.equals(APP_KEY)) {
-            Ansi.OUT.red("注意!!! 检测到使用了默认的 DEFAULT_APP_KEY , 这是非常不安全的 , 建议重写自定义模块的 appKey() 方法以设置自定义的 APP_KEY !!!").ln();
-        }
-    }
-
-    /**
-     * <p>appRootPath.</p>
-     *
-     * @return a {@link java.io.File} object.
-     */
-    public static File appRootPath() {
-        return APP_ROOT_PATH;
     }
 
     /**
@@ -148,15 +127,6 @@ public final class ScxModuleHandler {
         for (var scxModule : SCX_MODULE_LIST) {
             Scx.execute(scxModule.baseModuleExample::stop);
         }
-    }
-
-    /**
-     * 获取 appKey.
-     *
-     * @return a {@link java.lang.String} object
-     */
-    public static String appKey() {
-        return APP_KEY;
     }
 
 
