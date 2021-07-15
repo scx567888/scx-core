@@ -12,6 +12,7 @@ import cool.scx._ext.office.OfficeModule;
 import cool.scx._ext.organization.OrganizationModule;
 import cool.scx._ext.pay.PayModule;
 import cool.scx._ext.upload.UploadModule;
+import cool.scx._test0.Test0Module;
 import cool.scx.bo.WSBody;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
@@ -32,6 +33,7 @@ public class TestModule implements BaseModule {
                 new OrganizationModule(),
                 new PayModule(),
                 new UploadModule(),
+                new Test0Module(),
                 new TestModule(),
         };
         //运行项目

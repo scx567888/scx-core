@@ -69,8 +69,19 @@ public final class ScxContext {
         });
 
         //模块销毁时的消费者
-        ScxEventBus.consumer(ScxModuleHandler.ON_SCX_MODULE_REMOVE_NAME, scxModule -> {
-
+        ScxEventBus.consumer(ScxModuleHandler.ON_SCX_MODULE_REMOVE_NAME, o -> {
+            var scxModuleList = ScxUtils.cast(o);
+            for (var scxModule : scxModuleList) {
+                for (Class<?> c : scxModule.classList) {
+                    String[] beanNamesForType = APPLICATION_CONTEXT.getBeanNamesForType(c);
+                    for (String beanName : beanNamesForType) {
+                        APPLICATION_CONTEXT.removeBeanDefinition(beanName);
+                    }
+                }
+                Ansi.OUT.brightBlue("模块 [" + scxModule.moduleName + "] 已移除 " + 0 + " 个 Bean !!!").ln();
+            }
+            //通知其他模块 bean 注册完毕,可正常使用
+            ScxEventBus.publish(ON_CONTEXT_REMOVE_NAME, scxModuleList);
         });
 
     }

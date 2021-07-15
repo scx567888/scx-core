@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * 模块 Handler
@@ -50,6 +49,21 @@ public final class ScxModuleHandler {
      */
     public static void addModule(ScxModule module) {
         SCX_MODULE_LIST.add(module);
+    }
+
+    /**
+     * <p>addModule.</p>
+     *
+     * @param module a {@link ScxModule} object.
+     */
+    public static void removeModule(String moduleName) {
+        var needRemoveModule = findModule(moduleName);
+        ScxEventBus.publish(ON_SCX_MODULE_REMOVE_NAME, List.of(needRemoveModule));
+        SCX_MODULE_LIST.removeIf(scxModule -> scxModule.moduleName.equalsIgnoreCase(moduleName));
+    }
+
+    public static ScxModule findModule(String moduleName) {
+        return SCX_MODULE_LIST.stream().filter(m -> m.moduleName.equalsIgnoreCase(moduleName)).findAny().orElse(null);
     }
 
     /**

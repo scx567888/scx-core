@@ -3,10 +3,12 @@ package cool.scx._test;
 import cool.scx._ext.organization.User;
 import cool.scx._ext.organization.UserService;
 import cool.scx._test.car.Car;
+import cool.scx._test0.Test0Controller;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.auth.ScxAuth;
 import cool.scx.base.BaseService;
 import cool.scx.bo.Query;
+import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
 import cool.scx.ScxEventBus;
 import cool.scx.module.ScxModule;
@@ -200,20 +202,10 @@ public class TestController {
 
     @ScxMapping(method = Method.GET)
     public void c() {
-        List<ScxModule> allModule = ScxModuleHandler.getAllModule();
-        if (s){
-            ScxEventBus.consumer("abc",c->{
-                var s=(List<ScxModule>)c;
-                System.out.println();
-            });
-            ScxEventBus.consumer("abc",c->{
-                var s=(List<ScxModule>)c;
-                System.out.println();
-            });
-            s=false;
-        }
-        ScxEventBus.publish("abc",allModule);
-
+        Test0Controller bean = ScxContext.getBean(Test0Controller.class);
+        ScxModuleHandler.removeModule("test0module");
+        Test0Controller bean2 = ScxContext.getBean(Test0Controller.class);
+        System.out.println();
 //        return Json.ok().put("moduleList", ScxModuleHandler.getAllModule());
     }
 
