@@ -10,6 +10,12 @@ import java.util.Map;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
+/**
+ * <p>WatchFileUtils class.</p>
+ *
+ * @author scx567888
+ * @version 1.3.0
+ */
 public final class WatchFileUtils {
 
     /**

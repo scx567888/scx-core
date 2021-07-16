@@ -39,7 +39,7 @@ public final class ScxDBContext {
     /**
      * <p>fixTable.</p>
      *
-     * @param scxModuleList
+     * @param scxModuleList a {@link java.util.List} object
      */
     public static void fixTableByScxModel(List<ScxModule> scxModuleList) {
         //如果无法链接数据库 就跳过修复表

@@ -56,7 +56,7 @@ public final class ScxModuleHandler {
     /**
      * <p>addModule.</p>
      *
-     * @param module a {@link ScxModule} object.
+     * @param module a {@link cool.scx.module.ScxModule} object.
      */
     public static void addModule(ScxModule module) {
         SCX_MODULE_LIST.add(module);
@@ -66,7 +66,7 @@ public final class ScxModuleHandler {
     /**
      * <p>addModule.</p>
      *
-     * @param module a {@link ScxModule} object.
+     * @param moduleName a {@link java.lang.String} object
      */
     public static void removeModule(String moduleName) {
         var needRemoveModule = findModule(moduleName);
@@ -74,6 +74,12 @@ public final class ScxModuleHandler {
         SCX_MODULE_LIST.removeIf(scxModule -> scxModule.moduleName.equalsIgnoreCase(moduleName));
     }
 
+    /**
+     * <p>findModule.</p>
+     *
+     * @param moduleName a {@link java.lang.String} object
+     * @return a {@link cool.scx.module.ScxModule} object
+     */
     public static ScxModule findModule(String moduleName) {
         return SCX_MODULE_LIST.stream().filter(m -> m.moduleName.equalsIgnoreCase(moduleName)).findAny().orElse(null);
     }

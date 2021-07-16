@@ -5,6 +5,12 @@ import cool.scx.module.ScxModule;
 
 import java.util.List;
 
+/**
+ * <p>ScxUtils class.</p>
+ *
+ * @author scx567888
+ * @version 1.3.0
+ */
 public class ScxUtils {
 
     /**
@@ -21,6 +27,12 @@ public class ScxUtils {
                 || clazz.isAnnotationPresent(ScxWebSocketRoute.class);
     }
 
+    /**
+     * <p>cast.</p>
+     *
+     * @param o a {@link java.lang.Object} object
+     * @return a {@link java.util.List} object
+     */
     @SuppressWarnings("unchecked")
     public static List<ScxModule> cast(Object o) {
         return (List<ScxModule>) o;

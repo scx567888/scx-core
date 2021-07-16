@@ -52,7 +52,9 @@ public class ScxModule implements Serializable {
     /**
      * 根据 jar 文件创建 ScxModule
      *
-     * @param jarFile jar文件
+     * @param jarFile  jar文件
+     * @param isPlugin a boolean
+     * @throws java.io.IOException if any.
      */
     public ScxModule(File jarFile, boolean isPlugin) throws IOException {
         //判断文件是否为 jar 包,不是则抛出异常
@@ -72,6 +74,8 @@ public class ScxModule implements Serializable {
      *
      * @param baseModule b
      * @param <T>        t
+     * @throws java.net.URISyntaxException if any.
+     * @throws java.io.IOException         if any.
      */
     public <T extends BaseModule> ScxModule(T baseModule) throws URISyntaxException, IOException {
         var moduleClass = baseModule.getClass();

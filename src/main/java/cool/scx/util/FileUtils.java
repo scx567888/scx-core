@@ -1,7 +1,6 @@
 package cool.scx.util;
 
 import cool.scx.Scx;
-import cool.scx.module.ScxModuleHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,15 +20,13 @@ import java.util.regex.Pattern;
  */
 public final class FileUtils {
 
-    private static final String WINDOWS_FILE_SEPARATOR = "\\";
-    private static final String UNIX_FILE_SEPARATOR = "/";
-    private static final String FILE_EXTENSION = ".";
-
     /**
      * 文件大小格式化 正则表达式
      */
     public final static Pattern DISPLAY_SIZE_PATTERN = Pattern.compile("^([+\\-]?\\d+)([a-zA-Z]{0,2})$");
-
+    private static final String WINDOWS_FILE_SEPARATOR = "\\";
+    private static final String UNIX_FILE_SEPARATOR = "/";
+    private static final String FILE_EXTENSION = ".";
     /**
      * 文件大小格式化 映射表 方便计算使用
      */
@@ -221,6 +218,9 @@ public final class FileUtils {
 
     /**
      * 获取拓展名 (不包括 . )
+     *
+     * @param fileName a {@link java.lang.String} object
+     * @return a {@link java.lang.String} object
      */
     public static String getExt(String fileName) {
         if (fileName == null) {

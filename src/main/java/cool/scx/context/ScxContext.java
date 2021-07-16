@@ -1,7 +1,6 @@
 package cool.scx.context;
 
 import cool.scx.ScxEventBus;
-import cool.scx.config.ScxConfig;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.ScxUtils;

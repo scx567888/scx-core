@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
 
 /**
  * 扫描类工具类
+ *
+ * @author scx567888
+ * @version 1.3.0
  */
 public class ScanClassUtils {
 
@@ -32,7 +35,7 @@ public class ScanClassUtils {
      *
      * @param jarFileURI jar
      * @return r
-     * @throws IOException r
+     * @throws java.io.IOException r
      */
     public static List<Class<?>> getClassListByJar(URI jarFileURI) throws IOException {
         //获取 jarFile
@@ -45,6 +48,14 @@ public class ScanClassUtils {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * <p>getClassListByDir.</p>
+     *
+     * @param classRootDir a {@link java.net.URI} object
+     * @param classLoader  a {@link java.lang.ClassLoader} object
+     * @return a {@link java.util.List} object
+     * @throws java.io.IOException if any.
+     */
     public static List<Class<?>> getClassListByDir(URI classRootDir, ClassLoader classLoader) throws IOException {
         var classList = new ArrayList<Class<?>>();
         var classRootPath = Path.of(classRootDir);
@@ -67,6 +78,7 @@ public class ScanClassUtils {
      *
      * @param source a {@link java.lang.Class} object.
      * @return 可能是 目录 也可能是 jar 文件
+     * @throws java.net.URISyntaxException if any.
      */
     public static URI getClassSource(Class<?> source) throws URISyntaxException {
         return source.getProtectionDomain().getCodeSource().getLocation().toURI();
@@ -89,11 +101,20 @@ public class ScanClassUtils {
 
     /**
      * 根据 basePackage 对 class 进行过滤
+     *
+     * @param classList       a {@link java.util.List} object
+     * @param basePackageName a {@link java.lang.String} object
+     * @return a {@link java.util.List} object
      */
     public static List<Class<?>> filterByBasePackage(List<Class<?>> classList, String basePackageName) {
         return classList.stream().filter(c -> c.getPackageName().startsWith(basePackageName)).collect(Collectors.toList());
     }
 
+    /**
+     * <p>defaultClassLoader.</p>
+     *
+     * @return a {@link java.lang.ClassLoader} object
+     */
     public static ClassLoader defaultClassLoader() {
         return DEFAULT_CLASS_LOADER;
     }
@@ -110,6 +131,12 @@ public class ScanClassUtils {
                 .replaceAll("/", ".");//linux 路径替换
     }
 
+    /**
+     * <p>isJar.</p>
+     *
+     * @param file a {@link java.io.File} object
+     * @return a boolean
+     */
     public static boolean isJar(File file) {
         return !file.isDirectory() && file.getPath().endsWith(".jar");
     }

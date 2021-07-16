@@ -35,6 +35,7 @@ public class TestController {
     private final UserService userService;
 
     private final BaseService<Car> carService = new BaseService<>(Car.class);
+    boolean s = true;
 
     /**
      * TestController
@@ -83,7 +84,6 @@ public class TestController {
         index.add("loginUser", ScxAuth.getLoginUser());
         return index;
     }
-
 
     /**
      * 测试!!!
@@ -195,8 +195,6 @@ public class TestController {
     public Json aaaaa() {
         return Json.ok().put("moduleList", ScxModuleHandler.getAllModule());
     }
-
-    boolean s=true;
 
     @ScxMapping(method = Method.GET)
     public void c() {

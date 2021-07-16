@@ -71,6 +71,12 @@ public final class ScxTemplate {
     }
 
     //自定义的指令就在这里添加
+
+    /**
+     * <p>addTemplateDirective.</p>
+     *
+     * @param scxModuleList a {@link java.util.List} object
+     */
     public static void addTemplateDirective(List<ScxModule> scxModuleList) {
         for (ScxModule scxModule : scxModuleList) {
             for (Class<?> clazz : scxModule.classList) {

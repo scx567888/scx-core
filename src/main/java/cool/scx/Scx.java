@@ -21,18 +21,15 @@ public final class Scx {
      * 全局 vert.x
      */
     private static final Vertx GLOBAL_VERTX = initGlobalVertx();
-
+    /**
+     * 默认的核心包 APP KEY (密码) , 注意请不要在您自己的模块中使用此常量 , 非常不安全
+     */
+    private static final String DEFAULT_APP_KEY = "SCX-123456";
     /**
      * 项目根模块 所在路径
      * 默认取 所有自定义模块的最后一个 所在的文件根目录
      */
     private static File APP_ROOT;
-
-    /**
-     * 默认的核心包 APP KEY (密码) , 注意请不要在您自己的模块中使用此常量 , 非常不安全
-     */
-    private static final String DEFAULT_APP_KEY = "SCX-123456";
-
     /**
      * 项目的 appKey
      * 默认取 所有自定义模块的最后一个的AppKey
@@ -81,6 +78,12 @@ public final class Scx {
         GLOBAL_VERTX.nettyEventLoopGroup().execute(command);
     }
 
+    /**
+     * <p>initScx.</p>
+     *
+     * @param modules an array of T[] objects
+     * @param <T>     a T class
+     */
     protected static <T extends BaseModule> void initScx(T[] modules) {
         var lastModules = modules[modules.length - 1];
         initAppRoot(lastModules);

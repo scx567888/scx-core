@@ -1,7 +1,6 @@
 package cool.scx.util;
 
 import cool.scx.Scx;
-import cool.scx.module.ScxModuleHandler;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jasypt.util.text.AES256TextEncryptor;
 

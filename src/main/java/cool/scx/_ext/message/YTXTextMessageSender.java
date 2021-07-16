@@ -42,6 +42,10 @@ public class YTXTextMessageSender {
      * {@inheritDoc}
      * <p>
      * 向手机号发送短信
+     *
+     * @param address a {@link java.util.List} object
+     * @param message a {@link java.util.Map} object
+     * @return a {@link java.lang.String} object
      */
     public String send(List<String> address, Map<String, Object> message) {
         var timeStampStr = getTimeStampStr();
@@ -62,6 +66,8 @@ public class YTXTextMessageSender {
 
     /**
      * {@inheritDoc}
+     *
+     * @return a {@link java.lang.String} object
      */
     public String senderName() {
         return "ytx";

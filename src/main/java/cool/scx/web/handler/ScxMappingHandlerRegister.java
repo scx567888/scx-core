@@ -22,7 +22,7 @@ public class ScxMappingHandlerRegister {
     /**
      * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
      *
-     * @param scxModuleList
+     * @param scxModuleList a {@link java.util.List} object
      */
     public static void ScanScxMappingHandlers(List<ScxModule> scxModuleList) {
         SCX_MAPPING_HANDLER_LIST.clear();
@@ -58,8 +58,8 @@ public class ScxMappingHandlerRegister {
     /**
      * <p>register.</p>
      *
-     * @param router        a {@link Router} object
-     * @param scxModuleList
+     * @param router        a {@link io.vertx.ext.web.Router} object
+     * @param scxModuleList a {@link java.util.List} object
      */
     public static void register(Router router, List<ScxModule> scxModuleList) {
         ScanScxMappingHandlers(scxModuleList);

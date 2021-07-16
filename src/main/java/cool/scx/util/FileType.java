@@ -35,6 +35,15 @@ public class FileType {
      */
     public final String description;
 
+    /**
+     * <p>Constructor for FileType.</p>
+     *
+     * @param fileExtension a {@link java.lang.String} object
+     * @param mimeType      a {@link java.lang.String} object
+     * @param mediaType     a {@link cool.scx.enumeration.MediaType} object
+     * @param fileHeader    a {@link java.lang.String} object
+     * @param description   a {@link java.lang.String} object
+     */
     public FileType(String fileExtension, String mimeType, MediaType mediaType, String fileHeader, String description) {
         this.fileExtension = fileExtension;
         this.mimeType = mimeType;

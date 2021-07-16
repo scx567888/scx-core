@@ -36,6 +36,7 @@ public class ScxEventBus {
      * 注册消费者 这里注册的消费者 前端和本地均可以进行调用
      *
      * @param address a
+     * @param message a {@link java.lang.Object} object
      */
     public static void publish(String address, Object message) {
         VERTX_EVENTBUS.publish(address, objectToBuffer(message));

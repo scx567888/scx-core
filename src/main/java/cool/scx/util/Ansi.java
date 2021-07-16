@@ -29,6 +29,15 @@ public final class Ansi {
     }
 
     /**
+     * <p>out.</p>
+     *
+     * @return a {@link cool.scx.util.Ansi} object
+     */
+    public static Ansi out() {
+        return new Ansi();
+    }
+
+    /**
      * 红色
      *
      * @param o a {@link java.lang.Object} object.
@@ -229,18 +238,20 @@ public final class Ansi {
         return this;
     }
 
-    public static Ansi out() {
-        return new Ansi();
-    }
-
     private void add(Object o, AnsiColor ansiColor) {
         stringBuilder.append("\u001B[").append(ansiColor.code()).append("m").append(o).append("\u001B[0m");
     }
 
+    /**
+     * <p>print.</p>
+     */
     public void print() {
         System.out.print(stringBuilder);
     }
 
+    /**
+     * <p>println.</p>
+     */
     public void println() {
         ln();
         System.out.print(stringBuilder);

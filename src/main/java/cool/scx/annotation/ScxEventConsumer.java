@@ -7,6 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * 事件消费者
+ *
+ * @author scx567888
+ * @version 1.3.0
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

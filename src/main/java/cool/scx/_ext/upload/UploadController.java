@@ -154,13 +154,20 @@ public class UploadController {
         var uploadFile = checkFileId(fileId);
         var file = checkPhysicalFile(uploadFile);
         var fileType = FileTypeUtils.byName(uploadFile.filePath);
-        if (fileType.mediaType== MediaType.IMAGE) {
+        if (fileType.mediaType == MediaType.IMAGE) {
             return new Image(file, width, height, type);
         } else {
             return new Binary(file);
         }
     }
 
+    /**
+     * <p>checkFileId.</p>
+     *
+     * @param fileId a {@link java.lang.String} object
+     * @return a {@link cool.scx._ext.upload.UploadFile} object
+     * @throws cool.scx.exception.NotFoundException if any.
+     */
     public UploadFile checkFileId(String fileId) throws NotFoundException {
         var param = new Query().addWhere("fileId", WhereType.EQUAL, fileId);
         UploadFile uploadFile = uploadFileService.get(param);
@@ -170,6 +177,13 @@ public class UploadController {
         return uploadFile;
     }
 
+    /**
+     * <p>checkPhysicalFile.</p>
+     *
+     * @param uploadFile a {@link cool.scx._ext.upload.UploadFile} object
+     * @return a {@link java.io.File} object
+     * @throws cool.scx.exception.NotFoundException if any.
+     */
     public File checkPhysicalFile(UploadFile uploadFile) throws NotFoundException {
         var physicalFile = new File(UploadConfig.uploadFilePath(), uploadFile.filePath);
         if (!physicalFile.exists()) {

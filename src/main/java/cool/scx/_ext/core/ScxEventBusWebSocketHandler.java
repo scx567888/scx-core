@@ -1,10 +1,10 @@
 package cool.scx._ext.core;
 
+import cool.scx.ScxEventBus;
 import cool.scx.annotation.ScxWebSocketRoute;
 import cool.scx.base.BaseWSHandler;
 import cool.scx.bo.WSBody;
 import cool.scx.context.ScxContext;
-import cool.scx.ScxEventBus;
 import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 import io.vertx.core.buffer.Buffer;
@@ -78,7 +78,7 @@ public class ScxEventBusWebSocketHandler implements BaseWSHandler {
         } else { //这里是其他事件
             var event = createScxWebSocketEvent(textData, webSocket);
             if (event != null) {
-                ScxEventBus.publish(event.eventName(),event);
+                ScxEventBus.publish(event.eventName(), event);
             }
         }
     }
