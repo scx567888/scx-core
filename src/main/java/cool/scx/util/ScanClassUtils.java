@@ -110,5 +110,8 @@ public class ScanClassUtils {
                 .replaceAll("/", ".");//linux 路径替换
     }
 
+    public static boolean isJar(File file) {
+        return !file.isDirectory() && file.getPath().endsWith(".jar");
+    }
 
 }

@@ -83,7 +83,7 @@ public class ScxMappingHandlerRegister {
             if (a.url.equals(handler.url)) {
                 for (var h : handler.httpMethods) {
                     if (a.httpMethods.contains(h)) {
-                        Ansi.OUT.brightMagenta("检测到重复的路由!!! " + h + " --> \"" + handler.url + "\" , 相关 class 及方法如下 ▼").ln()
+                        Ansi.out().brightMagenta("检测到重复的路由!!! " + h + " --> \"" + handler.url + "\" , 相关 class 及方法如下 ▼").ln()
                                 .brightMagenta(handler.clazz.getName() + " --> " + handler.method.getName()).ln()
                                 .brightMagenta(a.clazz.getName() + " --> " + a.method.getName()).ln();
                         return true;

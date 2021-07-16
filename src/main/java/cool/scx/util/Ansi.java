@@ -2,6 +2,9 @@ package cool.scx.util;
 
 import cool.scx.enumeration.AnsiColor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 向控制台打印彩色
  *
@@ -9,11 +12,6 @@ import cool.scx.enumeration.AnsiColor;
  * @version 1.0.10
  */
 public final class Ansi {
-
-    /**
-     * Ansi 实例
-     */
-    public static final Ansi OUT = new Ansi();
 
     /**
      * 颜色列表
@@ -26,17 +24,9 @@ public final class Ansi {
      */
     private static int nextPrintColor = 0;
 
-    private Ansi() {
-    }
+    private final List<String> stringList = new ArrayList<>();
 
-    /**
-     * 向控制台打印指定的颜色
-     *
-     * @param o         要打印的语句
-     * @param ansiColor 颜色枚举
-     */
-    private static void print(Object o, AnsiColor ansiColor) {
-        System.out.print("\u001B[" + ansiColor.code() + "m" + o.toString() + "\u001B[0m");
+    private Ansi() {
     }
 
     /**
@@ -46,7 +36,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi red(Object o) {
-        print(o, AnsiColor.RED);
+        add(o, AnsiColor.RED);
         return this;
     }
 
@@ -57,7 +47,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi green(Object o) {
-        print(o, AnsiColor.GREEN);
+        add(o, AnsiColor.GREEN);
         return this;
     }
 
@@ -68,7 +58,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi brightCyan(Object o) {
-        print(o, AnsiColor.BRIGHT_CYAN);
+        add(o, AnsiColor.BRIGHT_CYAN);
         return this;
     }
 
@@ -79,7 +69,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi blue(Object o) {
-        print(o, AnsiColor.BLUE);
+        add(o, AnsiColor.BLUE);
         return this;
     }
 
@@ -90,7 +80,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi cyan(Object o) {
-        print(o, AnsiColor.CYAN);
+        add(o, AnsiColor.CYAN);
         return this;
     }
 
@@ -101,7 +91,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi brightBlue(Object o) {
-        print(o, AnsiColor.BRIGHT_BLUE);
+        add(o, AnsiColor.BRIGHT_BLUE);
         return this;
     }
 
@@ -112,7 +102,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi brightMagenta(Object o) {
-        print(o, AnsiColor.BRIGHT_MAGENTA);
+        add(o, AnsiColor.BRIGHT_MAGENTA);
         return this;
     }
 
@@ -123,7 +113,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi brightRed(Object o) {
-        print(o, AnsiColor.BRIGHT_RED);
+        add(o, AnsiColor.BRIGHT_RED);
         return this;
     }
 
@@ -134,7 +124,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi brightGreen(Object o) {
-        print(o, AnsiColor.BRIGHT_GREEN);
+        add(o, AnsiColor.BRIGHT_GREEN);
         return this;
     }
 
@@ -145,7 +135,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi black(Object o) {
-        print(o, AnsiColor.BLACK);
+        add(o, AnsiColor.BLACK);
         return this;
     }
 
@@ -156,7 +146,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi brightBlack(Object o) {
-        print(o, AnsiColor.BRIGHT_BLACK);
+        add(o, AnsiColor.BRIGHT_BLACK);
         return this;
     }
 
@@ -167,7 +157,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi brightYellow(Object o) {
-        print(o, AnsiColor.BRIGHT_YELLOW);
+        add(o, AnsiColor.BRIGHT_YELLOW);
         return this;
     }
 
@@ -178,7 +168,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi yellow(Object o) {
-        print(o, AnsiColor.YELLOW);
+        add(o, AnsiColor.YELLOW);
         return this;
     }
 
@@ -189,7 +179,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi magenta(Object o) {
-        print(o, AnsiColor.MAGENTA);
+        add(o, AnsiColor.MAGENTA);
         return this;
     }
 
@@ -200,7 +190,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi white(Object o) {
-        print(o, AnsiColor.WHITE);
+        add(o, AnsiColor.WHITE);
         return this;
     }
 
@@ -211,7 +201,7 @@ public final class Ansi {
      * @return Ansi 方便链式调用
      */
     public Ansi defaultColor(Object o) {
-        print(o, AnsiColor.DEFAULT_COLOR);
+        add(o, AnsiColor.DEFAULT_COLOR);
         return this;
     }
 
@@ -221,7 +211,7 @@ public final class Ansi {
      * @return a {@link cool.scx.util.Ansi} object.
      */
     public Ansi ln() {
-        System.out.println();
+        add(System.lineSeparator(), AnsiColor.DEFAULT_COLOR);
         return this;
     }
 
@@ -231,13 +221,30 @@ public final class Ansi {
      * @param o a {@link java.lang.String} object.
      * @return a {@link cool.scx.util.Ansi} object.
      */
-    public Ansi print(Object o) {
+    public Ansi color(Object o) {
         if (nextPrintColor >= printColor.length) {
             nextPrintColor = 0;
         }
-        print(o, printColor[nextPrintColor]);
+        add(o, printColor[nextPrintColor]);
         nextPrintColor = nextPrintColor + 1;
         return this;
+    }
+
+    public static Ansi out() {
+        return new Ansi();
+    }
+
+    private void add(Object o, AnsiColor ansiColor) {
+        stringList.add("\u001B[" + ansiColor.code() + "m" + o.toString() + "\u001B[0m");
+    }
+
+    public void print() {
+        System.out.print(String.join("", stringList));
+    }
+
+    public void println() {
+        ln();
+        System.out.print(String.join("", stringList));
     }
 
 }

@@ -15,13 +15,6 @@ import java.io.Serializable;
 public interface BaseModule extends Serializable {
 
     /**
-     * 配置文件加载完成调用
-     */
-    default void init() {
-
-    }
-
-    /**
      * 核心模块初始化完成调用
      */
     default void start() {

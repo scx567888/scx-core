@@ -48,8 +48,6 @@ public final class ScxAuth {
     private static AuthHandler AUTH_HANDLER;
 
     static {
-        Ansi.OUT.brightGreen("ScxAuth 初始化中...").ln();
-
         //Bean 加载完毕后的消费者
         ScxEventBus.consumer(ScxContext.ON_CONTEXT_REGISTER_NAME, o -> {
             var scxModuleList = ScxUtils.cast(o);
@@ -248,7 +246,7 @@ public final class ScxAuth {
      * todo 这里还需要初始化一下用户多终端登录的情况是踢出还是共存 (用配置文件)
      */
     public static void initAuth() {
-        Ansi.OUT.brightGreen("ScxAuth 初始化完成...").ln();
+        Ansi.out().brightGreen("ScxAuth 初始化完成...").ln();
     }
 
     /**
@@ -263,9 +261,9 @@ public final class ScxAuth {
             for (Class<?> c : scxModule.classList) {
                 if (!c.isInterface() && AuthHandler.class.isAssignableFrom(c)) {
                     if (authHandlerImplClass == null) {
-                        Ansi.OUT.brightGreen("已找到 [ " + AuthHandler.class.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
+                        Ansi.out().brightGreen("已找到 [ " + AuthHandler.class.getName() + "] 的实现类 [ " + c.getName() + " ]").ln();
                     } else {
-                        Ansi.OUT.brightGreen("已找到 [ " + AuthHandler.class.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + authHandlerImplClass.getName() + "] 已被覆盖").ln();
+                        Ansi.out().brightGreen("已找到 [ " + AuthHandler.class.getName() + "] 的实现类 [ " + c.getName() + " ] , 上一个实现类 [" + authHandlerImplClass.getName() + "] 已被覆盖").ln();
                     }
                     authHandlerImplClass = (Class<? extends AuthHandler>) c;
                 }
@@ -273,7 +271,7 @@ public final class ScxAuth {
         }
 
         if (authHandlerImplClass == null) {
-            Ansi.OUT.brightRed("Class [ " + AuthHandler.class.getName() + " ] 必须有一个实现类 !!!").ln();
+            Ansi.out().brightRed("Class [ " + AuthHandler.class.getName() + " ] 必须有一个实现类 !!!").ln();
             System.exit(0);
         }
 

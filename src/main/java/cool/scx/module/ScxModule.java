@@ -10,7 +10,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 /**
- * 模块实体
+ * ScxModule 用于承载业务模块
  *
  * @author scx567888
  * @version 1.1.2
@@ -18,17 +18,17 @@ import java.util.List;
 public class ScxModule implements Serializable {
 
     /**
-     * 模块名称
+     * 模块名称 用于区分模块 (不允许重复)
      */
     public final String moduleName;
 
     /**
-     * 基本包
+     * 需要扫描类的 basePackage
      */
     public final String basePackage;
 
     /**
-     *
+     * baseModule 实例 用于执行生命周期
      */
     public final BaseModule baseModuleExample;
 
@@ -55,9 +55,8 @@ public class ScxModule implements Serializable {
      * @param jarFile jar文件
      */
     public ScxModule(File jarFile, boolean isPlugin) throws IOException {
-        var isJar = !jarFile.isDirectory() && jarFile.getPath().endsWith(".jar");
-        if (!isJar) {
-            //判断文件是否为 jar 包
+        //判断文件是否为 jar 包,不是则抛出异常
+        if (!ScanClassUtils.isJar(jarFile)) {
             throw new IllegalArgumentException();
         }
         this.basePackage = "";
@@ -83,8 +82,7 @@ public class ScxModule implements Serializable {
         var classSource = ScanClassUtils.getClassSource(moduleClass);
         var classSourceFile = new File(classSource);
         //判断当前是否处于 jar 包中
-        var inJar = !classSourceFile.isDirectory() && classSourceFile.getPath().endsWith(".jar");
-        if (inJar) {
+        if (ScanClassUtils.isJar(classSourceFile)) {
             var allClassList = ScanClassUtils.getClassListByJar(classSource);
             this.classList = ScanClassUtils.filterByBasePackage(allClassList, basePackage);
             this.moduleRootPath = classSourceFile.getParentFile();

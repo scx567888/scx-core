@@ -7,6 +7,7 @@ import cool.scx.base.BaseWSHandler;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
 import cool.scx.module.ScxModule;
+import cool.scx.util.Ansi;
 import cool.scx.util.ScxUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.web.handler.*;
@@ -48,6 +49,8 @@ public final class ScxRouter {
             var scxModuleList = ScxUtils.cast(o);
             ScxMappingHandlerRegister.register(vertRouter, scxModuleList);
             addWebSocketRouter(scxModuleList);
+            Ansi.out().brightYellow("已加载 " + routeSize() + " 个 Http 路由 !!!").ln();
+            Ansi.out().brightYellow("已加载 " + webSocketRouteSize() + " 个 WebSocket 路由 !!!").ln();
         });
 
         //Bean 销毁时的消费者

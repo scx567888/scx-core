@@ -22,7 +22,7 @@ public final class Timer {
         if (START_TIME_MAP.get(name) == null) {
             START_TIME_MAP.put(name, System.nanoTime());
         } else {
-            Ansi.OUT.brightRed("定时器 [ " + name + " ] 已存在!!! 若要强制覆盖定时器,请使用 forceStart() !!!");
+            Ansi.out().brightRed("定时器 [ " + name + " ] 已存在!!! 若要强制覆盖定时器,请使用 forceStart() !!!");
         }
     }
 

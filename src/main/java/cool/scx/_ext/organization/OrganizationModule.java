@@ -14,7 +14,7 @@ public class OrganizationModule implements BaseModule {
      * {@inheritDoc}
      */
     @Override
-    public void init() {
+    public void start() {
         OrganizationConfig.initConfig();
     }
 

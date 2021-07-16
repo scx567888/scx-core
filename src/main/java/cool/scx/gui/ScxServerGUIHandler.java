@@ -26,7 +26,7 @@ public class ScxServerGUIHandler extends BaseGUIHandler {
             JOptionPane.showMessageDialog(null, "Y 新端口号 [ " + ScxServer.port + " ] !!!", "Y 新端口号 [ " + ScxServer.port + " ] !!!", JOptionPane.INFORMATION_MESSAGE);
             ScxServer.startServer();
         } else if (result == 1) {
-            Ansi.OUT.red("N 端口号被占用,用户已忽略!!! 服务器未启动!!!").ln();
+            Ansi.out().red("N 端口号被占用,用户已忽略!!! 服务器未启动!!!").ln();
         } else if (result == 2) {
             System.exit(-1);
         } else if (result == -1) {
@@ -44,7 +44,7 @@ public class ScxServerGUIHandler extends BaseGUIHandler {
     private static int checkPort(int p) {
         while (NetUtils.isLocalePortUsing(p)) {
             p = p + 1;
-            Ansi.OUT.red("N 端口号 [ " + (p - 1) + " ] 已被占用 !!!         \t -->\t 新端口号 : " + p).ln();
+            Ansi.out().red("N 端口号 [ " + (p - 1) + " ] 已被占用 !!!         \t -->\t 新端口号 : " + p).ln();
         }
         return p;
     }

@@ -42,7 +42,7 @@ public class GroupBy {
      */
     public GroupBy add(final String fieldName) {
         if (!groupByList.add(fieldName)) {
-            Ansi.OUT.brightRed("已跳过添加过相同的 GroupBy 字段 , 内容是: " + fieldName + " !!!").ln();
+            Ansi.out().brightRed("已跳过添加过相同的 GroupBy 字段 , 内容是: " + fieldName + " !!!").ln();
         }
         return this;
     }

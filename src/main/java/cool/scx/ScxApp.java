@@ -41,6 +41,7 @@ public final class ScxApp {
         Timer.start("ScxApp");
         // 显示 banner
         ScxBoot.showBanner();
+        System.out.println(Timer.stopToMillis("ScxApp"));
         // 确定 appRoot 及 appKey
         Scx.initScx(modules);
         // 初始化 配置文件
@@ -53,10 +54,6 @@ public final class ScxApp {
         ScxAuth.initAuth();
         // 初始化 http 路由
         ScxRouter.initRouter();
-        // 加载内部捆绑的 modules
-        ScxModuleHandler.loadBundledModules(modules);
-        // 初始化 模块
-        ScxModuleHandler.initModules();
         // 初始化数据库 上下文
         ScxDBContext.initDB();
         // 初始化 监听器
@@ -65,10 +62,12 @@ public final class ScxApp {
         ScxEventBus.initConsumer();
         // 初始化 web 服务器
         ScxServer.initServer();
-        // 初始化 模块的 start 生命周期
-        ScxModuleHandler.startModules();
         // 启动 web 服务器
         ScxServer.startServer();
+        // 加载内部捆绑的 modules
+        ScxModuleHandler.loadBundledModules(modules);
+        // 初始化插件
+        ScxModuleHandler.loadPlugins();
     }
 
 }

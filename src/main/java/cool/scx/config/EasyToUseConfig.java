@@ -101,52 +101,52 @@ class EasyToUseConfig {
 
         port = ScxConfig.get("scx.port", 8080,
                 s -> {
-                    Ansi.OUT.green("Y 服务器 IP 地址                       \t -->\t " + NetUtils.getLocalAddress()).ln();
-                    Ansi.OUT.green("Y 端口号                               \t -->\t " + s).ln();
+                    Ansi.out().green("Y 服务器 IP 地址                       \t -->\t " + NetUtils.getLocalAddress()).ln();
+                    Ansi.out().green("Y 端口号                               \t -->\t " + s).ln();
                 },
-                f -> Ansi.OUT.red("N 未检测到 scx.port                   \t -->\t 已采用默认值 : " + f).ln());
+                f -> Ansi.out().red("N 未检测到 scx.port                   \t -->\t 已采用默认值 : " + f).ln());
 
         showLog = ScxConfig.get("scx.show-log", true,
-                s -> Ansi.OUT.green("Y 是否打印日志                         \t -->\t " + (s ? "是" : "否")).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.show-log               \t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().green("Y 是否打印日志                         \t -->\t " + (s ? "是" : "否")).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.show-log               \t -->\t 已采用默认值 : " + f).ln());
 
         realDelete = ScxConfig.get("scx.real-delete", false,
-                s -> Ansi.OUT.green("Y 数据库删除方式为                     \t -->\t " + (s ? "物理删除" : "逻辑删除")).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.real-delete            \t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().green("Y 数据库删除方式为                     \t -->\t " + (s ? "物理删除" : "逻辑删除")).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.real-delete            \t -->\t 已采用默认值 : " + f).ln());
 
         allowedOrigin = ScxConfig.get("scx.allowed-origin", "*",
-                s -> Ansi.OUT.green("Y 允许的请求源                         \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.allowed-origin          \t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().green("Y 允许的请求源                         \t -->\t " + s).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.allowed-origin          \t -->\t 已采用默认值 : " + f).ln());
 
         var tempDisabledPluginList = ScxConfig.get("scx.disabled-plugins", new ArrayList<String>(),
-                s -> Ansi.OUT.green("Y 禁用插件列表                         \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.disabled-plugins        \t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().green("Y 禁用插件列表                         \t -->\t " + s).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.disabled-plugins        \t -->\t 已采用默认值 : " + f).ln());
 
         disabledPluginList = new HashSet<>(tempDisabledPluginList);
 
         String tempTemplateRoot = ScxConfig.get("scx.template.root", "AppRoot:/c/",
-                s -> Ansi.OUT.green("Y 模板根目录                           \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.template.root           \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
+                s -> Ansi.out().green("Y 模板根目录                           \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.template.root           \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
 
         templateRoot = FileUtils.getFileByAppRoot(tempTemplateRoot);
 
         templateResourceHttpUrl = ScxConfig.get("scx.template.resource-http-url", "/static/*",
-                s -> Ansi.OUT.green("Y 模板静态资源 Url                     \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.template.resource-http-url\t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().green("Y 模板静态资源 Url                     \t -->\t " + s).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.template.resource-http-url\t -->\t 已采用默认值 : " + f).ln());
 
         String tempTemplateResourceRoot = ScxConfig.get("scx.template.resource-root", "AppRoot:/c/static",
-                s -> Ansi.OUT.green("Y 模板静态资源目录                     \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.template.resource-root   \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
+                s -> Ansi.out().green("Y 模板静态资源目录                     \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.template.resource-root   \t -->\t 已采用默认值 : " + FileUtils.getFileByAppRoot(f)).ln());
 
         templateResourceRoot = FileUtils.getFileByAppRoot(tempTemplateResourceRoot);
 
         isOpenHttps = ScxConfig.get("scx.https.is-open", false,
-                s -> Ansi.OUT.green("Y 是否开启 https                       \t -->\t " + (s ? "是" : "否")).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.https.is-open           \t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().green("Y 是否开启 https                       \t -->\t " + (s ? "是" : "否")).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.https.is-open           \t -->\t 已采用默认值 : " + f).ln());
 
         var tempSSLPath = ScxConfig.get("scx.https.ssl-path", "",
-                s -> Ansi.OUT.green("Y 证书路径                            \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.https.ssl-path         \t -->\t 请检查证书路径是否正确").ln());
+                s -> Ansi.out().green("Y 证书路径                            \t -->\t " + FileUtils.getFileByAppRoot(s)).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.https.ssl-path         \t -->\t 请检查证书路径是否正确").ln());
 
         sslPath = FileUtils.getFileByAppRoot(tempSSLPath);
 
@@ -156,45 +156,45 @@ class EasyToUseConfig {
             try {
                 tempSSLPassword = CryptoUtils.decryptText(ScxConfig.get("scx.https.ssl-password", "",
                         Tidy::NoCode,
-                        f -> Ansi.OUT.red("N 未检测到 scx.https.ssl-password      \t -->\t 请检查证书密码是否正确").ln()));
+                        f -> Ansi.out().red("N 未检测到 scx.https.ssl-password      \t -->\t 请检查证书密码是否正确").ln()));
             } catch (Exception e) {
-                Ansi.OUT.red("N 解密 scx.https.ssl-password  出错        \t -->\t 请检查证书密码是否正确").ln();
+                Ansi.out().red("N 解密 scx.https.ssl-password  出错        \t -->\t 请检查证书密码是否正确").ln();
             }
         }
 
         sslPassword = tempSSLPassword;
 
         dataSourceHost = ScxConfig.get("scx.data-source.host", "127.0.0.1",
-                s -> Ansi.OUT.green("Y 数据源 Host                          \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.data-source.host        \t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().green("Y 数据源 Host                          \t -->\t " + s).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.data-source.host        \t -->\t 已采用默认值 : " + f).ln());
 
         dataSourcePort = ScxConfig.get("scx.data-source.port", 3306,
-                s -> Ansi.OUT.green("Y 数据源 端口号                        \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.data-source.port        \t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().green("Y 数据源 端口号                        \t -->\t " + s).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.data-source.port        \t -->\t 已采用默认值 : " + f).ln());
 
         dataSourceDatabase = ScxConfig.get("scx.data-source.database", "scx",
-                s -> Ansi.OUT.green("Y 数据源 数据库名称                    \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.data-source.database    \t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().green("Y 数据源 数据库名称                    \t -->\t " + s).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.data-source.database    \t -->\t 已采用默认值 : " + f).ln());
 
         dataSourceUsername = ScxConfig.get("scx.data-source.username", "root",
-                s -> Ansi.OUT.green("Y 数据源 用户名                        \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.data-source.username    \t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().green("Y 数据源 用户名                        \t -->\t " + s).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.data-source.username    \t -->\t 已采用默认值 : " + f).ln());
 
         String tempDataSourcePassword = "";
 
         try {
             tempDataSourcePassword = CryptoUtils.decryptText(ScxConfig.get("scx.data-source.password", "",
-                    s -> Ansi.OUT.green("Y 数据源 连接密码                      \t -->\t " + s).ln(),
-                    f -> Ansi.OUT.red("N 未检测到 scx.data-source.password    \t -->\t 请检查数据库密码是否正确").ln()));
+                    s -> Ansi.out().green("Y 数据源 连接密码                      \t -->\t " + s).ln(),
+                    f -> Ansi.out().red("N 未检测到 scx.data-source.password    \t -->\t 请检查数据库密码是否正确").ln()));
         } catch (Exception e) {
-            Ansi.OUT.red("N 解密 scx.data-source.password 出错  \t -->\t 请检查数据库密码是否正确").ln();
+            Ansi.out().red("N 解密 scx.data-source.password 出错  \t -->\t 请检查数据库密码是否正确").ln();
         }
 
         dataSourcePassword = tempDataSourcePassword;
 
         var tempDataSourceParameters = ScxConfig.get("scx.data-source.parameters", new ArrayList<String>(),
-                s -> Ansi.OUT.green("Y 数据源 连接参数                      \t -->\t " + s).ln(),
-                f -> Ansi.OUT.red("N 未检测到 scx.data-source.parameters  \t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().green("Y 数据源 连接参数                      \t -->\t " + s).ln(),
+                f -> Ansi.out().red("N 未检测到 scx.data-source.parameters  \t -->\t 已采用默认值 : " + f).ln());
 
         dataSourceParameters = new HashSet<>(tempDataSourceParameters);
 

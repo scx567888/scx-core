@@ -10,6 +10,7 @@ import io.vertx.ext.web.RoutingContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * ScxContext 上下文
@@ -50,7 +51,6 @@ public final class ScxContext {
     private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
     static {
-        Ansi.OUT.brightBlue("ScxContext 初始化中...").ln();
         //刷新
         APPLICATION_CONTEXT.refresh();
         //模块加载时的消费者
@@ -58,10 +58,11 @@ public final class ScxContext {
             var scxModuleList = ScxUtils.cast(o);
             for (var scxModule : scxModuleList) {
                 var allBean = initScxAnnotationBean(scxModule.classList);
-                var beanNumber = Arrays.stream(allBean).filter(s -> s.startsWith(scxModule.basePackage)).count();
-                Ansi.OUT.brightBlue("模块 [" + scxModule.moduleName + "] 共加载 " + beanNumber + " 个 Bean !!!").ln();
-                if (ScxConfig.showLog()) {
-                    Arrays.stream(allBean).filter(s -> s.startsWith(scxModule.basePackage)).forEach(c -> Ansi.OUT.brightYellow(c).ln());
+//                if (ScxConfig.showLog()) {
+                if (false) {
+                    var beanList = Arrays.stream(allBean).filter(s -> s.startsWith(scxModule.basePackage)).collect(Collectors.toList());
+                    Ansi.out().brightBlue("模块 [" + scxModule.moduleName + "] 共加载 " + beanList.size() + " 个 Bean !!!").ln();
+                    beanList.forEach(c -> Ansi.out().brightYellow(c).ln());
                 }
             }
             //通知其他模块 bean 注册完毕,可正常使用
@@ -78,7 +79,7 @@ public final class ScxContext {
                         APPLICATION_CONTEXT.removeBeanDefinition(beanName);
                     }
                 }
-                Ansi.OUT.brightBlue("模块 [" + scxModule.moduleName + "] 已移除 " + 0 + " 个 Bean !!!").ln();
+                Ansi.out().brightBlue("模块 [" + scxModule.moduleName + "] 已移除 " + 0 + " 个 Bean !!!").ln();
             }
             //通知其他模块 bean 注册完毕,可正常使用
             ScxEventBus.publish(ON_CONTEXT_REMOVE_NAME, scxModuleList);
@@ -106,7 +107,7 @@ public final class ScxContext {
 //                SCX_BEAN_CLASS_NAME_MAPPING.put(c.getSimpleName().toLowerCase(), c);
 //            } else {
 //                SCX_BEAN_CLASS_NAME_MAPPING.put(c.getName(), c);
-//                Ansi.OUT.brightRed("检测到重复名称的 class ").brightYellow("[" + aClass.getName() + "] ").blue("[" + c.getName() + "]").brightRed(" 可能会导致根据名称调用时意义不明确 !!! 建议修改 !!!").ln();
+//                Ansi.out().brightRed("检测到重复名称的 class ").brightYellow("[" + aClass.getName() + "] ").blue("[" + c.getName() + "]").brightRed(" 可能会导致根据名称调用时意义不明确 !!! 建议修改 !!!").ln();
 //            }
 //        }
         return APPLICATION_CONTEXT.getBeanDefinitionNames();
@@ -136,7 +137,7 @@ public final class ScxContext {
      * 初始化 context
      */
     public static void initContext() {
-        Ansi.OUT.brightBlue("ScxContext 初始化完成...").ln();
+        Ansi.out().brightBlue("ScxContext 初始化完成...").ln();
     }
 
     /**

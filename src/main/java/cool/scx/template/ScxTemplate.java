@@ -35,8 +35,6 @@ public final class ScxTemplate {
     private static final Configuration freemarkerConfig = initFreemarkerConfig();
 
     static {
-        Ansi.OUT.blue("ScxTemplate 初始化中...").ln();
-
         //Bean 加载完毕后的消费者
         ScxEventBus.consumer(ScxContext.ON_CONTEXT_REGISTER_NAME, o -> {
             var scxModuleList = ScxUtils.cast(o);
@@ -60,8 +58,8 @@ public final class ScxTemplate {
         try {
             configuration.setDirectoryForTemplateLoading(ScxConfig.templateRoot());
         } catch (Exception e) {
-            Ansi.OUT.brightRed(ScxConfig.templateRoot().getPath()).ln();
-            Ansi.OUT.brightRed("模板目录不存在!!!").ln();
+            Ansi.out().brightRed(ScxConfig.templateRoot().getPath()).ln();
+            Ansi.out().brightRed("模板目录不存在!!!").ln();
         }
 
         //设置 字符集
@@ -79,7 +77,7 @@ public final class ScxTemplate {
                 if (clazz.isAnnotationPresent(ScxTemplateDirective.class) && BaseTemplateDirective.class.isAssignableFrom(clazz)) {
                     try {
                         var myDirective = (BaseTemplateDirective) ScxContext.getBean(clazz);
-                        Ansi.OUT.blue("已加载自定义 Freemarker 标签 [" + myDirective._DirectiveName() + "] Class -> " + clazz.getName()).ln();
+                        Ansi.out().blue("已加载自定义 Freemarker 标签 [" + myDirective._DirectiveName() + "] Class -> " + clazz.getName()).ln();
                         freemarkerConfig.setSharedVariable(myDirective._DirectiveName(), myDirective);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -94,7 +92,7 @@ public final class ScxTemplate {
      * 初始化 cms 配置文件
      */
     public static void initTemplate() {
-        Ansi.OUT.blue("ScxTemplate 初始化完成...").ln();
+        Ansi.out().blue("ScxTemplate 初始化完成...").ln();
     }
 
     /**

@@ -16,7 +16,7 @@ public class UploadModule implements BaseModule {
      * start
      */
     @Override
-    public void init() {
+    public void start() {
         UploadConfig.initConfig();
     }
 

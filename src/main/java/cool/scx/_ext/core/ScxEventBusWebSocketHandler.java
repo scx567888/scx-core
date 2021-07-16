@@ -52,7 +52,7 @@ public class ScxEventBusWebSocketHandler implements BaseWSHandler {
     @Override
     public void onOpen(ServerWebSocket webSocket) {
         ScxContext.addOnlineItem(webSocket, null);
-        Ansi.OUT.brightBlue(webSocket.binaryHandlerID() + " 连接了!!! 当前总连接数 : " + ScxContext.getOnlineItemList().size()).ln();
+        Ansi.out().brightBlue(webSocket.binaryHandlerID() + " 连接了!!! 当前总连接数 : " + ScxContext.getOnlineItemList().size()).ln();
     }
 
     /**
@@ -64,7 +64,7 @@ public class ScxEventBusWebSocketHandler implements BaseWSHandler {
     public void onClose(ServerWebSocket webSocket) {
         //如果客户端终止连接 将此条连接作废
         ScxContext.removeOnlineItemByWebSocket(webSocket);
-        Ansi.OUT.brightRed(webSocket.binaryHandlerID() + " 关闭了!!! 当前总连接数 : " + ScxContext.getOnlineItemList().size()).ln();
+        Ansi.out().brightRed(webSocket.binaryHandlerID() + " 关闭了!!! 当前总连接数 : " + ScxContext.getOnlineItemList().size()).ln();
     }
 
     /**
@@ -88,7 +88,7 @@ public class ScxEventBusWebSocketHandler implements BaseWSHandler {
      */
     @Override
     public void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) {
-        Ansi.OUT.print("onBinaryMessage").ln();
+        Ansi.out().color("onBinaryMessage").ln();
     }
 
     /**

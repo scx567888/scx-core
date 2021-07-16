@@ -26,14 +26,15 @@ final class ScxBoot {
      * 在控制台上打印 banner
      */
     static void showBanner() {
-        Ansi.OUT.red("   ▄████████ ").green(" ▄████████ ").blue("▀████    ▐████▀ ").ln();
-        Ansi.OUT.red("  ███    ███ ").green("███    ███ ").blue("  ███▌   ████▀  ").ln();
-        Ansi.OUT.red("  ███    █▀  ").green("███    █▀  ").blue("   ███  ▐███    ").ln();
-        Ansi.OUT.red("  ███        ").green("███        ").blue("   ▀███▄███▀    ").ln();
-        Ansi.OUT.red("▀███████████ ").green("███        ").blue("   ████▀██▄     ").ln();
-        Ansi.OUT.red("         ███ ").green("███    █▄  ").blue("  ▐███  ▀███    ").ln();
-        Ansi.OUT.red("   ▄█    ███ ").green("███    ███ ").blue(" ▄███     ███▄  ").ln();
-        Ansi.OUT.red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(ScxConfig.SCX_VERSION).ln();
+        Ansi.out()
+                .red("   ▄████████ ").green(" ▄████████ ").blue("▀████    ▐████▀ ").ln()
+                .red("  ███    ███ ").green("███    ███ ").blue("  ███▌   ████▀  ").ln()
+                .red("  ███    █▀  ").green("███    █▀  ").blue("   ███  ▐███    ").ln()
+                .red("  ███        ").green("███        ").blue("   ▀███▄███▀    ").ln()
+                .red("▀███████████ ").green("███        ").blue("   ████▀██▄     ").ln()
+                .red("         ███ ").green("███    █▄  ").blue("  ▐███  ▀███    ").ln()
+                .red("   ▄█    ███ ").green("███    ███ ").blue(" ▄███     ███▄  ").ln()
+                .red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(ScxConfig.SCX_VERSION).println();
     }
 
     /**
@@ -47,7 +48,7 @@ final class ScxBoot {
             for (LoginItem loginItem : loginItems) {
                 ScxAuth.addLoginItem(loginItem);
             }
-            Ansi.OUT.brightGreen("成功从 SessionCache 中恢复 " + ScxAuth.getAllLoginItem().size() + " 条数据!!!").ln();
+            Ansi.out().brightGreen("成功从 SessionCache 中恢复 " + ScxAuth.getAllLoginItem().size() + " 条数据!!!").ln();
         } catch (Exception ignored) {
 
         }
@@ -55,8 +56,8 @@ final class ScxBoot {
             try (var f = new FileOutputStream(sessionCache); var o = new ObjectOutputStream(f)) {
                 // 执行模块的 stop 生命周期
                 ScxModuleHandler.stopModules();
-                Ansi.OUT.red("项目正在停止!!!").ln();
-                Ansi.OUT.red("保存 Session 中!!!").ln();
+                Ansi.out().red("项目正在停止!!!").ln();
+                Ansi.out().red("保存 Session 中!!!").ln();
                 o.writeObject(ScxAuth.getAllLoginItem().toArray(new LoginItem[0]));
             } catch (IOException ignored) {
 

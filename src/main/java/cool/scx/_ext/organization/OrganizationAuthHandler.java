@@ -85,7 +85,7 @@ public class OrganizationAuthHandler implements AuthHandler {
         currentUser.password = StringUtils.isEmpty(newUserInfo.password) ? null : CryptoUtils.encryptPassword(newUserInfo.password);
         //更新成功
         if (userService.update(currentUser) != null) {
-            Ansi.OUT.print("更新了自己的信息 用户名是 :" + currentUser.username).ln();
+            Ansi.out().color("更新了自己的信息 用户名是 :" + currentUser.username).ln();
             return Json.ok();
         } else {
             return Json.fail();
@@ -100,7 +100,7 @@ public class OrganizationAuthHandler implements AuthHandler {
     public Json logout() {
         var ctx = ScxContext.routingContext();
         var b = ScxAuth.removeAuthUser(ctx);
-        Ansi.OUT.print("当前总登录用户数量 : " + ScxAuth.getAllLoginItem().size() + " 个").ln();
+        Ansi.out().color("当前总登录用户数量 : " + ScxAuth.getAllLoginItem().size() + " 个").ln();
         return b ? Json.ok() : Json.fail();
     }
 
@@ -119,7 +119,7 @@ public class OrganizationAuthHandler implements AuthHandler {
             //这里和用户密码错误   可以使用相同的 提示信息 防止恶意破解
             return Json.fail(OrganizationConfig.confusionLoginError() ? "usernameOrPasswordError" : "passwordError");
         } else {
-            Ansi.OUT.print("登录出错 : " + e.getMessage()).ln();
+            Ansi.out().color("登录出错 : " + e.getMessage()).ln();
             return Json.fail("logonFailure");
         }
     }
@@ -203,7 +203,7 @@ public class OrganizationAuthHandler implements AuthHandler {
             updateLastLoginDateAndIP(loginUser.username);
             //这里根据登录设备向客户端返回不同的信息
             var loginDevice = ScxAuth.getDevice(ScxContext.routingContext());
-            Ansi.OUT.print(loginUser.username + " 登录了 , 登录设备 [" + loginDevice + "] , 当前总登录用户数量 : " + ScxAuth.getAllLoginItem().size() + " 个").ln();
+            Ansi.out().color(loginUser.username + " 登录了 , 登录设备 [" + loginDevice + "] , 当前总登录用户数量 : " + ScxAuth.getAllLoginItem().size() + " 个").ln();
             if (loginDevice == DeviceType.WEBSITE) {
                 return Json.fail("login-successful");
             } else {

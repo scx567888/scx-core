@@ -3,12 +3,17 @@ package cool.scx.module;
 import cool.scx.BaseModule;
 import cool.scx.Scx;
 import cool.scx.ScxEventBus;
+import cool.scx.config.ScxConfig;
+import cool.scx.context.ScxContext;
 import cool.scx.util.Ansi;
+import cool.scx.util.FileUtils;
+import cool.scx.util.ScxUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 模块 Handler
@@ -34,12 +39,18 @@ public final class ScxModuleHandler {
     private static final List<ScxModule> SCX_MODULE_LIST = new ArrayList<>();
 
     /**
-     * <p>initModules.</p>
+     * Constant <code>PLUGIN_ROOT</code>
      */
-    public static void initModules() {
-        for (var scxModule : SCX_MODULE_LIST) {
-            Scx.execute(scxModule.baseModuleExample::init);
-        }
+    private static final String PLUGIN_ROOT = "AppRoot:plugins";
+
+    static {
+        //Bean 加载完毕后的消费者
+        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REGISTER_NAME, o -> {
+            var scxModuleList = ScxUtils.cast(o);
+            for (ScxModule scxModule : scxModuleList) {
+                Scx.execute(scxModule.baseModuleExample::start);
+            }
+        });
     }
 
     /**
@@ -49,6 +60,7 @@ public final class ScxModuleHandler {
      */
     public static void addModule(ScxModule module) {
         SCX_MODULE_LIST.add(module);
+        ScxEventBus.publish(ON_SCX_MODULE_REGISTER_NAME, List.of(module));
     }
 
     /**
@@ -64,20 +76,6 @@ public final class ScxModuleHandler {
 
     public static ScxModule findModule(String moduleName) {
         return SCX_MODULE_LIST.stream().filter(m -> m.moduleName.equalsIgnoreCase(moduleName)).findAny().orElse(null);
-    }
-
-    /**
-     * <p>addModule.</p>
-     *
-     * @param baseModule a T object.
-     * @param <T>        a T object.
-     */
-    public static <T extends BaseModule> void addModule(T baseModule) {
-        try {
-            SCX_MODULE_LIST.add(new ScxModule(baseModule));
-        } catch (URISyntaxException | IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -124,59 +122,61 @@ public final class ScxModuleHandler {
         }
     }
 
-
-    /**
-     * Constant <code>PLUGIN_ROOT</code>
-     */
-    private static final String PLUGIN_ROOT = "AppRoot:plugins";
-
     /**
      * <p>reloadPlugins.</p>
      */
     public static void reloadPlugins() {
-        Ansi.OUT.yellow("ScxPlugins 重新加载中...").ln();
+        Ansi.out().yellow("ScxPlugins 重新加载中...").ln();
         loadPlugins();
-        Ansi.OUT.yellow("ScxPlugins 重新加载完成...").ln();
+        Ansi.out().yellow("ScxPlugins 重新加载完成...").ln();
     }
 
     /**
      * 初始化插件
      */
     public static void initPlugins() {
-        Ansi.OUT.yellow("ScxPlugins 初始化中...").ln();
+        Ansi.out().yellow("ScxPlugins 初始化中...").ln();
         loadPlugins();
-        Ansi.OUT.yellow("ScxPlugins 初始化完成...").ln();
+        Ansi.out().yellow("ScxPlugins 初始化完成...").ln();
     }
 
     /**
      * <p>init.</p>
      */
-    private static void loadPlugins() {
-//        var pluginRoot = FileUtils.getFileByAppRoot(PLUGIN_ROOT);
-//        if (pluginRoot.exists()) {
-//            var allPluginJar = pluginRoot.listFiles((file, s) -> s.endsWith(".jar"));
-//            if (allPluginJar != null) {
-//                for (File file : allPluginJar) {
-//                    //判断是否被禁用
-//                    var f = ScxConfig.disabledPluginList().contains(file.getName());
-//                    if (f) {
-//                        Ansi.OUT.brightRed("找到插件 名称 [" + file.getName() + "] 已禁用!!!").ln();
-//                    } else {
-//                        try {
-//                            ScxModuleItem moduleByFile = ScxModuleHandler.getModuleByFile(file);
-//                            moduleByFile.isPlugin = true;
-//                            ScxModuleHandler.addModule(moduleByFile);
-//                            Ansi.OUT.yellow("找到插件 文件名称 [" + file.getName() + "] 插件名称 [" + moduleByFile.moduleName + "] 已加载!!!").ln();
-//                        } catch (Exception e) {
-//                            Ansi.OUT.red("找到插件 文件名称 [" + file.getName() + "] 已损坏 !!!").ln();
-//                        }
-//                    }
-//                }
-//            }
-//            Ansi.OUT.yellow("共加载 " + ScxModuleHandler.getAllPluginModule().size() + " 个插件 !!!").ln();
-//        } else {
-//            Ansi.OUT.red("插件目录不存在 未加载任何插件!!!").ln();
-//        }
+    public static void loadPlugins() {
+        var pluginRoot = FileUtils.getFileByAppRoot(PLUGIN_ROOT);
+        if (pluginRoot.exists()) {
+            var allPluginJar = pluginRoot.listFiles((file, s) -> s.endsWith(".jar"));
+            if (allPluginJar != null) {
+                for (var file : allPluginJar) {
+                    //判断是否被禁用
+                    var f = ScxConfig.disabledPlugins().contains(file.getName());
+                    if (f) {
+                        Ansi.out().brightRed("找到插件 名称 [" + file.getName() + "] 已禁用!!!").ln();
+                    } else {
+                        try {
+                            var pluginModule = new ScxModule(file, true);
+                            ScxModuleHandler.addModule(pluginModule);
+                            Ansi.out().yellow("找到插件 文件名称 [" + file.getName() + "] 插件名称 [" + pluginModule.moduleName + "] 已加载!!!").ln();
+                        } catch (Exception e) {
+                            Ansi.out().red("找到插件 文件名称 [" + file.getName() + "] 已损坏 !!!").ln();
+                        }
+                    }
+                }
+            }
+            Ansi.out().yellow("共加载 " + getAllPluginModule().size() + " 个插件 !!!").ln();
+        } else {
+            Ansi.out().red("插件目录不存在 未加载任何插件!!!").ln();
+        }
+    }
+
+    /**
+     * 所有插件 模块
+     *
+     * @return a {@link java.util.List} object.
+     */
+    public static List<ScxModule> getAllPluginModule() {
+        return SCX_MODULE_LIST.stream().filter(scxModule -> scxModule.isPlugin).collect(Collectors.toList());
     }
 
 }
