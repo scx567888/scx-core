@@ -111,7 +111,7 @@ public final class Scx {
             APP_KEY = appModule.appKey();
         }
         if (DEFAULT_APP_KEY.equals(APP_KEY)) {
-            Ansi.out().red("注意!!! 检测到使用了默认的 DEFAULT_APP_KEY , 这是非常不安全的 , 建议重写自定义模块的 appKey() 方法以设置自定义的 APP_KEY !!!").ln();
+            Ansi.out().red("注意!!! 检测到使用了默认的 DEFAULT_APP_KEY , 这是非常不安全的 , 建议重写自定义模块的 appKey() 方法以设置自定义的 APP_KEY !!!").println();
         }
     }
 

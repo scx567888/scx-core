@@ -26,13 +26,13 @@ public class AuthLoginHandler {
     public void loginByWebSocket(WSBody wsBody) {
         String token = wsBody.data().get("token").asText();
         if (token != null) {
-            Ansi.out().green(token).ln();
+            Ansi.out().green(token).println();
             AuthUser loginUserByToken = ScxAuth.getLoginUserByToken(token);
             //这条websocket 连接验证通过
             if (loginUserByToken != null) {
                 ScxContext.addOnlineItem(wsBody.webSocket(), loginUserByToken._UniqueID());
-                Ansi.out().brightGreen(wsBody.webSocket().binaryHandlerID() + " 登录了!!! 登录的 ID 为 : " + loginUserByToken._UniqueID()).ln();
-                Ansi.out().brightYellow("当前总在线用户数量 : " + ScxContext.getOnlineUserCount()).ln();
+                Ansi.out().brightGreen(wsBody.webSocket().binaryHandlerID() + " 登录了!!! 登录的 ID 为 : " + loginUserByToken._UniqueID()).println();
+                Ansi.out().brightYellow("当前总在线用户数量 : " + ScxContext.getOnlineUserCount()).println();
             }
         }
     }

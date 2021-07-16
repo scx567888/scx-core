@@ -61,7 +61,7 @@ public class OrderBy {
         } else if ("DESC".equalsIgnoreCase(orderByStr.trim())) {
             return add(orderByColumn, OrderByType.DESC);
         } else {
-            Ansi.out().brightRed("排序类型有误 : " + orderByStr + " , 排序字段名称 : " + orderByColumn + " , 只能是 asc 或 desc (不区分大小写) !!!").ln();
+            Ansi.out().brightRed("排序类型有误 : " + orderByStr + " , 排序字段名称 : " + orderByColumn + " , 只能是 asc 或 desc (不区分大小写) !!!").println();
             return this;
         }
     }
@@ -91,7 +91,7 @@ public class OrderBy {
         } else if ("DESC".equalsIgnoreCase(orderByStr.trim())) {
             return addSQL(orderByColumn, OrderByType.DESC);
         } else {
-            Ansi.out().brightRed("排序类型有误 : " + orderByStr + " , 排序字段名称 : " + orderByColumn + " , 只能是 asc 或 desc (不区分大小写) !!!").ln();
+            Ansi.out().brightRed("排序类型有误 : " + orderByStr + " , 排序字段名称 : " + orderByColumn + " , 只能是 asc 或 desc (不区分大小写) !!!").println();
             return this;
         }
     }

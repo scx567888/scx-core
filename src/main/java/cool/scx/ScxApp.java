@@ -41,7 +41,6 @@ public final class ScxApp {
         Timer.start("ScxApp");
         // 显示 banner
         ScxBoot.showBanner();
-        System.out.println(Timer.stopToMillis("ScxApp"));
         // 确定 appRoot 及 appKey
         Scx.initScx(modules);
         // 初始化 配置文件

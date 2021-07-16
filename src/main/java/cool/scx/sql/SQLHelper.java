@@ -81,7 +81,7 @@ public final class SQLHelper {
 
                 if (nonExistentFields.size() != 0) {
                     var columns = nonExistentFields.stream().map(field -> CaseUtils.toSnake(field.getName())).collect(Collectors.joining(" , ", " [ ", " ] "));
-                    Ansi.out().brightBlue("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!").ln();
+                    Ansi.out().brightBlue("未找到表 " + table.tableName + " 中的 " + columns + " 字段 --> 正在自动建立 !!!").println();
                     var addSql = nonExistentFields.stream().map(field -> " ADD " + getSQLColumn(field)).collect(Collectors.joining(",", "", ""));
                     var alertSql = "ALTER TABLE `" + table.tableName + "` " + addSql;
                     var otherSQLByField = getOtherSQL(nonExistentFields.toArray(Field[]::new));
@@ -96,7 +96,7 @@ public final class SQLHelper {
                     return FixTableResult.NO_NEED_TO_FIX;
                 }
             } else {
-                Ansi.out().brightMagenta("未找到表 " + table.tableName + " --> 正在自动建立 !!!").ln();
+                Ansi.out().brightMagenta("未找到表 " + table.tableName + " --> 正在自动建立 !!!").println();
                 var createTableSql = "CREATE TABLE `" + table.tableName + "` ( " + Stream.of(table.allFields).map(field -> getSQLColumn(field) + ",").collect(Collectors.joining("", "", "")) + String.join(",", getOtherSQL(table.allFields)) + ") ;";
                 SQLRunner.execute(createTableSql, null);
                 return FixTableResult.FIX_SUCCESS;

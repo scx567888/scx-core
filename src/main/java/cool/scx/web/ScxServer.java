@@ -34,10 +34,10 @@ public final class ScxServer {
     static {
         Scx.vertx().eventBus().consumer("startVertxServer", (message) -> {
             var port = message.body().toString();
-            Ansi.out().green("服务器启动成功... 用时 " + Timer.stopToMillis("ScxApp") + " ms").ln();
+            Ansi.out().green("服务器启动成功... 用时 " + Timer.stopToMillis("ScxApp") + " ms").println();
             var httpOrHttps = ScxConfig.isOpenHttps() ? "https" : "http";
-            Ansi.out().green("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/").ln();
-            Ansi.out().green("> 本地 : " + httpOrHttps + "://localhost:" + port + "/").ln();
+            Ansi.out().green("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + port + "/").println();
+            Ansi.out().green("> 本地 : " + httpOrHttps + "://localhost:" + port + "/").println();
         });
     }
 
@@ -46,7 +46,7 @@ public final class ScxServer {
      */
     public static void initServer() {
         loadServer();
-        Ansi.out().brightYellow("服务器初始化完毕...").ln();
+        Ansi.out().brightYellow("服务器初始化完毕...").println();
     }
 
     private static void loadServer() {
@@ -86,9 +86,9 @@ public final class ScxServer {
     public static void stopServer() {
         stopServer(c -> {
             if (c.succeeded()) {
-                Ansi.out().brightRed("服务器已停止...").ln();
+                Ansi.out().brightRed("服务器已停止...").println();
             } else {
-                Ansi.out().brightRed("服务器停止失败...").ln();
+                Ansi.out().brightRed("服务器停止失败...").println();
             }
         });
     }

@@ -2,9 +2,6 @@ package cool.scx.util;
 
 import cool.scx.enumeration.AnsiColor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 向控制台打印彩色
  *
@@ -18,13 +15,15 @@ public final class Ansi {
      */
     private static final AnsiColor[] printColor = AnsiColor.values();
 
-
     /**
      * 下一个颜色 做内部索引使用
      */
     private static int nextPrintColor = 0;
 
-    private final List<String> stringList = new ArrayList<>();
+    /**
+     * 待输出的数据
+     */
+    private final StringBuilder stringBuilder = new StringBuilder();
 
     private Ansi() {
     }
@@ -211,7 +210,7 @@ public final class Ansi {
      * @return a {@link cool.scx.util.Ansi} object.
      */
     public Ansi ln() {
-        add(System.lineSeparator(), AnsiColor.DEFAULT_COLOR);
+        stringBuilder.append(System.lineSeparator());
         return this;
     }
 
@@ -235,16 +234,16 @@ public final class Ansi {
     }
 
     private void add(Object o, AnsiColor ansiColor) {
-        stringList.add("\u001B[" + ansiColor.code() + "m" + o.toString() + "\u001B[0m");
+        stringBuilder.append("\u001B[").append(ansiColor.code()).append("m").append(o).append("\u001B[0m");
     }
 
     public void print() {
-        System.out.print(String.join("", stringList));
+        System.out.print(stringBuilder);
     }
 
     public void println() {
         ln();
-        System.out.print(String.join("", stringList));
+        System.out.print(stringBuilder);
     }
 
 }

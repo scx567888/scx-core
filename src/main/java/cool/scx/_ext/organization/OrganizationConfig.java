@@ -18,8 +18,8 @@ public class OrganizationConfig {
      */
     public static void initConfig() {
         confusionLoginError = ScxConfig.get("core.auth.confusion-login-error", false,
-                s -> Ansi.out().magenta("Y 是否混淆登录错误                     \t -->\t " + (s ? "是" : "否")).ln(),
-                f -> Ansi.out().red("N 未检测到 core.auth.confusion-login-error \t -->\t 已采用默认值 : " + f).ln());
+                s -> Ansi.out().magenta("Y 是否混淆登录错误                     \t -->\t " + (s ? "是" : "否")).println(),
+                f -> Ansi.out().red("N 未检测到 core.auth.confusion-login-error \t -->\t 已采用默认值 : " + f).println());
     }
 
     /**

@@ -48,7 +48,7 @@ final class ScxBoot {
             for (LoginItem loginItem : loginItems) {
                 ScxAuth.addLoginItem(loginItem);
             }
-            Ansi.out().brightGreen("成功从 SessionCache 中恢复 " + ScxAuth.getAllLoginItem().size() + " 条数据!!!").ln();
+            Ansi.out().brightGreen("成功从 SessionCache 中恢复 " + ScxAuth.getAllLoginItem().size() + " 条数据!!!").println();
         } catch (Exception ignored) {
 
         }
@@ -56,8 +56,8 @@ final class ScxBoot {
             try (var f = new FileOutputStream(sessionCache); var o = new ObjectOutputStream(f)) {
                 // 执行模块的 stop 生命周期
                 ScxModuleHandler.stopModules();
-                Ansi.out().red("项目正在停止!!!").ln();
-                Ansi.out().red("保存 Session 中!!!").ln();
+                Ansi.out().red("项目正在停止!!!").println();
+                Ansi.out().red("保存 Session 中!!!").println();
                 o.writeObject(ScxAuth.getAllLoginItem().toArray(new LoginItem[0]));
             } catch (IOException ignored) {
 

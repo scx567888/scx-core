@@ -46,7 +46,7 @@ public final class ScxDBContext {
         if (!checkDataSource()) {
             return;
         }
-        Ansi.out().brightMagenta("检查数据表结构中...").ln();
+        Ansi.out().brightMagenta("检查数据表结构中...").println();
         //已经显示过修复表的 gui 这里使用 flag 只显示一次
         boolean alreadyShowConfirmFixTable = false;
         //修复成功的表
@@ -67,7 +67,7 @@ public final class ScxDBContext {
                             var cancelFix = !SQLGUIHandler.confirmFixTable();
                             //如果取消修复 直接跳出这个方法
                             if (cancelFix) {
-                                Ansi.out().brightMagenta("已取消修复表...").ln();
+                                Ansi.out().brightMagenta("已取消修复表...").println();
                                 return;
                             }
                             //设置 flag
@@ -88,13 +88,13 @@ public final class ScxDBContext {
         }
 
         if (fixSuccess != 0) {
-            Ansi.out().brightMagenta("修复成功 " + fixSuccess + " 张表...").ln();
+            Ansi.out().brightMagenta("修复成功 " + fixSuccess + " 张表...").println();
         }
         if (fixFail != 0) {
-            Ansi.out().brightMagenta("修复失败 " + fixFail + " 张表...").ln();
+            Ansi.out().brightMagenta("修复失败 " + fixFail + " 张表...").println();
         }
         if (fixSuccess + fixFail == 0) {
-            Ansi.out().brightMagenta("没有表需要修复...").ln();
+            Ansi.out().brightMagenta("没有表需要修复...").println();
         }
 
     }
@@ -103,14 +103,14 @@ public final class ScxDBContext {
      * <p>initDB.</p>
      */
     public static void initDB() {
-        Ansi.out().brightMagenta("ScxDBContext 初始化完成...").ln();
+        Ansi.out().brightMagenta("ScxDBContext 初始化完成...").println();
     }
 
     private static boolean checkDataSource() {
         DataSource ds = getDataSourceByConfig();
         try (var conn = ds.getConnection()) {
             var dm = conn.getMetaData();
-            Ansi.out().brightMagenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").ln();
+            Ansi.out().brightMagenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").println();
             dataSource = ds;
             return true;
         } catch (Exception e) {

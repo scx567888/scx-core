@@ -90,7 +90,7 @@ public final class BaseDao<Entity extends BaseModel> {
     public List<Long> insertList(List<Entity> entityList) {
         var size = entityList.size();
         if (size > splitSize) {
-            Ansi.out().brightRed("批量插入数据量过大 , 达到" + size + "条 !!! 已按照 " + splitSize + " 条一组进行切割并分段插入 !!!").ln();
+            Ansi.out().brightRed("批量插入数据量过大 , 达到" + size + "条 !!! 已按照 " + splitSize + " 条一组进行切割并分段插入 !!!").println();
             var generatedKeys = new ArrayList<Long>(splitSize);
             double number = Math.ceil(1.0 * size / splitSize);
             for (int i = 0; i < number; i++) {

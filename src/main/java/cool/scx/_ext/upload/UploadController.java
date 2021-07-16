@@ -131,7 +131,7 @@ public class UploadController {
     public Download download(String fileId) throws HttpRequestException {
         var uploadFile = checkFileId(fileId);
         var file = checkPhysicalFile(uploadFile);
-        Ansi.out().brightBlue("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + uploadFile.fileName).ln();
+        Ansi.out().brightBlue("ip 为 :" + NetUtils.getIpAddr() + "的用户 下载了" + uploadFile.fileName).println();
         //  这里让文件限速到 500 kb
         return new Download(file, uploadFile.fileName);
     }

@@ -66,7 +66,7 @@ public final class ScxConfig {
         loadParamsConfig();
         loadEasyToUseConfig();
         Scx.execute(ScxConfig::watchConfig);
-        Ansi.out().green("ScxConfig 初始化完成...").ln();
+        Ansi.out().green("ScxConfig 初始化完成...").println();
     }
 
     /**
@@ -98,12 +98,12 @@ public final class ScxConfig {
             var jsonConfigMap = mapper.readValue(scxConfigJson, new TypeReference<Map<String, Object>>() {
             });
             CONFIG_EXAMPLE.putAll(MapUtils.flatMap(jsonConfigMap, null));
-            Ansi.out().brightBlue("已加载配置文件  " + scxConfigJson.getPath()).ln();
+            Ansi.out().brightBlue("已加载配置文件  " + scxConfigJson.getPath()).println();
         } catch (Exception e) {
             if (e instanceof JsonProcessingException) {
-                Ansi.out().red("N 配置文件已损坏!!! 请确保配置文件正确 scx-config.json").ln();
+                Ansi.out().red("N 配置文件已损坏!!! 请确保配置文件正确 scx-config.json").println();
             } else if (e instanceof ConfigFileMissingException) {
-                Ansi.out().red("N 配置文件已丢失!!! 请确保配置文件存在 scx-config.json").ln();
+                Ansi.out().red("N 配置文件已丢失!!! 请确保配置文件存在 scx-config.json").println();
             } else {
                 e.printStackTrace();
             }
@@ -346,10 +346,10 @@ public final class ScxConfig {
             @Override
             public void onModify(Path path) {
                 if (path.equals(configPath)) {
-                    Ansi.out().green("ScxConfig 已修改,重新加载中...").ln();
+                    Ansi.out().green("ScxConfig 已修改,重新加载中...").println();
                     loadJsonConfig();
                     loadEasyToUseConfig();
-                    Ansi.out().green("ScxConfig 重新加载完成...").ln();
+                    Ansi.out().green("ScxConfig 重新加载完成...").println();
                 }
             }
 

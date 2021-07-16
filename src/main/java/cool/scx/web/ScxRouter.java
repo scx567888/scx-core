@@ -49,8 +49,8 @@ public final class ScxRouter {
             var scxModuleList = ScxUtils.cast(o);
             ScxMappingHandlerRegister.register(vertRouter, scxModuleList);
             addWebSocketRouter(scxModuleList);
-            Ansi.out().brightYellow("已加载 " + routeSize() + " 个 Http 路由 !!!").ln();
-            Ansi.out().brightYellow("已加载 " + webSocketRouteSize() + " 个 WebSocket 路由 !!!").ln();
+            Ansi.out().brightYellow("已加载 " + routeSize() + " 个 Http 路由 !!!").println();
+            Ansi.out().brightYellow("已加载 " + webSocketRouteSize() + " 个 WebSocket 路由 !!!").println();
         });
 
         //Bean 销毁时的消费者

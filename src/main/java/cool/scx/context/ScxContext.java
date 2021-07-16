@@ -61,7 +61,7 @@ public final class ScxContext {
 //                if (ScxConfig.showLog()) {
                 if (false) {
                     var beanList = Arrays.stream(allBean).filter(s -> s.startsWith(scxModule.basePackage)).collect(Collectors.toList());
-                    Ansi.out().brightBlue("模块 [" + scxModule.moduleName + "] 共加载 " + beanList.size() + " 个 Bean !!!").ln();
+                    Ansi.out().brightBlue("模块 [" + scxModule.moduleName + "] 共加载 " + beanList.size() + " 个 Bean !!!").println();
                     beanList.forEach(c -> Ansi.out().brightYellow(c).ln());
                 }
             }
@@ -79,7 +79,7 @@ public final class ScxContext {
                         APPLICATION_CONTEXT.removeBeanDefinition(beanName);
                     }
                 }
-                Ansi.out().brightBlue("模块 [" + scxModule.moduleName + "] 已移除 " + 0 + " 个 Bean !!!").ln();
+                Ansi.out().brightBlue("模块 [" + scxModule.moduleName + "] 已移除 " + 0 + " 个 Bean !!!").println();
             }
             //通知其他模块 bean 注册完毕,可正常使用
             ScxEventBus.publish(ON_CONTEXT_REMOVE_NAME, scxModuleList);
@@ -107,7 +107,7 @@ public final class ScxContext {
 //                SCX_BEAN_CLASS_NAME_MAPPING.put(c.getSimpleName().toLowerCase(), c);
 //            } else {
 //                SCX_BEAN_CLASS_NAME_MAPPING.put(c.getName(), c);
-//                Ansi.out().brightRed("检测到重复名称的 class ").brightYellow("[" + aClass.getName() + "] ").blue("[" + c.getName() + "]").brightRed(" 可能会导致根据名称调用时意义不明确 !!! 建议修改 !!!").ln();
+//                Ansi.out().brightRed("检测到重复名称的 class ").brightYellow("[" + aClass.getName() + "] ").blue("[" + c.getName() + "]").brightRed(" 可能会导致根据名称调用时意义不明确 !!! 建议修改 !!!").println();
 //            }
 //        }
         return APPLICATION_CONTEXT.getBeanDefinitionNames();
@@ -137,7 +137,7 @@ public final class ScxContext {
      * 初始化 context
      */
     public static void initContext() {
-        Ansi.out().brightBlue("ScxContext 初始化完成...").ln();
+        Ansi.out().brightBlue("ScxContext 初始化完成...").println();
     }
 
     /**

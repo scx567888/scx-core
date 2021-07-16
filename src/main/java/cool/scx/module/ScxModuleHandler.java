@@ -126,18 +126,18 @@ public final class ScxModuleHandler {
      * <p>reloadPlugins.</p>
      */
     public static void reloadPlugins() {
-        Ansi.out().yellow("ScxPlugins 重新加载中...").ln();
+        Ansi.out().yellow("ScxPlugins 重新加载中...").println();
         loadPlugins();
-        Ansi.out().yellow("ScxPlugins 重新加载完成...").ln();
+        Ansi.out().yellow("ScxPlugins 重新加载完成...").println();
     }
 
     /**
      * 初始化插件
      */
     public static void initPlugins() {
-        Ansi.out().yellow("ScxPlugins 初始化中...").ln();
+        Ansi.out().yellow("ScxPlugins 初始化中...").println();
         loadPlugins();
-        Ansi.out().yellow("ScxPlugins 初始化完成...").ln();
+        Ansi.out().yellow("ScxPlugins 初始化完成...").println();
     }
 
     /**
@@ -152,21 +152,21 @@ public final class ScxModuleHandler {
                     //判断是否被禁用
                     var f = ScxConfig.disabledPlugins().contains(file.getName());
                     if (f) {
-                        Ansi.out().brightRed("找到插件 名称 [" + file.getName() + "] 已禁用!!!").ln();
+                        Ansi.out().brightRed("找到插件 名称 [" + file.getName() + "] 已禁用!!!").println();
                     } else {
                         try {
                             var pluginModule = new ScxModule(file, true);
                             ScxModuleHandler.addModule(pluginModule);
-                            Ansi.out().yellow("找到插件 文件名称 [" + file.getName() + "] 插件名称 [" + pluginModule.moduleName + "] 已加载!!!").ln();
+                            Ansi.out().yellow("找到插件 文件名称 [" + file.getName() + "] 插件名称 [" + pluginModule.moduleName + "] 已加载!!!").println();
                         } catch (Exception e) {
-                            Ansi.out().red("找到插件 文件名称 [" + file.getName() + "] 已损坏 !!!").ln();
+                            Ansi.out().red("找到插件 文件名称 [" + file.getName() + "] 已损坏 !!!").println();
                         }
                     }
                 }
             }
-            Ansi.out().yellow("共加载 " + getAllPluginModule().size() + " 个插件 !!!").ln();
+            Ansi.out().yellow("共加载 " + getAllPluginModule().size() + " 个插件 !!!").println();
         } else {
-            Ansi.out().red("插件目录不存在 未加载任何插件!!!").ln();
+            Ansi.out().red("插件目录不存在 未加载任何插件!!!").println();
         }
     }
 

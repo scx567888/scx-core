@@ -18,14 +18,14 @@ public class SQLGUIHandler extends BaseGUIHandler {
      * @param e a {@link java.lang.Exception} object.
      */
     public static void dataSourceExceptionHandler(Exception e) {
-        Ansi.out().red("X 数据源连接失败 !!!").ln();
+        Ansi.out().red("X 数据源连接失败 !!!").println();
         var options = new Object[]{"忽略错误", "退出"};
         int result = JOptionPane.showOptionDialog(null, "错误信息:\r\n " + e.getMessage(), "N 数据源连接错误 !!!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options[0]);
         if (result == 1) {
             e.printStackTrace();
             System.exit(-1);
         } else {
-            Ansi.out().red("N 数据源链接错误,用户已忽略!!!").ln();
+            Ansi.out().red("N 数据源链接错误,用户已忽略!!!").println();
             e.printStackTrace();
         }
     }

@@ -184,7 +184,7 @@ public final class SQLRunner {
         }
         if (ScxConfig.showLog()) {
             var s = preparedStatement.toString();
-            Ansi.out().color(ScxConfig.DATETIME_FORMATTER.format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":"))).ln();
+            Ansi.out().color(ScxConfig.DATETIME_FORMATTER.format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":"))).println();
         }
         return preparedStatement;
     }
