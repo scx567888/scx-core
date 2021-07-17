@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>5.3.8</version>
+            <version>5.3.9</version>
         </dependency>
 
         <!-- mysql 驱动 注意 : 驱动版本应与当前开发使用数据库版本 [8.0.25] 对应 除非必要不要修改版本!!! -->
