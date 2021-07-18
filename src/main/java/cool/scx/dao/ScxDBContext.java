@@ -121,7 +121,7 @@ public final class ScxDBContext {
 
     private static DataSource getDataSourceByConfig() {
         var ds = new HikariDataSource();
-        ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        // ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
         var jdbcUrl = "jdbc:mysql://" + ScxConfig.dataSourceHost() + ":" + ScxConfig.dataSourcePort() + "/" + ScxConfig.dataSourceDatabase();
         for (String parameter : ScxConfig.dataSourceParameters()) {
             var p = parameter.split("=");
