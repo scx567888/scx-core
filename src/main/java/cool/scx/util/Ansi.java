@@ -254,7 +254,7 @@ public final class Ansi {
      */
     public void println() {
         ln();
-        System.out.print(stringBuilder);
+        print();
     }
 
 }
