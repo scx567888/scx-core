@@ -85,7 +85,7 @@ public final class BaseDao<Entity extends BaseModel> {
             }
             mapList.add(map);
         }
-        return SQLRunner.update(sql, mapList).generatedKeys;
+        return SQLRunner.updateBatch(sql, mapList).generatedKeys;
     }
 
     /**

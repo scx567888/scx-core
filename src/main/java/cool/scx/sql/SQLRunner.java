@@ -162,7 +162,7 @@ public final class SQLRunner {
      * @param paramMapList p
      * @return r
      */
-    public static UpdateResult update(String sql, List<Map<String, Object>> paramMapList) {
+    public static UpdateResult updateBatch(String sql, List<Map<String, Object>> paramMapList) {
         var ids = new ArrayList<Long>();
         var affectedLength = -1;
         try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, paramMapList)) {
