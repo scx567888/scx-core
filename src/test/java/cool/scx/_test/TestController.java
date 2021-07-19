@@ -11,10 +11,7 @@ import cool.scx.bo.Query;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.Method;
 import cool.scx.module.ScxModuleHandler;
-import cool.scx.util.DigestUtils;
-import cool.scx.util.FileTypeUtils;
-import cool.scx.util.HttpUtils;
-import cool.scx.util.StringUtils;
+import cool.scx.util.*;
 import cool.scx.vo.*;
 
 import java.net.http.HttpResponse;
@@ -54,28 +51,20 @@ public class TestController {
     @ScxMapping(value = "/", method = Method.GET)
     public Html TestIndex() {
         long count = userService.count(new Query());
-        if (count < 50) {
-            var s1 = new ArrayList<User>();
-            for (int i = 0; i < 25; i++) {
-                var s = new User();
-                var uuid = StringUtils.getUUID();
-                //测试表情符能否存储
-                s.username = uuid + "👶";
-                s.nickname = uuid + "🥝";
-                s.password = uuid;
-                s.isAdmin = false;
-                s1.add(s);
-            }
-            userService.save(s1);
-            for (int i = 0; i < 25; i++) {
-                var s = new User();
-                var uuid = StringUtils.getUUID();
-                s.username = uuid;
-                s.nickname = uuid;
-                s.password = uuid;
-                userService.save(s);
-            }
+        Timer.forceStart("123123");
+        var s1 = new ArrayList<User>();
+        for (int i = 0; i < 9999; i++) {
+            var s = new User();
+            var uuid = StringUtils.getUUID();
+            //测试表情符能否存储
+            s.username = uuid + "👶";
+            s.nickname = uuid + "🥝";
+            s.password = uuid;
+            s.isAdmin = false;
+            s1.add(s);
         }
+        userService.save(s1);
+        System.out.println(Timer.stopToMillis("123123"));
         var users = userService.list(new Query().setPagination(100));
         Html index = Html.ofTemplate("index");
         index.add("userList", users);

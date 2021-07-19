@@ -14,6 +14,7 @@ import cool.scx.util.Ansi;
 import cool.scx.util.ScxUtils;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -133,6 +134,12 @@ public final class ScxDBContext {
         mysqlDataSource.setUser(ScxConfig.dataSourceUsername());
         mysqlDataSource.setPassword(ScxConfig.dataSourcePassword());
         mysqlDataSource.setPort(ScxConfig.dataSourcePort());
+        //设置 参数使 mysql 执行批量更新
+        try {
+            mysqlDataSource.setRewriteBatchedStatements(true);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
         // 设置参数值
         for (var parameter : ScxConfig.dataSourceParameters()) {
             var p = parameter.split("=");

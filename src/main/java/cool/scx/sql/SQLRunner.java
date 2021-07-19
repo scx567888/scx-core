@@ -10,6 +10,7 @@ import cool.scx.util.ObjectUtils;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -155,39 +156,127 @@ public final class SQLRunner {
     }
 
     /**
-     * 使用参数值 paramMap，填充 PreparedStatement
+     * 批量执行更新语句
      *
-     * @param con      连接对象
-     * @param sql      未处理的sql 语句
-     * @param paramMap 参数 map
-     * @return PreparedStatement
-     * @throws java.lang.Exception if any.
+     * @param sql          sql
+     * @param paramMapList p
+     * @return r
      */
-    private static PreparedStatement getPreparedStatement(Connection con, String sql, Map<String, Object> paramMap) throws Exception {
-        var result = pattern.matcher(sql).replaceAll("?");
-        var preparedStatement = con.prepareStatement(result, Statement.RETURN_GENERATED_KEYS);
-        var index = 1;
-        if (paramMap != null) {
-            var matcher = pattern.matcher(sql);
-            while (matcher.find()) {
-                var tempValue = paramMap.get(matcher.group(2));
-                if (tempValue != null) {
-                    if (SQLHelper.isSupportedType(tempValue.getClass())) {
-                        preparedStatement.setObject(index, tempValue);
-                    } else {
-                        preparedStatement.setString(index, ObjectUtils.beanToJson(tempValue));
-                    }
-                } else {
-                    preparedStatement.setObject(index, null);
-                }
-                index++;
+    public static UpdateResult update(String sql, List<Map<String, Object>> paramMapList) {
+        var ids = new ArrayList<Long>();
+        var affectedLength = -1;
+        try (var con = getConnection(); var preparedStatement = getPreparedStatement(con, sql, paramMapList)) {
+            affectedLength = preparedStatement.executeBatch().length;
+            var resultSet = preparedStatement.getGeneratedKeys();
+            while (resultSet.next()) {
+                ids.add(resultSet.getLong(1));
             }
+            if (ids.size() == 0) {
+                ids.add(-1L);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new UpdateResult(affectedLength, ids);
+    }
+
+    private static PreparedStatement getPreparedStatement(Connection con, String sql, Map<String, Object> paramMap) throws Exception {
+        var indexNameMapping = getIndexNameMapping(sql);
+        var preparedStatement = getPreparedStatement0(con, sql);
+        //循环加入
+        if (paramMap != null) {
+            setObject(indexNameMapping, preparedStatement, paramMap);
         }
         if (ScxConfig.showLog()) {
             var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
             Ansi.out().color(ScxConfig.DATETIME_FORMATTER.format(LocalDateTime.now()) + " " + realSQL).println();
         }
         return preparedStatement;
+    }
+
+    /**
+     * 获取 PreparedStatement (带填充数据)
+     *
+     * @param con          连接对象
+     * @param sql          包含具名参数的 sql 语句
+     * @param paramMapList 参数列表
+     * @return p
+     * @throws Exception 异常
+     */
+    private static PreparedStatement getPreparedStatement(Connection con, String sql, List<Map<String, Object>> paramMapList) throws Exception {
+        var indexNameMapping = getIndexNameMapping(sql);
+        var preparedStatement = getPreparedStatement0(con, sql);
+        //循环加入
+        for (var paramMap : paramMapList) {
+            if (paramMap != null) {
+                setObject(indexNameMapping, preparedStatement, paramMap);
+                preparedStatement.addBatch();
+            }
+        }
+        if (ScxConfig.showLog()) {
+            var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
+            Ansi.out().color(ScxConfig.DATETIME_FORMATTER.format(LocalDateTime.now()) + " " + realSQL + "... 额外的 " + (paramMapList.size() - 1) + " 项").println();
+        }
+        return preparedStatement;
+    }
+
+    /**
+     * 向 preparedStatement 填充数据
+     *
+     * @param indexNameMapping  索引名称映射表
+     * @param preparedStatement p
+     * @param paramMap          参数列表
+     * @throws SQLException e
+     */
+    private static void setObject(Map<Integer, String> indexNameMapping, PreparedStatement preparedStatement, Map<String, Object> paramMap) throws SQLException {
+        for (var key : indexNameMapping.keySet()) {
+            var name = indexNameMapping.get(key);
+            //获取 参数
+            var tempValue = paramMap.get(name);
+            if (tempValue != null) {
+                //判断是否为数据库(MySQL)直接支持的数据类型
+                if (SQLHelper.isSupportedType(tempValue.getClass())) {
+                    preparedStatement.setObject(key, tempValue);
+                } else {//不是则转换为 json 存入
+                    preparedStatement.setString(key, ObjectUtils.beanToJson(tempValue));
+                }
+            } else {
+                preparedStatement.setObject(key, null);
+            }
+        }
+    }
+
+    /**
+     * 根据 sql 获取 索引及名称映射表
+     *
+     * @param sql sql
+     * @return r
+     */
+    private static Map<Integer, String> getIndexNameMapping(String sql) {
+        var matcher = pattern.matcher(sql);
+        //索引和名称 mapping
+        var indexNameMapping = new HashMap<Integer, String>();
+        var nameIndex = 1;
+        while (matcher.find()) {
+            var name = matcher.group(2);
+            indexNameMapping.put(nameIndex, name);
+            nameIndex++;
+        }
+        return indexNameMapping;
+    }
+
+    /**
+     * 获取 PreparedStatement (注意!!! 此时数据并未填充)
+     *
+     * @param con con
+     * @param sql sql
+     * @return p
+     * @throws SQLException e
+     */
+    private static PreparedStatement getPreparedStatement0(Connection con, String sql) throws SQLException {
+        var matcher = pattern.matcher(sql);
+        String realSQL = matcher.replaceAll("?");
+        return con.prepareStatement(realSQL, Statement.RETURN_GENERATED_KEYS);
     }
 
 }

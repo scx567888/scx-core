@@ -10,7 +10,10 @@ import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -83,7 +86,7 @@ public final class SQLBuilder {
     /**
      * 所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
      */
-    private String[][] _values;
+    private String[] _values;
 
     /**
      * 初始化
@@ -174,19 +177,7 @@ public final class SQLBuilder {
      * @return a {@link cool.scx.sql.SQLBuilder} object.
      */
     public SQLBuilder Values(Field[] fields) {
-        _values = new String[1][fields.length];
-        _values[0] = Stream.of(fields).map(o -> ":" + o.getName()).toArray(String[]::new);
-        return this;
-    }
-
-    /**
-     * 设置值 (批量插入)
-     *
-     * @param values an array of {@link java.lang.String} objects.
-     * @return a {@link cool.scx.sql.SQLBuilder} object.
-     */
-    public SQLBuilder Values(String[][] values) {
-        _values = values;
+        _values = Stream.of(fields).map(o -> ":" + o.getName()).toArray(String[]::new);
         return this;
     }
 
@@ -357,12 +348,7 @@ public final class SQLBuilder {
     }
 
     private String GetInsertSQL() {
-        if (_values.length == 1) {
-            return " INSERT INTO " + _tableName + " ( " + String.join(",", _insertColumns) + " ) VALUES ( " + String.join(",", _values[0]) + " ) ";
-        } else {
-            var valuesStr = Arrays.stream(_values).map(v -> Arrays.stream(v).collect(Collectors.joining(",", "(", ")"))).collect(Collectors.joining(","));
-            return " INSERT INTO " + _tableName + " ( " + String.join(",", _insertColumns) + " ) VALUES " + valuesStr;
-        }
+        return " INSERT INTO " + _tableName + " ( " + String.join(",", _insertColumns) + " ) VALUES ( " + String.join(",", _values) + " ) ";
     }
 
     private String GetUpdateSQL() {

@@ -5,11 +5,13 @@ import cool.scx.bo.*;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.SQLRunner;
-import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -52,23 +54,6 @@ public final class BaseDao<Entity extends BaseModel> {
     }
 
     /**
-     * 将实体类转为 map 并添加索引
-     * 注意 此方法只能转换第一层
-     *
-     * @param index a {@link java.lang.Integer} object.
-     * @param o     a {@link java.lang.Object} object.
-     * @return a {@link java.util.Map} object.
-     */
-    private static Map<String, Object> beanToMapWithIndex(Integer index, Object o) {
-        var clazzFields = o.getClass().getFields(); // 获取所有方法
-        var objectMap = new HashMap<String, Object>(1 + (int) (clazzFields.length / 0.75));
-        for (var field : clazzFields) {
-            objectMap.put("list" + index + "." + field.getName(), ObjectUtils.getFieldValue(field, o));
-        }
-        return objectMap;
-    }
-
-    /**
      * 保存单条数据
      *
      * @param entity 待插入的数据
@@ -88,28 +73,19 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return 保存成功的主键 (ID) 列表
      */
     public List<Long> insertList(List<Entity> entityList) {
-        var size = entityList.size();
-        if (size > splitSize) {
-            Ansi.out().brightRed("批量插入数据量过大 , 达到" + size + "条 !!! 已按照 " + splitSize + " 条一组进行切割并分段插入 !!!").println();
-            var generatedKeys = new ArrayList<Long>(splitSize);
-            double number = Math.ceil(1.0 * size / splitSize);
-            for (int i = 0; i < number; i++) {
-                generatedKeys.addAll(insertList(entityList.subList(i * splitSize, (Math.min((i + 1) * splitSize, size)))));
-            }
-            return generatedKeys;
-        }
-        var values = new String[entityList.size()][tableInfo.canInsertFields.length];
-        var map = new LinkedHashMap<String, Object>();
-        for (int i = 0; i < entityList.size(); i++) {
-            for (int j = 0; j < tableInfo.canInsertFields.length; j++) {
-                values[i][j] = ":list" + i + "." + tableInfo.canInsertFields[j].getName();
-            }
-            //将 list 集合降级为 一维 map 结构 key 为  list{index}.{field} index 为索引 field 为字段名称
-            map.putAll(beanToMapWithIndex(i, entityList.get(i)));
-        }
+        //获取 sql 语句
         var sql = SQLBuilder.Insert(tableInfo.fullTableName).InsertColumns(tableInfo.canInsertFields)
-                .Values(values).GetSQL();
-        return SQLRunner.update(sql, map).generatedKeys;
+                .Values(tableInfo.canInsertFields).GetSQL();
+        //将 entity 转换为 map
+        var mapList = new ArrayList<Map<String, Object>>(entityList.size());
+        for (var entity : entityList) {
+            var map = new HashMap<String, Object>();
+            for (var canInsertField : tableInfo.canInsertFields) {
+                map.put(canInsertField.getName(), ObjectUtils.getFieldValue(canInsertField, entity));
+            }
+            mapList.add(map);
+        }
+        return SQLRunner.update(sql, mapList).generatedKeys;
     }
 
     /**
