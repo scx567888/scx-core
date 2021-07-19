@@ -1,5 +1,6 @@
 package cool.scx.dao;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.ScxEventBus;
 import cool.scx.annotation.ScxModel;
@@ -107,7 +108,7 @@ public final class ScxDBContext {
     }
 
     private static boolean checkDataSource() {
-        DataSource ds = getDataSourceByConfig();
+        var ds = getDataSource();
         try (var conn = ds.getConnection()) {
             var dm = conn.getMetaData();
             Ansi.out().brightMagenta("数据源连接成功 : 类型 [" + dm.getDatabaseProductName() + "]  版本 [" + dm.getDatabaseProductVersion() + "]").println();
@@ -119,20 +120,28 @@ public final class ScxDBContext {
         }
     }
 
-    private static DataSource getDataSourceByConfig() {
-        var ds = new HikariDataSource();
-        // ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        var jdbcUrl = "jdbc:mysql://" + ScxConfig.dataSourceHost() + ":" + ScxConfig.dataSourcePort() + "/" + ScxConfig.dataSourceDatabase();
-        for (String parameter : ScxConfig.dataSourceParameters()) {
+    private static DataSource getDataSource() {
+        var hikariDataSource = new HikariDataSource();
+        hikariDataSource.setDataSource(getMySQLDataSource());
+        return hikariDataSource;
+    }
+
+    private static MysqlDataSource getMySQLDataSource() {
+        var mysqlDataSource = new MysqlDataSource();
+        mysqlDataSource.setServerName(ScxConfig.dataSourceHost());
+        mysqlDataSource.setDatabaseName(ScxConfig.dataSourceDatabase());
+        mysqlDataSource.setUser(ScxConfig.dataSourceUsername());
+        mysqlDataSource.setPassword(ScxConfig.dataSourcePassword());
+        mysqlDataSource.setPort(ScxConfig.dataSourcePort());
+        // 设置参数值
+        for (var parameter : ScxConfig.dataSourceParameters()) {
             var p = parameter.split("=");
             if (p.length == 2) {
-                ds.addDataSourceProperty(p[0], p[1]);
+                var property = mysqlDataSource.getProperty(p[0]);
+                property.setValue(property.getPropertyDefinition().parseObject(p[1], null));
             }
         }
-        ds.setJdbcUrl(jdbcUrl);
-        ds.setUsername(ScxConfig.dataSourceUsername());
-        ds.setPassword(ScxConfig.dataSourcePassword());
-        return ds;
+        return mysqlDataSource;
     }
 
     /**

@@ -40,6 +40,11 @@ public final class TableInfo {
     public final String tableName;
 
     /**
+     * 全表名 (包含数据库限定名)
+     */
+    public final String fullTableName;
+
+    /**
      * 所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
      */
     public final String[] selectColumns;
@@ -51,6 +56,7 @@ public final class TableInfo {
      */
     public TableInfo(Class<?> clazz) {
         tableName = getTableName(clazz);
+        fullTableName = ScxConfig.dataSourceDatabase() + "." + getTableName(clazz);
         allFields = getAllFields(clazz);
         canInsertFields = getCanInsertFields(allFields);
         canUpdateFields = getCanUpdateFields(allFields);

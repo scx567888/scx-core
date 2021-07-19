@@ -76,7 +76,7 @@ public final class BaseDao<Entity extends BaseModel> {
      */
     public Long insert(Entity entity) {
         var c = Stream.of(tableInfo.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
-        var sql = SQLBuilder.Insert(tableInfo.tableName).InsertColumns(c).Values(c).GetSQL();
+        var sql = SQLBuilder.Insert(tableInfo.fullTableName).InsertColumns(c).Values(c).GetSQL();
         var updateResult = SQLRunner.update(sql, ObjectUtils.beanToMap(entity));
         return updateResult.generatedKeys.size() > 0 ? updateResult.generatedKeys.get(0) : -1;
     }
@@ -107,7 +107,7 @@ public final class BaseDao<Entity extends BaseModel> {
             //将 list 集合降级为 一维 map 结构 key 为  list{index}.{field} index 为索引 field 为字段名称
             map.putAll(beanToMapWithIndex(i, entityList.get(i)));
         }
-        var sql = SQLBuilder.Insert(tableInfo.tableName).InsertColumns(tableInfo.canInsertFields)
+        var sql = SQLBuilder.Insert(tableInfo.fullTableName).InsertColumns(tableInfo.canInsertFields)
                 .Values(values).GetSQL();
         return SQLRunner.update(sql, map).generatedKeys;
     }
@@ -122,7 +122,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return a {@link java.util.List} object.
      */
     public List<Entity> select(Where where, GroupBy groupBy, OrderBy orderBy, Pagination pagination) {
-        var sqlBuilder = SQLBuilder.Select(tableInfo.tableName).SelectColumns(tableInfo.selectColumns)
+        var sqlBuilder = SQLBuilder.Select(tableInfo.fullTableName).SelectColumns(tableInfo.selectColumns)
                 .Where(where).GroupBy(groupBy).OrderBy(orderBy).Pagination(pagination);
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var sql = sqlBuilder.GetSQL();
@@ -137,7 +137,7 @@ public final class BaseDao<Entity extends BaseModel> {
      * @return 条数
      */
     public long count(Where where, GroupBy groupBy) {
-        var sqlBuilder = SQLBuilder.Select(tableInfo.tableName).SelectColumns("COUNT(*) AS count")
+        var sqlBuilder = SQLBuilder.Select(tableInfo.fullTableName).SelectColumns("COUNT(*) AS count")
                 .Where(where).GroupBy(groupBy);
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var sql = sqlBuilder.GetSQL();
@@ -160,7 +160,7 @@ public final class BaseDao<Entity extends BaseModel> {
         if (u.length == 0) {
             throw new RuntimeException("更新数据时 待更新的数据 [实体类中除被 @Column(excludeOnUpdate = true) 修饰以外的字段] 不能全部为 null !!!");
         }
-        var sqlBuilder = SQLBuilder.Update(tableInfo.tableName).UpdateColumns(u).Where(where);
+        var sqlBuilder = SQLBuilder.Update(tableInfo.fullTableName).UpdateColumns(u).Where(where);
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var entityMap = ObjectUtils.beanToMap(entity);
         entityMap.putAll(whereParamMap);
@@ -178,7 +178,7 @@ public final class BaseDao<Entity extends BaseModel> {
         if (where == null || where.isEmpty()) {
             throw new RuntimeException("更新数据时必须指定 id,删除条件 或 自定义的 where 语句 !!!");
         }
-        var sqlBuilder = SQLBuilder.Delete(tableInfo.tableName).Where(where);
+        var sqlBuilder = SQLBuilder.Delete(tableInfo.fullTableName).Where(where);
         var whereParamMap = sqlBuilder.GetWhereParamMap();
         var sql = sqlBuilder.GetSQL();
         return SQLRunner.update(sql, whereParamMap).affectedLength;

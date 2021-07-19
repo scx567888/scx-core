@@ -1,5 +1,6 @@
 package cool.scx.sql;
 
+import com.mysql.cj.jdbc.ClientPreparedStatement;
 import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
 import cool.scx.dao.ScxDBContext;
@@ -183,8 +184,8 @@ public final class SQLRunner {
             }
         }
         if (ScxConfig.showLog()) {
-            var s = preparedStatement.toString();
-            Ansi.out().color(ScxConfig.DATETIME_FORMATTER.format(LocalDateTime.now()) + " " + s.substring(s.indexOf(":"))).println();
+            var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
+            Ansi.out().color(ScxConfig.DATETIME_FORMATTER.format(LocalDateTime.now()) + " " + realSQL).println();
         }
         return preparedStatement;
     }
