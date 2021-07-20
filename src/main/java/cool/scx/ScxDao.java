@@ -1,8 +1,7 @@
-package cool.scx.dao;
+package cool.scx;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.zaxxer.hikari.HikariDataSource;
-import cool.scx.ScxEventBus;
 import cool.scx.annotation.ScxModel;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
@@ -23,7 +22,7 @@ import java.util.List;
  * @author scx567888
  * @version 1.1.5
  */
-public final class ScxDBContext {
+public final class ScxDao {
 
     /**
      * 数据源
@@ -104,7 +103,7 @@ public final class ScxDBContext {
     /**
      * <p>initDB.</p>
      */
-    public static void initDB() {
+    public static void initDao() {
         Ansi.out().brightMagenta("ScxDBContext 初始化完成...").println();
     }
 

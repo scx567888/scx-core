@@ -3,7 +3,6 @@ package cool.scx;
 import cool.scx.auth.ScxAuth;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.dao.ScxDBContext;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.template.ScxTemplate;
 import cool.scx.util.Timer;
@@ -54,7 +53,7 @@ public final class ScxApp {
         // 初始化 http 路由
         ScxRouter.initRouter();
         // 初始化数据库 上下文
-        ScxDBContext.initDB();
+        ScxDao.initDao();
         // 初始化 监听器
         ScxBoot.addListener();
         // 初始化事件总线

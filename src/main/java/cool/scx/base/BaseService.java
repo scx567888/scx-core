@@ -3,25 +3,29 @@ package cool.scx.base;
 import cool.scx.bo.*;
 import cool.scx.config.ScxConfig;
 import cool.scx.context.ScxContext;
-import cool.scx.dao.BaseDao;
 import cool.scx.enumeration.OrderByType;
 import cool.scx.enumeration.WhereType;
 import cool.scx.sql.SQLBuilder;
+import cool.scx.sql.SQLHelper;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.CaseUtils;
+import cool.scx.util.ObjectUtils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
- * 最基本的 service 类
+ * 最基本的 service 类 , 提供一些简单的 CRUD 操作
  * <p>
- * 对 BaseDao 进行简单的封装以简化操作成本
+ * '_' 下划线开头的方法为具体实现方法 其余方法为实现方法的建议封装
  * <p>
  * 业务 service 可以继承此类 或手动创建 : new BaseService()
+ * <p>
+ * 如果 无法满足需求
+ * <p>
+ * 可以考虑使用 {@link cool.scx.sql.SQLRunner}
  *
  * @author scx567888
  * @version 0.3.6
@@ -29,12 +33,12 @@ import java.util.Map;
 public class BaseService<Entity extends BaseModel> {
 
     /**
-     * 实际用于操作数据的 baseDao
+     * 实体类对应的 table 结构
      */
-    private final BaseDao<Entity> baseDao;
+    private final TableInfo tableInfo;
 
     /**
-     * 实体类的 class , 用于一些基本操作
+     * 实体类 class 用于泛型转换
      */
     private final Class<Entity> entityClass;
 
@@ -44,7 +48,7 @@ public class BaseService<Entity extends BaseModel> {
     @SuppressWarnings("unchecked")
     public BaseService() {
         this.entityClass = (Class<Entity>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.baseDao = new BaseDao<>(entityClass);
+        this.tableInfo = SQLHelper.getTableInfo(this.entityClass);
     }
 
     /**
@@ -54,7 +58,7 @@ public class BaseService<Entity extends BaseModel> {
      */
     public BaseService(Class<Entity> entityClass) {
         this.entityClass = entityClass;
-        this.baseDao = new BaseDao<>(entityClass);
+        this.tableInfo = SQLHelper.getTableInfo(this.entityClass);
     }
 
     /**
@@ -64,7 +68,7 @@ public class BaseService<Entity extends BaseModel> {
      * @return 插入后的数据
      */
     public Entity save(Entity entity) {
-        var newId = this.baseDao.insert(entity);
+        var newId = this._insert(entity);
         return this.get(newId);
     }
 
@@ -78,7 +82,7 @@ public class BaseService<Entity extends BaseModel> {
         if (entityList == null || entityList.size() == 0) {
             return new ArrayList<>();
         } else {
-            return this.baseDao.insertList(entityList);
+            return this._insertList(entityList);
         }
     }
 
@@ -91,12 +95,12 @@ public class BaseService<Entity extends BaseModel> {
     public long delete(long... ids) {
         //物理删除
         if (ScxConfig.realDelete()) {
-            return this.baseDao.delete(new Where("id", WhereType.IN, ids));
+            return this._delete(new Where("id", WhereType.IN, ids));
         } else {// 逻辑删除
             var needTombstoneEntity = ScxContext.getBean(entityClass);
             needTombstoneEntity.tombstone = true;
             var where = new Where("id", WhereType.IN, ids).add("tombstone", WhereType.EQUAL, false);
-            return this.baseDao.update(needTombstoneEntity, where, false);
+            return this._update(needTombstoneEntity, where, false);
         }
     }
 
@@ -109,11 +113,11 @@ public class BaseService<Entity extends BaseModel> {
     public long delete(Where where) {
         //物理删除
         if (ScxConfig.realDelete()) {
-            return this.baseDao.delete(where);
+            return this._delete(where);
         } else {//逻辑删除
             var needTombstoneEntity = ScxContext.getBean(entityClass);
             needTombstoneEntity.tombstone = true;
-            return this.baseDao.update(needTombstoneEntity, where, false);
+            return this._update(needTombstoneEntity, where, false);
         }
     }
 
@@ -124,7 +128,7 @@ public class BaseService<Entity extends BaseModel> {
      * @return 删除成功的数据条数
      */
     public long deleteIgnoreConfig(long... ids) {
-        return this.baseDao.delete(new Where("id", WhereType.IN, ids));
+        return this._delete(new Where("id", WhereType.IN, ids));
     }
 
     /**
@@ -134,7 +138,7 @@ public class BaseService<Entity extends BaseModel> {
      * @return 被删除的数据条数
      */
     public long deleteIgnoreConfig(Where where) {
-        return this.baseDao.delete(where);
+        return this._delete(where);
     }
 
     /**
@@ -159,7 +163,7 @@ public class BaseService<Entity extends BaseModel> {
         } else {
             var needRevokeDeleteModel = ScxContext.getBean(entityClass);
             needRevokeDeleteModel.tombstone = false;
-            return this.baseDao.update(needRevokeDeleteModel, where, false);
+            return this._update(needRevokeDeleteModel, where, false);
         }
     }
 
@@ -176,7 +180,7 @@ public class BaseService<Entity extends BaseModel> {
             where.add("tombstone", WhereType.EQUAL, false);
         }
         //更新成功的条数
-        return this.baseDao.update(entity, where, false);
+        return this._update(entity, where, false);
     }
 
     /**
@@ -206,7 +210,7 @@ public class BaseService<Entity extends BaseModel> {
             where.add("tombstone", WhereType.EQUAL, false);
         }
         //更新成功的条数
-        return this.baseDao.update(entity, where, true);
+        return this._update(entity, where, true);
     }
 
     /**
@@ -234,7 +238,7 @@ public class BaseService<Entity extends BaseModel> {
         if (!ScxConfig.realDelete()) {
             where.add("tombstone", WhereType.EQUAL, false);
         }
-        var list = this.baseDao.select(where, null, null, new Pagination(1));
+        var list = this._select(where, null, null, new Pagination(1));
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -249,7 +253,7 @@ public class BaseService<Entity extends BaseModel> {
             query.addWhere("tombstone", WhereType.EQUAL, false);
         }
         query.setPagination(1);
-        var list = this.baseDao.select(query.where(), query.groupBy(), query.orderBy(), query.pagination());
+        var list = this._select(query.where(), query.groupBy(), query.orderBy(), query.pagination());
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -263,7 +267,7 @@ public class BaseService<Entity extends BaseModel> {
         if (!ScxConfig.realDelete()) {
             query.addWhere("tombstone", WhereType.EQUAL, false);
         }
-        return this.baseDao.count(query.where(), query.groupBy());
+        return this._count(query.where(), query.groupBy());
     }
 
     /**
@@ -273,7 +277,7 @@ public class BaseService<Entity extends BaseModel> {
      */
     public long count() {
         var where = ScxConfig.realDelete() ? null : new Where("tombstone", WhereType.EQUAL, false);
-        return this.baseDao.count(where, null);
+        return this._count(where, null);
     }
 
     /**
@@ -286,7 +290,7 @@ public class BaseService<Entity extends BaseModel> {
         if (!ScxConfig.realDelete()) {
             query.addWhere("tombstone", WhereType.EQUAL, false);
         }
-        return this.baseDao.select(query.where(), query.groupBy(), query.orderBy(), query.pagination());
+        return this._select(query.where(), query.groupBy(), query.orderBy(), query.pagination());
     }
 
     /**
@@ -300,7 +304,7 @@ public class BaseService<Entity extends BaseModel> {
         if (!ScxConfig.realDelete()) {
             where.add("tombstone", WhereType.EQUAL, false);
         }
-        return this.baseDao.select(where, null, null, null);
+        return this._select(where, null, null, null);
     }
 
     /**
@@ -311,7 +315,7 @@ public class BaseService<Entity extends BaseModel> {
     public List<Entity> list() {
         var where = ScxConfig.realDelete() ? null : new Where("tombstone", WhereType.EQUAL, false);
         var orderBy = new OrderBy("updateDate", OrderByType.DESC);
-        return this.baseDao.select(where, null, orderBy, null);
+        return this._select(where, null, orderBy, null);
     }
 
     /**
@@ -322,13 +326,13 @@ public class BaseService<Entity extends BaseModel> {
      */
     public List<Map<String, Object>> getFieldList(String fieldName) {
         //判断查询字段是否安全 ( 数据库字段内 防止 sql 注入)
-        var isSafe = Arrays.stream(this.baseDao.tableInfo().allFields)
+        var isSafe = Arrays.stream(this.tableInfo.allFields)
                 .filter(field -> field.getName().equals(fieldName))
                 .count() == 1;
         if (isSafe) {
             var selectColumn = CaseUtils.toSnake(fieldName) + " As value ";
             var where = ScxConfig.realDelete() ? null : new Where("tombstone", WhereType.EQUAL, false);
-            var sqlBuilder = SQLBuilder.Select(this.baseDao.tableInfo().tableName)
+            var sqlBuilder = SQLBuilder.Select(this.tableInfo.tableName)
                     .SelectColumns(selectColumn)
                     .Where(where)
                     .GroupBy(new GroupBy("value"));
@@ -341,12 +345,110 @@ public class BaseService<Entity extends BaseModel> {
     }
 
     /**
-     * 返回 对应的 baseDao 实例 方便进行一些细粒度的操作
+     * 保存单条数据
      *
-     * @return 当前 baseService 实例对应的 baseDao实例
+     * @param entity 待插入的数据
+     * @return 插入成功的主键 ID 如果插入失败则返回 null
      */
-    public BaseDao<Entity> baseDao() {
-        return this.baseDao;
+    public Long _insert(Entity entity) {
+        var c = Stream.of(tableInfo.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
+        var sql = SQLBuilder.Insert(tableInfo.fullTableName).InsertColumns(c).Values(c).GetSQL();
+        var updateResult = SQLRunner.update(sql, ObjectUtils.beanToMap(entity));
+        return updateResult.generatedKeys.size() > 0 ? updateResult.generatedKeys.get(0) : -1;
+    }
+
+    /**
+     * 保存多条数据
+     *
+     * @param entityList 待保存的列表
+     * @return 保存成功的主键 (ID) 列表
+     */
+    public List<Long> _insertList(List<Entity> entityList) {
+        //获取 sql 语句
+        var sql = SQLBuilder.Insert(tableInfo.fullTableName).InsertColumns(tableInfo.canInsertFields)
+                .Values(tableInfo.canInsertFields).GetSQL();
+        //将 entity 转换为 map
+        var mapList = new ArrayList<Map<String, Object>>(entityList.size());
+        for (var entity : entityList) {
+            var map = new HashMap<String, Object>();
+            for (var canInsertField : tableInfo.canInsertFields) {
+                map.put(canInsertField.getName(), ObjectUtils.getFieldValue(canInsertField, entity));
+            }
+            mapList.add(map);
+        }
+        return SQLRunner.updateBatch(sql, mapList).generatedKeys;
+    }
+
+    /**
+     * 获取列表
+     *
+     * @param where      查询过滤条件.
+     * @param groupBy    a 分组条件.
+     * @param orderBy    a 排序条件.
+     * @param pagination 分页条件
+     * @return a {@link java.util.List} object.
+     */
+    public List<Entity> _select(Where where, GroupBy groupBy, OrderBy orderBy, Pagination pagination) {
+        var sqlBuilder = SQLBuilder.Select(tableInfo.fullTableName).SelectColumns(tableInfo.selectColumns)
+                .Where(where).GroupBy(groupBy).OrderBy(orderBy).Pagination(pagination);
+        var whereParamMap = sqlBuilder.GetWhereParamMap();
+        var sql = sqlBuilder.GetSQL();
+        return SQLRunner.query(sql, whereParamMap, entityClass);
+    }
+
+    /**
+     * 获取条数
+     *
+     * @param where   查询条件
+     * @param groupBy 分组条件
+     * @return 条数
+     */
+    public long _count(Where where, GroupBy groupBy) {
+        var sqlBuilder = SQLBuilder.Select(tableInfo.fullTableName).SelectColumns("COUNT(*) AS count")
+                .Where(where).GroupBy(groupBy);
+        var whereParamMap = sqlBuilder.GetWhereParamMap();
+        var sql = sqlBuilder.GetSQL();
+        return (Long) SQLRunner.query(sql, whereParamMap).get(0).get("count");
+    }
+
+    /**
+     * 更新数据
+     *
+     * @param entity      要更新的数据
+     * @param where       更新的过滤条件
+     * @param includeNull a boolean.
+     * @return 受影响的条数
+     */
+    public long _update(Entity entity, Where where, boolean includeNull) {
+        if (where == null || where.isEmpty()) {
+            throw new RuntimeException("更新数据时 必须指定 id , 删除条件 或 自定义的 where 语句 !!!");
+        }
+        var u = includeNull ? tableInfo.canUpdateFields : Stream.of(tableInfo.canUpdateFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
+        if (u.length == 0) {
+            throw new RuntimeException("更新数据时 待更新的数据 [实体类中除被 @Column(excludeOnUpdate = true) 修饰以外的字段] 不能全部为 null !!!");
+        }
+        var sqlBuilder = SQLBuilder.Update(tableInfo.fullTableName).UpdateColumns(u).Where(where);
+        var whereParamMap = sqlBuilder.GetWhereParamMap();
+        var entityMap = ObjectUtils.beanToMap(entity);
+        entityMap.putAll(whereParamMap);
+        var sql = sqlBuilder.GetSQL();
+        return SQLRunner.update(sql, entityMap).affectedLength;
+    }
+
+    /**
+     * 删除数据
+     *
+     * @param where where 条件
+     * @return 受影响的条数
+     */
+    public long _delete(Where where) {
+        if (where == null || where.isEmpty()) {
+            throw new RuntimeException("更新数据时必须指定 id,删除条件 或 自定义的 where 语句 !!!");
+        }
+        var sqlBuilder = SQLBuilder.Delete(tableInfo.fullTableName).Where(where);
+        var whereParamMap = sqlBuilder.GetWhereParamMap();
+        var sql = sqlBuilder.GetSQL();
+        return SQLRunner.update(sql, whereParamMap).affectedLength;
     }
 
 }

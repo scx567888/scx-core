@@ -3,7 +3,7 @@ package cool.scx.sql;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
 import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
-import cool.scx.dao.ScxDBContext;
+import cool.scx.ScxDao;
 import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 
@@ -41,7 +41,7 @@ public final class SQLRunner {
      * @throws java.lang.Exception if any.
      */
     public static Connection getConnection() throws Exception {
-        return ScxDBContext.dataSource().getConnection();
+        return ScxDao.dataSource().getConnection();
     }
 
     /**
