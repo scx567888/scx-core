@@ -1,9 +1,9 @@
 package cool.scx.sql;
 
 import com.mysql.cj.jdbc.ClientPreparedStatement;
+import cool.scx.ScxDao;
 import cool.scx.bo.UpdateResult;
 import cool.scx.config.ScxConfig;
-import cool.scx.ScxDao;
 import cool.scx.util.Ansi;
 import cool.scx.util.ObjectUtils;
 
