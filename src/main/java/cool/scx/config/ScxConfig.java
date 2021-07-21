@@ -1,8 +1,6 @@
 package cool.scx.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.Scx;
 import cool.scx.exception.ConfigFileMissingException;
 import cool.scx.util.*;
@@ -10,8 +8,6 @@ import cool.scx.util.*;
 import java.io.File;
 import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -31,7 +27,7 @@ public final class ScxConfig {
     /**
      * 配置文件 路径
      */
-    public static final String SCX_CONFIG_PATH = "AppRoot:scx-config.json";
+    public static final String SCX_CONFIG_PATH = "AppRoot:scx-config.xml";
 
     /**
      * 默认 LocalDateTime 格式化类
@@ -43,7 +39,7 @@ public final class ScxConfig {
      * 是一个映射表
      * 注意!!! 如果未执行 init 或 loadConfig 方法 nowScxExample 可能为空
      */
-    private static final Map<String, Object> CONFIG_EXAMPLE = new HashMap<>();
+    private static final ConfigExample CONFIG_EXAMPLE = new ConfigExample();
 
     /**
      * 通过 命令行 (外部) 传来的原始 参数
@@ -73,37 +69,32 @@ public final class ScxConfig {
      * 加载 外部参数 config
      */
     private static void loadParamsConfig() {
-        var map = new HashMap<String, Object>();
         for (String arg : ORIGINAL_PARAMS) {
             if (arg.startsWith("--")) {
                 var strings = arg.substring(2).split("=");
                 if (strings.length == 2) {
-                    map.put(strings[0], strings[1]);
+                    CONFIG_EXAMPLE.add(strings[0], strings[1]);
                 }
             }
         }
-        CONFIG_EXAMPLE.putAll(map);
     }
 
     /**
      * 加载 配置文件
      */
     private static void loadJsonConfig() {
-        var scxConfigJson = FileUtils.getFileByAppRoot(SCX_CONFIG_PATH);
-        var mapper = new ObjectMapper();
+        var scxConfigFile = FileUtils.getFileByAppRoot(SCX_CONFIG_PATH);
         try {
-            if (!scxConfigJson.exists()) {
+            if (!scxConfigFile.exists()) {
                 throw new ConfigFileMissingException();
             }
-            var jsonConfigMap = mapper.readValue(scxConfigJson, new TypeReference<Map<String, Object>>() {
-            });
-            CONFIG_EXAMPLE.putAll(MapUtils.flatMap(jsonConfigMap, null));
-            Ansi.out().brightBlue("已加载配置文件  " + scxConfigJson.getPath()).println();
+            CONFIG_EXAMPLE.add(XmlUtils.readToMap(scxConfigFile));
+            Ansi.out().brightBlue("已加载配置文件  " + scxConfigFile.getPath()).println();
         } catch (Exception e) {
             if (e instanceof JsonProcessingException) {
-                Ansi.out().red("N 配置文件已损坏!!! 请确保配置文件正确 scx-config.json").println();
+                Ansi.out().red("N 配置文件已损坏!!! 请确保配置文件正确 scx-config.xml").println();
             } else if (e instanceof ConfigFileMissingException) {
-                Ansi.out().red("N 配置文件已丢失!!! 请确保配置文件存在 scx-config.json").println();
+                Ansi.out().red("N 配置文件已丢失!!! 请确保配置文件存在 scx-config.xml").println();
             } else {
                 e.printStackTrace();
             }
@@ -123,10 +114,22 @@ public final class ScxConfig {
      *
      * @param keyPath keyPath
      * @param <T>     a T object.
+     *                return a T object.
+     */
+    public static String get(String keyPath) {
+        return get(keyPath, null, Tidy::NoCode, Tidy::NoCode);
+    }
+
+    /**
+     * 从默认配置文件获取配置值
+     * 没有找到配置文件会返回 null
+     *
+     * @param keyPath keyPath
+     * @param <T>     a T object.
      * @return a T object.
      */
-    public static <T> T get(String keyPath) {
-        return get(keyPath, null);
+    public static <T> T get(String keyPath, Class<T> tClass) {
+        return get(keyPath, null, Tidy::NoCode, Tidy::NoCode);
     }
 
     /**
@@ -138,7 +141,7 @@ public final class ScxConfig {
      * @param <T>        a T object.
      * @return a T object.
      */
-    public static <T> T get(String keyPath, T defaultVal) {
+    public static <T> T getOrDefault(String keyPath, T defaultVal) {
         return get(keyPath, defaultVal, Tidy::NoCode, Tidy::NoCode);
     }
 
@@ -155,7 +158,13 @@ public final class ScxConfig {
      */
     @SuppressWarnings("unchecked")
     public static <T> T get(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun) {
-        Object o = CONFIG_EXAMPLE.get(keyPath);
+        Object o;
+        if (defaultVal != null) {
+            var tClass = defaultVal.getClass();
+            o = CONFIG_EXAMPLE.get(keyPath, tClass);
+        } else {
+            o = CONFIG_EXAMPLE.get(keyPath);
+        }
         if (o == null) {
             failFun.accept(defaultVal);
             return defaultVal;
@@ -284,14 +293,6 @@ public final class ScxConfig {
         return easyToUseConfig.templateRoot;
     }
 
-    /**
-     * <p>allowedOrigin.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public static String allowedOrigin() {
-        return easyToUseConfig.allowedOrigin;
-    }
 
     /**
      * 获取模板资源前缀
@@ -325,19 +326,9 @@ public final class ScxConfig {
      *
      * @return a {@link java.util.Map} object.
      */
-    public static Map<String, Object> getConfigExample() {
+    public static ConfigExample getConfigExample() {
         return CONFIG_EXAMPLE;
     }
-
-    /**
-     * <p>pluginDisabledList.</p>
-     *
-     * @return a {@link java.util.Set} object.
-     */
-    public static Set<String> disabledPlugins() {
-        return easyToUseConfig.disabledPluginList;
-    }
-
 
     private static void watchConfig() {
         var path = Scx.appRoot();
@@ -354,6 +345,24 @@ public final class ScxConfig {
             }
 
         });
+    }
+
+    /**
+     * <p>allowedOrigin.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public static String allowedOrigin() {
+        return easyToUseConfig.allowedOrigin;
+    }
+
+    /**
+     * <p>pluginDisabledList.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
+    public static Set<String> disabledPlugins() {
+        return easyToUseConfig.disabledPluginList;
     }
 
 }

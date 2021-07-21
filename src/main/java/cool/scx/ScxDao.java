@@ -11,6 +11,7 @@ import cool.scx.module.ScxModule;
 import cool.scx.sql.SQLHelper;
 import cool.scx.util.Ansi;
 import cool.scx.util.ScxUtils;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -30,6 +31,8 @@ public final class ScxDao {
     private static DataSource dataSource;
 
     static {
+        var s = LoggerFactory.getLogger("123");
+        System.out.println();
         //模块加载时的消费者
         ScxEventBus.consumer(ScxContext.ON_CONTEXT_REGISTER_NAME, o -> {
             var scxModuleList = ScxUtils.cast(o);

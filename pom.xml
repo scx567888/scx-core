@@ -46,6 +46,13 @@
             <version>2.12.4</version>
         </dependency>
 
+        <!-- Jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.12.4</version>
+        </dependency>
+
         <!-- Spring 依赖注入 -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -86,13 +93,6 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>4.1.2</version>
-        </dependency>
-
-        <!-- slf4j 空实现 后期会替换成具体日志实现框架 -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-nop</artifactId>
-            <version>2.0.0-alpha2</version>
         </dependency>
 
     </dependencies>

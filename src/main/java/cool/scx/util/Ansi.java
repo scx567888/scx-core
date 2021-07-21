@@ -238,6 +238,11 @@ public final class Ansi {
         return this;
     }
 
+    public Ansi color(Object o, AnsiColor color) {
+        add(o, color);
+        return this;
+    }
+
     private void add(Object o, AnsiColor ansiColor) {
         stringBuilder.append("\u001B[").append(ansiColor.code()).append("m").append(o).append("\u001B[0m");
     }
