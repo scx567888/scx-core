@@ -200,7 +200,7 @@
                         <!-- 默认 ssl 占位空文件 -->
                         <exclude>/ssl/</exclude>
                         <!-- 默认 配置文件 -->
-                        <exclude>/*.json</exclude>
+                        <exclude>/*.xml</exclude>
                     </excludes>
                 </configuration>
             </plugin>
