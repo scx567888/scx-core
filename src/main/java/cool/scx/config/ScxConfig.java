@@ -4,10 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.Scx;
 import cool.scx.exception.ConfigFileMissingException;
 import cool.scx.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -50,6 +53,8 @@ public final class ScxConfig {
      * config 简单使用 实例
      */
     private static EasyToUseConfig easyToUseConfig;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScxConfig.class);
 
     /**
      * 初始化 配置文件
@@ -99,6 +104,7 @@ public final class ScxConfig {
                 e.printStackTrace();
             }
         }
+        logConfiguration();
     }
 
     /**
@@ -363,6 +369,49 @@ public final class ScxConfig {
      */
     public static Set<String> disabledPlugins() {
         return easyToUseConfig.disabledPluginList;
+    }
+
+    /**
+     * todo 显示 config 内容
+     */
+    private static void logConfiguration() {
+        LOGGER.debug("{} - configuration:", "ScxConfig");
+        final var propertyNames = List.of(1, 2, 3, 4, 5, 6, 7, 7);
+        for (var prop : propertyNames) {
+            try {
+                var value = 123;
+//                if ("dataSourceProperties".equals(prop)) {
+//                    var dsProps = PropertyElf.copyProperties(dataSourceProperties);
+//                    dsProps.setProperty("password", "<masked>");
+//                    value = dsProps;
+//                }
+//
+//                if ("initializationFailTimeout".equals(prop) && initializationFailTimeout == Long.MAX_VALUE) {
+//                    value = "infinite";
+//                }
+//                else if ("transactionIsolation".equals(prop) && transactionIsolationName == null) {
+//                    value = "default";
+//                }
+//                else if (prop.matches("scheduledExecutorService|threadFactory") && value == null) {
+//                    value = "internal";
+//                }
+//                else if (prop.contains("jdbcUrl") && value instanceof String) {
+//                    value = ((String)value).replaceAll("([?&;]password=)[^&#;]*(.*)", "$1<masked>$2");
+//                }
+//                else if (prop.contains("password")) {
+//                    value = "<masked>";
+//                }
+//                else if (value instanceof String) {
+//                    value = "\"" + value + "\""; // quote to see lead/trailing spaces is any
+//                }
+//                else if (value == null) {
+//                    value = "none";
+//                }
+                LOGGER.warn("{}{}", (prop + "................................................").substring(0, 32), value);
+            } catch (Exception e) {
+                // continue
+            }
+        }
     }
 
 }
