@@ -10,6 +10,9 @@ import java.util.Map;
 
 /**
  * 针对 jackson xmlMapper 进行一些简单的封装
+ *
+ * @author scx567888
+ * @version 1.3.0
  */
 public class XmlUtils {
 
@@ -30,7 +33,7 @@ public class XmlUtils {
      *
      * @param xmlFile Xml 文件
      * @return map
-     * @throws IOException io异常
+     * @throws java.io.IOException io异常
      */
     public static Map<String, Object> readToMap(File xmlFile) throws IOException {
         return XML_MAPPER.readValue(xmlFile, mapType);
@@ -41,7 +44,7 @@ public class XmlUtils {
      *
      * @param xmlFile Xml 文件
      * @return map
-     * @throws IOException io异常
+     * @throws java.io.IOException io异常
      */
     public static JsonNode readTree(File xmlFile) throws IOException {
         return XML_MAPPER.readTree(xmlFile);

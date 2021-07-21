@@ -10,6 +10,9 @@ import java.util.Set;
 
 /**
  * 配置文件实例
+ *
+ * @author scx567888
+ * @version 1.3.0
  */
 public class ConfigExample {
 
@@ -32,8 +35,7 @@ public class ConfigExample {
     /**
      * 向其中添加一个配置
      *
-     * @param keyPath keyPath
-     * @param value   value
+     * @param map a {@link java.util.Map} object
      * @return 当前实例方便链式调用
      */
     public ConfigExample add(Map<String, Object> map) {
@@ -45,7 +47,8 @@ public class ConfigExample {
      * 向其中添加一个配置
      *
      * @param keyPath keyPath
-     * @param value   value
+     * @param type    a {@link java.lang.Class} object
+     * @param <T>     a T class
      * @return 当前实例方便链式调用
      */
     public <T> T get(String keyPath, Class<T> type) {
@@ -64,13 +67,15 @@ public class ConfigExample {
      * 向其中添加一个配置
      *
      * @param keyPath keyPath
-     * @param value   value
      * @return 当前实例方便链式调用
      */
     public Object get(String keyPath) {
         return configMapping.get(keyPath);
     }
 
+    /**
+     * <p>clear.</p>
+     */
     public void clear() {
         configMapping.clear();
     }

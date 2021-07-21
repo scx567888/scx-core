@@ -8,13 +8,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * An almost trivial implementation of the {@link IMarkerFactory}
- * interface which creates {@link BasicMarker} instances.
+ * An almost trivial implementation of the {@link org.slf4j.IMarkerFactory}
+ * interface which creates {@link org.slf4j.helpers.BasicMarker} instances.
  *
  * <p>Simple logging systems can conform to the SLF4J API by binding
  * {@link org.slf4j.MarkerFactory} with an instance of this class.
  *
  * @author Ceki G&uuml;lc&uuml;
+ * @version 1.3.0
  */
 public class ScxMarkerFactory implements IMarkerFactory {
 
@@ -30,11 +31,10 @@ public class ScxMarkerFactory implements IMarkerFactory {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * Manufacture a {@link BasicMarker} instance by name. If the instance has been
      * created earlier, return the previously created instance.
-     *
-     * @param name the name of the marker to be created
-     * @return a Marker instance
      */
     public Marker getMarker(String name) {
         if (name == null) {
@@ -53,6 +53,8 @@ public class ScxMarkerFactory implements IMarkerFactory {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * Does the name marked already exist?
      */
     public boolean exists(String name) {
@@ -62,6 +64,9 @@ public class ScxMarkerFactory implements IMarkerFactory {
         return markerMap.containsKey(name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean detachMarker(String name) {
         if (name == null) {
             return false;
@@ -69,6 +74,9 @@ public class ScxMarkerFactory implements IMarkerFactory {
         return (markerMap.remove(name) != null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Marker getDetachedMarker(String name) {
         return new ScxMarker(name);
     }

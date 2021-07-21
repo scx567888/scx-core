@@ -1,20 +1,24 @@
 package cool.scx.log;
 
+import org.slf4j.Marker;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.slf4j.Marker;
-
 /**
- * A simple implementation of the {@link Marker} interface.
- * 
+ * A simple implementation of the {@link org.slf4j.Marker} interface.
+ *
  * @author Ceki G&uuml;lc&uuml;
  * @author Joern Huxhorn
+ * @version 1.3.0
  */
 public class ScxMarker implements Marker {
 
     private static final long serialVersionUID = -2849567615646933777L;
+    private static String OPEN = "[ ";
+    private static String CLOSE = " ]";
+    private static String SEP = ", ";
     private final String name;
     private List<Marker> referenceList = new CopyOnWriteArrayList<>();
 
@@ -25,10 +29,18 @@ public class ScxMarker implements Marker {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void add(Marker reference) {
         if (reference == null) {
             throw new IllegalArgumentException("A null value cannot be added to a Marker as reference.");
@@ -46,23 +58,47 @@ public class ScxMarker implements Marker {
         }
     }
 
+    /**
+     * <p>hasReferences.</p>
+     *
+     * @return a boolean
+     */
     public boolean hasReferences() {
         return (referenceList.size() > 0);
     }
 
+    /**
+     * <p>hasChildren.</p>
+     *
+     * @return a boolean
+     */
     @Deprecated
     public boolean hasChildren() {
         return hasReferences();
     }
 
+    /**
+     * <p>iterator.</p>
+     *
+     * @return a {@link java.util.Iterator} object
+     */
     public Iterator<Marker> iterator() {
-      return referenceList.iterator();
+        return referenceList.iterator();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean remove(Marker referenceToRemove) {
         return referenceList.remove(referenceToRemove);
     }
 
+    /**
+     * <p>contains.</p>
+     *
+     * @param other a {@link org.slf4j.Marker} object
+     * @return a boolean
+     */
     public boolean contains(Marker other) {
         if (other == null) {
             throw new IllegalArgumentException("Other cannot be null");
@@ -83,6 +119,8 @@ public class ScxMarker implements Marker {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * This method is mainly used with Expression Evaluators.
      */
     public boolean contains(String name) {
@@ -104,10 +142,9 @@ public class ScxMarker implements Marker {
         return false;
     }
 
-    private static String OPEN = "[ ";
-    private static String CLOSE = " ]";
-    private static String SEP = ", ";
-
+    /**
+     * {@inheritDoc}
+     */
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -120,10 +157,20 @@ public class ScxMarker implements Marker {
         return name.equals(other.getName());
     }
 
+    /**
+     * <p>hashCode.</p>
+     *
+     * @return a int
+     */
     public int hashCode() {
         return name.hashCode();
     }
 
+    /**
+     * <p>toString.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String toString() {
         if (!this.hasReferences()) {
             return this.getName();

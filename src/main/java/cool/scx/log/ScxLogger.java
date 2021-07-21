@@ -7,24 +7,44 @@ import org.slf4j.event.Level;
 import org.slf4j.helpers.AbstractLogger;
 import org.slf4j.helpers.MessageFormatter;
 
+/**
+ * <p>ScxLogger class.</p>
+ *
+ * @author scx567888
+ * @version 1.3.0
+ */
 public class ScxLogger extends AbstractLogger {
 
     private final String name;
 
+    /**
+     * <p>Constructor for ScxLogger.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     protected ScxLogger(String name) {
         this.name = name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return "SCX";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String getFullyQualifiedCallerName() {
         return name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void handleNormalizedLoggingCall(Level level, Marker marker, String msg, Object[] arguments, Throwable throwable) {
         var c = AnsiColor.DEFAULT_COLOR;
@@ -64,51 +84,81 @@ public class ScxLogger extends AbstractLogger {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isTraceEnabled() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isTraceEnabled(Marker marker) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isDebugEnabled() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isDebugEnabled(Marker marker) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isInfoEnabled() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isInfoEnabled(Marker marker) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isWarnEnabled() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isWarnEnabled(Marker marker) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isErrorEnabled() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isErrorEnabled(Marker marker) {
         return true;

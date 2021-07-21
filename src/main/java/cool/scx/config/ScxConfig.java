@@ -113,8 +113,7 @@ public final class ScxConfig {
      * 没有找到配置文件会返回 null
      *
      * @param keyPath keyPath
-     * @param <T>     a T object.
-     *                return a T object.
+     * @return a {@link java.lang.String} object
      */
     public static String get(String keyPath) {
         return get(keyPath, null, Tidy::NoCode, Tidy::NoCode);
@@ -126,6 +125,7 @@ public final class ScxConfig {
      *
      * @param keyPath keyPath
      * @param <T>     a T object.
+     * @param tClass  a {@link java.lang.Class} object
      * @return a T object.
      */
     public static <T> T get(String keyPath, Class<T> tClass) {

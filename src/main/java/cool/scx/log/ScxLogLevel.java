@@ -2,6 +2,9 @@ package cool.scx.log;
 
 /**
  * 日志级别
+ *
+ * @author scx567888
+ * @version 1.3.0
  */
 public enum ScxLogLevel {
 
@@ -19,6 +22,8 @@ public enum ScxLogLevel {
 
     /**
      * Returns the string representation of this Level.
+     *
+     * @return a {@link java.lang.String} object
      */
     public String toString() {
         return levelStr;

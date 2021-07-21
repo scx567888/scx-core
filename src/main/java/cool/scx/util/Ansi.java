@@ -238,6 +238,13 @@ public final class Ansi {
         return this;
     }
 
+    /**
+     * <p>color.</p>
+     *
+     * @param o     a {@link java.lang.Object} object
+     * @param color a {@link cool.scx.enumeration.AnsiColor} object
+     * @return a {@link cool.scx.util.Ansi} object
+     */
     public Ansi color(Object o, AnsiColor color) {
         add(o, color);
         return this;
