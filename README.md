@@ -20,19 +20,19 @@
 </p>
 <p align="center">
    <a target="_blank" href="https://github.com/eclipse-vertx/vert.x">
-        <img src="https://img.shields.io/badge/Vert.x-4.1.1-blue" alt="Vert.x"/>
+        <img src="https://img.shields.io/badge/Vert.x-4.1.2-blue" alt="Vert.x"/>
     </a>
     <a target="_blank" href="https://github.com/apache/freemarker">
         <img src="https://img.shields.io/badge/Freemarker-2.3.31-blue" alt="freemarker"/>
     </a>
     <a target="_blank" href="https://github.com/FasterXML/jackson">
-        <img src="https://img.shields.io/badge/Jackson-2.12.3-blue" alt="jackson"/>
+        <img src="https://img.shields.io/badge/Jackson-2.12.4-blue" alt="jackson"/>
     </a>
     <a target="_blank" href="https://github.com/spring-projects/spring-framework">
-        <img src="https://img.shields.io/badge/Spring--Framework-5.3.8-blue" alt="Spring-Framework"/>
+        <img src="https://img.shields.io/badge/Spring--Framework-5.3.9-blue" alt="Spring-Framework"/>
     </a>
     <a target="_blank" href="https://github.com/brettwooldridge/HikariCP">
-        <img src="https://img.shields.io/badge/HikariCP-4.0.3-blue" alt="HikariCP"/>
+        <img src="https://img.shields.io/badge/HikariCP-5.0.0-blue" alt="HikariCP"/>
     </a>
 </p>
 
