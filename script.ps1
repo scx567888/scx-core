@@ -162,7 +162,7 @@ function BuildProject()
     mvn clean package
     Move-Item ".\target\$PROJECT_NAME-$PROJECT_VERSION.jar" $OUTPUT_URL
     Copy-Item ".\src\main\resources\c" $OUTPUT_URL -recurse
-    Copy-Item ".\src\main\resources\scx-config.json" $OUTPUT_URL
+    Copy-Item ".\src\main\resources\scx-config.xml" $OUTPUT_URL
     "@echo off" | Out-File  -Encoding utf8 "$OUTPUT_URL\startup.bat"
     "chcp 65001" | Out-File -Append -Encoding utf8 "$OUTPUT_URL\startup.bat"
     "set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Duser.language=zh" | Out-File -Append -Encoding utf8 "$OUTPUT_URL\startup.bat"
