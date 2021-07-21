@@ -1,6 +1,7 @@
 package cool.scx.context;
 
 import cool.scx.ScxEventBus;
+import cool.scx.config.ScxConfig;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.ScxUtils;
@@ -57,8 +58,7 @@ public final class ScxContext {
             var scxModuleList = ScxUtils.cast(o);
             for (var scxModule : scxModuleList) {
                 var allBean = initScxAnnotationBean(scxModule.classList);
-//                if (ScxConfig.showLog()) {
-                if (false) {
+                if (ScxConfig.showLog()) {
                     var beanList = Arrays.stream(allBean).filter(s -> s.startsWith(scxModule.basePackage)).collect(Collectors.toList());
                     Ansi.out().brightBlue("模块 [" + scxModule.moduleName + "] 共加载 " + beanList.size() + " 个 Bean !!!").println();
                     beanList.forEach(c -> Ansi.out().brightYellow(c).ln());
