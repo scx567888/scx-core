@@ -118,7 +118,7 @@ class EasyToUseConfig {
                 s -> Ansi.out().green("Y 允许的请求源                         \t -->\t " + s).println(),
                 f -> Ansi.out().red("N 未检测到 scx.allowed-origin          \t -->\t 已采用默认值 : " + f).println());
 
-        var tempDisabledPluginList = ScxConfig.get("scx.disabled-plugins", new ArrayList<String>(),
+        var tempDisabledPluginList = ScxConfig.get("scx.disabled-plugins.disabled-plugin", new ArrayList<String>(),
                 s -> Ansi.out().green("Y 禁用插件列表                         \t -->\t " + s).println(),
                 f -> Ansi.out().red("N 未检测到 scx.disabled-plugins        \t -->\t 已采用默认值 : " + f).println());
 
@@ -192,7 +192,7 @@ class EasyToUseConfig {
 
         dataSourcePassword = tempDataSourcePassword;
 
-        var tempDataSourceParameters = ScxConfig.get("scx.data-source.parameters", new ArrayList<String>(),
+        var tempDataSourceParameters = ScxConfig.get("scx.data-source.parameters.parameter", new ArrayList<String>(),
                 s -> Ansi.out().green("Y 数据源 连接参数                      \t -->\t " + s).println(),
                 f -> Ansi.out().red("N 未检测到 scx.data-source.parameters  \t -->\t 已采用默认值 : " + f).println());
 

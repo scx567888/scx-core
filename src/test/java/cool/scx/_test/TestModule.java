@@ -11,7 +11,7 @@ import cool.scx._ext.message.MessageModule;
 import cool.scx._ext.office.OfficeModule;
 import cool.scx._ext.organization.OrganizationModule;
 import cool.scx._ext.pay.PayModule;
-import cool.scx._ext.upload.UploadModule;
+import cool.scx._ext.fss.UploadModule;
 import cool.scx._test0.Test0Module;
 import cool.scx.bo.WSBody;
 import cool.scx.config.ScxConfig;

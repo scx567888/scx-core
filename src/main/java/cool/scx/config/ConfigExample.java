@@ -54,8 +54,8 @@ public class ConfigExample {
     public <T> T get(String keyPath, Class<T> type) {
         Object value = configMapping.get(keyPath);
         if (value != null) {
-            if (List.class.isAssignableFrom(type) || Set.class.isAssignableFrom(type) || type.isArray()) {
-                value = value.toString().split(",");
+            if (isArrayOrList(type) && !isArrayOrList(value.getClass())) {
+                value = new Object[]{value};
             }
             return objectMapper.convertValue(value, type);
         } else {
@@ -78,6 +78,10 @@ public class ConfigExample {
      */
     public void clear() {
         configMapping.clear();
+    }
+
+    private static boolean isArrayOrList(Class<?> type) {
+        return List.class.isAssignableFrom(type) || Set.class.isAssignableFrom(type) || type.isArray();
     }
 
 }

@@ -6,12 +6,16 @@
         <allowed-origin>*</allowed-origin>
         <show-log>true</show-log>
         <real-delete>false</real-delete>
-        <disabled-plugins></disabled-plugins>
+        <disabled-plugins>
+            <disabled-plugin></disabled-plugin>
+        </disabled-plugins>
         <data-source>
             <host>127.0.0.1</host>
             <port>3306</port>
             <database>scx</database>
-            <parameters>allowMultiQueries=true</parameters>
+            <parameters>
+                <parameter>allowMultiQueries=true</parameter>
+            </parameters>
             <username>root</username>
             <password>OgaIGDNXuGHN8riHCTVsgeSro4o2IVY/wTU3+467XCYkdDT2bkoJROBhGOTcA3Z0</password>
         </data-source>

@@ -1,4 +1,4 @@
-package cool.scx._ext.upload;
+package cool.scx._ext.fss;
 
 import cool.scx.annotation.Column;
 import cool.scx.annotation.ScxModel;

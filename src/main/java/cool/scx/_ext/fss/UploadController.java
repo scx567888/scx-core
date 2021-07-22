@@ -1,4 +1,4 @@
-package cool.scx._ext.upload;
+package cool.scx._ext.fss;
 
 import cool.scx.annotation.FromPath;
 import cool.scx.annotation.FromQuery;
@@ -165,7 +165,7 @@ public class UploadController {
      * <p>checkFileId.</p>
      *
      * @param fileId a {@link java.lang.String} object
-     * @return a {@link cool.scx._ext.upload.UploadFile} object
+     * @return a {@link cool.scx._ext.fss.UploadFile} object
      * @throws cool.scx.exception.NotFoundException if any.
      */
     public UploadFile checkFileId(String fileId) throws NotFoundException {
@@ -180,7 +180,7 @@ public class UploadController {
     /**
      * <p>checkPhysicalFile.</p>
      *
-     * @param uploadFile a {@link cool.scx._ext.upload.UploadFile} object
+     * @param uploadFile a {@link cool.scx._ext.fss.UploadFile} object
      * @return a {@link java.io.File} object
      * @throws cool.scx.exception.NotFoundException if any.
      */
