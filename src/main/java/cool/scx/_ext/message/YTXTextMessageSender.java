@@ -33,9 +33,9 @@ public class YTXTextMessageSender {
      * <p>Constructor for YTXTextMessageSender.</p>
      */
     public YTXTextMessageSender() {
-        YTX_ACCOUNT_SID = ScxConfig.get("core.base.ytx-account-sid");
-        YTX_AUTH_TOKEN = ScxConfig.get("core.base.ytx-auth-token");
-        YTX_APP_ID = ScxConfig.get("core.base.ytx-app-id");
+        YTX_ACCOUNT_SID = ScxConfig.get("core.base.ytx-account-sid", String.class);
+        YTX_AUTH_TOKEN = ScxConfig.get("core.base.ytx-auth-token", String.class);
+        YTX_APP_ID = ScxConfig.get("core.base.ytx-app-id", String.class);
     }
 
     /**

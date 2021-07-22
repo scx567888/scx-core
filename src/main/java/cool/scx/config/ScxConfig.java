@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * 配置文件类
@@ -115,30 +114,6 @@ public final class ScxConfig {
     }
 
     /**
-     * 从默认配置文件获取配置值
-     * 没有找到配置文件会返回 null
-     *
-     * @param keyPath keyPath
-     * @return a {@link java.lang.String} object
-     */
-    public static String get(String keyPath) {
-        return get(keyPath, null, Tidy::NoCode, Tidy::NoCode);
-    }
-
-    /**
-     * 从默认配置文件获取配置值
-     * 没有找到配置文件会返回 null
-     *
-     * @param keyPath keyPath
-     * @param <T>     a T object.
-     * @param tClass  a {@link java.lang.Class} object
-     * @return a T object.
-     */
-    public static <T> T get(String keyPath, Class<T> tClass) {
-        return get(keyPath, null, Tidy::NoCode, Tidy::NoCode);
-    }
-
-    /**
      * 从默认配置文件获取配置值 并自动判断类型
      * 没有找到配置文件会返回 默认值
      *
@@ -147,38 +122,30 @@ public final class ScxConfig {
      * @param <T>        a T object.
      * @return a T object.
      */
+    @SuppressWarnings("unchecked")
     public static <T> T getOrDefault(String keyPath, T defaultVal) {
-        return get(keyPath, defaultVal, Tidy::NoCode, Tidy::NoCode);
+        if (defaultVal != null) {
+            var tClass = (Class<T>) defaultVal.getClass();
+            var o = get(keyPath, tClass);
+            return o == null ? defaultVal : o;
+        } else {
+            return (T) get(keyPath);
+        }
     }
 
     /**
      * 从指定的配置文件获取配置值 并自动判断类型
      * 没有找到配置文件会返回 默认值
      *
-     * @param keyPath    keyPath
-     * @param defaultVal 默认值
-     * @param successFun 获取成功的回调
-     * @param failFun    获取失败的回调
-     * @param <T>        a T object.
+     * @param keyPath keyPath
      * @return a T object.
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T get(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun) {
-        Object o;
-        if (defaultVal != null) {
-            var tClass = defaultVal.getClass();
-            o = CONFIG_EXAMPLE.get(keyPath, tClass);
-        } else {
-            o = CONFIG_EXAMPLE.get(keyPath);
-        }
-        if (o == null) {
-            failFun.accept(defaultVal);
-            return defaultVal;
-        } else {
-            T value = (T) o;
-            successFun.accept(value);
-            return value;
-        }
+    public static Object get(String keyPath) {
+        return CONFIG_EXAMPLE.get(keyPath);
+    }
+
+    public static <T> T get(String keyPath, Class<T> type) {
+        return CONFIG_EXAMPLE.get(keyPath, type);
     }
 
     /**
