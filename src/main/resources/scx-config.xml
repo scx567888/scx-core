@@ -7,7 +7,18 @@
         <port>8080</port>
         <!-- 日志配置 -->
         <log>
-            <level>error</level>
+            <!-- 日志类型 取值为三种 console (仅在控制台) , file (仅在文件) , both (两者都有) -->
+            <out-type>both</out-type>
+            <!-- 此处为了简化使用成本仅配置日志输出目录 实际规则为:根据当前事件(精确到天) 输出日志   -->
+            <!-- 单个日志文件最大值为 10MB ,超出则在尾部追加索引 如 : 2021-03-06_0.log 2021-03-06_1.log -->
+            <log-file-path>AppRoot:logs</log-file-path>
+            <!-- 全局日志输出级别 ERROR, WARN, INFO, DEBUG, TRACE -->
+            <!--  其他需要详细配置的类的输出级别 -->
+            <levels root="DEBUG">
+                <!-- name 为类的具体名称值为级别 -->
+                <level name="xxx.xxx.xxx">DEBUG</level>
+                <level name="xxx.xxx.xxx">ERROR</level>
+            </levels>
         </log>
         <!-- 允许的访问源 (用来控制跨域) -->
         <allowed-origin>*</allowed-origin>
