@@ -21,85 +21,128 @@
         <scx.encoding>UTF-8</scx.encoding>
         <!-- 构建项目时jar包的默认启动类 在您自己的项目中请覆写此值 -->
         <scx.mainClass>cool.scx._ext.AllExtApp</scx.mainClass>
+        <!-- *********** 以下为依赖包版本 ************* -->
+        <vertx.version>4.1.2</vertx.version>
+        <jackson.version>2.12.4</jackson.version>
+        <spring-framework.version>5.3.9</spring-framework.version>
+        <!-- 注意 : MySQL 驱动版本应与当前开发使用数据库版本 [8.0.25] 对应 除非必要不要修改版本!!! -->
+        <mysql-connector-j.version>8.0.25</mysql-connector-j.version>
+        <hikaricp.version>5.0.0</hikaricp.version>
+        <freemarker.version>2.3.31</freemarker.version>
+        <jasypt.version>1.9.3</jasypt.version>
+        <thumbnailator.version>0.4.14</thumbnailator.version>
+        <!-- poi 版本除非不要不要更新至 5.0 以上版本 因为其附带的依赖包会导致项目体积变大 -->
+        <poi.version>4.1.2</poi.version>
+        <slf4j.version>2.0.0-alpha2</slf4j.version>
     </properties>
 
     <dependencies>
 
-        <!-- vert.x -->
+        <!-- vert.x 核心包 -->
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+
+        <!-- vert.x 网络拓展包 -->
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web</artifactId>
-            <version>4.1.2</version>
+            <version>${vertx.version}</version>
+        </dependency>
+
+        <!-- Jackson 核心包 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- Jackson 数据绑定包 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- Jackson 注解包 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- Jackson 数据类型拓展包 针对 (jsr310)[https://jcp.org/en/jsr/detail?id=310] -->
+        <!-- 添加了对新的时间和日期Api (LocalDateTime、DateTimeFormatter) 等的支持 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- Jackson 数据格式 (XML) 拓展包 用于操作 XML -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- Spring Context 框架 , 主要使用其依赖注入及部分注解功能 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring-framework.version}</version>
+        </dependency>
+
+        <!-- mysql 驱动 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-connector-j.version}</version>
+        </dependency>
+
+        <!-- 数据库连接池 用于减少数据库连接创建时的性能消耗 -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${hikaricp.version}</version>
         </dependency>
 
         <!-- Freemarker 用于前台页面渲染工作 -->
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.31</version>
+            <version>${freemarker.version}</version>
         </dependency>
 
-        <!-- Jackson -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.12.4</version>
-        </dependency>
-
-        <!-- Jackson -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-xml</artifactId>
-            <version>2.12.4</version>
-        </dependency>
-
-        <!-- Spring 依赖注入 -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>5.3.9</version>
-        </dependency>
-
-        <!-- mysql 驱动 注意 : 驱动版本应与当前开发使用数据库版本 [8.0.25] 对应 除非必要不要修改版本!!! -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.25</version>
-        </dependency>
-
-        <!-- 连接池 -->
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>5.0.0</version>
-        </dependency>
-
-        <!-- 轻量级的加密解密工具包 -->
+        <!-- 轻量级的加密解密工具包 ,用于一些密码校验及敏感数据加密 -->
         <dependency>
             <groupId>org.jasypt</groupId>
             <artifactId>jasypt</artifactId>
-            <version>1.9.3</version>
+            <version>${jasypt.version}</version>
         </dependency>
 
-        <!-- 图像处理包工具包 -->
+        <!-- 图像处理包工具包 , 用于对图片进行简单的处理,如 切割,缩放 ,转码等 -->
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-            <version>0.4.14</version>
+            <version>${thumbnailator.version}</version>
         </dependency>
 
-        <!-- 操作 Excel  -->
+        <!-- 操作 Excel -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>4.1.2</version>
+            <version>${poi.version}</version>
         </dependency>
 
-        <!-- 日志框架 -->
+        <!-- 日志框架 . 注意: 因为项目内部已经对 slf4j 进行了具体的实现 -->
+        <!-- 所以不需要引入其他的第三方的日志实现,如 logback 等 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.0-alpha2</version>
+            <version>${slf4j.version}</version>
         </dependency>
 
     </dependencies>
@@ -128,15 +171,15 @@
     <!-- mvn deploy 发布的路径 -->
     <distributionManagement>
 
-        <!-- release 版本 -->
+        <!-- release  (线上) 版本 -->
         <repository>
-            <id>oss-sonatype</id>
+            <id>release</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
 
-        <!-- snapshots (快照) 版本 -->
+        <!-- snapshot (快照) 版本 -->
         <snapshotRepository>
-            <id>oss-sonatype</id>
+            <id>snapshot</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
 
@@ -199,8 +242,9 @@
                         <exclude>/sql/</exclude>
                         <!-- 默认 ssl 占位空文件 -->
                         <exclude>/ssl/</exclude>
-                        <!-- 默认 配置文件 -->
+                        <!-- 各种配置文件 -->
                         <exclude>/*.xml</exclude>
+                        <exclude>/*.json</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -233,7 +277,7 @@
                 <executions>
                     <execution>
                         <id>scx-javadoc-jar</id>
-                        <!-- 这里之所以将生命周期延后到 verify 验证阶段是因为目前只有 install 和 deploy 时才需要 javadoc -->
+                        <!-- 这里将生命周期延后到 verify (验证阶段) , 因为目前只有 install 和 deploy 时才需要 javadoc -->
                         <phase>verify</phase>
                         <goals>
                             <goal>jar</goal>
