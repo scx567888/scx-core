@@ -1,12 +1,15 @@
 package cool.scx.context;
 
 import cool.scx.ScxEventBus;
+import cool.scx.ScxEventNames;
+import cool.scx._ext.organization.User;
 import cool.scx.config.ScxConfig;
 import cool.scx.module.ScxModuleHandler;
 import cool.scx.util.Ansi;
 import cool.scx.util.ScxUtils;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.ext.web.RoutingContext;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.*;
@@ -19,16 +22,6 @@ import java.util.stream.Collectors;
  * @version 0.3.6
  */
 public final class ScxContext {
-
-    /**
-     * bean 注册完成时事件名称
-     */
-    public static final String ON_CONTEXT_REGISTER_NAME = "onContextRegister";
-
-    /**
-     * bean 移除时事件名称
-     */
-    public static final String ON_CONTEXT_REMOVE_NAME = "onContextRemove";
 
     /**
      * 存储所有在线的 连接
@@ -50,11 +43,12 @@ public final class ScxContext {
      */
     private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
+
     static {
         //刷新
         APPLICATION_CONTEXT.refresh();
         //模块加载时的消费者
-        ScxEventBus.consumer(ScxModuleHandler.ON_SCX_MODULE_REGISTER_NAME, o -> {
+        ScxEventBus.consumer(ScxEventNames.onScxModuleRegister, o -> {
             var scxModuleList = ScxUtils.cast(o);
             for (var scxModule : scxModuleList) {
                 var allBean = initScxAnnotationBean(scxModule.classList);
@@ -65,11 +59,11 @@ public final class ScxContext {
                 }
             }
             //通知其他模块 bean 注册完毕,可正常使用
-            ScxEventBus.publish(ON_CONTEXT_REGISTER_NAME, scxModuleList);
+            ScxEventBus.publish(ScxEventNames.onContextRegister, scxModuleList);
         });
 
         //模块销毁时的消费者
-        ScxEventBus.consumer(ScxModuleHandler.ON_SCX_MODULE_REMOVE_NAME, o -> {
+        ScxEventBus.consumer(ScxEventNames.onScxModuleRemove, o -> {
             var scxModuleList = ScxUtils.cast(o);
             for (var scxModule : scxModuleList) {
                 for (Class<?> c : scxModule.classList) {
@@ -81,7 +75,7 @@ public final class ScxContext {
                 Ansi.out().brightBlue("模块 [" + scxModule.moduleName + "] 已移除 " + 0 + " 个 Bean !!!").println();
             }
             //通知其他模块 bean 注册完毕,可正常使用
-            ScxEventBus.publish(ON_CONTEXT_REMOVE_NAME, scxModuleList);
+            ScxEventBus.publish(ScxEventNames.onScxModuleRemove, scxModuleList);
         });
 
     }

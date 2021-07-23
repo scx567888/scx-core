@@ -14,7 +14,6 @@ import cool.scx.util.ScxUtils;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public final class ScxDao {
         var s = LoggerFactory.getLogger("123");
         System.out.println();
         //模块加载时的消费者
-        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REGISTER_NAME, o -> {
+        ScxEventBus.consumer(ScxEventNames.onContextRegister, o -> {
             var scxModuleList = ScxUtils.cast(o);
             fixTableByScxModel(scxModuleList);
         });
@@ -129,6 +128,11 @@ public final class ScxDao {
         return hikariDataSource;
     }
 
+    /**
+     * 初始化 MySQL 数据源
+     *
+     * @return MySQL 数据源
+     */
     private static MysqlDataSource getMySQLDataSource() {
         var mysqlDataSource = new MysqlDataSource();
         mysqlDataSource.setServerName(ScxConfig.dataSourceHost());
@@ -136,12 +140,6 @@ public final class ScxDao {
         mysqlDataSource.setUser(ScxConfig.dataSourceUsername());
         mysqlDataSource.setPassword(ScxConfig.dataSourcePassword());
         mysqlDataSource.setPort(ScxConfig.dataSourcePort());
-        //设置 参数使 mysql 执行批量更新
-        try {
-            mysqlDataSource.setRewriteBatchedStatements(true);
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
         // 设置参数值
         for (var parameter : ScxConfig.dataSourceParameters()) {
             var p = parameter.split("=");

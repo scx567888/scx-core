@@ -6,6 +6,7 @@ import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;
 import cool.scx.auth.AuthUser;
 import cool.scx.base.BaseModel;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +19,9 @@ import java.util.List;
  */
 @ScxModel(tablePrefix = "auth")
 public class User extends BaseModel implements AuthUser {
+
+    @Autowired
+    public Dept dd;
 
     /**
      * 登录名，创建后不可改

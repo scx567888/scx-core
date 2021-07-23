@@ -15,7 +15,7 @@ import java.util.function.Consumer;
  * @author scx567888
  * @version 1.1.9
  */
-public class ScxEventBus {
+public final class ScxEventBus {
 
     /**
      * vertx 的事件总线

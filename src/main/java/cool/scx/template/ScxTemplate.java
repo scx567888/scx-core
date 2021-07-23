@@ -1,6 +1,7 @@
 package cool.scx.template;
 
 import cool.scx.ScxEventBus;
+import cool.scx.ScxEventNames;
 import cool.scx.annotation.ScxTemplateDirective;
 import cool.scx.base.BaseTemplateDirective;
 import cool.scx.config.ScxConfig;
@@ -36,13 +37,13 @@ public final class ScxTemplate {
 
     static {
         //Bean 加载完毕后的消费者
-        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REGISTER_NAME, o -> {
+        ScxEventBus.consumer(ScxEventNames.onContextRegister, o -> {
             var scxModuleList = ScxUtils.cast(o);
             addTemplateDirective(scxModuleList);
         });
 
         //Bean 销毁时的消费者
-        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REMOVE_NAME, scxModule -> {
+        ScxEventBus.consumer(ScxEventNames.onContextRemove, scxModule -> {
 
         });
     }

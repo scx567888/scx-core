@@ -54,9 +54,6 @@ public class ConfigExample {
     public <T> T get(String keyPath, Class<T> type) {
         Object value = configMapping.get(keyPath);
         if (value != null) {
-            if (isArrayOrList(type) && !isArrayOrList(value.getClass())) {
-                value = new Object[]{value};
-            }
             return objectMapper.convertValue(value, type);
         } else {
             return null;

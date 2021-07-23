@@ -8,6 +8,6 @@ import java.util.List;
 @ScxModel(tablePrefix = "test")
 public class Car extends BaseModel {
     public String name;
-    public List<Long> test1;
+    public List<Long> sizes;
     public List<String> tags;
 }

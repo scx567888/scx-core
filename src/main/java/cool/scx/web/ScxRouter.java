@@ -2,6 +2,7 @@ package cool.scx.web;
 
 import cool.scx.Scx;
 import cool.scx.ScxEventBus;
+import cool.scx.ScxEventNames;
 import cool.scx.annotation.ScxWebSocketRoute;
 import cool.scx.base.BaseWSHandler;
 import cool.scx.config.ScxConfig;
@@ -45,7 +46,7 @@ public final class ScxRouter {
         //404 匹配路由
         vertRouter.route().order(Integer.MAX_VALUE).handler(handle -> handle.fail(404));
         //Bean 加载完毕后的消费者
-        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REGISTER_NAME, o -> {
+        ScxEventBus.consumer(ScxEventNames.onContextRegister, o -> {
             var scxModuleList = ScxUtils.cast(o);
             ScxMappingHandlerRegister.register(vertRouter, scxModuleList);
             addWebSocketRouter(scxModuleList);
@@ -54,7 +55,7 @@ public final class ScxRouter {
         });
 
         //Bean 销毁时的消费者
-        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REMOVE_NAME, scxModule -> {
+        ScxEventBus.consumer(ScxEventNames.onContextRemove, scxModule -> {
 
         });
     }

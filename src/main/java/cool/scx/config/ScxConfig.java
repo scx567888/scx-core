@@ -2,6 +2,8 @@ package cool.scx.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.Scx;
+import cool.scx.ScxEventBus;
+import cool.scx.ScxEventNames;
 import cool.scx.exception.ConfigFileMissingException;
 import cool.scx.util.*;
 import org.slf4j.Logger;
@@ -44,27 +46,22 @@ public final class ScxConfig {
     private static final ConfigExample CONFIG_EXAMPLE = new ConfigExample();
 
     /**
-     * 通过 命令行 (外部) 传来的原始 参数
-     */
-    private static String[] ORIGINAL_PARAMS;
-
-    /**
      * config 简单使用 实例
      */
     private static EasyToUseConfig easyToUseConfig;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScxConfig.class);
 
     /**
      * 初始化 配置文件
      *
      * @param params a {@link java.lang.String} object.
      */
-    public static void initConfig(String... params) {
-        ORIGINAL_PARAMS = params;
-        loadJsonConfig();
+    public static void initConfig() {
+//        ScxEventBus.consumer(ScxEventNames.onConfigLoaded, (n) -> {
+//            easyToUseConfig.logConfig();
+//        });
+//        loadJsonConfig();
         loadParamsConfig();
-        loadEasyToUseConfig();
+        loadConfigFromFile();
         Scx.execute(ScxConfig::watchConfig);
         Ansi.out().green("ScxConfig 初始化完成...").println();
     }
@@ -73,20 +70,20 @@ public final class ScxConfig {
      * 加载 外部参数 config
      */
     private static void loadParamsConfig() {
-        for (String arg : ORIGINAL_PARAMS) {
-            if (arg.startsWith("--")) {
-                var strings = arg.substring(2).split("=");
-                if (strings.length == 2) {
-                    CONFIG_EXAMPLE.add(strings[0], strings[1]);
-                }
-            }
-        }
+//        for (String arg : ORIGINAL_PARAMS) {
+//            if (arg.startsWith("--")) {
+//                var strings = arg.substring(2).split("=");
+//                if (strings.length == 2) {
+//                    CONFIG_EXAMPLE.add(strings[0], strings[1]);
+//                }
+//            }
+//        }
     }
 
     /**
-     * 加载 配置文件
+     * 从文件中加载配置
      */
-    private static void loadJsonConfig() {
+    public static void loadConfigFromFile() {
         var scxConfigFile = FileUtils.getFileByAppRoot(SCX_CONFIG_PATH);
         try {
             if (!scxConfigFile.exists()) {
@@ -103,13 +100,6 @@ public final class ScxConfig {
                 e.printStackTrace();
             }
         }
-        logConfiguration();
-    }
-
-    /**
-     * 加载 config 简单使用 实例
-     */
-    private static void loadEasyToUseConfig() {
         easyToUseConfig = new EasyToUseConfig();
     }
 
@@ -285,14 +275,6 @@ public final class ScxConfig {
         return easyToUseConfig.templateResourceRoot;
     }
 
-    /**
-     * 获取 从外部传来的参数 (java -jar scx.jar  xxx)
-     *
-     * @return 外部传来的参数
-     */
-    public static String[] originalParams() {
-        return ORIGINAL_PARAMS;
-    }
 
     /**
      * <p>getConfigExample.</p>
@@ -301,23 +283,6 @@ public final class ScxConfig {
      */
     public static ConfigExample getConfigExample() {
         return CONFIG_EXAMPLE;
-    }
-
-    private static void watchConfig() {
-        var path = Scx.appRoot();
-        var configPath = FileUtils.getFileByAppRoot(SCX_CONFIG_PATH).toPath();
-        WatchFileUtils.watchDir(path.toPath(), new WatchFileEvent() {
-            @Override
-            public void onModify(Path path) {
-                if (path.equals(configPath)) {
-                    Ansi.out().green("ScxConfig 已修改,重新加载中...").println();
-                    loadJsonConfig();
-                    loadEasyToUseConfig();
-                    Ansi.out().green("ScxConfig 重新加载完成...").println();
-                }
-            }
-
-        });
     }
 
     /**
@@ -336,49 +301,6 @@ public final class ScxConfig {
      */
     public static Set<String> disabledPlugins() {
         return easyToUseConfig.disabledPluginList;
-    }
-
-    /**
-     * todo 显示 config 内容
-     */
-    private static void logConfiguration() {
-        LOGGER.debug("{} - configuration:", "ScxConfig");
-        final var propertyNames = List.of(1, 2, 3, 4, 5, 6, 7, 7);
-        for (var prop : propertyNames) {
-            try {
-                var value = 123;
-//                if ("dataSourceProperties".equals(prop)) {
-//                    var dsProps = PropertyElf.copyProperties(dataSourceProperties);
-//                    dsProps.setProperty("password", "<masked>");
-//                    value = dsProps;
-//                }
-//
-//                if ("initializationFailTimeout".equals(prop) && initializationFailTimeout == Long.MAX_VALUE) {
-//                    value = "infinite";
-//                }
-//                else if ("transactionIsolation".equals(prop) && transactionIsolationName == null) {
-//                    value = "default";
-//                }
-//                else if (prop.matches("scheduledExecutorService|threadFactory") && value == null) {
-//                    value = "internal";
-//                }
-//                else if (prop.contains("jdbcUrl") && value instanceof String) {
-//                    value = ((String)value).replaceAll("([?&;]password=)[^&#;]*(.*)", "$1<masked>$2");
-//                }
-//                else if (prop.contains("password")) {
-//                    value = "<masked>";
-//                }
-//                else if (value instanceof String) {
-//                    value = "\"" + value + "\""; // quote to see lead/trailing spaces is any
-//                }
-//                else if (value == null) {
-//                    value = "none";
-//                }
-                LOGGER.warn("{}{}", (prop + "................................................").substring(0, 32), value);
-            } catch (Exception e) {
-                // continue
-            }
-        }
     }
 
 }

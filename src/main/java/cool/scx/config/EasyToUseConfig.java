@@ -106,6 +106,8 @@ class EasyToUseConfig {
 
     final Map<String, Level> logLevelMapping;
 
+    private final Map<Consumer<Object>, Object> logInfo = new LinkedHashMap<>();
+
     EasyToUseConfig() {
 
         port = getWithInfo("scx.port", 8080,
@@ -224,23 +226,31 @@ class EasyToUseConfig {
         String formatInfo = column1Format + " - " + column3Format;
 
         for (int i = 0; i < 3; i++) {
-            System.out.format(formatInfo, rowsStrings[i],  rowsStrings[i]);
+            System.out.format(formatInfo, rowsStrings[i], rowsStrings[i]);
 
             System.out.println();
         }
 
     }
 
-    public static <T> T getWithInfo(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun) {
-        Object o = ScxConfig.getOrDefault(keyPath, defaultVal);
+    @SuppressWarnings("unchecked")
+    public <T> T getWithInfo(String keyPath, T defaultVal, Consumer<T> successFun, Consumer<T> failFun) {
+        T o = ScxConfig.getOrDefault(keyPath, defaultVal);
         if (o == null) {
-            Ansi.out().red("N 未检测到 " + keyPath + "        \t -->\t 已采用默认值 : " + defaultVal).println();
+            logInfo.put((Consumer<Object>) failFun, defaultVal);
+//            logInfo.add((n) -> Ansi.out().red("N 未检测到 " + keyPath + "        \t -->\t 已采用默认值 : " + defaultVal).println());
             return defaultVal;
         } else {
-            T value = (T) o;
-            successFun.accept(value);
-            return value;
+            logInfo.put((Consumer<Object>) successFun, o);
+            return o;
         }
+    }
+
+    /**
+     * 打印配置文件内容
+     */
+    public void logConfig() {
+        logInfo.forEach(Consumer::accept);
     }
 
 }

@@ -31,8 +31,6 @@
         <freemarker.version>2.3.31</freemarker.version>
         <jasypt.version>1.9.3</jasypt.version>
         <thumbnailator.version>0.4.14</thumbnailator.version>
-        <!-- poi 版本除非不要不要更新至 5.0 以上版本 因为其附带的依赖包会导致项目体积变大 -->
-        <poi.version>4.1.2</poi.version>
         <slf4j.version>2.0.0-alpha2</slf4j.version>
     </properties>
 
@@ -81,13 +79,6 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <!-- Jackson 数据格式 (XML) 拓展包 用于操作 XML -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-xml</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
         <!-- Spring Context 框架 , 主要使用其依赖注入及部分注解功能 -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -130,18 +121,17 @@
             <version>${thumbnailator.version}</version>
         </dependency>
 
-        <!-- 操作 Excel -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>${poi.version}</version>
-        </dependency>
-
-        <!-- 日志框架 . 注意: 因为项目内部已经对 slf4j 进行了具体的实现 -->
-        <!-- 所以不需要引入其他的第三方的日志实现,如 logback 等 -->
+        <!-- 日志框架 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!-- slf4j 空实现 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
 

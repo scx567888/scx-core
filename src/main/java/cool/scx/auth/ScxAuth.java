@@ -1,6 +1,7 @@
 package cool.scx.auth;
 
 import cool.scx.ScxEventBus;
+import cool.scx.ScxEventNames;
 import cool.scx.auth.exception.UnknownDeviceException;
 import cool.scx.context.ScxContext;
 import cool.scx.enumeration.DeviceType;
@@ -49,13 +50,13 @@ public final class ScxAuth {
 
     static {
         //Bean 加载完毕后的消费者
-        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REGISTER_NAME, o -> {
+        ScxEventBus.consumer(ScxEventNames.onContextRegister, o -> {
             var scxModuleList = ScxUtils.cast(o);
             AUTH_HANDLER = getAuthHandlerImpl(scxModuleList);
         });
 
         //Bean 销毁时的消费者
-        ScxEventBus.consumer(ScxContext.ON_CONTEXT_REMOVE_NAME, scxModule -> {
+        ScxEventBus.consumer(ScxEventNames.onContextRemove, scxModule -> {
 
         });
     }

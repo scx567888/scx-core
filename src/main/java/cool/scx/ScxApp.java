@@ -64,8 +64,6 @@ public final class ScxApp {
         ScxServer.startServer();
         // 加载内部捆绑的 modules
         ScxModuleHandler.loadBundledModules(modules);
-        // 初始化插件
-        ScxModuleHandler.loadPlugins();
     }
 
 }
