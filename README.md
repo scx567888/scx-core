@@ -22,9 +22,6 @@
    <a target="_blank" href="https://github.com/eclipse-vertx/vert.x">
         <img src="https://img.shields.io/badge/Vert.x-4.1.2-blue" alt="Vert.x"/>
     </a>
-    <a target="_blank" href="https://github.com/apache/freemarker">
-        <img src="https://img.shields.io/badge/Freemarker-2.3.31-blue" alt="freemarker"/>
-    </a>
     <a target="_blank" href="https://github.com/FasterXML/jackson">
         <img src="https://img.shields.io/badge/Jackson-2.12.4-blue" alt="jackson"/>
     </a>
@@ -33,6 +30,9 @@
     </a>
     <a target="_blank" href="https://github.com/brettwooldridge/HikariCP">
         <img src="https://img.shields.io/badge/HikariCP-5.0.0-blue" alt="HikariCP"/>
+    </a>
+    <a target="_blank" href="https://github.com/apache/freemarker">
+        <img src="https://img.shields.io/badge/Freemarker-2.3.31-blue" alt="freemarker"/>
     </a>
 </p>
 
@@ -46,14 +46,14 @@
 <dependency>
     <groupId>cool.scx</groupId>
     <artifactId>scx</artifactId>
-    <version>1.2.5</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
 2. 编写您自己的模块 。
 
 ``` java
-public class YourModule implements ScxModule {
+public class YourModule implements BaseModule {
 
 }
 ```
@@ -68,10 +68,10 @@ public static void main(String[] args) {
 //同时使用内置的模块
 public static void main(String[] args) {
     ScxModule[] modules = {
-            new BaseModule(), //基本模块
-            new AuthModule(), //认证模块
-            new CmsModule(),  //CMS 模块
-            new YourModule()  //自定义模块
+            new CrudModule(), // CRUD 模块
+            new FSSModule(),  // 文件存储模块
+            new CmsModule(),  // CMS 模块
+            new YourModule()  // <--- 您自己的模块
         };
     ScxApp.run(modules, args);
 }
