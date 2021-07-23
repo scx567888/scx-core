@@ -238,8 +238,6 @@
                         <exclude>/c/</exclude>
                         <!-- 默认 插件 占位空文件 -->
                         <exclude>/plugins/</exclude>
-                        <!-- 默认 sql 脚本 -->
-                        <exclude>/sql/</exclude>
                         <!-- 默认 ssl 占位空文件 -->
                         <exclude>/ssl/</exclude>
                         <!-- 各种配置文件 -->
